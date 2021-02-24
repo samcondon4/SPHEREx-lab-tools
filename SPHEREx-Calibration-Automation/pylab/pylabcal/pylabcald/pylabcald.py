@@ -1,4 +1,4 @@
-#!/usr/bin/env pythonimport os
+#!/usr/bin/env python
 
 '''
 This script starts the spectral calibration code, pylabcald.
@@ -9,6 +9,8 @@ import sys
 import logging
 import socket
 import importlib
+
+from importlib import reload
 
 from pylabcaldlib.settings import *
 sys.path.append(COMMON_CODE_DIR)
@@ -31,6 +33,8 @@ if __name__ == '__main__':
 
 	# - Motor 2
 	xstage2 = DPY50601(1)
+
+	DPY50601.total_motors_in_chain()
 
 	# ----------
 	# Start GUI?

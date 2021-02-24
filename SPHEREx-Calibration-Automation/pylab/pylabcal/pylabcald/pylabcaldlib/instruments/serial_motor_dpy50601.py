@@ -4,6 +4,8 @@ from serial.tools import list_ports
 
 class DPY50601:
     ##CLASS VARIABLES, SHARED BETWEEN ALL INSTANCES#######################################
+
+    TOTAL_MOTORS = 0
     '''_cmd_dict:
         Dictionary of ASCII commands to send to motor controller.
         Intended for use inside methods in conjunction w/ _get_cmd_bytes.
@@ -105,6 +107,9 @@ class DPY50601:
 
         return bytes(cls._cmd_dict[cmdstr].format(cid, value), 'utf-8')
 
+    @classmethod
+    def total_motors_in_chain(cls):
+        print("Number of motors on daisy chain: ",cls.TOTAL_MOTORS)
     ###########################################################################################################
 
     ##CONSTRUCTOR###########################################################################
@@ -122,6 +127,8 @@ class DPY50601:
             readval = DPY50601._ser.read(30)
             if (b'SMC60' not in readval):
                 print("DPY50601 Controller at ID {} not found...".format(self.id))
+
+        DPY50601.TOTAL_MOTORS = DPY50601.TOTAL_MOTORS + 1
 
     #########################################################################################
 
