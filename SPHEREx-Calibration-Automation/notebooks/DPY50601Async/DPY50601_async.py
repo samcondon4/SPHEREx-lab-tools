@@ -177,7 +177,8 @@ class DPY50601:
             2) direction: 0 moves motor counter-clockwise, 1 moves motor clockwise
 
         Return
-            success/failure code
+            success/failure code. 1 indicates a successful step operation, 0 indicates
+            failed step operation.
         '''
 
         move_success = 1
@@ -190,31 +191,26 @@ class DPY50601:
             print("Please specify valid direction specifier: (0) for ccw, (1) for cw.")
             move_success = 0
 
+        #Calculate destination in encoder counts and make sure we are within allowable movement range#################
         mult = (-2 * direction) + 1
         dest = self.enc_pos + 8 * (mult * n)
         if dest < 0 or dest > 8 * self.step_range:
             print("Step count leaves range")
             move_success = 0
+        ##############################################################################################################
 
+        #Initiate step operation and correct if destination isn't achieved###########################################
         if move_success:  # Don't run the code that actually moves the motor if an error was previously detected
-            # Create asyncio tasks
-            if self.task_running['get_encoderpos_async'] == 0:
-                postask = asyncio.create_task(self.get_encoderpos_async())
-                self.task_running['get_encoderpos_async'] = 1
-
-            if self.task_running['get_err_async'] == 0:
-                errtask = asyncio.create_task(self.get_err_async(stop=True))
-                self.task_running['get_err_async'] = 1
 
             if mult < 0:
                 self.step(n, 1)
             else:
                 self.step(n, 0)
+
             while self.enc_pos != dest:
-                print("step async, error code: {}".format(self.err_code))
-                await asyncio.wait([errtask, postask])
+                self.get_encoderpos()
+                self.get_err(stop=True)
                 if self.err_code != 0:
-                    print("leaving step")
                     move_success = 0
                     break
                 if self.prev_enc_pos == self.enc_pos:
@@ -223,13 +219,9 @@ class DPY50601:
                         self.step(n, 0)
                     elif n > 0:
                         self.step(n, 1)
-            # End periodic position and error message reading
-            postask.cancel()
-            self.task_running['get_encoderpos_async'] = 0
-            errtask.cancel()
-            self.task_running['get_err_async'] = 0
+                await asyncio.sleep(0.5)
+            #########################################################################################################
 
-        print("step task complete")
         self.task_running['step_async'] = 0
         return move_success
 
@@ -243,8 +235,7 @@ class DPY50601:
             2) direction: 0 moves motor counter-clockwise, 1 moves motor clockwise
 
         Return
-            current None. Eventually this should return if the move was successful
-
+            success/failure code
         '''
 
         move_fail = 0
@@ -288,11 +279,21 @@ class DPY50601:
 
         return move_fail
 
-    async def home_async(self):
+    async def home_async(self, initial=False, forward_first=True):
         '''home:
 
             Wrapper to home() function to run success/failure check of home operation
             in an asyncio concurrent context
+
+            Parameter
+                1) (optional) initial: this parameter specifies if this is the first homing
+                                       operation. Initial homing operations implement slightly
+                                       different logic.
+
+                2) (optional) forward_first: specifies if stage should be moved forward a small
+                                             amount before running the home operation. This is
+                                             useful if stage is already at a home position and
+                                             home_async is called just as a sanity check.
 
             Return
                 Success/failure code
@@ -302,53 +303,49 @@ class DPY50601:
         self.task_running['home_async'] = 1
         home_success = 1
 
-        if self.task_running['get_encoderpos_async'] == 0:
-            postask = asyncio.create_task(self.get_encoderpos_async())
-            self.task_running['get_encoderpos_async'] = 1
+        #Run brief ccw step before homing##########################
+        if forward_first is True:
+            step_task = asyncio.create_task(self.step_async(2000, 0))
+            await step_task
+        ############################################################
 
-        if self.task_running['get_err_async'] == 0:
-            errtask = asyncio.create_task(self.get_err_async(stop=True))
-            self.task_running['get_err_async'] = 1
-
-        await self.step_async(2000, 0)
+        #Run homing operation#######################################
         self.home()
-        while self.enc_pos != 0:
-            await asyncio.wait([errtask, postask])
+        complete = 0
+        while complete == 0:
+            self.get_err(stop=True)
+            self.get_encoderpos()
             if self.err_code != 0:
                 home_success = 0
                 break
-            '''
             if self.enc_pos == self.prev_enc_pos:
-                n = self.enc_pos // 8
-                if n < 0:
-                    self.step(n, 0)
-                elif n > 0:
-                    self.step(n, 1)
+                if not initial:
+                    n = self.enc_pos // 8
+                    if n < 0:
+                        self.step(-1*n, 0)
+                    elif n > 0:
+                        self.step(n, 1)
+                    else:
+                        complete = 1
                 else:
-                    print("Home operation on unit {} complete".format(self.id))
-                    self.set_pos(0)
-                    self.reset_encoder()
-            '''
+                    complete = 1
 
-            if self.enc_pos == self.prev_enc_pos:
-                print("Home operation on unit {} complete".format(self.id))
-                print(self.get_encoderpos())
-                self.set_pos(0)
-                self.reset_encoder()
+            #yield control to event loop. We don't want to block GUI code execution
+            await asyncio.sleep(0.5)
+        ###################################################################################
 
-        # End periodic position and error reading
-        postask.cancel()
-        self.task_running['get_encoderpos_async'] = 0
-        errtask.cancel()
-        self.task_running['get_err_async'] = 0
-
-        self.task_running['home_async'] = 0
+        print("Home operation on unit {} complete".format(self.id))
+        self.set_pos(0)
+        self.reset_encoder()
+        #Send final stop command for safety
+        self.stop()
         return home_success
 
     def home(self):
         '''home:
             Send home command to motor controller
         '''
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CCW', self.id))
         DPY50601._ser.write(DPY50601._get_cmd_bytes('HOME', self.id, 1))
 
     async def get_pos_async(self, interval=0.5):
@@ -424,12 +421,8 @@ class DPY50601:
     def get_err(self, stop=False):
         DPY50601._ser.write(DPY50601._get_cmd_bytes('READ_ERR_REG', self.id))
         err = DPY50601._ser.read(30).decode('utf-8')
-        print("get_err")
-        print(err)
         err = err.split('\r')[0]
-        print(err)
         self.err_code = int(err)
-        print(self.err_code)
         if self.err_code != 0:
             print("Error {} received during motion on unit {}".format(self.err_code, self.id))
             if stop is True:
