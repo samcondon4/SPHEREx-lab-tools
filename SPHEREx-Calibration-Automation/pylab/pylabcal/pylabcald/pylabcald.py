@@ -18,6 +18,8 @@ sys.path.append(COMMON_CODE_DIR)
 #from pylabcaldlib.data_acq.data_acq import DataAcq
 #from pylabcaldlib.instruments.instrument_loader import load_instruments
 
+from pylabcaldlib.instruments.repeatedtimer import RepeatedTimer
+from pylabcaldlib.instruments.powermaxusb import PowermaxUSB
 from pylabcaldlib.instruments.serial_motor_dpy50601 import DPY50601
 
 if __name__ == '__main__':
