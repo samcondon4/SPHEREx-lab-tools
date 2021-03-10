@@ -122,23 +122,17 @@ class DPY50601:
     ###########################################################################################################
 
     ##CONSTRUCTOR###########################################################################
-    def __init__(self, motor_id, encoder_motor_ratio=8, encoder_retries=10, step_range=20000):
+    def __init__(self, motor_id, encoder_motor_ratio=8):
 
         ##Instance Variables
         self.id = motor_id
         self.encoder_motor_ratio = encoder_motor_ratio
-        self.encoder_retries = encoder_retries
-        self.step_range = step_range
         self.com_est = 0  # communication established?
         self.pos = 0
         self.prev_pos = 0
         self.enc_pos = 0
         self.prev_enc_pos = 0
         self.err_code = 0
-        self.task_running = {'get_err_async': 0,
-                             'get_encoderpos_async': 0,
-                             'home_async': 0,
-                             'step_async': 0}
 
         ##If DPY50601 serial COM port hasn't been opened, then open it. Otherwise, ping controller
         ##at specified ID through the open port.
@@ -154,7 +148,6 @@ class DPY50601:
         if self.com_est == 1:
             print('DPY50601-{} communication established at {}'.format(self.id, DPY50601._ser.name))
             DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_MOT_RATIO', self.id, self.encoder_motor_ratio))
-            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_RETRIES', self.id, self.encoder_retries))
             # Read initial motor stage position
             self.pos = self.get_pos()
             self.prev_pos = self.pos
@@ -166,7 +159,7 @@ class DPY50601:
     #########################################################################################
 
     ##Instance Methods###################################################################################
-    async def step_async(self, n, direction):
+    async def step_async(self, n, direction, interval=0.5, timeout=5):
         '''step:
 
         Wrapper to step() to run success/failure check of step() operation in
@@ -175,6 +168,8 @@ class DPY50601:
         Parameters
             1) n: number of steps to move motor
             2) direction: 0 moves motor counter-clockwise, 1 moves motor clockwise
+            3) interval: amount of time in between successive controller status reads
+            4) timeout: number of idle controller status reads to detect before timing out
 
         Return
             success/failure code. 1 indicates a successful step operation, 0 indicates
@@ -182,9 +177,7 @@ class DPY50601:
         '''
 
         move_success = 1
-
-        #Register step async task as running
-        self.task_running['step_async'] = 1
+        timeout_cnt = 0
 
         # Make sure a valid direction specifier was provided
         if not (direction == 0 or direction == 1):
@@ -193,8 +186,8 @@ class DPY50601:
 
         #Calculate destination in encoder counts and make sure we are within allowable movement range#################
         mult = (-2 * direction) + 1
-        dest = self.enc_pos + 8 * (mult * n)
-        if dest < 0 or dest > 8 * self.step_range:
+        dest = self.enc_pos + (self.encoder_motor_ratio*mult* n)
+        if dest < 0:
             print("Step count leaves range")
             move_success = 0
         ##############################################################################################################
@@ -207,22 +200,28 @@ class DPY50601:
             else:
                 self.step(n, 0)
 
-            while self.enc_pos != dest:
+            while abs(self.enc_pos - dest) >= self.encoder_motor_ratio:
                 self.get_encoderpos()
                 self.get_err(stop=True)
                 if self.err_code != 0:
                     move_success = 0
                     break
                 if self.prev_enc_pos == self.enc_pos:
-                    n = (self.enc_pos - dest) // 8
+                    timeout_cnt += 1
+                    if timeout_cnt == timeout:
+                        raise TimeoutError('Controller timeout. Limit switch pressed?')
+                        move_success = 0
+                        break
+                    n = (self.enc_pos - dest) // self.encoder_motor_ratio
+                    print("Stage correction value = {}".format(n))
+                    print(self.enc_pos - dest)
                     if n < 0:
-                        self.step(n, 0)
+                        self.step(-1*n, 0)
                     elif n > 0:
                         self.step(n, 1)
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(interval)
             #########################################################################################################
 
-        self.task_running['step_async'] = 0
         return move_success
 
     def step(self, n, direction):
@@ -253,6 +252,27 @@ class DPY50601:
 
         return move_fail
 
+    async def slew_async(self, direction, interval=0.5, timeout=5):
+        '''slew_async:
+
+        Wrapper to slew() to run periodic controller status reads in an asyncio concurrent context.
+
+        :param direction: direction to move motor. 0 for ccw, 1 for cw.
+        :param interval: (optional) specify interval between successive controller status reads
+        :param timeout: (optional) specify number of idle controller status reads before raising timeout exception.
+        :return: success code. 0 for failed slew, 1 for successful slew
+        '''
+
+        slew_success = 1
+        timeout_cnt = 0
+
+        if not (direction == 0 or direction == 1):
+            print("Please specify valid direction specifier: (0) for ccw, (1) for cw.")
+            slew_success = 0
+
+        if slew_success:
+            self.slew(direction)
+
     def slew(self, direction):
         '''slew():
             Description: Set motor spinning with no specified number of steps. Motor will keep spinning until
@@ -279,7 +299,7 @@ class DPY50601:
 
         return move_fail
 
-    async def home_async(self, initial=False, forward_first=True):
+    async def home_async(self, initial=False, forward_first=True, interval=0.5, timeout=5):
         '''home:
 
             Wrapper to home() function to run success/failure check of home operation
@@ -295,12 +315,17 @@ class DPY50601:
                                              useful if stage is already at a home position and
                                              home_async is called just as a sanity check.
 
+                3) (optional) interval: specifies the amount of time between successive controller
+                                        status checks.
+
+                4) (optional) timeout: specifies number of idle controller status reads before timing
+                                       out.
+
             Return
                 Success/failure code
         '''
 
-        #Register home_async task as running
-        self.task_running['home_async'] = 1
+        timeout_cnt = 0
         home_success = 1
 
         #Run brief ccw step before homing##########################
@@ -319,8 +344,13 @@ class DPY50601:
                 home_success = 0
                 break
             if self.enc_pos == self.prev_enc_pos:
+                timeout_cnt += 1
+                if timeout_cnt == timeout:
+                    raise TimeoutError('Controller timeout. Limit switch pressed?')
+                    home_success = 0
+                    break
                 if not initial:
-                    n = self.enc_pos // 8
+                    n = self.enc_pos // self.encoder_motor_ratio
                     if n < 0:
                         self.step(-1*n, 0)
                     elif n > 0:
@@ -334,7 +364,6 @@ class DPY50601:
             await asyncio.sleep(0.5)
         ###################################################################################
 
-        print("Home operation on unit {} complete".format(self.id))
         self.set_pos(0)
         self.reset_encoder()
         #Send final stop command for safety
@@ -348,21 +377,6 @@ class DPY50601:
         DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CCW', self.id))
         DPY50601._ser.write(DPY50601._get_cmd_bytes('HOME', self.id, 1))
 
-    async def get_pos_async(self, interval=0.5):
-        '''get_pos_async:
-
-            Wrapper for get_pos for use in periodic readings in asyncio context
-
-            Parameter:
-                1) interval: amount of time to sleep before next execution
-            Return:
-                None, position is returned through class instance attribute pos
-        '''
-
-        while 1:
-            self.get_pos()
-            await asyncio.sleep(interval)
-
     def get_pos(self):
         '''get_position:
 
@@ -374,22 +388,6 @@ class DPY50601:
         pos = pos.split('\r')[0]
         self.pos = int(pos)
         return self.pos
-
-    async def get_encoderpos_async(self, interval=0.5):
-        '''get_encoderpos_async:
-
-            Wrapper for get_encoderpos for use in asyncio context.
-
-            Parameter
-                1) interval: amount of time to sleep until next execution
-
-            Return:
-                 None, encoder position is returned through the class instance attribute enc_pos
-        '''
-
-        while 1:
-            self.get_encoderpos()
-            await asyncio.sleep(interval)
 
     def get_encoderpos(self):
         '''get_encoderpos:
@@ -403,30 +401,15 @@ class DPY50601:
         self.enc_pos = int(enc_pos)
         return self.enc_pos
 
-    async def get_err_async(self, stop=False, interval=0.5):
-        '''get_err_async:
-
-            Parameters
-                1) stop: optional boolean that gives method permission to halt
-                         any motion if an error is detected.
-
-                2) interval: amount of time to sleep before next execution
-
-            Read error register for use as asyncio task
-        '''
-        while 1:
-            self.get_err(stop=stop)
-            await asyncio.sleep(interval)
-
     def get_err(self, stop=False):
         DPY50601._ser.write(DPY50601._get_cmd_bytes('READ_ERR_REG', self.id))
         err = DPY50601._ser.read(30).decode('utf-8')
         err = err.split('\r')[0]
         self.err_code = int(err)
         if self.err_code != 0:
-            print("Error {} received during motion on unit {}".format(self.err_code, self.id))
             if stop is True:
                 self.stop()
+            raise RuntimeError('Error code {} received on controller {}'.format(self.err_code, self.id))
         return self.err_code
 
     def stop(self):
@@ -517,7 +500,7 @@ class DPY50601:
 
             Reset internal encoder count register to 0
         '''
-
+        print("Resetting encoder")
         DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_RST', self.id))
         self.prev_enc_pos = self.enc_pos
         self.enc_pos = 0
