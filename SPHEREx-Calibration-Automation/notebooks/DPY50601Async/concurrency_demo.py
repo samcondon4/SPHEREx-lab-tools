@@ -1,11 +1,11 @@
 from DPY50601_async import DPY50601
 import asyncio
-import msvcrt
 import time
 
 
 async def main():
-    await asyncio.gather(motor_control(), fibonacci(100000))
+    motor_task = asyncio.create_task(motor_control())
+    fib_task = asyncio.create_task(fibonacci(10000))
 
 
 async def motor_control():
@@ -13,9 +13,9 @@ async def motor_control():
     #run initial home operation for sanity-check
     await d0.home_async(initial=True, forward_first=True)
     #move motor 4000 steps in ccw direction
-    await d0.step_async(4000, 0) #
+    await d0.step_async(4000, 0)
     #move motor 1000 steps cw
-    await d0.step_async(1000, 1)
+    await d0.step_async(1000, 0)
     #move motor 2000 steps ccw
     await d0.step_async(2000, 0)
     #run home operation
@@ -39,5 +39,3 @@ async def fibonacci(nterms):
             await asyncio.sleep(0.0001)
 
 asyncio.run(main())
-
-
