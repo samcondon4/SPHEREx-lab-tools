@@ -42,7 +42,8 @@ class DPY50601:
         'SET_DIR_CW': '@{}+\r',
         'SET_DIR_CCW': '@{}-\r',
         'STOP': '@{}.\r',
-        'SET_ADDR_REG': '@{}~{}\r'
+        'SET_ADDR_REG': '@{}~{}\r',
+        'SET_OUTPUT': '@{}OR{}\r'
     }
 
     '''_ser:
@@ -79,11 +80,11 @@ class DPY50601:
 
             except Exception as e:
                 print("Exception on {}: {}".format(p.name, e))
-                if (ser.is_open):
+                if ser.is_open:
                     ser.close()
             else:
                 readval = ser.read(30)
-                if (b'SMC60' in readval):
+                if b'SMC60' in readval:
                     print('Found DPY50601 COM at: {}'.format(p.name))
                     cls._ser = ser
                     com_est = 1
@@ -126,7 +127,7 @@ class DPY50601:
 
         ##Instance Variables
         self.id = motor_id
-        self.encoder_motor_ratio = encoder_motor_ratio
+        self.encoder_motor_ratio = encoder_motor_ratio #check this
         self.com_est = 0  # communication established?
         self.pos = 0
         self.prev_pos = 0
@@ -247,6 +248,7 @@ class DPY50601:
             move_fail = 1
 
         if move_fail != 1:
+            self.set_output(4)
             DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_N_STEPS', self.id, n))
             DPY50601._ser.write(DPY50601._get_cmd_bytes('GO_N_STEPS', self.id))
 
@@ -374,6 +376,7 @@ class DPY50601:
         '''home:
             Send home command to motor controller
         '''
+        self.set_output(2)
         DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CCW', self.id))
         DPY50601._ser.write(DPY50601._get_cmd_bytes('HOME', self.id, 1))
 
@@ -504,4 +507,12 @@ class DPY50601:
         DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_RST', self.id))
         self.prev_enc_pos = self.enc_pos
         self.enc_pos = 0
+
+    def set_output(self, val):
+        '''Write to the controller output register.
+
+        :param val: Value to write to output register. Should be within range 0-255
+        :return: None
+        '''
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_OUTPUT', self.id, val))
     ######################################################################################################
