@@ -13,15 +13,15 @@ async def main():
 async def motor_control():
     d0 = DPY50601(0)
     #run initial home operation for sanity-check
-    await d0.home_async(initial=True, forward_first=True)
+    await d0.home_async(initial=True)
     #move motor 4000 steps in ccw direction
-    #await d0.step_async(1000, 1)
+    await d0.step_async(10000, 1)
     #move motor 1000 steps cw
-    #await d0.step_async(2000, 1)
+    await d0.step_async(2000, 1)
     #move motor 2000 steps ccw
-    #await d0.step_async(2000, 0)
+    await d0.step_async(2000, 0)
     #run home operation
-    #await d0.home_async(forward_first=False)
+    await d0.home_async()
 
 
 async def fibonacci(nterms):
