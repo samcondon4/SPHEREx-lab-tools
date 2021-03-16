@@ -22,6 +22,7 @@ class DPY50601:
         'SET_ACCELERATION': '@{}A{}\r',
         'SET_BASE_SPEED': '@{}B{}\r',
         'GO_N_STEPS': '@{}G\r',
+        'MOVE_TO': '@{}P{}\r',
         'SET_N_STEPS': '@{}N{}\r',
         'HOME': '@{}H{}\r',
         'ENCD_AUTO': '@{}EA{}\r',
@@ -42,7 +43,8 @@ class DPY50601:
         'SET_DIR_CW': '@{}+\r',
         'SET_DIR_CCW': '@{}-\r',
         'STOP': '@{}.\r',
-        'SET_ADDR_REG': '@{}~{}\r'
+        'SET_ADDR_REG': '@{}~{}\r',
+        'SET_OUTPUT': '@{}OR{}\r'
     }
 
     '''_ser:
@@ -79,11 +81,11 @@ class DPY50601:
 
             except Exception as e:
                 print("Exception on {}: {}".format(p.name, e))
-                if (ser.is_open):
+                if ser.is_open:
                     ser.close()
             else:
                 readval = ser.read(30)
-                if (b'SMC60' in readval):
+                if b'SMC60' in readval:
                     print('Found DPY50601 COM at: {}'.format(p.name))
                     cls._ser = ser
                     com_est = 1
@@ -126,13 +128,17 @@ class DPY50601:
 
         ##Instance Variables
         self.id = motor_id
-        self.encoder_motor_ratio = encoder_motor_ratio
+        self.encoder_delay = 500
+        self.encoder_motor_ratio = encoder_motor_ratio #check this
+        self.encoder_retries = 5
+        self.encoder_window = self.encoder_motor_ratio
         self.com_est = 0  # communication established?
         self.pos = 0
         self.prev_pos = 0
         self.enc_pos = 0
         self.prev_enc_pos = 0
         self.err_code = 0
+
 
         ##If DPY50601 serial COM port hasn't been opened, then open it. Otherwise, ping controller
         ##at specified ID through the open port.
@@ -148,17 +154,45 @@ class DPY50601:
         if self.com_est == 1:
             print('DPY50601-{} communication established at {}'.format(self.id, DPY50601._ser.name))
             DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_MOT_RATIO', self.id, self.encoder_motor_ratio))
+            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_DELAY', self.id, self.encoder_delay))
+            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_RETRIES', self.id, self.encoder_retries))
+            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_WINDOW', self.id, self.encoder_window))
+            #encoder auto correct disabled by default
+            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_AUTO', self.id, 0))
             # Read initial motor stage position
             self.pos = self.get_pos()
             self.prev_pos = self.pos
             self.enc_pos = self.get_encoderpos()
             self.prev_enc_pos = self.enc_pos
+            # Pull all controller outputs to ground by default
+            self.set_output(255)
         else:
             print("DPY50601 Controller at ID {} not found...".format(self.id))
 
     #########################################################################################
 
     ##Instance Methods###################################################################################
+
+    def move_to(self, pos, auto_cor=False):
+        '''move_to: move to specified absolute position. For defined results, this should only be called
+                    after an appropriate homing operation has been performed.
+
+        :param pos: Position to move to. Range is -8388607 - +8388607
+               auto_cor: (optional) enable encoder auto correct functionality
+        :return: success/failure code
+        '''
+
+        move_success = 0
+        if auto_cor:
+            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_AUTO', self.id, 1))
+            print("Auto-correct enabled")
+        else:
+            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_AUTO', self.id, 0))
+        #Switch to home- input
+        self.set_output(4)
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('MOVE_TO', self.id, pos))
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('GO_N_STEPS', self.id))
+
     async def step_async(self, n, direction, interval=0.5, timeout=5):
         '''step:
 
@@ -187,40 +221,34 @@ class DPY50601:
         #Calculate destination in encoder counts and make sure we are within allowable movement range#################
         mult = (-2 * direction) + 1
         dest = self.enc_pos + (self.encoder_motor_ratio*mult* n)
-        if dest < 0:
-            print("Step count leaves range")
-            move_success = 0
         ##############################################################################################################
 
-        #Initiate step operation and correct if destination isn't achieved###########################################
-        if move_success:  # Don't run the code that actually moves the motor if an error was previously detected
+        if mult < 0:
+            self.step(n, 1)
+        else:
+            self.step(n, 0)
 
-            if mult < 0:
-                self.step(n, 1)
-            else:
-                self.step(n, 0)
-
-            while abs(self.enc_pos - dest) >= self.encoder_motor_ratio:
-                self.get_encoderpos()
-                self.get_err(stop=True)
-                if self.err_code != 0:
+        while abs(self.enc_pos - dest) >= self.encoder_motor_ratio:
+            self.get_encoderpos()
+            self.get_err(stop=True)
+            if self.err_code != 0:
+                move_success = 0
+                break
+            if self.prev_enc_pos == self.enc_pos:
+                timeout_cnt += 1
+                if timeout_cnt == timeout:
+                    raise TimeoutError('Controller timeout. Limit switch pressed?')
                     move_success = 0
                     break
-                if self.prev_enc_pos == self.enc_pos:
-                    timeout_cnt += 1
-                    if timeout_cnt == timeout:
-                        raise TimeoutError('Controller timeout. Limit switch pressed?')
-                        move_success = 0
-                        break
-                    n = (self.enc_pos - dest) // self.encoder_motor_ratio
-                    print("Stage correction value = {}".format(n))
-                    print(self.enc_pos - dest)
-                    if n < 0:
-                        self.step(-1*n, 0)
-                    elif n > 0:
-                        self.step(n, 1)
-                await asyncio.sleep(interval)
-            #########################################################################################################
+                n = (self.enc_pos - dest) // self.encoder_motor_ratio
+                print("Stage correction value = {}".format(n))
+                print(self.enc_pos - dest)
+                if n < 0:
+                    self.step(-1*n, 0)
+                elif n > 0:
+                    self.step(n, 1)
+            await asyncio.sleep(interval)
+        #########################################################################################################
 
         return move_success
 
@@ -247,6 +275,7 @@ class DPY50601:
             move_fail = 1
 
         if move_fail != 1:
+            self.set_output(4)
             DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_N_STEPS', self.id, n))
             DPY50601._ser.write(DPY50601._get_cmd_bytes('GO_N_STEPS', self.id))
 
@@ -299,7 +328,7 @@ class DPY50601:
 
         return move_fail
 
-    async def home_async(self, initial=False, forward_first=True, interval=0.5, timeout=5):
+    async def home_async(self, initial=True, interval=0.5, timeout=5):
         '''home:
 
             Wrapper to home() function to run success/failure check of home operation
@@ -310,15 +339,10 @@ class DPY50601:
                                        operation. Initial homing operations implement slightly
                                        different logic.
 
-                2) (optional) forward_first: specifies if stage should be moved forward a small
-                                             amount before running the home operation. This is
-                                             useful if stage is already at a home position and
-                                             home_async is called just as a sanity check.
-
-                3) (optional) interval: specifies the amount of time between successive controller
+                2) (optional) interval: specifies the amount of time between successive controller
                                         status checks.
 
-                4) (optional) timeout: specifies number of idle controller status reads before timing
+                3) (optional) timeout: specifies number of idle controller status reads before timing
                                        out.
 
             Return
@@ -327,12 +351,6 @@ class DPY50601:
 
         timeout_cnt = 0
         home_success = 1
-
-        #Run brief ccw step before homing##########################
-        if forward_first is True:
-            step_task = asyncio.create_task(self.step_async(2000, 0))
-            await step_task
-        ############################################################
 
         #Run homing operation#######################################
         self.home()
@@ -374,6 +392,7 @@ class DPY50601:
         '''home:
             Send home command to motor controller
         '''
+        self.set_output(2)
         DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CCW', self.id))
         DPY50601._ser.write(DPY50601._get_cmd_bytes('HOME', self.id, 1))
 
@@ -504,4 +523,12 @@ class DPY50601:
         DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_RST', self.id))
         self.prev_enc_pos = self.enc_pos
         self.enc_pos = 0
+
+    def set_output(self, val):
+        '''Write to the controller output register.
+
+        :param val: Value to write to output register. Should be within range 0-255
+        :return: None
+        '''
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_OUTPUT', self.id, val))
     ######################################################################################################

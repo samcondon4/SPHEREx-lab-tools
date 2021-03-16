@@ -5,8 +5,8 @@ d0 = DPY50601(0)
 
 
 async def main():
-    await d0.home_async(initial=True, forward_first=False)
-    #await asyncio.gather(reset_enc(), motor_control())
+    #await d0.home_async(initial=True, forward_first=True)
+    await asyncio.gather(reset_enc(), motor_control())
 
 
 async def motor_control():
