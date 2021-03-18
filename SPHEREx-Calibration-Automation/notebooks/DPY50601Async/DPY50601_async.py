@@ -275,7 +275,7 @@ class DPY50601:
             move_fail = 1
 
         if move_fail != 1:
-            self.set_output(4)
+        #    self.set_output(4)
             DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_N_STEPS', self.id, n))
             DPY50601._ser.write(DPY50601._get_cmd_bytes('GO_N_STEPS', self.id))
 
@@ -392,7 +392,7 @@ class DPY50601:
         '''home:
             Send home command to motor controller
         '''
-        self.set_output(2)
+        #self.set_output(4)
         DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CCW', self.id))
         DPY50601._ser.write(DPY50601._get_cmd_bytes('HOME', self.id, 1))
 
