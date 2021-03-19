@@ -61,6 +61,8 @@ def get_io_parameters(raw_params):
     io['permanent_storage_folder']  = raw_params['permanent_storage_folder']
     io['compression_type']          = raw_params['compression_type']
     io['storage_type']              = raw_params['storage_type']
+    io['keywords']              = raw_params['keywords']
+    io['suffix']              = raw_params['suffix']
 
     return io
 
