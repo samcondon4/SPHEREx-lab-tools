@@ -34,11 +34,12 @@ def get_params(param_file_path):
 
 
     # Convert "raw" config dictionary to "organized" dictionary `params`
-    params = get_general_params(raw_params)
+    params = {}
+    params['general'] = get_general_params(raw_params)
     params['io'] = get_io_parameters(raw_io_params)
     #params['storage'] = get_storage_parameters(raw_io_params)
     params['metadata'] = get_metadata_parameters(raw_metadata_params)
-    params['cosmo'] = get_cosmology_parameters(raw_cosmo_params)
+    #params['cosmo'] = get_cosmology_parameters(raw_cosmo_params)
     params['monochrometer'] = get_monochrometer_parameters(raw_monochrometer_params)
 
     logging.info("---------- PARAMETER VALUES ----------")
