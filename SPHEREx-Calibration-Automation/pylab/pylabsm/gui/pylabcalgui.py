@@ -16,8 +16,8 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-# import pylab
 from pylabsm import SpectralCalibrationMachine
+
 
 class tabdemo(QTabWidget):
     def __init__(self, parent=None):
@@ -456,7 +456,7 @@ class motorWindow(QDialog):
         super(motorWindow, self).__init__(parent)
 
         self.state_machine = obj_in.state_machine
-        self.setWindowTitle("Settings")
+        self.setWindowTitle("Motor Controler")
 
         layout = QGridLayout()
 
@@ -466,37 +466,44 @@ class motorWindow(QDialog):
         layout.addWidget(label_1, 0, 0)
         label_step = QLabel("Step Size: ")
         layout.addWidget(label_step, 1, 0)
-        # label_speed = QLabel("Speed: ")
-        # layout.addWidget(label_speed, 2, 0)
 
         self.home_button_1 = QPushButton(self)
         self.home_button_1.setText("Home")
+        self.home_button_1.clicked.connect(lambda: self.move_motor(self.home_button_1))
         layout.addWidget(self.home_button_1, 0, 1)
 
         self.fwd_button_1 = QPushButton(self)
         self.fwd_button_1.setText("Fwd")
+        self.fwd_button_1.clicked.connect(lambda: self.move_motor(self.fwd_button_1))
         layout.addWidget(self.fwd_button_1, 0, 2)
 
         self.back_button_1 = QPushButton(self)
         self.back_button_1.setText("Back")
+        self.back_button_1.clicked.connect(lambda: self.move_motor(self.back_button_1))
         layout.addWidget(self.back_button_1, 0, 3)
+
+        self.set_speed_1 = QPushButton(self)
+        self.set_speed_1.setText("Set Speed")
+        self.set_speed_1.clicked.connect(lambda: self.move_motor(self.set_speed_1))
+        layout.addWidget(self.set_speed_1, 0, 4)
 
         home_motor_1 = 0
         self.display_home_1 = QSpinBox(self)
         self.display_home_1.setValue(home_motor_1)
-        # self.display_home.valueChanged.connect(self.updateHomeMotor1)
 
         self.step_fwd_1 = QSpinBox(self)
         self.step_fwd_1.setValue(0)
-        # self.step_fwd_1.valueChanged.connect(self.updateStartWavelength)
 
         self.step_back_1 = QSpinBox(self)
         self.step_back_1.setValue(0)
-        # self.step_back.valueChanged.connect(self.updateStopWavelength)
+
+        self.set_speed_1 = QSpinBox(self)
+        self.set_speed_1.setValue(6)
 
         layout.addWidget(self.display_home_1, 1, 1)
         layout.addWidget(self.step_fwd_1, 1, 2)
         layout.addWidget(self.step_back_1, 1, 3)
+        layout.addWidget(self.set_speed_1, 1, 4)
 
         # MOTOR 2
 
@@ -520,22 +527,28 @@ class motorWindow(QDialog):
         self.back_button_2.setText("Back")
         layout.addWidget(self.back_button_2, 0 + y1, 3)
 
+        self.set_speed_2 = QPushButton(self)
+        self.set_speed_2.setText("Set Speed")
+        self.set_speed_2.clicked.connect(lambda: self.move_motor(self.set_speed_2))
+        layout.addWidget(self.set_speed_2, 0 + y1, 4)
+
         home_motor_2 = 0
         self.display_home_2 = QSpinBox(self)
         self.display_home_2.setValue(home_motor_2)
-        # self.display_home_2.valueChanged.connect(self.updateHomeMotor1)
 
         self.step_fwd_2 = QSpinBox(self)
         self.step_fwd_2.setValue(0)
-        # self.step_fwd_2.valueChanged.connect(self.updateStartWavelength)
 
         self.step_back_2 = QSpinBox(self)
         self.step_back_2.setValue(0)
-        # self.step_back.valueChanged.connect(self.updateStopWavelength)
+
+        self.set_speed_2 = QSpinBox(self)
+        self.set_speed_2.setValue(6)
 
         layout.addWidget(self.display_home_2, 1 + y1, 1)
         layout.addWidget(self.step_fwd_2, 1 + y1, 2)
         layout.addWidget(self.step_back_2, 1 + y1, 3)
+        layout.addWidget(self.set_speed_2, 1 + y1, 4)
 
         # Set Widget
         self.widget = QWidget()
@@ -550,6 +563,26 @@ class motorWindow(QDialog):
         self.verticalLayout = QVBoxLayout(self)
         self.verticalLayout.addWidget(self.widget)
         self.verticalLayout.addWidget(self.buttonBox)
+
+    @pyqtSlot()
+    def move_motor(self, btn):
+        print('PyQt5 pushbutton is clicked')
+        if btn.text() == 'Home':
+            print('Set going home command')
+            self.state_machine.stepper_motors['xstage'].home()
+        if btn.text() == 'Set Speed':
+            step_speed = 1
+            step_size = self.set_speed_1.value()
+            self.state_machine.stepper_motors['xstage'].set_basespeed()
+        if btn.text() == 'Fwd':
+            step_dir = 0
+            step_size = self.step_fwd_1.value()
+            self.state_machine.stepper_motors['xstage'].step(step_size, step_dir)
+        if btn.text() == 'Back':
+            step_dir = 1
+            step_size = self.step_back_1.value()
+            self.state_machine.stepper_motors['xstage'].step(step_size, step_dir)
+
 
 def main():
     app = QApplication(sys.argv)

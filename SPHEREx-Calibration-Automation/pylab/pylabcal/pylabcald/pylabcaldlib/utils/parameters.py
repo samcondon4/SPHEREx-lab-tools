@@ -99,11 +99,18 @@ def get_cosmology_parameters(raw_params):
 def get_monochrometer_parameters(raw_params):
     mono = {}
 
-    mono['wavelength_start']    = raw_params['wavelength_start']
-    mono['wavelength_stop']     = raw_params['wavelength_stop']
-    mono['wavelength_step']     = raw_params['wavelength_step']
+    mono['wavelength_start']    = raw_params['wavelength_start_um']
+    mono['wavelength_stop']     = raw_params['wavelength_stop_um']
+    mono['wavelength_step']     = raw_params['wavelength_step_um']
 
     return mono
+
+def get_powermax_parameters(raw_params):
+    pmax = {}
+
+    pmax['wavelength_min'] = raw_params['wavelength_min_um']
+    pmax['wavelength_max'] = raw_params['wavelength_max_um']
+    pmax['measure_freq'] = raw_params['measure_freq_s']
 
 def is_float(s):
     try:
