@@ -2,7 +2,7 @@ import pdb
 import pyvisa
 import pandas as pd
 import time, threading
-from pylabcaldlib.instruments.repeatedtimer import RepeatedTimer
+from pylabcallib.instruments.repeatedtimer import RepeatedTimer
 
 class PowermaxUSB:
     _info_dict = {'ID': '*IDN?',

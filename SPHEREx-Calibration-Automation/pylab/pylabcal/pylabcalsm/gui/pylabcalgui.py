@@ -7,10 +7,10 @@ import numpy as np
 import copy
 import datetime as datetime
 
-#sys.path.append(r'C:\Users\marco viero\Repositories\SPHEREx-lab-tools\SPHEREx-Calibration-Automation\pylab\pylabsm')
+#sys.path.append(r'C:\Users\marco viero\Repositories\SPHEREx-lab-tools\SPHEREx-Calibration-Automation\pylab\pylabcalsm')
 #sys.path.append(r'C:\Users\marco viero\Repositories\SPHEREx-lab-tools\SPHEREx-Calibration-Automation\pylab\pylabcal\pylabcald')
-sys.path.append(r'..\..\..\pylab\pylabsm')
-sys.path.append(r'..\..\..\pylab\pylabcal\pylabcald')
+sys.path.append(r'..')
+sys.path.append(r'../../pylabcald')
 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
