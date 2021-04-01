@@ -5,40 +5,18 @@ from configparser import ConfigParser
 import logging
 #import astropy.cosmology as ac
 
-def get_params(param_file_path):
-    """
-    Get parameter values and return them in the form of a dictionary.
+"""
+Functions to read/write parameters from/to .cfg files using ConfigParser
+"""
 
-    Parameters
-    ----------
-    param_file_path : str
-        path to parameter file
-
-    Returns
-    -------
-    params : dict
-    """
-
+def get_params_dict(param_file_path):
     config = ConfigParser()
     config.read(param_file_path)
 
-    params = get_params_dict(config)
-
-    logging.info("---------- PARAMETER VALUES ----------")
-    logging.info("======================================")
-    logging.info("\n" + pprint.pformat(params, indent=4) + "\n")
-
-    #write_config_file(params, param_file_path)
-    #pdb.set_trace()
-    return params
-
-def get_params_dict(config_in):
     dict_out = {}
-    for section in config_in.sections():
+    for section in config.sections():
         dict_sect = {}
-        for (each_key, each_val) in config_in.items(section):
-            #print(each_key)
-            #print(each_val)
+        for (each_key, each_val) in config.items(section):
             dict_sect[each_key] = each_val
 
         dict_out[section] = dict_sect
@@ -47,19 +25,18 @@ def get_params_dict(config_in):
 
 def write_config_file(params_out, config_filename_out):
     config_out = ConfigParser()
-    #pdb.set_trace()
+
     for ikey, idict in params_out.items():
-        #pdb.set_trace()
         if not config_out.has_section(ikey):
+
             config_out.add_section(ikey)
-            #pdb.set_trace()
             for isect, ivals in idict.items():
                 #pdb.set_trace()
-                config_out.set(ikey, isect, ivals)
-
+                #print(ikey, isect, ivals)
+                config_out.set(ikey, isect, str(ivals))
 
     #pdb.set_trace()
-    #config_filename_out = "..\\pylab\\pylabcal\\config\\setup_test_write.cfg"
+    # Write config_filename_out (check if overwriting externally)
     with open(config_filename_out, 'w') as conf:
         config_out.write(conf)
 
@@ -94,8 +71,8 @@ def is_true(raw_params, key):
     s       = sraw.lower() # Make case-insensitive
 
     # Lists of acceptable 'True' and 'False' strings
-    true_strings    = ['true', 't', 'yes', 'y', '1']
-    false_strings    = ['false', 'f', 'no', 'n', '0']
+    true_strings    = ['True','true', 't', 'yes', 'y', '1']
+    false_strings    = ['False','false', 'f', 'no', 'n', '0']
     if s in true_strings:
         return True
     elif s in false_strings:

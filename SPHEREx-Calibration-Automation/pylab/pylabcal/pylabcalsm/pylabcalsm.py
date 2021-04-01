@@ -4,13 +4,11 @@ import pdb
 import numpy as np
 import datetime as datetime
 
-#sys.path.append(r'..\pylab')
-sys.path.append(r'..\pylab\pylabcal\pylabcald')
+sys.path.append(r'..\pylab\pylabcal')
 
-from pylabcaldlib.utils import parameters
-from pylabcaldlib.instruments.repeatedtimer import RepeatedTimer
-from pylabcaldlib.instruments.powermaxusb import PowermaxUSB
-from pylabcaldlib.instruments.serial_motor_dpy50601 import DPY50601
+from pylabcallib.utils.parameters import *
+from pylabcallib.instruments.powermaxusb import PowermaxUSB
+from pylabcallib.instruments.serial_motor_dpy50601 import DPY50601
 
 class SM:
 	startState = 'waiting'
@@ -28,6 +26,7 @@ class SM:
 		self.errorStatus = self.error_status
 		self.errorDict = {}
 		self.metadata = {}
+
 
 	def step(self, inp):
 		(s, o) = self.getNextValues(self.state, inp)
@@ -47,10 +46,17 @@ class SpectralCalibrationMachine(SM):
 	def __init__(self, config_file='setup.cfg'):
 		print('Start by Initializing')
 
-		self.path = r"C:\Users\marco viero\Repositories\SPHEREx-lab-tools\SPHEREx-Calibration-Automation\pylab\pylabcal\config"
+		#self.path = r"/pylab/pylabcal/config"
+		self.path = os.path.join('..','pylab','pylabcal','config')
+
+		if os.path.isfile(os.path.join(self.path,config_file)) == False:
+			print('No config file by this name')
+			print('Return some kind of error')
+			pdb.set_trace()
 		self.cfg_file_default = config_file
 		self.message_box = []
 		self.message_log = []
+		self.overwrite_config_file = False
 
 		#pdb.set_trace()
 		# self.errorStatus = self.initialize()
@@ -106,9 +112,19 @@ class SpectralCalibrationMachine(SM):
 
 	def get_parameters(self, config_path):
 
-		params = parameters.get_params(config_path)
+		params = get_params_dict(config_path)
 
 		return params
+
+	def write_parameters(self, config_path_out):
+		pdb.set_trace()
+		if not os.path.isfile(config_path_out):
+			write_config_file(self.params, config_path_out)
+		elif self.overwrite_config_file == True:
+			write_config_file(self.params, config_path_out)
+			self.overwrite_config_file == False
+		else:
+			print(config_path_out+' already exists.')
 
 	def update_parameters(self, params_in):
 
