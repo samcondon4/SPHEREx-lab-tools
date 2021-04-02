@@ -117,14 +117,17 @@ class SpectralCalibrationMachine(SM):
 		return params
 
 	def write_parameters(self, config_path_out):
-		pdb.set_trace()
+		#pdb.set_trace()
+		configfilename = config_path_out.split('/')[-1].split('\\')[-1]
 		if not os.path.isfile(config_path_out):
 			write_config_file(self.params, config_path_out)
+			self.message_box.append(configfilename + ' saved')
 		elif self.overwrite_config_file == True:
 			write_config_file(self.params, config_path_out)
 			self.overwrite_config_file == False
+			self.message_box.append(configfilename + ' overwritten')
 		else:
-			print(config_path_out+' already exists.')
+			self.message_box.append(configfilename +' already exists')
 
 	def update_parameters(self, params_in):
 
