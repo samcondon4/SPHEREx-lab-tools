@@ -1,0 +1,81 @@
+---
+layout: default
+---
+
+<div id="home">
+  <h1>{{ site.title }}</h1>
+  <hr />
+  <!--
+  <h1><span style="color:#fea500">
+        <span style="font-variant:small-caps;">SPHEREx</span>
+      </span> Calibration Lab Analysis Wiki</h1>
+  </center>
+  -->
+  This wiki is to organize, share, and archive information collected and
+  analyzed by the SPHEREx Calibration Lab.
+  It contains i) detailed instructions for installation of software and drivers
+  for all lab instrumentation; ii) plans and instructions for data collection
+  and storage; iii) schedules; iv)
+  General projects that do not fit into the categories of specific telescope
+  performance or science results should go onto the
+  <a href="/general_projects/analysis_logbook/">General Projects</a> logbook.
+
+  <p> Instructions for creating blog posts can be found <a href="/jekyll/update/2021/03/31/how-to-create-wiki-posts.html">
+  here </a>.
+
+  <p>  Please follow these <a href="analysis/20081205_best_prac">best practices</a>
+  for effective postings &mdash; such as in this
+  <a href="analysis/20060504_example">example</a>, using this
+  <a href="analysis/20081205_template">jekyll template</a>.
+  <!--
+  The directory structure is <tt>'/analysis'</tt> for analysis (i.e. detector)
+  related material, and <tt>'/design'</tt> for design related material.
+  New entries should appear as a new directory containing an
+  <tt>index.html</tt> file with the posting as well as any plots.
+  Directory structure for posts is <tt>/analysis/date_descr</tt>, e.g.
+  <tt>/analysis/20081205_descr</tt>.
+  -->
+  A <a href="analysis/20081205_best_prac/affiliations.html">glossary of initials,
+  names, and affiliations</a> is provided to help with translating a persons'
+  initials to a real name.
+  </p>
+
+  <hr>
+
+  <ol class="posts">
+    {% for post in paginator.posts %}
+      <li><a href="{{ post.url }}">{{ post.title }}</a> &raquo; <i><span>{{ post.date | date_to_string }}</span></i></li>
+    {% endfor %}
+  </ol>
+
+  <!-- Pagination links -->
+  {% if paginator.total_pages > 1 %}
+    <ul class="pagination pagination-sm">
+      {% if paginator.previous_page %}
+        <li><a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><span aria-hidden="true">&laquo;</span></li>
+      {% endif %}
+
+      <li><a href="/">First</a></li>
+
+      {% for page in (1..paginator.total_pages) %}
+        {% if page == paginator.page %}
+          <li class="active"><a>{{ page }}<span class="sr-only">(current)</span></a></li>
+        {% elsif page == 1 %}
+          <li><a href="/">{{ page }}</a></li>
+        {% else %}
+          <li><a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      <li><a href="/page/{{ paginator.total_pages }}/">Last</a></li>
+
+      {% if paginator.next_page %}
+        <li><a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+</div><!-- end #home -->
