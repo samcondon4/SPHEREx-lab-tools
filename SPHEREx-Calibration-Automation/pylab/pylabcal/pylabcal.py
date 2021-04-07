@@ -12,7 +12,7 @@ sys.path.append(COMMON_CODE_DIR)
 #from pylabcallib.data_acq.data_acq import DataAcq
 #from pylabcallib.instruments.instrument_loader import load_instruments
 
-from pylab.pylabcal.pylabcallib.instruments import DPY50601
+from pylab.pylablib.instruments import DPY50601
 
 if __name__ == '__main__':
 

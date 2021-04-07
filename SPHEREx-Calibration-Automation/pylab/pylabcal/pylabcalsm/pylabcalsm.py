@@ -4,11 +4,12 @@ import pdb
 import numpy as np
 import datetime as datetime
 
-sys.path.append(r'..\pylab\pylabcal')
+sys.path.append(r'..\pylab')
+sys.path.append(r'..\..\..\pylab')
 
-from pylabcallib.utils.parameters import *
-from pylabcallib.instruments.powermaxusb import PowermaxUSB
-from pylabcallib.instruments.serial_motor_dpy50601 import DPY50601
+from pylablib.utils.parameters import *
+from pylablib.instruments.powermaxusb import PowermaxUSB
+from pylablib.instruments.serial_motor_dpy50601 import DPY50601
 
 class SM:
 	startState = 'waiting'
@@ -47,7 +48,8 @@ class SpectralCalibrationMachine(SM):
 		print('Start by Initializing')
 
 		#self.path = r"/pylab/pylabcal/config"
-		self.path = os.path.join('..','pylab','pylabcal','config')
+		#self.path = os.path.join('..','pylab','pylabcal','config')
+		self.path = os.path.join('..', 'config')
 
 		if os.path.isfile(os.path.join(self.path,config_file)) == False:
 			print('No config file by this name')
@@ -125,7 +127,7 @@ class SpectralCalibrationMachine(SM):
 			self.message_box.append(configfilename + ' saved')
 		elif self.overwrite_config_file == True:
 			write_config_file(self.params, config_path_out)
-			self.overwrite_config_file == False
+			self.overwrite_config_file = False
 			self.message_box.append(configfilename + ' overwritten')
 		else:
 			self.message_box.append(configfilename +' already exists')
