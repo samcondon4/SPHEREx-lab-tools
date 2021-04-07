@@ -1,0 +1,7 @@
+Packages to install from scratch for SPHEREx-lab:
+jupyter (anaconda.navigator)
+numpy (anaconda.navigator)
+pyvisa (conda install -c conda-forge pyvisa)
+pandas
+pyserial
+matplotlib
