@@ -57,6 +57,7 @@ class SpectralCalibrationMachine(SM):
 		self.message_box = []
 		self.message_log = []
 		self.overwrite_config_file = False
+		self.config_box_checked = True
 
 		#pdb.set_trace()
 		# self.errorStatus = self.initialize()
