@@ -1,10 +1,13 @@
 ---
 layout: post
 title:  "How-To Create Wiki Posts in Jekyll"
-date:   2021-03-31 09:09:44 -0800
-categories: jekyll update
+date:   2021-03-31
+categories: [jekyll, update]
 ---
-### New posts
+The wiki is designed with two parts; Posts and Navigation.  Post are notebook-like blog posts that are searchable, grouped by keywords, and displayed chronologically on the first page.
+Navigation points to specific information related to hardware, software, schedules, and FAQ.
+
+## New posts
 Creating new posts is easy but there are a few unbreakable rules,
 * In the `_drafts` directory create a new file named according to the following
 format; date `YEAR-MONTH-DAY-title.md` where title words are separated by dashes
@@ -19,12 +22,25 @@ categories.  For example, this post's metada is
 layout: post
 title:  "How-To Create Wiki Posts in Jekyll"
 date:   2021-03-31 09:09:44 -0800
-categories: jekyll update
+categories: [jekyll, update]
 ---
 {% endhighlight %}
 * Text should be written in the kramdown version of Markdown.  For more information [see this cheatsheet](https://kramdown.gettalong.org/quickref.html)
 * When posts are completed, move them from `_drafts` to `_posts` directories.
 
+#### Layout
+Layout is the template to use for the document. For standard blog-like documents (90% of our docs) the layout we will use is `post`.  Other templates (or make your own!) can be found in `_posts`.
+
+#### Date
+Date format is 2021-03-31 09:09:44 -0800, where the time (in 24 hours) and timezone are optional.
+
+#### Keywords/categories
+The addition of keywords (aka catagories) in the front-matter automatically makes the document visible in the "Articles by Category" section.  
+
+### Navigation
+The left column of the site links to Navigation.  This is still under construction.  
+
+#### Building the site
 You can rebuild the site in many different ways, but the most common way is to run `jekyll serve`, which launches a web server and auto-regenerates your site when a file is updated.
 
 ### Markdown Syntax
