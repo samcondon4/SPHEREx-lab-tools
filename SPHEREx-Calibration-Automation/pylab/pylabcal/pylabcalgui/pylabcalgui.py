@@ -5,6 +5,7 @@ import sys
 import pdb
 import copy
 import datetime as datetime
+import asyncio
 
 sys.path.append(r'..\..\pylabcal\pylabcalsm')
 sys.path.append(r'..\..\pylabcal')
@@ -13,8 +14,9 @@ sys.path.append(r'..\..\pylablib')
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-
+from qasync import QEventLoop
 from pylabcalsm import SpectralCalibrationMachine
+
 
 class cal_gui_tab(QTabWidget):
     def __init__(self, parent=None, config_file='setup.cfg'):
@@ -660,7 +662,7 @@ class motorWindow(QDialog):
         print('PyQt5 pushbutton is clicked')
         if btn.text() == 'Home':
             print('Set going home command')
-            self.state_machine.stepper_motors['xstage'].home()
+            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].home_async())
         if btn.text() == 'Set Speed':
             step_speed = 1
             step_size = self.set_speed_1.value()
@@ -668,17 +670,21 @@ class motorWindow(QDialog):
         if btn.text() == 'Fwd':
             step_dir = 0
             step_size = self.step_fwd_1.value()
-            self.state_machine.stepper_motors['xstage'].step(step_size, step_dir)
+            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].step_async(step_size, step_dir))
         if btn.text() == 'Back':
             step_dir = 1
             step_size = self.step_back_1.value()
-            self.state_machine.stepper_motors['xstage'].step(step_size, step_dir)
+            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].step_async(step_size, step_dir))
 
-def main():
-    app = QApplication(sys.argv)
-    ex = cal_gui_tab()
-    ex.show()
-    sys.exit(app.exec_())
 
 if __name__ == '__main__':
-    main()
+    app = QApplication(sys.argv)
+    loop = QEventLoop()
+    asyncio.set_event_loop(loop)
+    ex = cal_gui_tab()
+    ex.show()
+    with loop:
+        loop.run_forever()
+        loop.close()
+    sys.exit(app.exec_())
+

@@ -79,7 +79,7 @@ class SpectralCalibrationMachine(SM):
 		# Load Data Collection
 
 		# Load Powermax
-		self.powermax = PowermaxUSB()
+		#self.powermax = PowermaxUSB()
 		# mn = self.params['powermax'] = wavelength_min
 		# mx = self.params['powermax'] = wavelength_max
 		# self.powermax.set_wavelength()
@@ -87,11 +87,11 @@ class SpectralCalibrationMachine(SM):
 		# self.errorDict['powermax'] = self.powermax.error_record
 
 		# Load Motor Controllers into Dict
-		#self.stepper_motors = {}
-		#for imotor in range(1):
-			#motor_name = 'motor_'+str(imotor)
-			#motor_name = 'xstage'
-			#self.stepper_motors[motor_name] = DPY50601(imotor)
+		self.stepper_motors = {}
+		for imotor in range(1):
+			motor_name = 'motor_'+str(imotor)
+			motor_name = 'xstage'
+			self.stepper_motors[motor_name] = DPY50601(imotor)
 
 		# pdb.set_trace()
 		if np.sum(sum(self.errorDict.values())):
