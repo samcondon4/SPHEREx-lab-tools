@@ -4,7 +4,7 @@ import pdb
 import numpy as np
 import datetime as datetime
 
-sys.path.append(r'..\pylab')
+#sys.path.append(r'..\pylab')
 sys.path.append(r'..\..\..\pylab')
 
 from pylablib.utils.parameters import *

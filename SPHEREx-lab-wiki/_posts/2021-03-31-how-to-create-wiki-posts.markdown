@@ -70,6 +70,13 @@ Store images in the images directory, and then link to them via
 ```
 ![Spherex-Logo](/images/spherex_logo.png){:class="img-responsive"}.  Don't forget to put the ! in front or it will just be a hyperlink.  
 
+
+### Footnotes
+You can add footnotes easily, for example, if you want to cite a paper like [Chung et al. 2020][Chung20][^1].
+
+[^1]: [Forecasting [C II] line-intensity mapping measurements between the end of reionization and the epoch of galaxy assembly, Dongwoo T Chung, Marco P Viero, Sarah E Church, Risa H Wechsler 2020, ApJ, 892, 51](https://iopscience.iop.org/article/10.3847/1538-4357/ab798f)
+[Chung20]: Forecasting [C II] line-intensity mapping measurements between the end of reionization and the epoch of galaxy assembly, Dongwoo T Chung, Marco P Viero, Sarah E Church, Risa H Wechsler 2020, ApJ, 892, 51](https://iopscience.iop.org/article/10.3847/1538-4357/ab798f
+
 ### Code Snippets
 Jekyll offers support for code snippets for a wide range of languages, either by starting/ending
 a snippet with three back quotes followed by the language name;
@@ -163,3 +170,5 @@ Use | to separate table columns and --- or === or :---: to insert dividing lines
 |=====
 | Foot1   | Foot2   | Foot3
 {: rules="groups"}
+
+<hr>
