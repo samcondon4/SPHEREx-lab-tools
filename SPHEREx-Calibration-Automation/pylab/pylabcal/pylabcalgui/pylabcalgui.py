@@ -275,7 +275,7 @@ class cal_gui_tab(QTabWidget):
 
         self.dialogOverwriteBrowser = overwrite_cfg_window(self)
 
-        self.dialogTextBrowser = motorWindow()
+        self.dialogTextBrowser = motorWindow(self)
         # pdb.set_trace()
         if len(self.state_machine.message_box) > 0:
             for i in self.state_machine.message_box:
@@ -545,10 +545,10 @@ class overwrite_cfg_window(QDialog):
 
 
 class motorWindow(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, obj_in, parent=None):
         super(motorWindow, self).__init__(parent)
 
-        # self.state_machine = obj_in.state_machine
+        self.state_machine = obj_in.state_machine
         self.setWindowTitle("Motor Controler")
 
         layout = QGridLayout()
