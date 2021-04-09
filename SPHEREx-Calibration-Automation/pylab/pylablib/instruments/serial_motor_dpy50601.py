@@ -124,14 +124,15 @@ class DPY50601:
     ###########################################################################################################
 
     ##CONSTRUCTOR###########################################################################
-    def __init__(self, motor_id, encoder_motor_ratio=8):
+    def __init__(self, motor_id, encoder_motor_ratio=8, encoder_retries=5, encoder_auto=0):
 
         ##Instance Variables
         self.id = motor_id
         self.encoder_delay = 500
         self.encoder_motor_ratio = encoder_motor_ratio #check this
-        self.encoder_retries = 5
+        self.encoder_retries = encoder_retries
         self.encoder_window = self.encoder_motor_ratio
+        self.encoder_auto = encoder_auto
         self.com_est = 0  # communication established?
         self.pos = 0
         self.prev_pos = 0
@@ -158,14 +159,14 @@ class DPY50601:
             DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_RETRIES', self.id, self.encoder_retries))
             DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_WINDOW', self.id, self.encoder_window))
             #encoder auto correct disabled by default
-            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_AUTO', self.id, 0))
+            DPY50601._ser.write(DPY50601._get_cmd_bytes('ENCD_AUTO', self.id, self.encoder_auto))
             # Read initial motor stage position
             self.pos = self.get_pos()
             self.prev_pos = self.pos
             self.enc_pos = self.get_encoderpos()
             self.prev_enc_pos = self.enc_pos
             # Pull all controller outputs to ground by default
-            self.set_output(255)
+            #self.set_output(255)
         else:
             print("DPY50601 Controller at ID {} not found...".format(self.id))
 
@@ -193,114 +194,48 @@ class DPY50601:
         DPY50601._ser.write(DPY50601._get_cmd_bytes('MOVE_TO', self.id, pos))
         DPY50601._ser.write(DPY50601._get_cmd_bytes('GO_N_STEPS', self.id))
 
-    async def step_async(self, n, direction, interval=0.5, timeout=5):
+    async def step(self, n, direction, interval=0.5, timeout=5, concurrent=True):
         '''step:
 
-        Wrapper to step() to run success/failure check of step() operation in
-        an asynio concurrent context.
+        Sends command to move stepper motor 'n' steps in specified direction. Can be run w/ asynchronous checks or just a straightforward step 
+        operation.
 
         Parameters
-            1) n: number of steps to move motor
-            2) direction: 0 moves motor counter-clockwise, 1 moves motor clockwise
-            3) interval: amount of time in between successive controller status reads
-            4) timeout: number of idle controller status reads to detect before timing out
+            n: number of steps to move motor
+            direction: 0 moves motor counter-clockwise, 1 moves motor clockwise
+            interval: Sleep period in seconds to pass to the invoke_async function, should concurrent execution be set to True.
+            timeout: Timeout to pass to invoke_async should concurrent be set to True.
+            concurrent: Initiate asynchronous operation?
 
         Return
-            success/failure code. 1 indicates a successful step operation, 0 indicates
-            failed step operation.
+            None
         '''
+        ret_code = 0
 
-        move_success = 1
-        timeout_cnt = 0
-
-        # Make sure a valid direction specifier was provided
-        if not (direction == 0 or direction == 1):
-            print("Please specify valid direction specifier: (0) for ccw, (1) for cw.")
-            move_success = 0
-
-        #Calculate destination in encoder counts and make sure we are within allowable movement range#################
-        mult = (-2 * direction) + 1
-        dest = self.enc_pos + (self.encoder_motor_ratio*mult* n)
-        ##############################################################################################################
-
-        if mult < 0:
-            self.step(n, 1)
-        else:
-            self.step(n, 0)
-
-        while abs(self.enc_pos - dest) >= self.encoder_motor_ratio:
-            self.get_encoderpos()
-            self.get_err(stop=True)
-            if self.err_code != 0:
-                move_success = 0
-                break
-            if self.prev_enc_pos == self.enc_pos:
-                timeout_cnt += 1
-                if timeout_cnt == timeout:
-                    raise TimeoutError('Controller timeout. Limit switch pressed?')
-                    move_success = 0
-                    break
-                n = (self.enc_pos - dest) // self.encoder_motor_ratio
-                print("Stage correction value = {}".format(n))
-                print(self.enc_pos - dest)
-                if n < 0:
-                    self.step(-1*n, 0)
-                elif n > 0:
-                    self.step(n, 1)
-            await asyncio.sleep(interval)
-        #########################################################################################################
-
-        return move_success
-
-    def step(self, n, direction):
-        '''step:
-
-        Sends command to move stepper motor 'n' steps in specified direction.
-
-        Parameters
-            1) n: number of steps to move motor
-            2) direction: 0 moves motor counter-clockwise, 1 moves motor clockwise
-
-        Return
-            success/failure code
-        '''
-
-        move_fail = 0
+        self.set_maxspeed(1500)
         if direction == 0:
             DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CCW', self.id))
         elif direction == 1:
             DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CW', self.id))
         else:
-            print("Please specify a valid direction")
-            move_fail = 1
+            ret_code = -1
+            raise ValueError("Invalid direction specified. Must use 0 for ccw and 1 for cw.")
 
-        if move_fail != 1:
-        #    self.set_output(4)
-            DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_N_STEPS', self.id, n))
-            DPY50601._ser.write(DPY50601._get_cmd_bytes('GO_N_STEPS', self.id))
+        #Send step command##
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_N_STEPS', self.id, n))
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('GO_N_STEPS', self.id))
 
-        return move_fail
+        async_task = None
+        if concurrent:
+            async_task = asyncio.create_task(self.invoke_async(interval, timeout))
+            await async_task
 
-    async def slew_async(self, direction, interval=0.5, timeout=5):
-        '''slew_async:
+        if (async_task is not None) and (async_task.result() == 0):
+            ret_code = -1
+            raise RuntimeError("Step operation complete on controller {} but no motion detected on motor!".format(self.id))
 
-        Wrapper to slew() to run periodic controller status reads in an asyncio concurrent context.
+        return ret_code
 
-        :param direction: direction to move motor. 0 for ccw, 1 for cw.
-        :param interval: (optional) specify interval between successive controller status reads
-        :param timeout: (optional) specify number of idle controller status reads before raising timeout exception.
-        :return: success code. 0 for failed slew, 1 for successful slew
-        '''
-
-        slew_success = 1
-        timeout_cnt = 0
-
-        if not (direction == 0 or direction == 1):
-            print("Please specify valid direction specifier: (0) for ccw, (1) for cw.")
-            slew_success = 0
-
-        if slew_success:
-            self.slew(direction)
 
     def slew(self, direction):
         '''slew():
@@ -328,73 +263,64 @@ class DPY50601:
 
         return move_fail
 
-    async def home_async(self, initial=True, interval=0.5, timeout=5):
+    async def home(self, interval=0.5, timeout=5, concurrent=True):
         '''home:
+            Execute homing operation. Motor will travel in ccw direction at a reduced speed until 
+            a limit switch is encountered. Then encoder position will be reset to 0.
 
-            Wrapper to home() function to run success/failure check of home operation
-            in an asyncio concurrent context
+            Parameters:
+                interval: Sleep period in seconds to pass to the invoke_async function, should concurrent execution be set to True.
+                timeout: Timeout to pass to invoke_async should concurrent be set to True.
+                concurrent: Initiate asynchronous operation?
 
-            Parameter
-                1) (optional) initial: this parameter specifies if this is the first homing
-                                       operation. Initial homing operations implement slightly
-                                       different logic.
-
-                2) (optional) interval: specifies the amount of time between successive controller
-                                        status checks.
-
-                3) (optional) timeout: specifies number of idle controller status reads before timing
-                                       out.
-
-            Return
-                Success/failure code
+            Return:
+                None
         '''
+        self.set_maxspeed(500)
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CCW', self.id))
+        DPY50601._ser.write(DPY50601._get_cmd_bytes('SLEW', self.id))
 
+        async_task = None
+        if concurrent:
+            async_task = asyncio.create_task(self.invoke_async(interval, timeout))
+            await async_task
+
+        self.reset_encoder()
+        self.set_pos(0)
+
+        if (async_task is not None) and async_task.result() == 0:
+            raise RuntimeError("Homing operation complete on controller {} but no motion on motor detected. Perform visual inspection before continuing.".format(self.id))
+
+
+
+    async def invoke_async(self, interval, timeout):
+        """invoke_async:
+                Initiate asynchronous sequence to check on motor controller state. Error states are detected/reported
+                and the number of steps that motor traveled in a single sequence is returned.
+
+            Parameters:
+                interval: Sleep period in seconds between check sequences.
+                timeout: Number of times to read no motion on controller before returning
+
+            Returns:
+                steps: Number of steps that motor controller traveled in the given sequence. 
+
+        """
+        initial_pos = self.get_encoderpos()
         timeout_cnt = 0
-        home_success = 1
-
-        #Run homing operation#######################################
-        self.home()
-        complete = 0
-        while complete == 0:
+        while True:
             self.get_err(stop=True)
             self.get_encoderpos()
-            if self.err_code != 0:
-                home_success = 0
-                break
-            if self.enc_pos == self.prev_enc_pos:
+            if self.prev_enc_pos == self.enc_pos:
                 timeout_cnt += 1
-                if timeout_cnt == timeout:
-                    raise TimeoutError('Controller timeout. Limit switch pressed?')
-                    home_success = 0
+                if timeout_cnt >= timeout:
                     break
-                if not initial:
-                    n = self.enc_pos // self.encoder_motor_ratio
-                    if n < 0:
-                        self.step(-1*n, 0)
-                    elif n > 0:
-                        self.step(n, 1)
-                    else:
-                        complete = 1
-                else:
-                    complete = 1
+            await asyncio.sleep(interval)
 
-            #yield control to event loop. We don't want to block GUI code execution
-            await asyncio.sleep(0.5)
-        ###################################################################################
+        final_pos = self.get_encoderpos()
 
-        self.set_pos(0)
-        self.reset_encoder()
-        #Send final stop command for safety
-        self.stop()
-        return home_success
+        return final_pos - initial_pos
 
-    def home(self):
-        '''home:
-            Send home command to motor controller
-        '''
-        #self.set_output(4)
-        DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_DIR_CCW', self.id))
-        DPY50601._ser.write(DPY50601._get_cmd_bytes('HOME', self.id, 1))
 
     def get_pos(self):
         '''get_position:
@@ -420,7 +346,7 @@ class DPY50601:
         self.enc_pos = int(enc_pos)
         return self.enc_pos
 
-    def get_err(self, stop=False):
+    def get_err(self, stop=True):
         DPY50601._ser.write(DPY50601._get_cmd_bytes('READ_ERR_REG', self.id))
         err = DPY50601._ser.read(30).decode('utf-8')
         err = err.split('\r')[0]
@@ -490,7 +416,7 @@ class DPY50601:
         DPY50601._ser.write(DPY50601._get_cmd_bytes('SET_MAX_SPEED', self.id, speed))
         DPY50601._ser.write(DPY50601._get_cmd_bytes('VERIFY', self.id, 'M'))
         maxspeed = DPY50601._ser.read(30)
-        if (maxspeed != speed):
+        if maxspeed != speed:
             set_fail = 1
         return set_fail
 
