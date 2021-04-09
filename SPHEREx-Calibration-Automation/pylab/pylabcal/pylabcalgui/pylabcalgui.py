@@ -585,12 +585,15 @@ class motorWindow(QDialog):
         self.display_home_1.setValue(home_motor_1)
 
         self.step_fwd_1 = QSpinBox(self)
+        self.step_fwd_1.setMaximum(100000)
         self.step_fwd_1.setValue(0)
 
         self.step_back_1 = QSpinBox(self)
+        self.step_back_1.setMaximum(100000)
         self.step_back_1.setValue(0)
 
         self.set_speed_1 = QSpinBox(self)
+        self.set_speed_1.setMaximum(3000)
         self.set_speed_1.setValue(6)
 
         layout.addWidget(self.display_home_1, 1, 1)
