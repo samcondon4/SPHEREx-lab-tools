@@ -665,19 +665,19 @@ class motorWindow(QDialog):
         print('PyQt5 pushbutton is clicked')
         if btn.text() == 'Home':
             print('Set going home command')
-            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].home_async())
+            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].home())
         if btn.text() == 'Set Speed':
             step_speed = 1
             step_size = self.set_speed_1.value()
-            self.state_machine.stepper_motors['xstage'].set_basespeed()
+            self.state_machine.stepper_motors['xstage'].set_maxspeed()
         if btn.text() == 'Fwd':
             step_dir = 0
             step_size = self.step_fwd_1.value()
-            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].step_async(step_size, step_dir))
+            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].step(step_size, step_dir, timeout=2))
         if btn.text() == 'Back':
             step_dir = 1
             step_size = self.step_back_1.value()
-            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].step_async(step_size, step_dir))
+            asyncio.ensure_future(self.state_machine.stepper_motors['xstage'].step(step_size, step_dir, timeout=2))
 
 
 if __name__ == '__main__':
