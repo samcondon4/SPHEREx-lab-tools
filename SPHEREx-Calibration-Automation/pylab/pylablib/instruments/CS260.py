@@ -1,4 +1,5 @@
 import subprocess as sp
+import asyncio
 
 
 class CS260:
@@ -33,15 +34,15 @@ class CS260:
                   0: Success
     """
 
-    def __init__(self, exe_path_, grat1_range_=(475.0, 1400.0), grat2_range_=(925.0, 2600.0), grat3_range_=(2500.0, 12000.0)):
+    def __init__(self, exe_path_, grat1_range_=(0.475, 1.400), grat2_range_=(0.925, 2.600), grat3_range_=(2.500, 12.0)):
         """ initialize instance of CS260 class
 
         :param exe_path_: Path to C++ executable DLL wrapper
                grat*_range: tuples with wavelength ranges for each grating present in monochromator. On initialization,
-                            these values should be specified in nanometers
+                            these values should be specified in microns
         """
         self.exe_path = exe_path_
-        self.units = "NM"
+        self.units = "UM"
         self.wavelength = None
         self.step_pos = None
         self.grating = None
@@ -58,7 +59,7 @@ class CS260:
         self.grating_ranges = [grat1_range_, grat2_range_, grat3_range_]
         self.open()
         # set default units to microns
-        self.set_units("UM")
+        self.set_units("NM")
         #Get initial values for all parameters#########################
         self.get_units()
         self.get_wavelength()
@@ -72,6 +73,32 @@ class CS260:
         #################################################################
 
     ##Wrapper functions##########################################################
+
+    async def scan(self, start, stop, step, interval=0.5):
+        """scan: Start scan over specified wavelengths, version 1.0
+
+        :param start: starting wavelength. Must be expressed in current units.
+        :param stop: stopping wavelength. Must be expressed in current units.
+        :param step: Wavelength step size. Must be expressed in current units.
+        :param interval: Time interval to pause between each step. Expressed in seconds.
+                         NOTE: Value given here is AT LEAST the amount of time that CS260 will pause at each step.
+                               Actual length of pause may be longer.
+
+        :return: success/error code
+        """
+        # Perform checks on input arguments. To do checks include: arguments are in correct units, within wavelength
+        #                                                          range, step size does not exceed the resolution
+        wave = 0
+        wave_next = start
+        while True:
+            if not self.get_error() and wave <= stop:
+                self.set_wavelength(wave_next)
+                wave = wave_next
+                wave_next += step
+                await asyncio.sleep(interval)
+            else:
+                break
+
     def set_units(self, units):
         """set_units: Set units that wavelength is expressed in. Valid units are
                       nano-meter ("NM"), micro-meter ("UM"), or wave-number ("WN")
@@ -132,8 +159,8 @@ class CS260:
         t = type(wave)
         if not (t == int or t == float):
             raise TypeError("Expected input of type int or float but type {} given.".format(t))
-        self.get_grating()
         """
+        self.get_grating()
         if wave < self.grating_ranges[self.grating - 1][0] or wave > self.grating_ranges[self.grating - 1][1]:
             raise RuntimeError("Specified wavelength outside of grating {} range ({} - {} nm.)".format(
                                 self.grating, self.grating_ranges[self.grating-1][0], self.grating_ranges[self.grating-1][1]))
@@ -141,6 +168,7 @@ class CS260:
             cp = self.write("GOWAVE {}".format(wave))
         """
         cp = self.write("GOWAVE {}".format(wave))
+        return cp.returncode
 
     def get_wavelength(self):
         """get_wavelength: returns exact wavelength output in current units.
@@ -150,6 +178,29 @@ class CS260:
         cp = self.ask('WAVE?')
         self.wavelength = float(cp.stdout.decode('utf-8'))
         return self.wavelength
+
+    def step(self, n):
+        """ step: move wavelength drive an integer number of steps
+
+        :param n: integer number of steps to move wavelength drive. Can be positive or negative but must be integer
+        :return: success/error code
+        """
+
+        t = type(n)
+        if t != int:
+            raise TypeError("Expected input of type int but {} given.".format(t))
+
+        cp = self.write('STEP {}'.format(n))
+        return cp.returncode
+
+    def get_step(self):
+        """get_step: return current wavelength drive step position
+
+        :return: wavelength drive step position
+        """
+        cp = self.ask('STEP?')
+        self.step_pos = int(cp.stdout.decode('utf-8'))
+        return self.step_pos
 
     def set_grating(self, g):
         """set_grating: move wavelength drive to grating specified in integer parameter
@@ -282,6 +333,18 @@ class CS260:
         self.bandpass = float(cp.stdout.decode('utf-8'))
         return self.bandpass
 
+    def get_error(self):
+        """get_error: check for monochromator error state and return error code.
+
+        :return: Error code or 0 if no error state encountered.
+        """
+        cp = self.ask('STB?')
+        err_code = int(cp.stdout.decode('utf-8'))
+        if err_code == 20:
+            cp = self.ask('ERROR?')
+            err_code = int(cp.stdout.decode('utf-8'))
+            raise RuntimeError("Error state {} seen on CS260".format(err_code))
+        return err_code
     ############################################################################
 
     ##C++ EXE Functions#################################################################
