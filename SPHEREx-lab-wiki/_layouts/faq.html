@@ -11,7 +11,7 @@ layout: default
     {{ content }}
 
     {% assign p_array = "" | split:"|"  %}
-    {% for project in site.software %}
+    {% for project in site.faq %}
       {% capture p_slug %}{{ project.url | split:"/" | last }},{{ project.url }}{% endcapture %}
       {% assign p_slug_arr = p_slug | split:"," %}
       {% assign p_array = p_array | push: p_slug_arr  %}
@@ -20,7 +20,7 @@ layout: default
     <div class="projects">
       {% include project_tags.html %}
 
-      {% for i in site.data.software %}
+      {% for i in site.data.faq %}
       <div class="project-item project-outer" data-tags='{{ i.tags | jsonify | downcase }}'>
         <div class="project-inner">
 

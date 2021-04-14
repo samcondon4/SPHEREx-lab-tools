@@ -2,6 +2,7 @@
 layout: post
 title:  "How-To Create Wiki Posts in Jekyll"
 date:   2021-03-31
+permalink: /how-to/
 categories: [jekyll, update]
 ---
 The wiki is designed with two parts; Posts and Navigation.  Post are notebook-like blog posts that are searchable, grouped by keywords, and displayed chronologically on the first page.
@@ -72,7 +73,7 @@ Store images in the images directory, and then link to them via
 
 
 ### Footnotes
-You can add footnotes easily, for example, if you want to cite a paper like [Chung et al. 2020][Chung20][^1].
+You can add footnotes easily, for example, if you want to cite a paper like [Chung et al. 2020][Chung20][^1].  Scroll to the bottom to see the footnote!
 
 [^1]: [Forecasting [C II] line-intensity mapping measurements between the end of reionization and the epoch of galaxy assembly, Dongwoo T Chung, Marco P Viero, Sarah E Church, Risa H Wechsler 2020, ApJ, 892, 51](https://iopscience.iop.org/article/10.3847/1538-4357/ab798f)
 [Chung20]: Forecasting [C II] line-intensity mapping measurements between the end of reionization and the epoch of galaxy assembly, Dongwoo T Chung, Marco P Viero, Sarah E Church, Risa H Wechsler 2020, ApJ, 892, 51](https://iopscience.iop.org/article/10.3847/1538-4357/ab798f

@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+    {% for isoftware in site.data.software %}
+      {% if isoftware.slug == page.slug %}
+        <span class="time">{{ isoftware.date }}</span> &raquo;
+        {% for tag in isoftware.tags %}
+          <span class="tags tag-filter">{{ tag }}</span>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </header>
+
+  <div class="content">
+    <hr />
+    {{ content }}
+  </div>
+</article>

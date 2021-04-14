@@ -13,29 +13,24 @@ collections:
   project:
     output: true
     permalink: /project/:path/
-
-#social:
-#    - icon: fa-facebook
-#      link: "#"
-#    - icon: fa-twitter
-#      link: "#"
-#    - icon: fa-linkedin
-#      link: "#"
-#    - icon: fa-stack-exchange
-#      link: "#"
-#    - icon: fa-github
-#      link: "https://github.com/agusmakmun"
-
-#share:
-#  twitter_username: github.io
+  hardware:
+    output: true
+    permalink: /hardware/:path/
+  software:
+    output: true
+    permalink: /software/:path/
 
 urls:
     - text: Hardware
       url: /hardware/
     - text: Software
       url: /software/
+    - text: Projects
+      url: /projects/
     - text: Schedules
       url: /schedules/
+    - text: Files
+      url: /files/
     - text: FAQ
       url: /faq/
 
