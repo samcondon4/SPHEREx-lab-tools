@@ -79,7 +79,7 @@ class SpectralCalibrationMachine(SM):
 		# Load Data Collection
 
 		# Load Powermax
-		#self.powermax = PowermaxUSB()
+		self.powermax = PowermaxUSB()
 		# mn = self.params['powermax'] = wavelength_min
 		# mx = self.params['powermax'] = wavelength_max
 		# self.powermax.set_wavelength()
