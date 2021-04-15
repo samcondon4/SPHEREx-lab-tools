@@ -1,5 +1,29 @@
 import subprocess as sp
+from subprocess import *
 import asyncio
+
+
+def async_sp_run(args, check=False):
+    """async_sp_run: asynchronous equivalent of the subprocess run function that always captures
+                     the process output.
+
+    :return: completed process object
+    """
+    with sp.Popen(args, stdout=PIPE, stderr=PIPE, stdin=PIPE) as process:
+
+        retcode = None
+        #wait for process to complete
+        while retcode is None:
+            retcode = process.poll()
+
+        stdout = process.stdout.read()
+        stderr = process.stderr.read()
+
+    if retcode != 0 and check:
+        raise CalledProcessError(retcode, process.args,
+                                 output=stdout, stderr=stderr)
+
+    return sp.CompletedProcess(process.args, retcode, stdout, stderr)
 
 
 class CS260:
@@ -65,7 +89,7 @@ class CS260:
         self.get_wavelength()
         self.get_grating()
         self.get_shutter()
-        #self.get_filter()
+        self.get_filter()
         self.get_slit_microns(1)
         self.get_slit_microns(2)
         self.get_slit_microns(3)
@@ -73,31 +97,6 @@ class CS260:
         #################################################################
 
     ##Wrapper functions##########################################################
-
-    async def scan(self, start, stop, step, interval=0.5):
-        """scan: Start scan over specified wavelengths, version 1.0
-
-        :param start: starting wavelength. Must be expressed in current units.
-        :param stop: stopping wavelength. Must be expressed in current units.
-        :param step: Wavelength step size. Must be expressed in current units.
-        :param interval: Time interval to pause between each step. Expressed in seconds.
-                         NOTE: Value given here is AT LEAST the amount of time that CS260 will pause at each step.
-                               Actual length of pause may be longer.
-
-        :return: success/error code
-        """
-        # Perform checks on input arguments. To do checks include: arguments are in correct units, within wavelength
-        #                                                          range, step size does not exceed the resolution
-        wave = 0
-        wave_next = start
-        while True:
-            if not self.get_error() and wave <= stop:
-                self.set_wavelength(wave_next)
-                wave = wave_next
-                wave_next += step
-                await asyncio.sleep(interval)
-            else:
-                break
 
     def set_units(self, units):
         """set_units: Set units that wavelength is expressed in. Valid units are
@@ -149,25 +148,18 @@ class CS260:
         self.units = cp.stdout.decode('utf-8').upper()
         return self.units
 
-    def set_wavelength(self, wave):
+    def set_wavelength(self, wave, concurrent=False):
         """set_wavelength: move wavelength drive to step position closest
                            to specified wavelength parameter.
 
+        :param concurrent: specify if this should be executed asynchronously
         :param wave: float wavelength value
         :return:
         """
         t = type(wave)
         if not (t == int or t == float):
             raise TypeError("Expected input of type int or float but type {} given.".format(t))
-        """
-        self.get_grating()
-        if wave < self.grating_ranges[self.grating - 1][0] or wave > self.grating_ranges[self.grating - 1][1]:
-            raise RuntimeError("Specified wavelength outside of grating {} range ({} - {} nm.)".format(
-                                self.grating, self.grating_ranges[self.grating-1][0], self.grating_ranges[self.grating-1][1]))
-        else:
-            cp = self.write("GOWAVE {}".format(wave))
-        """
-        cp = self.write("GOWAVE {}".format(wave))
+        cp = self.write("GOWAVE {}".format(wave), concurrent=concurrent)
         return cp.returncode
 
     def get_wavelength(self):
@@ -179,9 +171,10 @@ class CS260:
         self.wavelength = float(cp.stdout.decode('utf-8'))
         return self.wavelength
 
-    def step(self, n):
+    def step(self, n, concurrent=False):
         """ step: move wavelength drive an integer number of steps
 
+        :param concurrent: specify if this should be run asynchronously
         :param n: integer number of steps to move wavelength drive. Can be positive or negative but must be integer
         :return: success/error code
         """
@@ -190,7 +183,7 @@ class CS260:
         if t != int:
             raise TypeError("Expected input of type int but {} given.".format(t))
 
-        cp = self.write('STEP {}'.format(n))
+        cp = self.write('STEP {}'.format(n), concurrent=concurrent)
         return cp.returncode
 
     def get_step(self):
@@ -202,7 +195,7 @@ class CS260:
         self.step_pos = int(cp.stdout.decode('utf-8'))
         return self.step_pos
 
-    def set_grating(self, g):
+    def set_grating(self, g, concurrent=False):
         """set_grating: move wavelength drive to grating specified in integer parameter
                         g.
 
@@ -214,7 +207,7 @@ class CS260:
             raise TypeError("Expected input of type int but type {} given.".format(t))
 
         if g in range(1, 4):
-            self.write('GRAT {}'.format(g))
+            self.write('GRAT {}'.format(g), concurrent=concurrent)
         else:
             raise ValueError("Input should be integer values 1, 2, or 3")
 
@@ -234,17 +227,18 @@ class CS260:
         """
         self.write('ABORT')
 
-    def set_shutter(self, oc):
+    def set_shutter(self, oc, concurrent=False):
         """set_shutter: close or open shutter depending on input oc (open-close)
 
+        :param concurrent: specify if this should be run asyncronously
         :param oc: open close: use "C" for close, "O" for open
         :return: success code
         """
         ret = 0
         if oc == "C":
-            self.write('SHUTTER C')
+            self.write('SHUTTER C', concurrent=concurrent)
         elif oc == "O":
-            self.write('SHUTTER O')
+            self.write('SHUTTER O', concurrent=concurrent)
         else:
             raise ValueError("Please specify valid value of shutter state parameter. Valid values are {'O', 'C'}")
 
@@ -258,9 +252,10 @@ class CS260:
         self.shutter_state = cp.stdout.decode('utf-8')
         return self.shutter_state
 
-    def set_filter(self, f):
+    def set_filter(self, f, concurrent=False):
         """set_filter: move filter wheel to position specified by integer f
 
+        :param concurrent: specify if this should be run asynchronously
         :param f: integer filter wheel position
         :return: success code
         """
@@ -268,7 +263,7 @@ class CS260:
         if t != int:
             raise TypeError("Input type int expected but type {} was given.".format(t))
         if f in range(1, 7):
-            self.write('FILTER {}'.format(f))
+            self.write('FILTER {}'.format(f), concurrent=concurrent)
         else:
             raise ValueError("Filter wheel position should be integer between 1-6, but value {} was given.".format(f))
 
@@ -349,23 +344,28 @@ class CS260:
 
     ##C++ EXE Functions#################################################################
     def open(self):
-        cp = sp.run([self.exe_path, 'open'], capture_output=True, shell=True, check=True)
+        cp = sp.run([self.exe_path, 'open'], capture_output=True, check=True)
         return cp
 
     def close(self):
-        cp = sp.run([self.exe_path, 'close'], capture_output=True, shell=True, check=True)
+        cp = sp.run([self.exe_path, 'close'], capture_output=True, check=True)
         return cp
 
     def list(self):
-        cp = sp.run([self.exe_path, 'list'], capture_output=True, shell=True, check=True)
+        cp = sp.run([self.exe_path, 'list'], capture_output=True, check=True)
         return cp
 
-    def write(self, cmd):
-        cp = sp.run([self.exe_path, 'write', cmd], capture_output=True, shell=True, check=True)
+    def write(self, cmd, concurrent=False):
+        args = [self.exe_path, 'write', cmd]
+        if not concurrent:
+            cp = sp.run(args, capture_output=True, check=True)
+        else:
+            cp = async_sp_run(args, check=True)
+
         return cp
 
     def ask(self, query):
-        cp = sp.run([self.exe_path, 'ask', query], capture_output=True, shell=True, check=True)
+        cp = sp.run([self.exe_path, 'ask', query], capture_output=True, check=True)
         return cp
 
     ########################################################################################
