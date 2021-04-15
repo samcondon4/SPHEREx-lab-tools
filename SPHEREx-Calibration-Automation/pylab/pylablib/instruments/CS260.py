@@ -3,7 +3,7 @@ from subprocess import *
 import asyncio
 
 
-def async_sp_run(args, check=False):
+async def async_sp_run(args, check=False):
     """async_sp_run: asynchronous equivalent of the subprocess run function that always captures
                      the process output.
 
@@ -15,6 +15,7 @@ def async_sp_run(args, check=False):
         #wait for process to complete
         while retcode is None:
             retcode = process.poll()
+            await asyncio.sleep(0.001)
 
         stdout = process.stdout.read()
         stderr = process.stderr.read()
@@ -148,7 +149,7 @@ class CS260:
         self.units = cp.stdout.decode('utf-8').upper()
         return self.units
 
-    def set_wavelength(self, wave, concurrent=False):
+    async def set_wavelength(self, wave, concurrent=False):
         """set_wavelength: move wavelength drive to step position closest
                            to specified wavelength parameter.
 
@@ -159,7 +160,9 @@ class CS260:
         t = type(wave)
         if not (t == int or t == float):
             raise TypeError("Expected input of type int or float but type {} given.".format(t))
-        cp = self.write("GOWAVE {}".format(wave), concurrent=concurrent)
+        write_task = asyncio.create_task(self.write_async("GOWAVE {}".format(wave)))
+        await write_task
+        cp = write_task.result()
         return cp.returncode
 
     def get_wavelength(self):
@@ -171,7 +174,7 @@ class CS260:
         self.wavelength = float(cp.stdout.decode('utf-8'))
         return self.wavelength
 
-    def step(self, n, concurrent=False):
+    async def step(self, n, concurrent=False):
         """ step: move wavelength drive an integer number of steps
 
         :param concurrent: specify if this should be run asynchronously
@@ -183,7 +186,9 @@ class CS260:
         if t != int:
             raise TypeError("Expected input of type int but {} given.".format(t))
 
-        cp = self.write('STEP {}'.format(n), concurrent=concurrent)
+        step_task = asyncio.create_task(self.write_async('STEP {}'.format(n)))
+        await step_task
+        cp = step_task.result()
         return cp.returncode
 
     def get_step(self):
@@ -195,21 +200,28 @@ class CS260:
         self.step_pos = int(cp.stdout.decode('utf-8'))
         return self.step_pos
 
-    def set_grating(self, g, concurrent=False):
+    async def set_grating(self, g, concurrent=False):
         """set_grating: move wavelength drive to grating specified in integer parameter
                         g.
 
         :param: integer grating value 1, 2, or 3.
         :return: success code
         """
+        task_run = 0
         t = type(g)
         if t != int:
             raise TypeError("Expected input of type int but type {} given.".format(t))
 
         if g in range(1, 4):
-            self.write('GRAT {}'.format(g), concurrent=concurrent)
+            sg_task = asyncio.create_task(self.write_async("GRAT {}".format(g)))
+            await sg_task
+            cp = sg_task.result()
+            task_run = 1
         else:
             raise ValueError("Input should be integer values 1, 2, or 3")
+
+        if task_run:
+            return cp.returncode
 
     def get_grating(self):
         """get_grating: return current grating position
@@ -227,7 +239,7 @@ class CS260:
         """
         self.write('ABORT')
 
-    def set_shutter(self, oc, concurrent=False):
+    def set_shutter(self, oc):
         """set_shutter: close or open shutter depending on input oc (open-close)
 
         :param concurrent: specify if this should be run asyncronously
@@ -236,9 +248,9 @@ class CS260:
         """
         ret = 0
         if oc == "C":
-            self.write('SHUTTER C', concurrent=concurrent)
+            self.write('SHUTTER C')
         elif oc == "O":
-            self.write('SHUTTER O', concurrent=concurrent)
+            self.write('SHUTTER O')
         else:
             raise ValueError("Please specify valid value of shutter state parameter. Valid values are {'O', 'C'}")
 
@@ -252,20 +264,27 @@ class CS260:
         self.shutter_state = cp.stdout.decode('utf-8')
         return self.shutter_state
 
-    def set_filter(self, f, concurrent=False):
+    async def set_filter(self, f, concurrent=False):
         """set_filter: move filter wheel to position specified by integer f
 
         :param concurrent: specify if this should be run asynchronously
         :param f: integer filter wheel position
         :return: success code
         """
+        task_run = 0
         t = type(f)
         if t != int:
             raise TypeError("Input type int expected but type {} was given.".format(t))
         if f in range(1, 7):
-            self.write('FILTER {}'.format(f), concurrent=concurrent)
+            sf_task = asyncio.create_task(self.write_async('FILTER {}'.format(f)))
+            await sf_task
+            cp = sf_task.result()
+            task_run = 1
         else:
             raise ValueError("Filter wheel position should be integer between 1-6, but value {} was given.".format(f))
+
+        if task_run:
+            return cp.returncode
 
     def get_filter(self):
         """get_filter: return current filter wheel position
@@ -355,13 +374,16 @@ class CS260:
         cp = sp.run([self.exe_path, 'list'], capture_output=True, check=True)
         return cp
 
-    def write(self, cmd, concurrent=False):
+    def write(self, cmd):
         args = [self.exe_path, 'write', cmd]
-        if not concurrent:
-            cp = sp.run(args, capture_output=True, check=True)
-        else:
-            cp = async_sp_run(args, check=True)
+        cp = sp.run(args, capture_output=True, check=True)
+        return cp
 
+    async def write_async(self, cmd):
+        args = [self.exe_path, 'write', cmd]
+        sp_run_task = asyncio.create_task(async_sp_run(args, check=True))
+        await sp_run_task
+        cp = sp_run_task.result()
         return cp
 
     def ask(self, query):
