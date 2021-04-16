@@ -264,7 +264,7 @@ class CS260:
         self.shutter_state = cp.stdout.decode('utf-8')
         return self.shutter_state
 
-    async def set_filter(self, f, concurrent=False):
+    async def set_filter(self, f):
         """set_filter: move filter wheel to position specified by integer f
 
         :param concurrent: specify if this should be run asynchronously

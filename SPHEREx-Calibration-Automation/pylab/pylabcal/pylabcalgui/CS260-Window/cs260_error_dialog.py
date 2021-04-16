@@ -10,14 +10,14 @@
 from PyQt5.QtWidgets import *
 
 
-class InvalidScanSequenceDialog(QDialog):
+class Cs260ErrorDialog(QDialog):
     def __init__(self):
         super().__init__()
         
         self.dialog = QDialog()
         self.gridLayout_2 = QGridLayout()
         self.gridLayout = QGridLayout()
-        self.dialog.setWindowTitle("Invalid Scan Sequence!")
+        self.dialog.setWindowTitle("Error!")
         self.dialog.setMinimumSize(900, 500)
 
         self.error_browser = QTextBrowser(self)
@@ -29,7 +29,5 @@ class InvalidScanSequenceDialog(QDialog):
 
     def disp_errors(self, error_list):
         self.error_browser.clear()
-        self.error_browser.append("Invalid scan sequence will not be added to the series.")
-        self.error_browser.append("Fix the following errors:")
         for e in error_list:
             self.error_browser.append(e)
