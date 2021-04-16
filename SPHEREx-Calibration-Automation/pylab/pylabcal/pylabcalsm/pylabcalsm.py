@@ -93,7 +93,9 @@ class SpectralCalibrationMachine(SM):
 			motor_name = 'xstage'
 			self.stepper_motors[motor_name] = DPY50601(imotor)
 
-		# pdb.set_trace()
+		self.stepper_motors['test'] = 3
+		#pdb.set_trace()
+
 		if np.sum(sum(self.errorDict.values())):
 			# self.error_handler()
 			self.errorStatus = True

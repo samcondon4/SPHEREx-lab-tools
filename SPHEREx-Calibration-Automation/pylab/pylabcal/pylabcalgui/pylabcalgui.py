@@ -291,7 +291,12 @@ class cal_gui_tab(QTabWidget):
             self.open_overwrite_cfg_window()
         else:
             self.state_machine.config_box_checked = True
+            #self.use_config_box.setChecked(True)
+
+        if self.state_machine.config_box_checked == True:
             self.use_config_box.setChecked(True)
+        else:
+            self.use_config_box.setChecked(False)
 
         self.state_machine.write_parameters(config_filename_in)
         self.display_messages_in_box()
@@ -309,6 +314,7 @@ class cal_gui_tab(QTabWidget):
     @pyqtSlot()
     def sync_config_file(self):
         self.state_machine.cfg_file_default = self.cfg_file_ui.text()
+        self.save_config_button.setDisabled(False)
 
     @pyqtSlot()
     def sync_temp_storage_path(self):
@@ -411,14 +417,19 @@ class cal_gui_tab(QTabWidget):
 
     def check_default_changed(self):
         self.use_config_box.setChecked(True)
+        self.save_config_button.setDisabled(True)
+        keep_going = True
         for ikey0 in self.state_machine.params:
             for ikey1 in self.state_machine.params[ikey0]:
-                if (self.state_machine.params[ikey0][ikey1] == self.parameters_default[ikey0][ikey1]) == False:
+                if (str(self.state_machine.params[ikey0][ikey1]) == self.parameters_default[ikey0][ikey1]) == False:
                     self.state_machine.config_box_checked = False
                     self.use_config_box.setChecked(False)
                     self.save_config_button.setDisabled(False)
-                    # pdb.set_trace()
+                    keep_going = False
+
                     break
+            if keep_going == False:
+                break
 
     # uncheck method
     def uncheck_comp(self, state):
@@ -537,12 +548,83 @@ class overwrite_cfg_window(QDialog):
     def accept_overwrite(self):
         # self.state_machine.params['io']['overwrite'] = True
         self.state_machine.overwrite_config_file = True
-        self.state_machine.config_box_checked = False
-        # self.save_config_button.setDisabled(False)
+        self.state_machine.config_box_checked = True
+        #self.save_config_button.setDisabled(False)
 
     def reject_overwrite(self):
         self.state_machine.overwrite_config_file = False
+        self.state_machine.config_box_checked = False
 
+class motorWindow2(QDialog):
+    def __init__(self, obj_in, parent=None):
+        super(motorWindow2, self).__init__(parent)
+
+        self.state_machine = obj_in.state_machine
+        self.setWindowTitle("Motor Controler")
+
+        layout = QGridLayout()
+
+        # MOTOR 1
+
+        label_1 = QLabel("Motor 1: ")
+        layout.addWidget(label_1, 0, 0)
+        label_step = QLabel("Step Size: ")
+        layout.addWidget(label_step, 1, 0)
+
+        self.home_button = QPushButton(self)
+        self.home_button.setText("Home")
+        self.home_button.clicked.connect(lambda: self.move_motor(self.home_button))
+        layout.addWidget(self.home_button, 0, 1)
+
+        self.fwd_button = QPushButton(self)
+        self.fwd_button.setText("Fwd")
+        self.fwd_button.clicked.connect(lambda: self.move_motor(self.fwd_button))
+        layout.addWidget(self.fwd_button, 0, 2)
+
+        self.back_button = QPushButton(self)
+        self.back_button.setText("Back")
+        self.back_button.clicked.connect(lambda: self.move_motor(self.back_button))
+        layout.addWidget(self.back_button, 0, 3)
+
+        self.set_speed = QPushButton(self)
+        self.set_speed.setText("Set Speed")
+        self.set_speed.clicked.connect(lambda: self.move_motor(self.set_speed))
+        layout.addWidget(self.set_speed, 0, 4)
+
+        home_motor_1 = 0
+        self.display_home = QSpinBox(self)
+        self.display_home.setValue(home_motor)
+
+        self.step_fwd = QSpinBox(self)
+        self.step_fwd.setMaximum(100000)
+        self.step_fwd.setValue(0)
+
+        self.step_back = QSpinBox(self)
+        self.step_back.setMaximum(100000)
+        self.step_back.setValue(0)
+
+        self.set_speed = QSpinBox(self)
+        self.set_speed.setMaximum(3000)
+        self.set_speed.setValue(6)
+
+        layout.addWidget(self.display_home, 1, 1)
+        layout.addWidget(self.step_fwd, 1, 2)
+        layout.addWidget(self.step_back, 1, 3)
+        layout.addWidget(self.set_speed, 1, 4)
+
+        # Set Widget
+        self.widget = QWidget()
+        self.widget.setLayout(layout)
+
+        # QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Apply | QDialogButtonBox.Cancel
+        QBtn = QDialogButtonBox.Ok
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.setOrientation(Qt.Horizontal)
+        self.buttonBox.accepted.connect(self.accept)
+
+        self.verticalLayout = QVBoxLayout(self)
+        self.verticalLayout.addWidget(self.widget)
+        self.verticalLayout.addWidget(self.buttonBox)
 
 class motorWindow(QDialog):
     def __init__(self, obj_in, parent=None):
