@@ -2,8 +2,13 @@ import sys
 from qasync import QEventLoop
 import asyncio
 from PyQt5.QtWidgets import *
-from cs260_dialog import *
-from cs260_error_dialog import *
+#UI files
+from cs260_dialog_ui import *
+from cs260_dialog_error import *
+#Function files
+from cs260_dialog_manualtab import *
+from cs260_dialog_scantab import *
+
 sys.path.append("..\\..\\..\\pylablib\\instruments")
 from CS260 import *
 
@@ -38,15 +43,23 @@ class CS260Window(QDialog):
         self.current_sequence = None
         #################################################
 
-        ##Set up main UI dialog#####################################################
+        ##Set up main UI dialog############################################################
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
+
+        ##Scan tab buttons#######################################################
         self.ui.add_new_sequence_button.clicked.connect(self.add_sequence)
         self.ui.edit_sequence_button.clicked.connect(self.edit_sequence)
         self.ui.remove_sequence_button.clicked.connect(self.remove_sequence)
         self.ui.series.clicked.connect(self.update_current_sequence)
         self.ui.start_scan_series_button.clicked.connect(self.start_scan_series)
-        ############################################################################
+        #########################################################################
+
+        ##Manual tab buttons#####################################################
+
+        #########################################################################
+
+        ####################################################################################
 
         ##Set up invalid scan sequence dialog#######################################
         self.error_dialog = Cs260ErrorDialog()
