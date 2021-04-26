@@ -67,7 +67,7 @@ class CS260:
                             these values should be specified in microns
         """
         self.exe_path = exe_path_
-        self.units = "UM"
+        self.units = "NM"
         self.wavelength = None
         self.step_pos = None
         self.grating = None
@@ -84,7 +84,7 @@ class CS260:
         self.grating_ranges = [grat1_range_, grat2_range_, grat3_range_]
         self.open()
         # set default units to microns
-        self.set_units("NM")
+        self.set_units("UM")
         #Get initial values for all parameters#########################
         self.get_units()
         self.get_wavelength()
@@ -97,7 +97,131 @@ class CS260:
         self.get_bandpass()
         #################################################################
 
-    ##Wrapper functions##########################################################
+    ##Asynchronous methods####################################################
+    async def set_wavelength(self, wave):
+        """set_wavelength: move wavelength drive to step position closest
+                           to specified wavelength parameter.
+
+        :param wave: float wavelength value
+        :return:
+        """
+        t = type(wave)
+        if not (t == int or t == float):
+            raise TypeError("Expected input of type int or float but type {} given.".format(t))
+        write_task = asyncio.create_task(self.write_async("GOWAVE {}".format(wave)))
+        await write_task
+        await asyncio.create_task(self.async_pend("wave", arg=wave))
+        cp = write_task.result()
+        return cp.returncode
+
+    async def step(self, n, concurrent=False):
+        """ step: move wavelength drive an integer number of steps
+
+        :param concurrent: specify if this should be run asynchronously
+        :param n: integer number of steps to move wavelength drive. Can be positive or negative but must be integer
+        :return: success/error code
+        """
+
+        t = type(n)
+        if t != int:
+            raise TypeError("Expected input of type int but {} given.".format(t))
+
+        step_task = asyncio.create_task(self.write_async('STEP {}'.format(n)))
+        await step_task
+        cp = step_task.result()
+        return cp.returncode
+
+    async def set_grating(self, g):
+        """set_grating: move wavelength drive to grating specified in integer parameter
+                        g.
+
+        :param: integer grating value 1, 2, or 3.
+        :return: success code
+        """
+        task_run = 0
+        t = type(g)
+        if t != int:
+            raise TypeError("Expected input of type int but type {} given.".format(t))
+
+        if g in range(1, 4):
+            sg_task = asyncio.create_task(self.write_async("GRAT {}".format(g)))
+            await sg_task
+            await asyncio.create_task(self.async_pend("grating", arg=g))
+            cp = sg_task.result()
+            task_run = 1
+        else:
+            raise ValueError("Input should be integer values 1, 2, or 3")
+
+        if task_run:
+            return cp.returncode
+
+    async def set_filter(self, f):
+        """set_filter: move filter wheel to position specified by integer f
+
+        :param concurrent: specify if this should be run asynchronously
+        :param f: integer filter wheel position
+        :return: success code
+        """
+        task_run = 0
+        t = type(f)
+        if t != int:
+            raise TypeError("Input type int expected but type {} was given.".format(t))
+        if f in range(1, 7):
+            sf_task = asyncio.create_task(self.write_async('FILTER {}'.format(f)))
+            await sf_task
+            await asyncio.create_task(self.async_pend("osf", arg=f))
+            cp = sf_task.result()
+            task_run = 1
+        else:
+            raise ValueError("Filter wheel position should be integer between 1-6, but value {} was given.".format(f))
+
+        if task_run:
+            return cp.returncode
+
+    async def async_pend(self, pend_task, arg=None, pend_time=0.5):
+        """async_pend: additional layer of pending. Sometimes the low-level "blocking" cs260 communication
+                       functions exit before their action is actually complete. This function waits until
+                       a valid return has been read from the cs260 before leaving. Also can serve as a check
+                       for if the monochromator responded properly by comparing the queried value against
+                       arg.
+
+            Parameters:
+                pend_task: which of the above async tasks should be pended? Valid inputs are "osf", "grating",
+                           "step", or "wave"
+                arg: Argument that was passed in higher level calling function. Compare cs260 query with this
+                     value to check if device responded properly. Default value is None, which indicates that
+                     no check should be performed.
+                pend_time: interval (seconds) between queries
+        """
+        #Set proper query function based on input argument
+        query_func = None
+        if pend_task == "wave":
+            query_func = self.get_wavelength
+        elif pend_task == "grating":
+            query_func = self.get_grating
+        elif pend_task == "osf":
+            query_func = self.get_filter
+        else:
+            raise ValueError("Invalid pend_task argument provided. Valid values are {'wave', 'osf', 'grating'}")
+
+        complete = False
+        val = 0
+        while not complete:
+            try:
+                val = query_func()
+            except ValueError as e:
+                await asyncio.sleep(pend_time)
+            else:
+                complete = True
+
+        #Check if monochromator queried value matches desired value. Raise exception if it doesn't
+        if (arg is not None) and (not (abs(val - arg) < 0.2)):
+            raise RuntimeError("Monochromator {} task set unspecified value {} instead of {}".format(pend_task, val, arg))
+        else:
+            return val
+    #############################################################################
+
+    ##Wrapper methods##########################################################
 
     def set_units(self, units):
         """set_units: Set units that wavelength is expressed in. Valid units are
@@ -149,22 +273,6 @@ class CS260:
         self.units = cp.stdout.decode('utf-8').upper()
         return self.units
 
-    async def set_wavelength(self, wave, concurrent=False):
-        """set_wavelength: move wavelength drive to step position closest
-                           to specified wavelength parameter.
-
-        :param concurrent: specify if this should be executed asynchronously
-        :param wave: float wavelength value
-        :return:
-        """
-        t = type(wave)
-        if not (t == int or t == float):
-            raise TypeError("Expected input of type int or float but type {} given.".format(t))
-        write_task = asyncio.create_task(self.write_async("GOWAVE {}".format(wave)))
-        await write_task
-        cp = write_task.result()
-        return cp.returncode
-
     def get_wavelength(self):
         """get_wavelength: returns exact wavelength output in current units.
 
@@ -174,23 +282,6 @@ class CS260:
         self.wavelength = float(cp.stdout.decode('utf-8'))
         return self.wavelength
 
-    async def step(self, n, concurrent=False):
-        """ step: move wavelength drive an integer number of steps
-
-        :param concurrent: specify if this should be run asynchronously
-        :param n: integer number of steps to move wavelength drive. Can be positive or negative but must be integer
-        :return: success/error code
-        """
-
-        t = type(n)
-        if t != int:
-            raise TypeError("Expected input of type int but {} given.".format(t))
-
-        step_task = asyncio.create_task(self.write_async('STEP {}'.format(n)))
-        await step_task
-        cp = step_task.result()
-        return cp.returncode
-
     def get_step(self):
         """get_step: return current wavelength drive step position
 
@@ -199,29 +290,6 @@ class CS260:
         cp = self.ask('STEP?')
         self.step_pos = int(cp.stdout.decode('utf-8'))
         return self.step_pos
-
-    async def set_grating(self, g, concurrent=False):
-        """set_grating: move wavelength drive to grating specified in integer parameter
-                        g.
-
-        :param: integer grating value 1, 2, or 3.
-        :return: success code
-        """
-        task_run = 0
-        t = type(g)
-        if t != int:
-            raise TypeError("Expected input of type int but type {} given.".format(t))
-
-        if g in range(1, 4):
-            sg_task = asyncio.create_task(self.write_async("GRAT {}".format(g)))
-            await sg_task
-            cp = sg_task.result()
-            task_run = 1
-        else:
-            raise ValueError("Input should be integer values 1, 2, or 3")
-
-        if task_run:
-            return cp.returncode
 
     def get_grating(self):
         """get_grating: return current grating position
@@ -263,28 +331,6 @@ class CS260:
         cp = self.ask('SHUTTER?')
         self.shutter_state = cp.stdout.decode('utf-8')
         return self.shutter_state
-
-    async def set_filter(self, f):
-        """set_filter: move filter wheel to position specified by integer f
-
-        :param concurrent: specify if this should be run asynchronously
-        :param f: integer filter wheel position
-        :return: success code
-        """
-        task_run = 0
-        t = type(f)
-        if t != int:
-            raise TypeError("Input type int expected but type {} was given.".format(t))
-        if f in range(1, 7):
-            sf_task = asyncio.create_task(self.write_async('FILTER {}'.format(f)))
-            await sf_task
-            cp = sf_task.result()
-            task_run = 1
-        else:
-            raise ValueError("Filter wheel position should be integer between 1-6, but value {} was given.".format(f))
-
-        if task_run:
-            return cp.returncode
 
     def get_filter(self):
         """get_filter: return current filter wheel position

@@ -70,6 +70,7 @@ class SpectralCalibrationMachine(SM):
 	def initialize(self):
 		#print('Initialize each device, one at a time.  Each Returns Flag and Metadata, stored in a Dict')
 		self.params = self.get_parameters(os.path.join(self.path, self.cfg_file_default))
+		print(self.params)
 		self.start()
 
 		# Load Thorlabs Laser
@@ -87,13 +88,13 @@ class SpectralCalibrationMachine(SM):
 		# self.errorDict['powermax'] = self.powermax.error_record
 
 		# Load Motor Controllers into Dict
-		self.stepper_motors = {}
-		for imotor in range(1):
-			motor_name = 'motor_'+str(imotor)
-			motor_name = 'xstage'
-			self.stepper_motors[motor_name] = DPY50601(imotor)
+		#self.stepper_motors = {}
+		#for imotor in range(1):
+		#	motor_name = 'motor_'+str(imotor)
+		#	motor_name = 'xstage'
+		#	self.stepper_motors[motor_name] = DPY50601(imotor)
 
-		self.stepper_motors['test'] = 3
+		#self.stepper_motors['test'] = 3
 		#pdb.set_trace()
 
 		if np.sum(sum(self.errorDict.values())):
@@ -104,8 +105,7 @@ class SpectralCalibrationMachine(SM):
 		# return
 		else:
 			self.message_box.append(self.get_time_now() + 'Initialization successful')
-			#self.message_box.append('Initialization successful')
-			self.init_status = True
+			#self.message_box.append('Initialization successful')			self.init_status = True
 
 		return 'waiting', 'Initialized without errors'  # errors
 
