@@ -30,13 +30,15 @@ class CS260Window(QDialog):
     """
     CS260 dialog class.
     """
-    def __init__(self, cs260_obj):
+    def __init__(self, cs260_obj, scan_sync_queue=None):
         super().__init__()
 
         ##Class attributes###############################
         #cs260 monochromator class instance
         self.cs260 = cs260_obj
         self.current_sequence = None
+        #event for synchronization between an external task and the scan series task
+        self.scan_sync_queue = scan_sync_queue 
         #################################################
 
         ##Set up main UI dialog############################################################
@@ -239,7 +241,7 @@ class CS260Window(QDialog):
 
         ##Run through each sequence in the series#####
         for seq in scan_series:
-            seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int = \
+            seq_name, seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int = \
                                                                                 self.get_seq_from_item(seq)
             seq_step_wave = float(seq_step_wave) / 1000
             cur_filter = self.cs260.get_filter()
@@ -258,14 +260,25 @@ class CS260Window(QDialog):
                 await filter_task
             #Run through wave step sequence######################################
             while next_wave < seq_end_wave + seq_step_wave:
-                self.cs260.set_shutter("C")
-                wave_task = asyncio.create_task(self.cs260.set_wavelength(next_wave))
-                await wave_task
-                self.cs260.set_shutter("O")
-                print(self.cs260.get_grating(), self.cs260.get_filter(), self.cs260.get_wavelength())
-                await asyncio.sleep(seq_measure_int)
+                print("move wave start")
+                self.cs260.set_shutter("C") #close shutter before moving
+                wave_task = asyncio.create_task(self.cs260.set_wavelength(next_wave)) #move to new wavelength
+                await wave_task #wait until mono drive arives at new wavelength
+                self.cs260.set_shutter("O") #open shutter
+                print("move wave end")
+
+                #if a queue object has been passed, use it to synchronize between external task. Otherwise just sleep for measure interval
+                if self.scan_sync_queue is not None:
+                	self.scan_sync_queue.put_nowait(seq_measure_int)
+                	ack = asyncio.create_task(self.scan_sync_queue.get())
+                	await ack
+                else:
+                	await asyncio.sleep(seq_measure_int)
+                
                 next_wave = self.cs260.get_wavelength() + seq_step_wave
             ####################################################################
+            if self.scan_sync_queue is not None:
+            	self.scan_sync_queue.put_nowait("{}.csv".format(seq_name))
         ##############################################
 
         self.coro_exec['scan_series'] = None
@@ -324,13 +337,14 @@ class CS260Window(QDialog):
     @staticmethod
     def get_seq_from_item(item):
         seq_data = item.data(SEQUENCE_ROLE)
+        seq_name = seq_data.name
         seq_filter = seq_data.osf
         seq_grating = seq_data.grating
         seq_start_wave = seq_data.start_wave
         seq_end_wave = seq_data.end_wave
         seq_step_wave = seq_data.step_wave
         seq_measure_int = seq_data.measure_interval
-        return [seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int]
+        return [seq_name, seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int]
 
     def get_seq_values(self, seq):
 
