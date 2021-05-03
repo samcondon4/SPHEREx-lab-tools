@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -245,17 +245,14 @@
        </item>
        <item row="2" column="0">
         <layout class="QGridLayout" name="gridLayout_4">
-         <item row="1" column="0">
-          <widget class="QLineEdit" name="sequence_name_ledit">
+         <item row="5" column="0">
+          <widget class="QPushButton" name="remove_sequence_button">
            <property name="text">
-            <string>Seq1</string>
-           </property>
-           <property name="placeholderText">
-            <string/>
+            <string>Remove Sequence from Scan Series</string>
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="3" column="0">
           <widget class="QPushButton" name="add_new_sequence_button">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
@@ -282,23 +279,33 @@
           </widget>
          </item>
          <item row="4" column="0">
-          <widget class="QPushButton" name="remove_sequence_button">
-           <property name="text">
-            <string>Remove Sequence from Scan Series</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
           <widget class="QPushButton" name="edit_sequence_button">
            <property name="text">
             <string>Edit Sequence</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="1" rowspan="5">
+         <item row="0" column="1" rowspan="6">
           <widget class="QListWidget" name="series">
            <property name="editTriggers">
             <set>QAbstractItemView::AllEditTriggers</set>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLineEdit" name="sequence_name_ledit">
+           <property name="text">
+            <string>Seq1</string>
+           </property>
+           <property name="placeholderText">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="power_measure_checkbox">
+           <property name="text">
+            <string>Run power measurements over sequence</string>
            </property>
           </widget>
          </item>
@@ -313,6 +320,19 @@
       <layout class="QGridLayout" name="gridLayout_15">
        <item row="1" column="0" colspan="2">
         <layout class="QGridLayout" name="gridLayout_14">
+         <item row="2" column="0">
+          <widget class="QPushButton" name="abort_manual_button">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Abort</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0">
           <widget class="QPushButton" name="set_parameters_button">
            <property name="sizePolicy">
@@ -326,8 +346,8 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
-          <widget class="QPushButton" name="abort_manual_button">
+         <item row="3" column="0">
+          <widget class="QPushButton" name="power_measure_button">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
              <horstretch>0</horstretch>
@@ -335,7 +355,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Abort</string>
+            <string>Run Power Measurement</string>
            </property>
           </widget>
          </item>
