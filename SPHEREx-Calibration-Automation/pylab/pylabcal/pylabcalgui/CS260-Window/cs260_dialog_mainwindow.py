@@ -2,9 +2,10 @@ import sys
 from qasync import QEventLoop
 import asyncio
 from PyQt5.QtWidgets import *
-#UI files
+# UI files
 from cs260_dialog_ui import *
 from cs260_dialog_popup import *
+
 sys.path.append("..\\..\\..\\pylablib\\instruments")
 from CS260 import *
 
@@ -15,8 +16,9 @@ class ScanSequence:
     """
     data structure to hold the parameters of a single scan sequence
     """
+
     def __init__(self, name=None, grating=None, osf=None, start_wave=None,
-                 end_wave=None, step_wave=None, measure_interval=None):
+                 end_wave=None, step_wave=None, measure_interval=None, ext_sync=None):
         self.name = name
         self.grating = grating
         self.osf = osf
@@ -30,13 +32,16 @@ class CS260Window(QDialog):
     """
     CS260 dialog class.
     """
-    def __init__(self, cs260_obj):
+
+    def __init__(self, cs260_obj, sync_queue=None):
         super().__init__()
 
         ##Class attributes###############################
-        #cs260 monochromator class instance
+        # cs260 monochromator class instance
         self.cs260 = cs260_obj
         self.current_sequence = None
+        # event for synchronization between an external task and the scan series task
+        self.sync_queue = sync_queue
         #################################################
 
         ##Set up main UI dialog############################################################
@@ -69,8 +74,8 @@ class CS260Window(QDialog):
         self.popup_dialog = Cs260PopupDialog()
         ############################################################################
 
-        #Maintain list of executing coroutines. Anytime a coroutine is scheduled,
-        #its associated task will be set to the corresponding dictionary value.
+        # Maintain list of executing coroutines. Anytime a coroutine is scheduled,
+        # its associated task will be set to the corresponding dictionary value.
         self.coro_exec = {"grating": None, "osf": None, "wave": None, "set_params": None, "scan_series": None}
 
     ##METHODS FOR BOTH SCAN AND MANUAL TABS#######################################
@@ -96,19 +101,19 @@ class CS260Window(QDialog):
 
         """
 
-        #Send abort command to cs260
+        # Send abort command to cs260
         self.cs260.abort()
-        #Always close shutter when aborting
+        # Always close shutter when aborting
         self.cs260.set_shutter("C")
 
-        #Kill all running coroutines/tasks
+        # Kill all running coroutines/tasks
         for coro in self.coro_exec:
             coro_exec = self.coro_exec[coro]
             if coro_exec is not None:
                 coro_exec.cancel()
                 self.coro_exec[coro] = None
 
-        #Prompt user to check manual display for current state
+        # Prompt user to check manual display for current state
         # Update manual display w/ current values
         asyncio.create_task(self.update_manual_display())
         msg = ["Abort complete.", "Check the manual display tab for current cs260 state."]
@@ -120,40 +125,40 @@ class CS260Window(QDialog):
     ##MANUAL TAB METHODS##########################################################
     def set_parameters(self):
 
-        #Check if a monochromator control task is already running before starting anything else
+        # Check if a monochromator control task is already running before starting anything else
         if self.cs260_is_busy():
             return
 
-        #Always close shutter as first movement
+        # Always close shutter as first movement
         new_params = [("shutter", "C")]
 
-        #If grating needs to be changed, do this next
+        # If grating needs to be changed, do this next
         cur_grating = self.cs260.get_grating()
         new_grating = self.ui.grating_new_cbox.currentIndex() + 1
         if new_grating != cur_grating:
             new_params.append(("grating", new_grating))
 
-        #Next take care of filter
+        # Next take care of filter
         cur_osf = self.cs260.get_filter()
         new_osf = self.ui.osf_new_cbox.currentIndex() + 1
         if cur_osf != new_osf:
             new_params.append(("osf", new_osf))
 
-        #Now wavelength
+        # Now wavelength
         cur_wave = self.cs260.get_wavelength()
         new_wave = float(self.ui.wavelength_new_ledit.text())
         if cur_wave != new_wave:
             new_params.append(("wave", new_wave))
 
-        #If shutter needs to be opened, do this last
+        # If shutter needs to be opened, do this last
         new_shutter = self.ui.shutter_new_cbox.currentIndex()
         if new_shutter == 0:
             new_params.append(("shutter", "O"))
 
-        #If any changes were made, execute asynchronous transition function
+        # If any changes were made, execute asynchronous transition function
         if len(new_params) > 0:
             set_params_task = asyncio.create_task(self.set_parameters_async(new_params))
-            #Register newly created task w/ executing task dictionary
+            # Register newly created task w/ executing task dictionary
             self.coro_exec['set_params'] = set_params_task
 
     async def set_parameters_async(self, params):
@@ -174,11 +179,33 @@ class CS260Window(QDialog):
                 self.coro_exec[p[0]] = None
 
         await asyncio.create_task(self.update_manual_display())
-        #Task has completed. Remove it from the executing coroutine/task dictionary
+        # Task has completed. Remove it from the executing coroutine/task dictionary
         self.coro_exec['set_params'] = None
 
+    def start_ext_sync(self, measure_int=5):
+        '''start_ext_sync:
+                Send external synchronization task for single measurement
+        '''
+        if self.sync_queue is not None:
+            asyncio.ensure_future(self.start_ext_sync_async(measure_int))
+
+    async def start_ext_sync_async(self, measure_interval):
+        '''start_ext_sync_async:
+                Run synchronization with external measurement task
+        '''
+        measure_dict = {'Sequence': "_manual-measurement_",
+                        'Grating': self.cs260.get_grating(),
+                        'Wavelength': self.cs260.get_wavelength(),
+                        'Filter': self.cs260.get_filter(),
+                        'Shutter': self.cs260.get_shutter(),
+                        'Measure Int': measure_interval}
+
+        self.sync_queue.put_nowait(measure_dict)
+        await asyncio.create_task(self.sync_queue.get())
+        self.sync_queue.put_nowait("done")
+
     async def update_manual_display(self):
-        #Filter reading######################################################
+        # Filter reading######################################################
         filter_read_task = asyncio.create_task(self.cs260.async_pend("osf"))
         await filter_read_task
         cur_filter = filter_read_task.result()
@@ -186,7 +213,7 @@ class CS260Window(QDialog):
         self.ui.osf_new_cbox.setCurrentIndex(cur_filter - 1)
         ######################################################################
 
-        #Grating reading##############################################################
+        # Grating reading##############################################################
         grating_read_task = asyncio.create_task(self.cs260.async_pend("grating"))
         await grating_read_task
         cur_grating = grating_read_task.result()
@@ -194,7 +221,7 @@ class CS260Window(QDialog):
         self.ui.grating_new_cbox.setCurrentIndex(cur_grating - 1)
         ###############################################################################
 
-        #Shutter reading###############################################################
+        # Shutter reading###############################################################
         shutter_state = self.cs260.get_shutter()
         if shutter_state == "O":
             self.ui.shutter_current_ledit.setText("Open")
@@ -204,7 +231,7 @@ class CS260Window(QDialog):
             self.ui.shutter_new_cbox.setCurrentIndex(1)
         ###############################################################################
 
-        #Wavelength reading###################################
+        # Wavelength reading###################################
         wave_read_task = asyncio.create_task(self.cs260.async_pend("wave"))
         await wave_read_task
         cur_wave = str(wave_read_task.result())
@@ -215,18 +242,18 @@ class CS260Window(QDialog):
     ################################################################################
 
     ##SCAN TAB METHODS#############################################################
-    def start_scan_series(self):
+    def start_scan_series(self, ext_sync=False):
 
         if self.cs260.get_units() != "UM":
             self.cs260.set_units("UM")
 
-        #Check if a monochromator control task is already running before starting anything else
+        # Check if a monochromator control task is already running before starting anything else
         if not self.cs260_is_busy():
-            scan_task = asyncio.create_task(self.scan_series_async())
-            #Register scan task as running
+            scan_task = asyncio.create_task(self.scan_series_async(ext_sync))
+            # Register scan task as running
             self.coro_exec['scan_series'] = scan_task
 
-    async def scan_series_async(self):
+    async def scan_series_async(self, ext_sync):
         """start_scan_series: Begin user programmed scan series
 
         :return: completion code
@@ -239,33 +266,53 @@ class CS260Window(QDialog):
 
         ##Run through each sequence in the series#####
         for seq in scan_series:
-            seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int = \
-                                                                                self.get_seq_from_item(seq)
+            seq_name, seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, \
+                                                seq_measure_int = self.get_seq_from_item(seq)
+
             seq_step_wave = float(seq_step_wave) / 1000
             cur_filter = self.cs260.get_filter()
             cur_grating = self.cs260.get_grating()
             next_wave = seq_start_wave
-            #Close shutter before changing grating and filter
+            # Close shutter before changing grating and filter
             self.cs260.set_shutter("C")
-            #Move grating to sequence specified position
+            # Move grating to sequence specified position
             if seq_grating != cur_grating:
                 grating_task = asyncio.create_task(self.cs260.set_grating(seq_grating))
                 await grating_task
 
-            #Move filter to sequence specified position
+            # Move filter to sequence specified position
             if seq_filter != cur_filter:
                 filter_task = asyncio.create_task(self.cs260.set_filter(seq_filter))
                 await filter_task
-            #Run through wave step sequence######################################
+            # Run through wave step sequence######################################
             while next_wave < seq_end_wave + seq_step_wave:
-                self.cs260.set_shutter("C")
-                wave_task = asyncio.create_task(self.cs260.set_wavelength(next_wave))
-                await wave_task
-                self.cs260.set_shutter("O")
-                print(self.cs260.get_grating(), self.cs260.get_filter(), self.cs260.get_wavelength())
-                await asyncio.sleep(seq_measure_int)
+                print("move wave start")
+                self.cs260.set_shutter("C")  # close shutter before moving
+                wave_task = asyncio.create_task(self.cs260.set_wavelength(next_wave))  # move to new wavelength
+                await wave_task  # wait until mono drive arives at new wavelength
+                self.cs260.set_shutter("O")  # open shutter
+                print("move wave end")
+
+                # if a queue object has been passed, use it to synchronize between external task.
+                # Otherwise just sleep for measure interval
+                if ext_sync and self.sync_queue is not None:
+                    measure_dict = {'Sequence': seq_name,
+                                    'Grating': self.cs260.get_grating(),
+                                    'Wavelength': self.cs260.get_wavelength(),
+                                    'Filter': self.cs260.get_filter(),
+                                    'Shutter': self.cs260.get_shutter(),
+                                    'Measure Int': measure_interval}
+                    self.sync_queue.put_nowait(measure_dict)
+                    ack = asyncio.create_task(self.sync_queue.get())
+                    await ack
+                else:
+                    await asyncio.sleep(seq_measure_int)
+
                 next_wave = self.cs260.get_wavelength() + seq_step_wave
             ####################################################################
+            # Communicate that the scan series task is complete
+            if ext_sync > 0 and self.sync_queue is not None:
+                self.sync_queue.put_nowait("done")
         ##############################################
 
         self.coro_exec['scan_series'] = None
@@ -275,18 +322,18 @@ class CS260Window(QDialog):
 
     def add_sequence(self):
         seq = ScanSequence()
-        c = self.get_seq_values(seq)
+        c = self.set_seq_values(seq)
         if c == 0:
             seq_item = QListWidgetItem()
             seq_item.setText(seq.name)
             seq_item.setData(SEQUENCE_ROLE, seq)
             self.ui.series.addItem(seq_item)
-        
+
     def edit_sequence(self):
         if self.current_sequence is not None:
             prev_seq = self.current_sequence.data(SEQUENCE_ROLE)
             seq = prev_seq
-            edit_code = self.get_seq_values(seq)
+            edit_code = self.set_seq_values(seq)
             if edit_code != 0:
                 self.current_sequence = prev_seq
             else:
@@ -307,7 +354,7 @@ class CS260Window(QDialog):
         if cur_item is not self.current_sequence:
             self.current_sequence = cur_item
             cur_seq_data = self.current_sequence.data(SEQUENCE_ROLE)
-            #Update display values:
+            # Update display values:
             self.ui.grating_select_cbox.setCurrentIndex(cur_seq_data.grating - 1)
             self.ui.osf_select_cbox.setCurrentIndex(cur_seq_data.osf - 1)
             self.ui.sequence_wave_start_ledit.setText(str(cur_seq_data.start_wave))
@@ -317,22 +364,25 @@ class CS260Window(QDialog):
             self.ui.sequence_name_ledit.setText(cur_seq_data.name)
 
     def show_invalid_seq_popup(self, error_list):
-        error_list = ["Invalid scan sequence will not be added to the series.", "Fix the following errors:"] + error_list
+        error_list = ["Invalid scan sequence will not be added to the series.",
+                      "Fix the following errors:"] + error_list
         self.popup_dialog.disp_errors(error_list)
         self.popup_dialog.popup()
 
     @staticmethod
     def get_seq_from_item(item):
         seq_data = item.data(SEQUENCE_ROLE)
+        seq_name = seq_data.name
         seq_filter = seq_data.osf
         seq_grating = seq_data.grating
         seq_start_wave = seq_data.start_wave
         seq_end_wave = seq_data.end_wave
         seq_step_wave = seq_data.step_wave
         seq_measure_int = seq_data.measure_interval
-        return [seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int]
+        return [seq_name, seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave,
+                seq_measure_int]
 
-    def get_seq_values(self, seq):
+    def set_seq_values(self, seq):
 
         errors = []
         warnings = []
@@ -382,7 +432,7 @@ class CS260Window(QDialog):
 
 
 if __name__ == "__main__":
-    #Create cs260 control instance
+    # Create cs260 control instance
     exe_path = "..\\..\\..\\pylablib\\instruments\\CS260-Drivers\\C++EXE.exe"
     cs = CS260(exe_path)
 
