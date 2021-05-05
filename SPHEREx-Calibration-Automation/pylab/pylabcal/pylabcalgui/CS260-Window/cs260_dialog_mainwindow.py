@@ -26,7 +26,6 @@ class ScanSequence:
         self.end_wave = end_wave
         self.step_wave = step_wave
         self.measure_interval = measure_interval
-        self.ext_sync = ext_sync
 
 
 class CS260Window(QDialog):
@@ -34,7 +33,7 @@ class CS260Window(QDialog):
     CS260 dialog class.
     """
 
-    def __init__(self, cs260_obj, scan_sync_queue=None):
+    def __init__(self, cs260_obj, sync_queue=None):
         super().__init__()
 
         ##Class attributes###############################
@@ -42,7 +41,7 @@ class CS260Window(QDialog):
         self.cs260 = cs260_obj
         self.current_sequence = None
         # event for synchronization between an external task and the scan series task
-        self.scan_sync_queue = scan_sync_queue
+        self.sync_queue = sync_queue
         #################################################
 
         ##Set up main UI dialog############################################################
@@ -66,7 +65,6 @@ class CS260Window(QDialog):
         ####Manual tab buttons###########################################
         self.ui.set_parameters_button.clicked.connect(self.set_parameters)
         self.ui.abort_manual_button.clicked.connect(self.abort)
-        self.ui.power_measure_button.clicked.connect(self.start_ext_sync)
         #################################################################
         #########################################################################
 
@@ -188,7 +186,7 @@ class CS260Window(QDialog):
         '''start_ext_sync:
                 Send external synchronization task for single measurement
         '''
-        if self.scan_sync_queue is not None:
+        if self.sync_queue is not None:
             asyncio.ensure_future(self.start_ext_sync_async(measure_int))
 
     async def start_ext_sync_async(self, measure_interval):
@@ -202,9 +200,9 @@ class CS260Window(QDialog):
                         'Shutter': self.cs260.get_shutter(),
                         'Measure Int': measure_interval}
 
-        self.scan_sync_queue.put_nowait(measure_dict)
-        await asyncio.create_task(self.scan_sync_queue.get())
-        self.scan_sync_queue.put_nowait("done")
+        self.sync_queue.put_nowait(measure_dict)
+        await asyncio.create_task(self.sync_queue.get())
+        self.sync_queue.put_nowait("done")
 
     async def update_manual_display(self):
         # Filter reading######################################################
@@ -244,18 +242,18 @@ class CS260Window(QDialog):
     ################################################################################
 
     ##SCAN TAB METHODS#############################################################
-    def start_scan_series(self):
+    def start_scan_series(self, ext_sync=False):
 
         if self.cs260.get_units() != "UM":
             self.cs260.set_units("UM")
 
         # Check if a monochromator control task is already running before starting anything else
         if not self.cs260_is_busy():
-            scan_task = asyncio.create_task(self.scan_series_async())
+            scan_task = asyncio.create_task(self.scan_series_async(ext_sync))
             # Register scan task as running
             self.coro_exec['scan_series'] = scan_task
 
-    async def scan_series_async(self):
+    async def scan_series_async(self, ext_sync):
         """start_scan_series: Begin user programmed scan series
 
         :return: completion code
@@ -268,8 +266,8 @@ class CS260Window(QDialog):
 
         ##Run through each sequence in the series#####
         for seq in scan_series:
-            seq_name, seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int, \
-                seq_ext_trig = self.get_seq_from_item(seq)
+            seq_name, seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, \
+                                                seq_measure_int = self.get_seq_from_item(seq)
 
             seq_step_wave = float(seq_step_wave) / 1000
             cur_filter = self.cs260.get_filter()
@@ -297,15 +295,15 @@ class CS260Window(QDialog):
 
                 # if a queue object has been passed, use it to synchronize between external task.
                 # Otherwise just sleep for measure interval
-                if seq_ext_trig > 0 and self.scan_sync_queue is not None:
+                if ext_sync and self.sync_queue is not None:
                     measure_dict = {'Sequence': seq_name,
                                     'Grating': self.cs260.get_grating(),
                                     'Wavelength': self.cs260.get_wavelength(),
                                     'Filter': self.cs260.get_filter(),
                                     'Shutter': self.cs260.get_shutter(),
                                     'Measure Int': measure_interval}
-                    self.scan_sync_queue.put_nowait(measure_dict)
-                    ack = asyncio.create_task(self.scan_sync_queue.get())
+                    self.sync_queue.put_nowait(measure_dict)
+                    ack = asyncio.create_task(self.sync_queue.get())
                     await ack
                 else:
                     await asyncio.sleep(seq_measure_int)
@@ -313,8 +311,8 @@ class CS260Window(QDialog):
                 next_wave = self.cs260.get_wavelength() + seq_step_wave
             ####################################################################
             # Communicate that the scan series task is complete
-            if seq_ext_trig > 0 and self.scan_sync_queue is not None:
-                self.scan_sync_queue.put_nowait("done")
+            if ext_sync > 0 and self.sync_queue is not None:
+                self.sync_queue.put_nowait("done")
         ##############################################
 
         self.coro_exec['scan_series'] = None
@@ -364,7 +362,6 @@ class CS260Window(QDialog):
             self.ui.sequence_wave_step_ledit.setText(str(cur_seq_data.step_wave))
             self.ui.sequence_measure_int_ledit.setText(str(cur_seq_data.measure_interval))
             self.ui.sequence_name_ledit.setText(cur_seq_data.name)
-            self.ui.power_measure_checkbox.setCheckState(cur_seq_data.ext_sync)
 
     def show_invalid_seq_popup(self, error_list):
         error_list = ["Invalid scan sequence will not be added to the series.",
@@ -382,9 +379,8 @@ class CS260Window(QDialog):
         seq_end_wave = seq_data.end_wave
         seq_step_wave = seq_data.step_wave
         seq_measure_int = seq_data.measure_interval
-        ext_sync = seq_data.ext_sync
         return [seq_name, seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave,
-                seq_measure_int, ext_sync]
+                seq_measure_int]
 
     def set_seq_values(self, seq):
 
@@ -424,9 +420,6 @@ class CS260Window(QDialog):
             if seq.measure_interval < 0.5:
                 warnings.append("Small Measure Interval provided. Monochromator wavelength drive may not step as fast "
                                 "as the specified interval demands.")
-
-        # If box is checked, set external synchronization flag
-        seq.ext_sync = self.ui.power_measure_checkbox.checkState()
 
         if len(errors) > 0:
             ret = -1

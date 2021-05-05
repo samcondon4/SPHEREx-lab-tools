@@ -10,15 +10,15 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 300)
-        self.gridLayout = QtWidgets.QGridLayout(Dialog)
+class Ui_TransmissionTab(object):
+    def setupUi(self, TransmissionTab):
+        TransmissionTab.setObjectName("TransmissionTab")
+        TransmissionTab.resize(400, 300)
+        self.gridLayout = QtWidgets.QGridLayout(TransmissionTab)
         self.gridLayout.setObjectName("gridLayout")
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setObjectName("verticalLayout")
-        self.power_measure_scan_series = QtWidgets.QPushButton(Dialog)
+        self.power_measure_scan_series = QtWidgets.QPushButton(TransmissionTab)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -26,7 +26,7 @@ class Ui_Dialog(object):
         self.power_measure_scan_series.setSizePolicy(sizePolicy)
         self.power_measure_scan_series.setObjectName("power_measure_scan_series")
         self.verticalLayout.addWidget(self.power_measure_scan_series)
-        self.power_measure_single = QtWidgets.QPushButton(Dialog)
+        self.power_measure_single = QtWidgets.QPushButton(TransmissionTab)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -36,21 +36,21 @@ class Ui_Dialog(object):
         self.verticalLayout.addWidget(self.power_measure_single)
         self.gridLayout.addLayout(self.verticalLayout, 0, 0, 1, 1)
 
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(TransmissionTab)
+        QtCore.QMetaObject.connectSlotsByName(TransmissionTab)
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, TransmissionTab):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.power_measure_scan_series.setText(_translate("Dialog", "Run Power Measurements over Scan Series"))
-        self.power_measure_single.setText(_translate("Dialog", "Run Single Power Measurement"))
+        TransmissionTab.setWindowTitle(_translate("TransmissionTab", "Dialog"))
+        self.power_measure_scan_series.setText(_translate("TransmissionTab", "Run Power Measurements over Scan Series"))
+        self.power_measure_single.setText(_translate("TransmissionTab", "Run Single Power Measurement"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
+    TransmissionTab = QtWidgets.QDialog()
+    ui = Ui_TransmissionTab()
+    ui.setupUi(TransmissionTab)
+    TransmissionTab.show()
     sys.exit(app.exec_())
