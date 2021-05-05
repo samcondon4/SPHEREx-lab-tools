@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'MonochromatorDialog.ui'
+# Form implementation generated from reading ui file 'CS260Dialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.3
 #
@@ -156,16 +156,16 @@ class Ui_Dialog(object):
         self.sequence_name_label.setSizePolicy(sizePolicy)
         self.sequence_name_label.setObjectName("sequence_name_label")
         self.gridLayout_4.addWidget(self.sequence_name_label, 0, 0, 1, 1)
+        self.series = QtWidgets.QListWidget(self.tab)
+        self.series.setEditTriggers(QtWidgets.QAbstractItemView.AllEditTriggers)
+        self.series.setObjectName("series")
+        self.gridLayout_4.addWidget(self.series, 0, 1, 5, 1)
         self.remove_sequence_button = QtWidgets.QPushButton(self.tab)
         self.remove_sequence_button.setObjectName("remove_sequence_button")
         self.gridLayout_4.addWidget(self.remove_sequence_button, 4, 0, 1, 1)
         self.edit_sequence_button = QtWidgets.QPushButton(self.tab)
         self.edit_sequence_button.setObjectName("edit_sequence_button")
         self.gridLayout_4.addWidget(self.edit_sequence_button, 3, 0, 1, 1)
-        self.series = QtWidgets.QListWidget(self.tab)
-        self.series.setEditTriggers(QtWidgets.QAbstractItemView.AllEditTriggers)
-        self.series.setObjectName("series")
-        self.gridLayout_4.addWidget(self.series, 0, 1, 5, 1)
         self.gridLayout_6.addLayout(self.gridLayout_4, 2, 0, 1, 1)
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
@@ -189,7 +189,7 @@ class Ui_Dialog(object):
         sizePolicy.setHeightForWidth(self.abort_manual_button.sizePolicy().hasHeightForWidth())
         self.abort_manual_button.setSizePolicy(sizePolicy)
         self.abort_manual_button.setObjectName("abort_manual_button")
-        self.gridLayout_14.addWidget(self.abort_manual_button, 1, 0, 1, 1)
+        self.gridLayout_14.addWidget(self.abort_manual_button, 2, 0, 1, 1)
         self.gridLayout_15.addLayout(self.gridLayout_14, 1, 0, 1, 2)
         self.gridLayout_7 = QtWidgets.QGridLayout()
         self.gridLayout_7.setObjectName("gridLayout_7")
@@ -282,7 +282,7 @@ class Ui_Dialog(object):
         self.gridLayout_12.addWidget(self.tabWidget, 0, 0, 1, 1)
 
         self.retranslateUi(Dialog)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         self.grating_select_cbox.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
@@ -337,3 +337,13 @@ class Ui_Dialog(object):
         self.label_43.setText(_translate("Dialog", "Wavelength (um.):"))
         self.label_45.setText(_translate("Dialog", "Grating:"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("Dialog", "Manual"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Dialog = QtWidgets.QDialog()
+    ui = Ui_Dialog()
+    ui.setupUi(Dialog)
+    Dialog.show()
+    sys.exit(app.exec_())
