@@ -1,14 +1,20 @@
+import pdb
 import sys
+import os
+import datetime as datetime
 from qasync import QEventLoop
 import asyncio
 from PyQt5.QtWidgets import *
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+sys.path.append("..\\CS260-Window")
+sys.path.append("..\\..\\..\\pylablib\\instruments")
+
 # UI files
-from cs260_dialog_ui import Ui_Dialog as cs260_dialog
+# from cs260_dialog_ui import Ui_Dialog as cs260_dialog
 from cs260_dialog_popup import Cs260PopupDialog
 from scanWindowDialog import Ui_Dialog as masterDialog
-
-sys.path.append("..\\..\\..\\pylablib\\instruments")
-from CS260 import *
+from CS260 import CS260
 
 SEQUENCE_ROLE = 1
 
@@ -31,24 +37,29 @@ class ScanSequence:
 
 class masterWindow(QDialog):
     """
-    CS260 dialog class.
+    masterWindow dialog class.
     """
 
-    def __init__(self, cs260_obj):
+    #def __init__(self, cs260_obj, sync_queue=None):
+    def __init__(self, sync_queue=None):
         super().__init__()
 
         ##Class attributes###############################
         # cs260 monochromator class instance
-        self.cs260 = cs260_obj
+        # self.cs260 = cs260_obj
         self.current_sequence = None
+
+        # event for synchronization between an external task and the scan series task
+        self.sync_queue = sync_queue
         #################################################
 
         ##Set up main UI dialog############################################################
         self.ui = masterDialog()
         self.ui.setupUi(self)
+        # self.ui.sequence_config_files = QListWidget()
         ###################################################################################
 
-        ##Scan tab buttons#######################################################
+        ##Common tab buttons: Add/Edit/Remove Sequence #############################
         self.ui.add_sequence_button_tab1.clicked.connect(self.add_sequence)
         self.ui.add_sequence_button_tab2.clicked.connect(self.add_sequence)
         self.ui.add_sequence_button_tab3.clicked.connect(self.add_sequence)
@@ -56,7 +67,11 @@ class masterWindow(QDialog):
         self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence)
         self.ui.remove_sequence_button_tab2.clicked.connect(self.remove_sequence)
         self.ui.remove_sequence_button_tab3.clicked.connect(self.remove_sequence)
-        self.ui.series.clicked.connect(self.update_current_sequence)
+        self.ui.sequence_config_files_tab1.clicked.connect(self.update_current_sequence)
+        self.ui.sequence_config_files_tab2.clicked.connect(self.update_current_sequence)
+        self.ui.sequence_config_files_tab3.clicked.connect(self.update_current_sequence)
+
+        ##Common tab buttons: Run Sequence, Run Series, Abort #############################
         self.ui.run_single_tab1.clicked.connect(self.start_scan_series)
         self.ui.run_single_tab2.clicked.connect(self.start_scan_series)
         self.ui.run_single_tab3.clicked.connect(self.start_scan_series)
@@ -68,11 +83,15 @@ class masterWindow(QDialog):
         self.ui.abort_scan_button_tab3.clicked.connect(self.abort)
         #########################################################################
 
+        ### First Tab Sequence File List
+
+        ### Common tab Status Log
+
         ##Manual tab init#####################################################
         ####Set all display values to monochromator current state#######
         asyncio.create_task(self.update_manual_display())
-
         #################################################################
+
         ####Manual tab buttons###########################################
         self.ui.set_parameters_button_tab4.clicked.connect(self.set_parameters)
         self.ui.abort_manual_button_tab4.clicked.connect(self.abort)
@@ -88,6 +107,17 @@ class masterWindow(QDialog):
         # Maintain list of executing coroutines. Anytime a coroutine is scheduled,
         # its associated task will be set to the corresponding dictionary value.
         self.coro_exec = {"grating": None, "osf": None, "wave": None, "set_params": None, "scan_series": None}
+
+        # Display list of .cfg files in Tab 1
+        path_config_file = self.ui.config_path_lineEdit_tab3.text()
+        self.saved_config_files = []
+        for file in os.listdir(path_config_file):
+            # check the files which are end with specific extension
+            if file.endswith(".cfg"):
+                self.saved_config_files.append(file)
+
+        for ifile in self.saved_config_files:
+            self.ui.saved_config_files_tab1.addItem(ifile)
 
     ##METHODS FOR BOTH SCAN AND MANUAL TABS#######################################
     def cs260_is_busy(self, error=True):
@@ -248,10 +278,10 @@ class masterWindow(QDialog):
         :return: completion code
         """
 
-        sequence_count = self.ui.series.count()
+        sequence_count = self.ui.sequence_config_files_tab1.count()
         scan_series = []
         for i in range(sequence_count):
-            scan_series.append(self.ui.series.item(i))
+            scan_series.append(self.ui.sequence_config_files_tab1.item(i))
 
         ##Run through each sequence in the series#####
         for seq in scan_series:
@@ -296,7 +326,9 @@ class masterWindow(QDialog):
             seq_item = QListWidgetItem()
             seq_item.setText(seq.name)
             seq_item.setData(SEQUENCE_ROLE, seq)
-            self.ui.series.addItem(seq_item)
+            self.ui.sequence_config_files_tab1.addItem(seq_item)
+            self.ui.sequence_config_files_tab2.addItem(seq_item)
+            self.ui.sequence_config_files_tab3.addItem(seq_item)
 
     def edit_sequence(self):
         if self.current_sequence is not None:
@@ -307,24 +339,32 @@ class masterWindow(QDialog):
                 self.current_sequence = prev_seq
             else:
                 self.current_sequence = seq
-                self.ui.series.currentItem().setText(seq.name)
-                self.ui.series.currentItem().setData(SEQUENCE_ROLE, seq)
+                self.ui.sequence_config_files_tab1.currentItem().setText(seq.name)
+                self.ui.sequence_config_files_tab1.currentItem().setData(SEQUENCE_ROLE, seq)
+                self.ui.sequence_config_files_tab2.currentItem().setText(seq.name)
+                self.ui.sequence_config_files_tab2.currentItem().setData(SEQUENCE_ROLE, seq)
+                self.ui.sequence_config_files_tab3.currentItem().setText(seq.name)
+                self.ui.sequence_config_files_tab3.currentItem().setData(SEQUENCE_ROLE, seq)
 
         else:
             self.popup_dialog.disp_errors(["No sequence selected to edit!"])
             self.popup_dialog.popup()
 
     def remove_sequence(self):
-        cur_row = self.ui.series.currentRow()
-        self.ui.series.takeItem(cur_row)
+        cur_row_tab1 = self.ui.sequence_config_files_tab1.currentRow()
+        cur_row_tab2 = self.ui.sequence_config_files_tab2.currentRow()
+        cur_row_tab3 = self.ui.sequence_config_files_tab3.currentRow()
+        self.ui.sequence_config_files_tab1.takeItem(cur_row_tab1)
+        self.ui.sequence_config_files_tab2.takeItem(cur_row_tab2)
+        self.ui.sequence_config_files_tab3.takeItem(cur_row_tab3)
 
     def update_current_sequence(self):
-        cur_item = self.ui.series.currentItem()
-        if cur_item is not self.current_sequence:
-            self.current_sequence = cur_item
+        cur_item_tab1 = self.ui.sequence_config_files_tab1.currentItem()
+        if cur_item_tab1 is not self.current_sequence:
+            self.current_sequence = cur_item_tab1
             cur_seq_data = self.current_sequence.data(SEQUENCE_ROLE)
             # Update display values:
-            self.ui.grating_select_cbox.setCurrentIndex(cur_seq_data.grating - 1)
+            self.ui.grating_select_cbox_tab2.setCurrentIndex(cur_seq_data.grating - 1)
             self.ui.osf_select_cbox.setCurrentIndex(cur_seq_data.osf - 1)
             self.ui.sequence_wave_start_ledit.setText(str(cur_seq_data.start_wave))
             self.ui.sequence_wave_end_ledit.setText(str(cur_seq_data.end_wave))
@@ -401,12 +441,12 @@ class masterWindow(QDialog):
 if __name__ == "__main__":
     # Create cs260 control instance
     exe_path = "..\\..\\..\\pylablib\\instruments\\CS260-Drivers\\C++EXE.exe"
-    cs = masterWindow(exe_path)
+    #cs = CS260(exe_path)
 
     app = QtWidgets.QApplication(sys.argv)
     loop = QEventLoop()
     asyncio.set_event_loop(loop)
-    window = CS260Window(cs)
+    window = masterWindow()#cs)
     window.show()
     with loop:
         loop.run_forever()

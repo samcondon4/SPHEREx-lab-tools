@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>877</width>
-    <height>532</height>
+    <width>914</width>
+    <height>562</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab1_series_scan">
     <attribute name="title">
@@ -37,6 +37,9 @@
        <width>261</width>
        <height>151</height>
       </rect>
+     </property>
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::DragDrop</enum>
      </property>
     </widget>
     <widget class="QLabel" name="sequence_progress_label_tab1">
@@ -212,7 +215,7 @@
      </property>
      <layout class="QHBoxLayout" name="sl_horizontalLayout_tab1">
       <item>
-       <widget class="QListWidget" name="status_log_tab1"/>
+       <widget class="QTextBrowser" name="sl_textBrowser_tab1"/>
       </item>
       <item>
        <widget class="QScrollBar" name="sl_scrollBar_tab1">
@@ -234,7 +237,17 @@
      </property>
      <layout class="QHBoxLayout" name="scf_horizontalLayout_tab1">
       <item>
-       <widget class="QListWidget" name="saved_config_files_tab1"/>
+       <widget class="QListWidget" name="saved_config_files_tab1">
+        <property name="dragEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::DragOnly</enum>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QScrollBar" name="scf_scrollBar_tab1">
@@ -472,7 +485,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Seq1</string>
+      <string>setup_test.cfg</string>
      </property>
      <property name="placeholderText">
       <string/>
@@ -640,6 +653,9 @@
        <height>121</height>
       </rect>
      </property>
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::InternalMove</enum>
+     </property>
     </widget>
     <widget class="QLabel" name="shutter_position_label_tab2">
      <property name="geometry">
@@ -685,7 +701,7 @@
      </property>
      <layout class="QHBoxLayout" name="sl_horizontalLayout_tab2">
       <item>
-       <widget class="QListWidget" name="status_log_tab2"/>
+       <widget class="QTextBrowser" name="sl_textBrowser_tab2"/>
       </item>
       <item>
        <widget class="QScrollBar" name="sl_scrollBar_tab2">
@@ -718,7 +734,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>110</y>
+       <y>130</y>
        <width>131</width>
        <height>21</height>
       </rect>
@@ -731,7 +747,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>130</y>
+       <y>150</y>
        <width>141</width>
        <height>21</height>
       </rect>
@@ -744,7 +760,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>150</y>
+       <y>170</y>
        <width>141</width>
        <height>21</height>
       </rect>
@@ -757,7 +773,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>170</y>
+       <y>190</y>
        <width>141</width>
        <height>21</height>
       </rect>
@@ -770,7 +786,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>190</y>
+       <y>210</y>
        <width>141</width>
        <height>21</height>
       </rect>
@@ -783,7 +799,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>210</y>
+       <y>230</y>
        <width>141</width>
        <height>21</height>
       </rect>
@@ -796,7 +812,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>230</y>
+       <y>250</y>
        <width>141</width>
        <height>21</height>
       </rect>
@@ -809,7 +825,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>270</y>
        <width>201</width>
        <height>21</height>
       </rect>
@@ -835,7 +851,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
+       <y>60</y>
        <width>261</width>
        <height>20</height>
       </rect>
@@ -851,7 +867,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>10</y>
+       <y>40</y>
        <width>121</width>
        <height>21</height>
       </rect>
@@ -864,7 +880,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
+       <y>100</y>
        <width>261</width>
        <height>20</height>
       </rect>
@@ -880,7 +896,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>60</y>
+       <y>80</y>
        <width>121</width>
        <height>21</height>
       </rect>
@@ -1100,6 +1116,9 @@
        <height>131</height>
       </rect>
      </property>
+     <property name="dragDropMode">
+      <enum>QAbstractItemView::InternalMove</enum>
+     </property>
     </widget>
     <widget class="QWidget" name="layoutWidget_4">
      <property name="geometry">
@@ -1112,7 +1131,7 @@
      </property>
      <layout class="QHBoxLayout" name="sl_horizontalLayout_tab3">
       <item>
-       <widget class="QListWidget" name="status_log_tab3"/>
+       <widget class="QTextBrowser" name="sl_textBrowser_tab3"/>
       </item>
       <item>
        <widget class="QScrollBar" name="sl_scrollBar_tab3">
@@ -1122,6 +1141,35 @@
        </widget>
       </item>
      </layout>
+    </widget>
+    <widget class="QLabel" name="config_path_label_tab3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Config Files Path:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="config_path_lineEdit_tab3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>261</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>../../config/</string>
+     </property>
+     <property name="placeholderText">
+      <string/>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="tab4_manual">
@@ -1134,7 +1182,7 @@
        <x>10</x>
        <y>0</y>
        <width>411</width>
-       <height>231</height>
+       <height>250</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_9">
@@ -1216,10 +1264,10 @@
     <widget class="QWidget" name="layoutWidget_6">
      <property name="geometry">
       <rect>
-       <x>425</x>
+       <x>430</x>
        <y>0</y>
        <width>401</width>
-       <height>231</height>
+       <height>247</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout_10">
@@ -1339,9 +1387,9 @@
     <widget class="QWidget" name="layoutWidget_7">
      <property name="geometry">
       <rect>
-       <x>13</x>
-       <y>243</y>
-       <width>811</width>
+       <x>10</x>
+       <y>250</y>
+       <width>821</width>
        <height>201</height>
       </rect>
      </property>
