@@ -320,6 +320,7 @@ class masterWindow(QDialog):
         pass
 
     def add_sequence(self):
+        #pdb.set_trace()
         seq = ScanSequence()
         c = self.get_seq_values(seq)
         if c == 0:
@@ -397,7 +398,7 @@ class masterWindow(QDialog):
         if seq.name == "":
             errors.append("Sequence Name left blank")
         # Grabbing value from cbox so no check needed yet.
-        seq.grating = self.ui.grating_select_cbox.currentIndex() + 1
+        seq.grating = self.ui.grating_select_cbox_tab2.currentIndex() + 1
         # Grabbing value from cbox so no check needed yet.
         seq.osf = self.ui.osf_select_cbox.currentIndex() + 1
 

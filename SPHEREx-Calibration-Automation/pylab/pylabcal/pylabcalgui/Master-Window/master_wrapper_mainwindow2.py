@@ -13,7 +13,7 @@ sys.path.append("..\\..\\..\\pylablib\\instruments")
 # UI files
 # from cs260_dialog_ui import Ui_Dialog as cs260_dialog
 from cs260_dialog_popup import Cs260PopupDialog
-from scanWindowDialog import Ui_Dialog as masterDialog
+from scanWindowDialog2 import Ui_Dialog as masterDialog
 from CS260 import CS260
 
 SEQUENCE_ROLE = 1
@@ -66,7 +66,7 @@ class masterWindow(QDialog):
         self.ui.edit_sequence_button_tab2.clicked.connect(self.edit_sequence)
         self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence)
         self.ui.remove_sequence_button_tab2.clicked.connect(self.remove_sequence)
-        self.ui.remove_sequence_button_tab3.clicked.connect(self.remove_sequence)
+        #self.ui.remove_sequence_button_tab3.clicked.connect(self.remove_sequence)
         self.ui.sequence_config_files_tab1.clicked.connect(self.update_current_sequence)
         self.ui.sequence_config_files_tab2.clicked.connect(self.update_current_sequence)
         self.ui.sequence_config_files_tab3.clicked.connect(self.update_current_sequence)
@@ -117,7 +117,9 @@ class masterWindow(QDialog):
                 self.saved_config_files.append(file)
 
         for ifile in self.saved_config_files:
-            self.ui.saved_config_files_tab1.addItem(ifile)
+            self.ui.sequence_config_files_tab1.addItem(ifile)
+            self.ui.sequence_config_files_tab2.addItem(ifile)
+            self.ui.sequence_config_files_tab3.addItem(ifile)
 
     ##METHODS FOR BOTH SCAN AND MANUAL TABS#######################################
     def cs260_is_busy(self, error=True):
@@ -278,10 +280,10 @@ class masterWindow(QDialog):
         :return: completion code
         """
 
-        sequence_count = self.ui.sequence_config_files_tab1.count()
+        sequence_count = self.ui.series_config_files_tab1.count()
         scan_series = []
         for i in range(sequence_count):
-            scan_series.append(self.ui.sequence_config_files_tab1.item(i))
+            scan_series.append(self.ui.series_config_files_tab1.item(i))
 
         ##Run through each sequence in the series#####
         for seq in scan_series:
@@ -352,12 +354,12 @@ class masterWindow(QDialog):
             self.popup_dialog.popup()
 
     def remove_sequence(self):
-        cur_row_tab1 = self.ui.sequence_config_files_tab1.currentRow()
-        cur_row_tab2 = self.ui.sequence_config_files_tab2.currentRow()
-        cur_row_tab3 = self.ui.sequence_config_files_tab3.currentRow()
-        self.ui.sequence_config_files_tab1.takeItem(cur_row_tab1)
-        self.ui.sequence_config_files_tab2.takeItem(cur_row_tab2)
-        self.ui.sequence_config_files_tab3.takeItem(cur_row_tab3)
+        cur_row_tab1 = self.ui.series_config_files_tab1.currentRow()
+        #cur_row_tab2 = self.ui.sequence_config_files_tab2.currentRow()
+        #cur_row_tab3 = self.ui.sequence_config_files_tab3.currentRow()
+        self.ui.series_config_files_tab1.takeItem(cur_row_tab1)
+        #self.ui.sequence_config_files_tab2.takeItem(cur_row_tab2)
+        #self.ui.sequence_config_files_tab3.takeItem(cur_row_tab3)
 
     def update_current_sequence(self):
         cur_item_tab1 = self.ui.sequence_config_files_tab1.currentItem()

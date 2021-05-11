@@ -7,23 +7,87 @@
     <x>0</x>
     <y>0</y>
     <width>842</width>
-    <height>784</height>
+    <height>787</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab1_series_scan">
       <attribute name="title">
        <string>Tab 1</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_4">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0" rowspan="2">
+        <layout class="QVBoxLayout" name="saved_series_verticalLayout_tab1">
+         <item>
+          <widget class="QLabel" name="saved_series_config_files_label_tab1">
+           <property name="text">
+            <string>Saved Series Config Files</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="saved_series_config_files_tab1">
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOn</enum>
+           </property>
+           <property name="dragDropMode">
+            <enum>QAbstractItemView::DragDrop</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="series_name_label_tab1">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>New Series File Name:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="series_name_ledit_tab1">
+           <property name="text">
+            <string>series_test.cfg</string>
+           </property>
+           <property name="placeholderText">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="overwrite_checkBox_tab1">
+           <property name="text">
+            <string>Overwrite Without Warning</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="save_series_button_tab1">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Save Series to Config File</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="0" column="1">
         <layout class="QVBoxLayout" name="progressBar_verticalLayout_tab1">
          <item>
@@ -90,11 +154,115 @@
         </layout>
        </item>
        <item row="1" column="1" rowspan="2">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLabel" name="curent_parameters_title_tab1">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Current State:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>State Machine State:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="wavelength_current_label_tab1">
+           <property name="text">
+            <string>Wavelength (um.):</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="wavelength_current_ledit_tab1">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="osf_current_label_tab1">
+           <property name="text">
+            <string>Filter:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="osf_current_ledit_tab1">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="grating_current_label_tab1">
+           <property name="text">
+            <string>Grating:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="grating_current_ledit_tab1">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="shutter_current_label_tab1">
+           <property name="text">
+            <string>Shutter:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="shutter_current_ledit_tab1">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="0" rowspan="2">
         <layout class="QVBoxLayout" name="add_sequence_verticalLayout_tab1">
          <item>
           <widget class="QLabel" name="sequence_config_files_label_tab1">
            <property name="text">
             <string>Saved Sequence Config Files</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="load_series_button_tab1">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Load Series From Config File</string>
            </property>
           </widget>
          </item>
@@ -118,90 +286,6 @@
            </property>
            <property name="text">
             <string>Add New Sequence To Scan Series</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="remove_sequence_button_tab1">
-           <property name="text">
-            <string>Remove Sequence From Scan Series</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0" rowspan="2">
-        <layout class="QVBoxLayout" name="saved_series_verticalLayout_tab1">
-         <item>
-          <widget class="QLabel" name="series_name_label_tab1">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>New Series Config File Name:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="series_name_ledit_tab1">
-           <property name="text">
-            <string>series_test.cfg</string>
-           </property>
-           <property name="placeholderText">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="overwrite_checkBox_tab1">
-           <property name="text">
-            <string>Overwrite Without Warning</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="load_series_button_tab1">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Load Series From Config File</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="save_series_button_tab1">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Save Series to Config File</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="saved_series_config_files_label_tab1">
-           <property name="text">
-            <string>Saved Series Config Files</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QListWidget" name="saved_series_config_files_tab1">
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOn</enum>
-           </property>
-           <property name="dragDropMode">
-            <enum>QAbstractItemView::DragDrop</enum>
            </property>
           </widget>
          </item>
@@ -232,6 +316,13 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="remove_sequence_button_tab1">
+           <property name="text">
+            <string>Remove Sequence From Scan Series</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item row="4" column="0" colspan="3">
@@ -259,91 +350,14 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="0" rowspan="2">
-        <layout class="QGridLayout" name="current_params_gridLayout_tab1">
-         <item row="2" column="0">
-          <widget class="QLineEdit" name="wavelength_current_ledit_tab1">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLineEdit" name="osf_current_ledit_tab1">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="wavelength_current_label_tab1">
-           <property name="text">
-            <string>Wavelength (um.):</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="shutter_current_label_tab1">
-           <property name="text">
-            <string>Shutter:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLineEdit" name="grating_current_ledit_tab1">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="grating_current_label_tab1">
-           <property name="text">
-            <string>Grating:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLineEdit" name="shutter_current_ledit_tab1">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="osf_current_label_tab1">
-           <property name="text">
-            <string>Filter:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="curent_parameters_title_tab1">
-           <property name="font">
-            <font>
-             <pointsize>10</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Current State:</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="tab2_single_scan">
       <attribute name="title">
        <string>Tab 2</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="0">
+      <layout class="QGridLayout" name="gridLayout_4">
+       <item row="0" column="0" rowspan="2">
         <layout class="QGridLayout" name="current_params_gridLayout_tab2">
          <item row="2" column="0">
           <widget class="QLineEdit" name="wavelength_current_ledit_tab2">
@@ -420,7 +434,7 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="1">
+       <item row="0" column="1" rowspan="2">
         <layout class="QVBoxLayout" name="new_params_gridLayout_tab2">
          <item>
           <widget class="QLabel" name="new_parameters_title_tab2">
@@ -542,52 +556,132 @@
          </item>
         </layout>
        </item>
-       <item row="0" column="2" rowspan="4">
-        <layout class="QVBoxLayout" name="sl_verticalLayout_tab2">
+       <item row="0" column="2">
+        <layout class="QVBoxLayout" name="data_format_verticalLayout_tab3_2">
          <item>
-          <widget class="QLabel" name="status_log_label_tab2">
+          <layout class="QHBoxLayout" name="data_format_horizontalLayout_tab3_2">
+           <item>
+            <widget class="QLabel" name="data_format_label_tab3_2">
+             <property name="text">
+              <string>Data Format:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="data_format_comboBox_tab3_2">
+             <property name="currentText">
+              <string>.csv</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>.csv</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>.json</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>.parquet</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLabel" name="compresssion_label_tab3_2">
+             <property name="text">
+              <string>Compression:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="compression_comboBox_tab3_2">
+             <property name="currentText">
+              <string>.zip</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>.zip</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>.tgz</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>.tar</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="2">
+        <layout class="QVBoxLayout" name="config_files_verticalLayout_tab3_2">
+         <item>
+          <widget class="QLabel" name="config_path_label_tab3_2">
            <property name="text">
-            <string>Status Log</string>
+            <string>Config Files Path:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QTextBrowser" name="sl_textBrowser_tab2">
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOn</enum>
+          <widget class="QLineEdit" name="config_path_lineEdit_tab3_2">
+           <property name="text">
+            <string>../../config/</string>
+           </property>
+           <property name="placeholderText">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="storage_path_label_tab3_2">
+           <property name="text">
+            <string>Storage Path:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="storage_path_lineEdit_tab3_2">
+           <property name="text">
+            <string>/data/big_data/</string>
+           </property>
+           <property name="placeholderText">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="filename_suffix_label_tab3_2">
+           <property name="text">
+            <string>Filename Suffix:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="filename_suffix_lineEdit_tab3_2">
+           <property name="text">
+            <string>_30042021_1701</string>
+           </property>
+           <property name="placeholderText">
+            <string/>
            </property>
           </widget>
          </item>
         </layout>
        </item>
-       <item row="1" column="0" rowspan="3">
-        <layout class="QVBoxLayout" name="add_sequence_verticalLayout_tab2">
-         <item>
-          <widget class="QLabel" name="sequence_config_files_label_tab2">
-           <property name="text">
-            <string>Saved Sequence Config Files</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QListWidget" name="sequence_config_files_tab2">
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOn</enum>
-           </property>
-           <property name="dragEnabled">
-            <bool>true</bool>
-           </property>
-           <property name="dragDropMode">
-            <enum>QAbstractItemView::DragOnly</enum>
-           </property>
-           <property name="selectionMode">
-            <enum>QAbstractItemView::MultiSelection</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <layout class="QVBoxLayout" name="new_params2_gridLayout_tab2">
          <item>
           <widget class="QLabel" name="osf_select_label_tab2">
@@ -672,7 +766,7 @@
          </item>
         </layout>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="1">
         <layout class="QVBoxLayout" name="verticalLayout">
          <item>
           <widget class="QLabel" name="sequence_name_label">
@@ -698,15 +792,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="load_sequence_button_tab2">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QCheckBox" name="overwrite_checkBox_tab3_4">
            <property name="text">
-            <string>Load Sequence From Config File</string>
+            <string>Overwrite Without Warning</string>
            </property>
           </widget>
          </item>
@@ -717,16 +805,9 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QCheckBox" name="overwrite_checkBox_tab3_4">
-           <property name="text">
-            <string>Overwrite Without Warning</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
-       <item row="3" column="1">
+       <item row="4" column="1">
         <layout class="QVBoxLayout" name="add_sequence2_verticalLayout_tab2">
          <item>
           <widget class="QPushButton" name="add_sequence_button_tab2">
@@ -748,16 +829,9 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="edit_sequence_button_tab2">
-           <property name="text">
-            <string>Edit Sequence</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
-       <item row="4" column="0" colspan="3">
+       <item row="5" column="0" colspan="3">
         <layout class="QHBoxLayout" name="run_bottons_horizontalLayout_tab2">
          <item>
           <widget class="QPushButton" name="run_single_tab2">
@@ -782,265 +856,22 @@
          </item>
         </layout>
        </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="tab3_settings">
-      <attribute name="title">
-       <string>Page</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_6">
-       <item row="0" column="0" rowspan="2">
-        <layout class="QGridLayout" name="current_params_gridLayout_tab3">
-         <item row="7" column="0">
-          <widget class="QLabel" name="shutter_current_label_tab3">
-           <property name="text">
-            <string>Shutter:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QLineEdit" name="shutter_current_ledit_tab3">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLineEdit" name="osf_current_ledit_tab3">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="osf_current_label_tab3">
-           <property name="text">
-            <string>Filter:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="curent_parameters_title_tab3">
+       <item row="2" column="2" rowspan="3">
+        <layout class="QVBoxLayout" name="metadata_verticalLayout_tab3_2">
+         <item>
+          <widget class="QLabel" name="metadata_label_tab3_2">
            <property name="font">
             <font>
-             <pointsize>10</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
+             <underline>true</underline>
             </font>
            </property>
-           <property name="text">
-            <string>Current State:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLineEdit" name="wavelength_current_ledit_tab3">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="wavelength_current_label_tab3">
-           <property name="text">
-            <string>Wavelength (um.):</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLineEdit" name="grating_current_ledit_tab3">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="grating_current_label_tab3">
-           <property name="text">
-            <string>Grating:</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="0" column="1">
-        <layout class="QVBoxLayout" name="config_files_verticalLayout_tab3">
-         <item>
-          <widget class="QLabel" name="config_path_label_tab3">
-           <property name="text">
-            <string>Config Files Path:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="config_path_lineEdit_tab3">
-           <property name="text">
-            <string>../../config/</string>
-           </property>
-           <property name="placeholderText">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="storage_path_label_tab3">
-           <property name="text">
-            <string>Storage Path:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="storage_path_lineEdit_tab3">
-           <property name="text">
-            <string>/data/big_data/</string>
-           </property>
-           <property name="placeholderText">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="filename_suffix_label_tab3">
-           <property name="text">
-            <string>Filename Suffix:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="filename_suffix_lineEdit_tab3">
-           <property name="text">
-            <string>_30042021_1701</string>
-           </property>
-           <property name="placeholderText">
-            <string/>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="0" column="2" rowspan="4">
-        <layout class="QVBoxLayout" name="sl_verticalLayout_tab3">
-         <item>
-          <widget class="QLabel" name="status_log_label_tab3">
-           <property name="text">
-            <string>Status Log</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QTextBrowser" name="sl_textBrowser_tab3">
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOn</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="1">
-        <layout class="QVBoxLayout" name="data_format_verticalLayout_tab3">
-         <item>
-          <layout class="QHBoxLayout" name="data_format_horizontalLayout_tab3">
-           <item>
-            <widget class="QLabel" name="data_format_label_tab3">
-             <property name="text">
-              <string>Data Format:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="data_format_comboBox_tab3">
-             <property name="currentText">
-              <string>.parquet</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>.csv</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>.json</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>.parquet</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_7">
-           <item>
-            <widget class="QLabel" name="compresssion_label_tab3">
-             <property name="text">
-              <string>Compression:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="compression_comboBox_tab3">
-             <property name="currentText">
-              <string>.tgz</string>
-             </property>
-             <item>
-              <property name="text">
-               <string>.zip</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>.tgz</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>.tar</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="0" rowspan="2">
-        <layout class="QVBoxLayout" name="add_sequence_verticalLayout_tab3">
-         <item>
-          <widget class="QLabel" name="sequence_config_files_label_tab3">
-           <property name="text">
-            <string>Saved Sequence Config Files</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QListWidget" name="sequence_config_files_tab3">
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOn</enum>
-           </property>
-           <property name="dragDropMode">
-            <enum>QAbstractItemView::DragDrop</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="2" column="1">
-        <layout class="QVBoxLayout" name="metadata_verticalLayout_tab3">
-         <item>
-          <widget class="QLabel" name="metadata_label_tab3">
            <property name="text">
             <string>Metadata to Include</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="checkBox_8">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -1053,7 +884,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_2">
+          <widget class="QCheckBox" name="checkBox_9">
            <property name="text">
             <string>Power_Meter</string>
            </property>
@@ -1063,7 +894,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_3">
+          <widget class="QCheckBox" name="checkBox_10">
            <property name="text">
             <string>Filter_Wheel_1</string>
            </property>
@@ -1073,7 +904,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_4">
+          <widget class="QCheckBox" name="checkBox_11">
            <property name="text">
             <string>Filter_Wheel_2</string>
            </property>
@@ -1083,7 +914,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_5">
+          <widget class="QCheckBox" name="checkBox_12">
            <property name="text">
             <string>Grating</string>
            </property>
@@ -1093,7 +924,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_6">
+          <widget class="QCheckBox" name="checkBox_13">
            <property name="text">
             <string>Wavelength</string>
            </property>
@@ -1103,7 +934,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_7">
+          <widget class="QCheckBox" name="checkBox_14">
            <property name="text">
             <string>Measurement_Interval</string>
            </property>
@@ -1113,14 +944,19 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="keywords_label_tab3">
+          <widget class="QLabel" name="keywords_label_tab3_2">
+           <property name="font">
+            <font>
+             <underline>true</underline>
+            </font>
+           </property>
            <property name="text">
             <string>Search Keywords:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="keywords_lineEdit_tab3">
+          <widget class="QLineEdit" name="keywords_lineEdit_tab3_2">
            <property name="text">
             <string>Test, Development</string>
            </property>
@@ -1129,42 +965,45 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Notes</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTextBrowser" name="textBrowser"/>
+         </item>
         </layout>
        </item>
-       <item row="3" column="1">
-        <layout class="QVBoxLayout" name="add_sequence2_verticalLayout_tab3">
+       <item row="2" column="0" rowspan="3">
+        <layout class="QVBoxLayout" name="add_sequence_verticalLayout_tab2">
          <item>
-          <widget class="QLabel" name="sequence_name_label_4">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
+          <widget class="QLabel" name="sequence_config_files_label_tab2">
            <property name="text">
-            <string>New Sequence Config File Name:</string>
+            <string>Saved Sequence Config Files</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="sequence_name_ledit_4">
-           <property name="text">
-            <string>setup_test.cfg</string>
+          <widget class="QListWidget" name="sequence_config_files_tab2">
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOn</enum>
            </property>
-           <property name="placeholderText">
-            <string/>
+           <property name="dragEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="dragDropMode">
+            <enum>QAbstractItemView::DragOnly</enum>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::MultiSelection</enum>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="save_sequence_pushButton_4_tab2_3">
-           <property name="text">
-            <string>Save Sequence Config File</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="add_sequence_button_tab3">
+          <widget class="QPushButton" name="load_sequence_button_tab2">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
              <horstretch>0</horstretch>
@@ -1172,39 +1011,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Add New Sequence To Scan Series</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="overwrite_checkBox_tab3_5">
-           <property name="text">
-            <string>Overwrite Without Warning</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="4" column="0" colspan="3">
-        <layout class="QHBoxLayout" name="run_bottons_horizontalLayout_tab3">
-         <item>
-          <widget class="QPushButton" name="run_single_tab3">
-           <property name="text">
-            <string>Run Highlighted Sequence</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="run_series_tab3">
-           <property name="text">
-            <string>Run Series</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="abort_scan_button_tab3">
-           <property name="text">
-            <string>Abort Scan</string>
+            <string>Load Sequence From Config File</string>
            </property>
           </widget>
          </item>
@@ -1440,6 +1247,12 @@
         </layout>
        </item>
       </layout>
+     </widget>
+     <widget class="QWidget" name="tab3_settings">
+      <attribute name="title">
+       <string>Page</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6"/>
      </widget>
     </widget>
    </item>
