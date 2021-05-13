@@ -5,7 +5,8 @@ import numpy as np
 import datetime as datetime
 
 #sys.path.append(r'..\pylab')
-sys.path.append(r'..\..\..\pylab')
+sys.path.append(r'..\..\..\..\pylablib')
+sys.path.append(r'..\..\..')
 
 from pylablib.utils.parameters import *
 from pylablib.instruments.powermaxusb import PowermaxUSB
@@ -49,7 +50,7 @@ class SpectralCalibrationMachine(SM):
 
 		#self.path = r"/pylab/pylabcal/config"
 		#self.path = os.path.join('..','pylab','pylabcal','config')
-		self.path = os.path.join('..', 'config')
+		self.path = os.path.join('..', '..', 'config', 'sequence')
 
 		if os.path.isfile(os.path.join(self.path,config_file)) == False:
 			print('No config file by this name')

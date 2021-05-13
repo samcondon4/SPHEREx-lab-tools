@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="tab1_series_scan">
     <attribute name="title">
@@ -337,13 +337,13 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
        <width>261</width>
-       <height>131</height>
+       <height>157</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
@@ -430,7 +430,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>280</x>
@@ -472,7 +472,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>280</x>
@@ -525,13 +525,13 @@
       </item>
      </layout>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>140</y>
        <width>261</width>
-       <height>191</height>
+       <height>212</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">

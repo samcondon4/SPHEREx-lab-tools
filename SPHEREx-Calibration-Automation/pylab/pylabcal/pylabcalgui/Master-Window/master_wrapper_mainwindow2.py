@@ -1,6 +1,7 @@
 import pdb
 import sys
 import os
+import copy
 import datetime as datetime
 from qasync import QEventLoop
 import asyncio
@@ -13,8 +14,12 @@ sys.path.append("..\\..\\..\\pylablib\\instruments")
 # UI files
 # from cs260_dialog_ui import Ui_Dialog as cs260_dialog
 from cs260_dialog_popup import Cs260PopupDialog
-from scanWindowDialog2 import Ui_Dialog as masterDialog
+from scanWindowDialog3 import Ui_Dialog as masterDialog
 from CS260 import CS260
+
+# State Machine
+sys.path.append("..\\..\\pylabcalsm")
+from pylabcalsm import SpectralCalibrationMachine
 
 SEQUENCE_ROLE = 1
 
@@ -41,8 +46,32 @@ class masterWindow(QDialog):
     """
 
     #def __init__(self, cs260_obj, sync_queue=None):
-    def __init__(self, sync_queue=None):
-        super().__init__()
+    def __init__(self, sync_queue=None, parent=None, config_file='default_setup.cfg'):
+        super().__init__(parent)
+
+        ##State Machine##################################
+        self.state_machine = SpectralCalibrationMachine(config_file=config_file)
+        self.parameters_default = copy.deepcopy(self.state_machine.params)
+        #pdb.set_trace()
+        # self.parameters_last = copy.deepcopy(self.state_machine.params)
+        # self.parameters = copy.deepcopy(self.state_machine.params)
+
+        ### Tab 1 - Run Series
+        ## Update Current State
+        #self.wavelength_current_ledit_tab2.setvalue(self.state_machine.params['monochrometer']['wavelength_step'])
+
+
+        ## Display Saved Series Config Files
+
+        ## Display Saved Sequence Config Files
+
+        ## Update Status Log (aka message_box)
+
+        ## Update Progress Bars
+
+        ### Tab 2 - Run Sequence
+
+        ### Tab 3 - Manual
 
         ##Class attributes###############################
         # cs260 monochromator class instance
@@ -58,32 +87,67 @@ class masterWindow(QDialog):
         self.ui.setupUi(self)
         # self.ui.sequence_config_files = QListWidget()
         ###################################################################################
+        #Config Directories
+        #sequence_path = os.path.join(self.state_machine.config_files_path,'sequence')
+        #series_path = os.path.join(self.state_machine.config_files_path,'series')
+        config_path = self.state_machine.params['io']['config_files_path']
+        self.ui.config_path_lineEdit_tab2.setText(config_path)
 
         ##Common tab buttons: Add/Edit/Remove Sequence #############################
         self.ui.add_sequence_button_tab1.clicked.connect(self.add_sequence)
         self.ui.add_sequence_button_tab2.clicked.connect(self.add_sequence)
-        self.ui.add_sequence_button_tab3.clicked.connect(self.add_sequence)
-        self.ui.edit_sequence_button_tab2.clicked.connect(self.edit_sequence)
+        #self.ui.edit_sequence_button_tab2.clicked.connect(self.edit_sequence)
         self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence)
         self.ui.remove_sequence_button_tab2.clicked.connect(self.remove_sequence)
         #self.ui.remove_sequence_button_tab3.clicked.connect(self.remove_sequence)
-        self.ui.sequence_config_files_tab1.clicked.connect(self.update_current_sequence)
-        self.ui.sequence_config_files_tab2.clicked.connect(self.update_current_sequence)
-        self.ui.sequence_config_files_tab3.clicked.connect(self.update_current_sequence)
+        #self.ui.sequence_config_files_tab1.clicked.connect(self.update_current_sequence)
+        #self.ui.sequence_config_files_tab2.clicked.connect(self.update_current_sequence)
 
         ##Common tab buttons: Run Sequence, Run Series, Abort #############################
         self.ui.run_single_tab1.clicked.connect(self.start_scan_series)
         self.ui.run_single_tab2.clicked.connect(self.start_scan_series)
-        self.ui.run_single_tab3.clicked.connect(self.start_scan_series)
         self.ui.run_series_tab1.clicked.connect(self.start_scan_series)
         self.ui.run_series_tab2.clicked.connect(self.start_scan_series)
-        self.ui.run_series_tab3.clicked.connect(self.start_scan_series)
         self.ui.abort_scan_button_tab1.clicked.connect(self.abort)
         self.ui.abort_scan_button_tab2.clicked.connect(self.abort)
-        self.ui.abort_scan_button_tab3.clicked.connect(self.abort)
         #########################################################################
 
-        ### First Tab Sequence File List
+        ### Series Files
+        # Put existing Series files in a list
+        self.saved_series_config_files = []
+
+        # Establish path to series files
+        path_config_file = self.ui.config_path_lineEdit_tab2.text()
+        #for file in os.listdir(os.path.join(path_config_file,'sequence')):
+        for file in os.listdir(os.path.join('..','..','config','series')):
+            # check the files which are end with specific extension
+            if file.endswith(".cfg"):
+                self.saved_series_config_files.append(file)
+
+        # Display files ending in .cfg
+        for ifile in self.saved_series_config_files:
+            self.ui.saved_series_config_files_tab1.addItem(ifile)
+
+        ### Sequence Files
+        # Put existing Sequence files in a list
+        self.saved_sequence_config_files = []
+
+        # Establish path to sequence files
+        path_config_file = self.ui.config_path_lineEdit_tab2.text()
+        #for file in os.listdir(os.path.join(path_config_file,'sequence')):
+        for file in os.listdir(os.path.join('..','..','config','sequence')):
+            # check the files which are end with specific extension
+            if file.endswith(".cfg"):
+                self.saved_sequence_config_files.append(file)
+
+        # Display files ending in .cfg
+        for ifile in self.saved_sequence_config_files:
+            self.ui.sequence_config_files_tab1.addItem(ifile)
+            self.ui.sequence_config_files_tab2.addItem(ifile)
+
+        # If sequence is dragged and dropped onto tab1, also update tab2 (and viceversa)
+        #self.ui.series_config_files_tab1.currentTextChanged(self.sync_config_file)
+        #self.ui.series_config_files_tab2.currentTextChanged(self.sync_config_file)
 
         ### Common tab Status Log
 
@@ -108,18 +172,46 @@ class masterWindow(QDialog):
         # its associated task will be set to the corresponding dictionary value.
         self.coro_exec = {"grating": None, "osf": None, "wave": None, "set_params": None, "scan_series": None}
 
-        # Display list of .cfg files in Tab 1
-        path_config_file = self.ui.config_path_lineEdit_tab3.text()
-        self.saved_config_files = []
-        for file in os.listdir(path_config_file):
-            # check the files which are end with specific extension
-            if file.endswith(".cfg"):
-                self.saved_config_files.append(file)
+        self.series_log = QTextEdit()
+        #self.retranslateUi()
 
-        for ifile in self.saved_config_files:
-            self.ui.sequence_config_files_tab1.addItem(ifile)
-            self.ui.sequence_config_files_tab2.addItem(ifile)
-            self.ui.sequence_config_files_tab3.addItem(ifile)
+        # Populate Series list from Series file
+        self.ui.load_series_button_tab1.clicked.connect(self.select_series_from_file)
+
+        # Remove Sequence from Series list
+        self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence_from_series)
+
+    def select_series_from_file(self):
+
+        series_filename = self.ui.saved_series_config_files_tab1.currentItem().text()
+        text = open(os.path.join('..','..','config','series', series_filename)).read()
+
+        self.series_log.insertPlainText(text)
+        self.ui.series_config_files_tab1.clear()
+        self.ui.series_config_files_tab2.clear()
+        for ifile in text.split('\n'):
+            if ifile:
+                self.ui.series_config_files_tab1.addItem(ifile)
+                self.ui.series_config_files_tab2.addItem(ifile)
+
+    def remove_sequence_from_series(self):
+        self.ui.series_config_files_tab1.takeItem(self.ui.series_config_files_tab1.currentRow())
+
+    def display_messages_in_box(self):
+
+        while len(self.state_machine.message_box) > 0:
+            last_line = self.get_time_now() + self.state_machine.message_box.pop(0)
+            self.state_machine.message_log.append(last_line)
+            self.msg.append(last_line)
+
+    def get_datetime_now(self):
+        dateTimeObj = datetime.datetime.now()
+        return dateTimeObj.strftime("_%d%m%Y_%H%M")
+
+    def get_time_now(self):
+        dateTimeObj = datetime.datetime.now()
+        # return "_" + dateTimeObj.strftime("%H:%M:%S")
+        return dateTimeObj.strftime("%H:%M:%S") + " "
 
     ##METHODS FOR BOTH SCAN AND MANUAL TABS#######################################
     def cs260_is_busy(self, error=True):
@@ -230,6 +322,8 @@ class masterWindow(QDialog):
         filter_read_task = asyncio.create_task(self.cs260.async_pend("osf"))
         await filter_read_task
         cur_filter = filter_read_task.result()
+        self.ui.osf_current_ledit_tab1.setText("OSF{}".format(cur_filter))
+        self.ui.osf_current_ledit_tab2.setText("OSF{}".format(cur_filter))
         self.ui.osf_current_ledit_tab4.setText("OSF{}".format(cur_filter))
         self.ui.osf_new_cbox_tab4.setCurrentIndex(cur_filter - 1)
         ######################################################################
@@ -238,6 +332,8 @@ class masterWindow(QDialog):
         grating_read_task = asyncio.create_task(self.cs260.async_pend("grating"))
         await grating_read_task
         cur_grating = grating_read_task.result()
+        self.ui.grating_current_ledit_tab1.setText("G{}".format(self.cs260.get_grating()))
+        self.ui.grating_current_ledit_tab2.setText("G{}".format(self.cs260.get_grating()))
         self.ui.grating_current_ledit_tab4.setText("G{}".format(self.cs260.get_grating()))
         self.ui.grating_new_cbox_tab4.setCurrentIndex(cur_grating - 1)
         ###############################################################################
@@ -245,9 +341,13 @@ class masterWindow(QDialog):
         # Shutter reading###############################################################
         shutter_state = self.cs260.get_shutter()
         if shutter_state == "O":
+            self.ui.shutter_current_ledit_tab1.setText("Open")
+            self.ui.shutter_current_ledit_tab2.setText("Open")
             self.ui.shutter_current_ledit_tab4.setText("Open")
             self.ui.shutter_new_cbox_tab4.setCurrentIndex(0)
         elif shutter_state == "C":
+            self.ui.shutter_current_ledit_tab1.setText("Closed")
+            self.ui.shutter_current_ledit_tab2.setText("Closed")
             self.ui.shutter_current_ledit_tab4.setText("Closed")
             self.ui.shutter_new_cbox_tab4.setCurrentIndex(1)
         ###############################################################################
@@ -256,6 +356,8 @@ class masterWindow(QDialog):
         wave_read_task = asyncio.create_task(self.cs260.async_pend("wave"))
         await wave_read_task
         cur_wave = str(wave_read_task.result())
+        self.ui.wavelength_current_ledit_tab1.setText(cur_wave)
+        self.ui.wavelength_current_ledit_tab2.setText(cur_wave)
         self.ui.wavelength_current_ledit_tab4.setText(cur_wave)
         self.ui.wavelength_new_ledit_tab4.setText(cur_wave)
         #######################################################
@@ -322,16 +424,17 @@ class masterWindow(QDialog):
         pass
 
     def add_sequence(self):
+        #seq = ScanSequence()
+        #c = self.get_seq_values(seq)
+        #if c == 0:
+        #    seq_item = QListWidgetItem()
+        #    seq_item.setText(seq.name)
+        #    seq_item.setData(SEQUENCE_ROLE, seq)
+        #    self.ui.series_config_files_tab1.addItem(seq_item)
+        #    self.ui.series_config_files_tab2.addItem(seq_item)
+        self.ui.series_config_files_tab1.addItem(self.ui.sequence_config_files_tab1.currentItem().text())
+        self.ui.series_config_files_tab2.addItem(self.ui.sequence_config_files_tab1.currentItem().text())
         #pdb.set_trace()
-        seq = ScanSequence()
-        c = self.get_seq_values(seq)
-        if c == 0:
-            seq_item = QListWidgetItem()
-            seq_item.setText(seq.name)
-            seq_item.setData(SEQUENCE_ROLE, seq)
-            self.ui.sequence_config_files_tab1.addItem(seq_item)
-            self.ui.sequence_config_files_tab2.addItem(seq_item)
-            self.ui.sequence_config_files_tab3.addItem(seq_item)
 
     def edit_sequence(self):
         if self.current_sequence is not None:
@@ -346,8 +449,6 @@ class masterWindow(QDialog):
                 self.ui.sequence_config_files_tab1.currentItem().setData(SEQUENCE_ROLE, seq)
                 self.ui.sequence_config_files_tab2.currentItem().setText(seq.name)
                 self.ui.sequence_config_files_tab2.currentItem().setData(SEQUENCE_ROLE, seq)
-                self.ui.sequence_config_files_tab3.currentItem().setText(seq.name)
-                self.ui.sequence_config_files_tab3.currentItem().setData(SEQUENCE_ROLE, seq)
 
         else:
             self.popup_dialog.disp_errors(["No sequence selected to edit!"])
@@ -373,7 +474,7 @@ class masterWindow(QDialog):
             self.ui.sequence_wave_end_ledit.setText(str(cur_seq_data.end_wave))
             self.ui.sequence_wave_step_ledit.setText(str(cur_seq_data.step_wave))
             self.ui.sequence_measure_int_ledit.setText(str(cur_seq_data.measure_interval))
-            self.ui.sequence_name_ledit.setText(cur_seq_data.name)
+            #self.ui.sequence_name_ledit.setText(cur_seq_data.name)
 
     def show_invalid_seq_popup(self, error_list):
         error_list = ["Invalid scan sequence will not be added to the series.",
