@@ -8,13 +8,19 @@ sys.path.append('Transmission-Measurement')
 from cs260_dialog_mainwindow import *
 import transmission_measurement_main
 
+#Hard coded flags to generate miscellaneous extension tabs
 transmission = True
+
+
+
 
 class PylabMiscDialog(CS260Window):
     def __init__(self, cs, sync_queue, transmission=False):
         super().__init__(cs, sync_queue=sync_queue)
         if transmission is True:
             transmission_measurement_main.add_transmission_tab(self.ui.tabWidget)
+
+
 
 
 if __name__ == "__main__":
