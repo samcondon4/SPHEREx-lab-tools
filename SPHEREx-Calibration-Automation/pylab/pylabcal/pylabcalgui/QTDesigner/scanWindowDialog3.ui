@@ -354,6 +354,12 @@
            <property name="text">
             <string>Run Highlighted Sequence</string>
            </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
           </widget>
          </item>
          <item>
@@ -361,12 +367,24 @@
            <property name="text">
             <string>Run Series</string>
            </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="abort_scan_button_tab1">
            <property name="text">
             <string>Abort Scan</string>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
            </property>
           </widget>
          </item>

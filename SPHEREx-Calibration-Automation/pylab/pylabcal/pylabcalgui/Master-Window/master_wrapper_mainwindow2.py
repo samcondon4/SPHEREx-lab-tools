@@ -3,6 +3,7 @@ import sys
 import os
 import copy
 import datetime as datetime
+from configparser import ConfigParser
 from qasync import QEventLoop
 import asyncio
 from PyQt5.QtWidgets import *
@@ -115,6 +116,7 @@ class masterWindow(QDialog):
         ### Series Files
         # Put existing Series files in a list
         self.saved_series_config_files = []
+        self.ui.save_series_button_tab1.clicked.connect(self.save_series_to_file)
 
         # Establish path to series files
         path_config_file = self.ui.config_path_lineEdit_tab2.text()
@@ -144,10 +146,6 @@ class masterWindow(QDialog):
         for ifile in self.saved_sequence_config_files:
             self.ui.sequence_config_files_tab1.addItem(ifile)
             self.ui.sequence_config_files_tab2.addItem(ifile)
-
-        # If sequence is dragged and dropped onto tab1, also update tab2 (and viceversa)
-        #self.ui.series_config_files_tab1.currentTextChanged(self.sync_config_file)
-        #self.ui.series_config_files_tab2.currentTextChanged(self.sync_config_file)
 
         ### Common tab Status Log
 
@@ -180,6 +178,25 @@ class masterWindow(QDialog):
 
         # Remove Sequence from Series list
         self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence_from_series)
+
+    def save_series_to_file(self):
+        series_filename = self.ui.series_name_ledit_tab1.text()
+        series_filename_out = os.path.join('..','..','config','series',series_filename)
+        #pdb.set_trace()
+
+        #config_out = ConfigParser()
+        config_out = []
+        for i in range(len(self.ui.series_config_files_tab1)):
+            config_out.append(self.ui.series_config_files_tab1.item(i).text())
+
+        series_file = open(series_filename_out, 'w')
+
+        for element in config_out:
+            series_file.write(element)
+            series_file.write('\n')
+        series_file.close()
+
+        self.ui.saved_series_config_files_tab1.addItem(series_filename)
 
     def select_series_from_file(self):
 
