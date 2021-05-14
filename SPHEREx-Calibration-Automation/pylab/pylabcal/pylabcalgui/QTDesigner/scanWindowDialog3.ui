@@ -14,14 +14,14 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
+   <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab1_series_scan">
       <attribute name="title">
-       <string>Tab 1</string>
+       <string>Series</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0" rowspan="2">
@@ -264,7 +264,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>New Series File Name:</string>
+            <string>Series Config File Name:</string>
            </property>
           </widget>
          </item>
@@ -345,6 +345,13 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QPushButton" name="clear_all_sequences_button_tab_1">
+           <property name="text">
+            <string>Clear All Sequences</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item row="3" column="0" colspan="4">
@@ -394,7 +401,7 @@
      </widget>
      <widget class="QWidget" name="tab2_single_scan">
       <attribute name="title">
-       <string>Tab 2</string>
+       <string>Sequence</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="0" column="0" rowspan="2">
@@ -746,19 +753,6 @@
            </property>
           </widget>
          </item>
-         <item>
-          <widget class="QPushButton" name="load_sequence_button_tab2">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Load Sequence From Config File</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
        <item row="2" column="1">
@@ -993,16 +987,15 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="overwrite_checkBox_tab2">
-           <property name="text">
-            <string>Overwrite Without Warning</string>
+          <widget class="QPushButton" name="load_sequence_button_tab2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="save_sequence_pushButton_tab2">
            <property name="text">
-            <string>Save Sequence Config File</string>
+            <string>Load Sequence From Config File</string>
            </property>
           </widget>
          </item>
@@ -1023,6 +1016,27 @@
           <widget class="QPushButton" name="remove_sequence_button_tab2">
            <property name="text">
             <string>Remove Sequence From Series</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="clear_all_sequences_button_tab_2">
+           <property name="text">
+            <string>Clear All Sequences</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="save_sequence_pushButton_tab2">
+           <property name="text">
+            <string>Save Sequence to Config File</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="overwrite_checkBox_tab2">
+           <property name="text">
+            <string>Overwrite Without Warning</string>
            </property>
           </widget>
          </item>
@@ -1091,7 +1105,7 @@
      </widget>
      <widget class="QWidget" name="tab4_manual">
       <attribute name="title">
-       <string>Page</string>
+       <string>Monochrometer</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
@@ -1317,12 +1331,6 @@
         </layout>
        </item>
       </layout>
-     </widget>
-     <widget class="QWidget" name="tab3_settings">
-      <attribute name="title">
-       <string>Page</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_6"/>
      </widget>
     </widget>
    </item>

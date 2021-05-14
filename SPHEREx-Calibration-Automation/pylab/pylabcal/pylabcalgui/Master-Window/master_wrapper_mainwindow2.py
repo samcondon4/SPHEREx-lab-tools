@@ -147,6 +147,7 @@ class masterWindow(QDialog):
             self.ui.sequence_config_files_tab1.addItem(ifile)
             self.ui.sequence_config_files_tab2.addItem(ifile)
 
+
         ### Common tab Status Log
 
         ##Manual tab init#####################################################
@@ -171,13 +172,23 @@ class masterWindow(QDialog):
         self.coro_exec = {"grating": None, "osf": None, "wave": None, "set_params": None, "scan_series": None}
 
         self.series_log = QTextEdit()
-        #self.retranslateUi()
 
+        self.retranslateUi()
+
+    def retranslateUi(self):
         # Populate Series list from Series file
         self.ui.load_series_button_tab1.clicked.connect(self.select_series_from_file)
 
-        # Remove Sequence from Series list
+        # Remove Single Sequence from Series list
         self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence_from_series)
+
+        # Clear All Sequences from Series List
+        self.ui.clear_all_sequences_button_tab_1.clicked.connect(self.clear_series)
+        self.ui.clear_all_sequences_button_tab_2.clicked.connect(self.clear_series)
+
+    def clear_series(self):
+        self.ui.series_config_files_tab1.clear()
+        self.ui.series_config_files_tab2.clear()
 
     def save_series_to_file(self):
         series_filename = self.ui.series_name_ledit_tab1.text()
@@ -196,7 +207,9 @@ class masterWindow(QDialog):
             series_file.write('\n')
         series_file.close()
 
-        self.ui.saved_series_config_files_tab1.addItem(series_filename)
+        isin_list = self.ui.saved_series_config_files_tab1.findItems(series_filename, QtCore.Qt.MatchExactly)
+        if len(isin_list) < 1:
+            self.ui.saved_series_config_files_tab1.addItem(series_filename)
 
     def select_series_from_file(self):
 
