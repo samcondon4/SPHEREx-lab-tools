@@ -95,8 +95,8 @@ class masterWindow(QDialog):
         self.ui.config_path_lineEdit_tab2.setText(config_path)
 
         ##Common tab buttons: Add/Edit/Remove Sequence #############################
-        self.ui.add_sequence_button_tab1.clicked.connect(self.add_sequence)
-        self.ui.add_sequence_button_tab2.clicked.connect(self.add_sequence)
+        self.ui.add_sequence_button_tab1.clicked.connect(self.add_sequence_tab1)
+        self.ui.add_sequence_button_tab2.clicked.connect(self.add_sequence_tab2)
         #self.ui.edit_sequence_button_tab2.clicked.connect(self.edit_sequence)
         self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence)
         self.ui.remove_sequence_button_tab2.clicked.connect(self.remove_sequence)
@@ -453,7 +453,7 @@ class masterWindow(QDialog):
     def abort_scan_series(self):
         pass
 
-    def add_sequence(self):
+    def add_sequence_tab1(self):
         #seq = ScanSequence()
         #c = self.get_seq_values(seq)
         #if c == 0:
@@ -464,6 +464,19 @@ class masterWindow(QDialog):
         #    self.ui.series_config_files_tab2.addItem(seq_item)
         self.ui.series_config_files_tab1.addItem(self.ui.sequence_config_files_tab1.currentItem().text())
         self.ui.series_config_files_tab2.addItem(self.ui.sequence_config_files_tab1.currentItem().text())
+        #pdb.set_trace()
+
+    def add_sequence_tab2(self):
+        #seq = ScanSequence()
+        #c = self.get_seq_values(seq)
+        #if c == 0:
+        #    seq_item = QListWidgetItem()
+        #    seq_item.setText(seq.name)
+        #    seq_item.setData(SEQUENCE_ROLE, seq)
+        #    self.ui.series_config_files_tab1.addItem(seq_item)
+        #    self.ui.series_config_files_tab2.addItem(seq_item)
+        self.ui.series_config_files_tab1.addItem(self.ui.sequence_config_files_tab2.currentItem().text())
+        self.ui.series_config_files_tab2.addItem(self.ui.sequence_config_files_tab2.currentItem().text())
         #pdb.set_trace()
 
     def edit_sequence(self):
