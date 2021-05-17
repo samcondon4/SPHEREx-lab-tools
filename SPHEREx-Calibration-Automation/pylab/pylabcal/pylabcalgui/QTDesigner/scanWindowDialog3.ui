@@ -14,10 +14,10 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
+   <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab1_series_scan">
       <attribute name="title">
@@ -240,6 +240,9 @@
            <property name="dragDropMode">
             <enum>QAbstractItemView::NoDragDrop</enum>
            </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::MultiSelection</enum>
+           </property>
           </widget>
          </item>
          <item>
@@ -331,7 +334,7 @@
             <enum>QAbstractItemView::DragDrop</enum>
            </property>
            <property name="selectionMode">
-            <enum>QAbstractItemView::MultiSelection</enum>
+            <enum>QAbstractItemView::SingleSelection</enum>
            </property>
           </widget>
          </item>
@@ -742,6 +745,9 @@
            <property name="verticalScrollBarPolicy">
             <enum>Qt::ScrollBarAlwaysOn</enum>
            </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::DoubleClicked</set>
+           </property>
            <property name="dragEnabled">
             <bool>true</bool>
            </property>
@@ -749,7 +755,7 @@
             <enum>QAbstractItemView::DragOnly</enum>
            </property>
            <property name="selectionMode">
-            <enum>QAbstractItemView::MultiSelection</enum>
+            <enum>QAbstractItemView::SingleSelection</enum>
            </property>
           </widget>
          </item>
@@ -763,19 +769,6 @@
            </property>
            <property name="text">
             <string>Load Sequence From Config File</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="add_sequence_button_tab2">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Add Sequence To Series</string>
            </property>
           </widget>
          </item>
@@ -993,7 +986,7 @@
          <item>
           <widget class="QLineEdit" name="sequence_name_ledit_tab2">
            <property name="text">
-            <string>setup_test.cfg</string>
+            <string>setup.cfg</string>
            </property>
            <property name="placeholderText">
             <string/>
@@ -1004,6 +997,19 @@
           <widget class="QPushButton" name="save_sequence_pushButton_tab2">
            <property name="text">
             <string>Save Sequence to Config File</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="add_sequence_button_tab2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Save and Add Sequence To Series</string>
            </property>
           </widget>
          </item>

@@ -135,14 +135,14 @@ class SpectralCalibrationMachine(SM):
 		else:
 			self.message_box.append(configfilename +' already exists')
 
-	def update_parameters(self, params_in):
-
-		if self.params != params_in:
-			self.params = params_in
-
-			return True
+	def update_parameters(self, config_file):
+		config_path = os.path.join(self.path, config_file)
+		if os.path.isfile(config_path):
+			print(config_path)
+			self.params = self.get_parameters(config_path)
 		else:
-			return False
+			print(config_file+' file does not exist')
+			return
 
 	def error_handler(self):
 		for key, value in self.errorDict.items():

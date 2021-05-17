@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>641</width>
+    <width>871</width>
     <height>484</height>
    </rect>
   </property>
@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -281,13 +281,6 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="1" rowspan="5">
-          <widget class="QListWidget" name="series">
-           <property name="editTriggers">
-            <set>QAbstractItemView::AllEditTriggers</set>
-           </property>
-          </widget>
-         </item>
          <item row="4" column="0">
           <widget class="QPushButton" name="remove_sequence_button">
            <property name="text">
@@ -299,6 +292,13 @@
           <widget class="QPushButton" name="edit_sequence_button">
            <property name="text">
             <string>Edit Sequence</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1" rowspan="5">
+          <widget class="QListWidget" name="series">
+           <property name="editTriggers">
+            <set>QAbstractItemView::AllEditTriggers</set>
            </property>
           </widget>
          </item>
@@ -326,7 +326,7 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="0">
+         <item row="1" column="0">
           <widget class="QPushButton" name="abort_manual_button">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -337,6 +337,121 @@
            <property name="text">
             <string>Abort</string>
            </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="0" column="1">
+        <layout class="QGridLayout" name="gridLayout_8">
+         <item row="8" column="0">
+          <widget class="QComboBox" name="shutter_new_cbox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>Open</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Close</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_42">
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>New Parameters:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLineEdit" name="wavelength_new_ledit"/>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_45">
+           <property name="text">
+            <string>Grating:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_43">
+           <property name="text">
+            <string>Wavelength (um.):</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_44">
+           <property name="text">
+            <string>Filter:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLabel" name="label_46">
+           <property name="text">
+            <string>Shutter:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QComboBox" name="osf_new_cbox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>OSF1</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>OSF2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>OSF3</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>OSF4</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QComboBox" name="grating_new_cbox">
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+           <item>
+            <property name="text">
+             <string>G1</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>G2</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>G3</string>
+            </property>
+           </item>
           </widget>
          </item>
         </layout>
@@ -413,121 +528,6 @@
           <widget class="QLabel" name="label_39">
            <property name="text">
             <string>Filter:</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="0" column="1">
-        <layout class="QGridLayout" name="gridLayout_8">
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_44">
-           <property name="text">
-            <string>Filter:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_42">
-           <property name="font">
-            <font>
-             <pointsize>14</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>New Parameters:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0">
-          <widget class="QLabel" name="label_46">
-           <property name="text">
-            <string>Shutter:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLineEdit" name="wavelength_new_ledit"/>
-         </item>
-         <item row="4" column="0">
-          <widget class="QComboBox" name="osf_new_cbox">
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string>OSF1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>OSF2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>OSF3</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>OSF4</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QComboBox" name="grating_new_cbox">
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string>G1</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>G2</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>G3</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="8" column="0">
-          <widget class="QComboBox" name="shutter_new_cbox">
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-           <item>
-            <property name="text">
-             <string>Open</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Close</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_43">
-           <property name="text">
-            <string>Wavelength (um.):</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="label_45">
-           <property name="text">
-            <string>Grating:</string>
            </property>
           </widget>
          </item>

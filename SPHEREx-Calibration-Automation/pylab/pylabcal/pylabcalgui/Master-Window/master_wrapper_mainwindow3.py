@@ -186,11 +186,20 @@ class masterWindow(QDialog):
         self.ui.clear_all_sequences_button_tab_1.clicked.connect(self.clear_series)
         self.ui.clear_all_sequences_button_tab_2.clicked.connect(self.clear_series)
 
-    def update_current_state(self, value):
-        pdb.set_trace()
+        # Load parameters from saved config file
+        #highlighted_config_file = self.ui.load_sequence_button_tab2.text()
+        #highlighted_config_file = self.ui.sequence_name_ledit_tab2.text()
+        #self.state_machine.update_parameters(highlighted_config_file)
 
-        highlighted_file = value.text()
-        self.state_machine.update_parameters(highlighted_file)
+        self.ui.load_sequence_button_tab2.clicked.connect(self.update_current_state)
+
+    def update_current_state(self, value):
+        #highlighted_file = value.text()
+        #self.state_machine.update_parameters(highlighted_file)
+
+        highlighted_config_file = self.ui.sequence_config_files_tab2.currentItem().text()
+        self.state_machine.update_parameters(highlighted_config_file)
+        pdb.set_trace()
 
     #def add_text_to_message_box(self):
 
