@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'scanWindowDialog3.ui'
+# Form implementation generated from reading ui file 'C:/Users/viero/Repositories/SPHEREx-lab-tools/SPHEREx-Calibration-Automation/pylab/pylabcal/pylabcalgui/QTDesigner/scanWindowDialog3.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.2
 #
@@ -136,7 +136,7 @@ class Ui_Dialog(object):
         self.saved_series_config_files_tab1.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         self.saved_series_config_files_tab1.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.saved_series_config_files_tab1.setDragDropMode(QtWidgets.QAbstractItemView.NoDragDrop)
-        self.saved_series_config_files_tab1.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
+        self.saved_series_config_files_tab1.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.saved_series_config_files_tab1.setObjectName("saved_series_config_files_tab1")
         self.saved_series_verticalLayout_tab1.addWidget(self.saved_series_config_files_tab1)
         self.load_series_button_tab1 = QtWidgets.QPushButton(self.tab1_series_scan)
@@ -186,7 +186,7 @@ class Ui_Dialog(object):
         self.series_config_files_tab1.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.series_config_files_tab1.setDragEnabled(True)
         self.series_config_files_tab1.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-        self.series_config_files_tab1.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        self.series_config_files_tab1.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
         self.series_config_files_tab1.setObjectName("series_config_files_tab1")
         self.run_series_verticalLayout_tab1.addWidget(self.series_config_files_tab1)
         self.remove_sequence_button_tab1 = QtWidgets.QPushButton(self.tab1_series_scan)

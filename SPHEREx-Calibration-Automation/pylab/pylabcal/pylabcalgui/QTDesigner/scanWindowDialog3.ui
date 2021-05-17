@@ -241,7 +241,7 @@
             <enum>QAbstractItemView::NoDragDrop</enum>
            </property>
            <property name="selectionMode">
-            <enum>QAbstractItemView::MultiSelection</enum>
+            <enum>QAbstractItemView::SingleSelection</enum>
            </property>
           </widget>
          </item>
@@ -334,7 +334,7 @@
             <enum>QAbstractItemView::DragDrop</enum>
            </property>
            <property name="selectionMode">
-            <enum>QAbstractItemView::SingleSelection</enum>
+            <enum>QAbstractItemView::NoSelection</enum>
            </property>
           </widget>
          </item>
