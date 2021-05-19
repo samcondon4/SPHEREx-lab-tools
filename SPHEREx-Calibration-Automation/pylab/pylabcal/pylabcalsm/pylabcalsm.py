@@ -42,10 +42,24 @@ class SM:
 		self.start()
 		return [self.step(inp) for inp in inputs]
 
+class ScanSequence:
+    """
+    data structure to hold the parameters of a single scan sequence
+    """
+
+    def __init__(self, name=None, grating=None, osf=None, start_wave=None,
+                 end_wave=None, step_wave=None, measure_interval=None):
+        self.name = name
+        self.grating = grating
+        self.osf = osf
+        self.start_wave = start_wave
+        self.end_wave = end_wave
+        self.step_wave = step_wave
+        self.measure_interval = measure_interval
 
 class SpectralCalibrationMachine(SM):
 
-	def __init__(self, config_file='setup.cfg'):
+	def __init__(self, config_file='setup.ini'):
 		print('Start by Initializing')
 
 		#self.path = r"/pylab/pylabcal/config"

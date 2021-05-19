@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab1_series_scan">
       <attribute name="title">
@@ -118,6 +118,25 @@
        <item row="0" column="2">
         <layout class="QVBoxLayout" name="progressBar_verticalLayout_tab1">
          <item>
+          <widget class="QLabel" name="scan_progress_label_tab1">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Current Scan Progress</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QProgressBar" name="scan_progressBar_tab1">
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="sequence_progress_label_tab1">
            <property name="font">
             <font>
@@ -195,7 +214,7 @@
             <enum>Qt::ScrollBarAlwaysOn</enum>
            </property>
            <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
+            <set>QAbstractItemView::SelectedClicked</set>
            </property>
            <property name="dragDropOverwriteMode">
             <bool>true</bool>
@@ -325,7 +344,7 @@
             <enum>Qt::ScrollBarAsNeeded</enum>
            </property>
            <property name="editTriggers">
-            <set>QAbstractItemView::NoEditTriggers</set>
+            <set>QAbstractItemView::SelectedClicked</set>
            </property>
            <property name="dragEnabled">
             <bool>true</bool>
@@ -746,7 +765,7 @@
             <enum>Qt::ScrollBarAlwaysOn</enum>
            </property>
            <property name="editTriggers">
-            <set>QAbstractItemView::DoubleClicked</set>
+            <set>QAbstractItemView::SelectedClicked</set>
            </property>
            <property name="dragEnabled">
             <bool>true</bool>
@@ -916,6 +935,9 @@
            <property name="verticalScrollBarPolicy">
             <enum>Qt::ScrollBarAsNeeded</enum>
            </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::DoubleClicked|QAbstractItemView::SelectedClicked</set>
+           </property>
            <property name="dragEnabled">
             <bool>true</bool>
            </property>
@@ -986,7 +1008,7 @@
          <item>
           <widget class="QLineEdit" name="sequence_name_ledit_tab2">
            <property name="text">
-            <string>setup.cfg</string>
+            <string>setup.ini</string>
            </property>
            <property name="placeholderText">
             <string/>
@@ -1024,6 +1046,25 @@
        </item>
        <item row="4" column="1">
         <layout class="QVBoxLayout" name="progressBar_verticalLayout_tab1_2">
+         <item>
+          <widget class="QLabel" name="scan_progress_label_tab2">
+           <property name="font">
+            <font>
+             <pointsize>10</pointsize>
+            </font>
+           </property>
+           <property name="text">
+            <string>Current Scan Progress</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QProgressBar" name="scan_progressBar_tab2">
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QLabel" name="sequence_progress_label_tab1_2">
            <property name="font">

@@ -6,7 +6,7 @@ import logging
 #import astropy.cosmology as ac
 
 """
-Functions to read/write parameters from/to .cfg files using ConfigParser
+Functions to read/write parameters from/to .ini files using ConfigParser
 """
 
 def get_params_dict(param_file_path):
