@@ -210,9 +210,8 @@ class masterWindow(QDialog):
         #highlighted_file = value.text()
         #self.state_machine.update_parameters(highlighted_file)
 
-        highlighted_config_file = self.ui.sequence_config_files_tab2.currentItem().text()
+        highlighted_config_file = self.ui.sequence_name_ledit_tab2.text()
         self.state_machine.update_parameters(highlighted_config_file)
-        pdb.set_trace()
 
     #def add_text_to_message_box(self):
 
