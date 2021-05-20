@@ -179,7 +179,8 @@ class masterWindow(QDialog):
 
     def retranslateUi(self):
         # Populate Series list from Series file
-        self.ui.load_series_button_tab1.clicked.connect(self.select_series_from_file)
+        #self.ui.load_series_button_tab1.clicked.connect(self.select_series_from_file)
+        self.ui.load_series_button_tab1.clicked.connect(self.load_series_from_file)
 
         # Remove Single Sequence from Series list
         self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence_from_series)
@@ -193,7 +194,7 @@ class masterWindow(QDialog):
         #highlighted_config_file = self.ui.sequence_name_ledit_tab2.text()
         #self.state_machine.update_parameters(highlighted_config_file)
 
-        self.ui.load_sequence_button_tab2.clicked.connect(self.update_current_state)
+        self.ui.load_sequence_button_tab2.clicked.connect(self.load_sequence_from_file)
 
         # When sequence file is highlighted, also update in current qlinetext
         self.ui.sequence_config_files_tab1.currentItemChanged.connect(self.update_highlighted_sequence)
@@ -201,17 +202,43 @@ class masterWindow(QDialog):
         self.ui.series_config_files_tab1.currentItemChanged.connect(self.update_highlighted_sequence)
         self.ui.series_config_files_tab2.currentItemChanged.connect(self.update_highlighted_sequence)
 
+    def update_gui_displayed_params(self):
+        self.ui.sequence_wave_start_ledit.setText(self.state_machine.params['monochrometer']['start_wave'])
+        self.ui.sequence_wave_end_ledit.setText(self.state_machine.params['monochrometer']['end_wave'])
+        self.ui.sequence_wave_step_ledit.setText(self.state_machine.params['monochrometer']['step_wave'])
+        self.ui.sequence_measure_int_ledit.setText(self.state_machine.params['monochrometer']['measure_interval'])
+        self.ui.osf_select_cbox.setCurrentIndex(-1+int(self.state_machine.params['monochrometer']['osf']))
+        self.ui.grating_select_cbox_tab2.setCurrentIndex(-1+int(self.state_machine.params['monochrometer']['grating']))
+        if self.state_machine.params['monochrometer']['shutter_open'] == 'True':
+            self.ui.shutter_position_cbox_tab2.setCurrentIndex(0)
+        else:
+            self.ui.shutter_position_cbox_tab2.setCurrentIndex(1)
+
+        metadata_widgets = (self.ui.metadata_verticalLayout_tab2.itemAt(i).widget() for i in range(self.ui.metadata_verticalLayout_tab2.count()))
+        for iwidget in metadata_widgets:
+            if isinstance(iwidget, QCheckBox):
+                #print(iwidget.text().lower())
+                if iwidget.text().lower() in self.state_machine.params['metadata']:
+                    if self.state_machine.params['metadata'][iwidget.text().lower()] == 'True':
+                        iwidget.setChecked(True)
+                    else:
+                        iwidget.setChecked(False)
+
     def update_highlighted_sequence(self, value):
-        #pdb.set_trace()
         highlighted_file = value.text()
         self.ui.sequence_name_ledit_tab2.setText(highlighted_file)
 
-    def update_current_state(self, value):
+    def load_sequence_from_file(self):
+        highlighted_config_file = self.ui.sequence_name_ledit_tab2.text()
+        self.state_machine.update_parameters(highlighted_config_file)
+        self.update_gui_displayed_params()
+
+    '''def update_current_state(self, value):
         #highlighted_file = value.text()
         #self.state_machine.update_parameters(highlighted_file)
 
         highlighted_config_file = self.ui.sequence_name_ledit_tab2.text()
-        self.state_machine.update_parameters(highlighted_config_file)
+        self.state_machine.update_parameters(highlighted_config_file)'''
 
     #def add_text_to_message_box(self):
 
@@ -240,7 +267,8 @@ class masterWindow(QDialog):
         if len(isin_list) < 1:
             self.ui.saved_series_config_files_tab1.addItem(series_filename)
 
-    def select_series_from_file(self):
+
+    def load_series_from_file(self):
 
         series_filename = self.ui.saved_series_config_files_tab1.currentItem().text()
         text = open(os.path.join('..','..','config','series', series_filename)).read()
@@ -449,7 +477,8 @@ class masterWindow(QDialog):
         ##Run through each sequence in the series#####
         for seq in scan_series:
             seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int = \
-                self.get_seq_from_item(seq)
+                self.get_seq_from_file(seq)
+                #self.get_seq_from_item(seq)
             seq_step_wave = float(seq_step_wave) / 1000
             cur_filter = self.state_machine.cs260.get_filter()
             cur_grating = self.state_machine.cs260.get_grating()
@@ -553,6 +582,18 @@ class masterWindow(QDialog):
                       "Fix the following errors:"] + error_list
         self.popup_dialog.disp_errors(error_list)
         self.popup_dialog.popup()
+
+    @staticmethod
+    def get_seq_from_file(filein):
+        self.state_machine.get_parameters_from_file(filein)
+        pdb.set_trace()
+        seq_filter = seq_data.osf
+        seq_grating = seq_data.grating
+        seq_start_wave = seq_data.start_wave
+        seq_end_wave = seq_data.end_wave
+        seq_step_wave = seq_data.step_wave
+        seq_measure_int = seq_data.measure_interval
+        return [seq_filter, seq_grating, seq_start_wave, seq_end_wave, seq_step_wave, seq_measure_int]
 
     @staticmethod
     def get_seq_from_item(item):

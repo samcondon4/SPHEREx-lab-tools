@@ -8,7 +8,7 @@ import datetime as datetime
 sys.path.append(r'..\..\..\..\pylablib')
 sys.path.append(r'..\..\..')
 
-from pylablib.utils.parameters import *
+from pylablib.utils.parameters import get_params_dict, write_config_file
 from pylablib.instruments.powermaxusb import PowermaxUSB
 from pylablib.instruments.serial_motor_dpy50601 import DPY50601
 
@@ -42,21 +42,6 @@ class SM:
 		self.start()
 		return [self.step(inp) for inp in inputs]
 
-class ScanSequence:
-    """
-    data structure to hold the parameters of a single scan sequence
-    """
-
-    def __init__(self, name=None, grating=None, osf=None, start_wave=None,
-                 end_wave=None, step_wave=None, measure_interval=None):
-        self.name = name
-        self.grating = grating
-        self.osf = osf
-        self.start_wave = start_wave
-        self.end_wave = end_wave
-        self.step_wave = step_wave
-        self.measure_interval = measure_interval
-
 class SpectralCalibrationMachine(SM):
 
 	def __init__(self, config_file='setup.ini'):
@@ -84,7 +69,7 @@ class SpectralCalibrationMachine(SM):
 
 	def initialize(self):
 		#print('Initialize each device, one at a time.  Each Returns Flag and Metadata, stored in a Dict')
-		self.params = self.get_parameters(os.path.join(self.path, self.cfg_file_default))
+		self.params = self.get_parameters_from_file(os.path.join(self.path, self.cfg_file_default))
 		print(self.params)
 		self.start()
 
@@ -130,13 +115,63 @@ class SpectralCalibrationMachine(SM):
 		#return dateTimeObj.strftime("%d-%m-%Y (%H:%M:%S)") + " "
 		return dateTimeObj.strftime("%H:%M:%S") + " "
 
-	def get_parameters(self, config_path):
+	def get_parameters_from_file(self, config_path):
 
+		#pdb.set_trace()
 		params = get_params_dict(config_path)
 
 		return params
 
-	def write_parameters(self, config_path_out):
+	def get_parameters_from_gui(self):
+
+		pdb.set_trace()
+		errors = []
+		warnings = []
+		seq.name = self.ui.sequence_name_ledit.text()
+		if seq.name == "":
+			errors.append("Sequence Name left blank")
+		# Grabbing value from cbox so no check needed yet.
+		seq.grating = self.ui.grating_select_cbox_tab2.currentIndex() + 1
+		# Grabbing value from cbox so no check needed yet.
+		seq.osf = self.ui.osf_select_cbox.currentIndex() + 1
+
+		try:
+			seq.start_wave = float(self.ui.sequence_wave_start_ledit.text())
+		except ValueError as e:
+			errors.append("Invalid start wave arg: {}".format(e))
+		# else: check input against valid wavelength range for grating and filters
+
+		try:
+			seq.end_wave = float(self.ui.sequence_wave_end_ledit.text())
+		except ValueError as e:
+			errors.append("Invalid end wave arg: {}".format(e))
+		# else: check input against valid wavelength range for grating and filters
+
+		try:
+			seq.step_wave = float(self.ui.sequence_wave_step_ledit.text())
+		except ValueError as e:
+			errors.append("Invalid wave step arg: {}".format(e))
+		# else: check input against grating step resolution
+
+		try:
+			seq.measure_interval = float(self.ui.sequence_measure_int_ledit.text())
+		except ValueError as e:
+			errors.append("Invalid measure interval arg: {}".format(e))
+		else:
+			if seq.measure_interval < 0.5:
+				warnings.append("Small Measure Interval provided. Monochromator wavelength drive may not step as fast "
+								"as the specified interval demands.")
+
+		if len(errors) > 0:
+			ret = -1
+			self.show_invalid_seq_popup(errors)
+		else:
+			ret = 0
+
+		return ret
+
+
+	def write_parameters_to_file(self, config_path_out):
 		#pdb.set_trace()
 		configfilename = config_path_out.split('/')[-1].split('\\')[-1]
 		if not os.path.isfile(config_path_out):
@@ -153,7 +188,7 @@ class SpectralCalibrationMachine(SM):
 		config_path = os.path.join(self.path, config_file)
 		if os.path.isfile(config_path):
 			print(config_path)
-			self.params = self.get_parameters(config_path)
+			self.params = self.get_parameters_from_file(config_path)
 		else:
 			print(config_file+' file does not exist')
 			return

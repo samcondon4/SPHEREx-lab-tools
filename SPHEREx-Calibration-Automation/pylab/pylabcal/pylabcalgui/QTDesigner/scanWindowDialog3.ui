@@ -808,7 +808,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_8">
+          <widget class="QCheckBox" name="cryo_checkBox">
            <property name="enabled">
             <bool>true</bool>
            </property>
@@ -821,7 +821,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_9">
+          <widget class="QCheckBox" name="power_meter_checkBox">
            <property name="text">
             <string>Power_Meter</string>
            </property>
@@ -831,7 +831,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_10">
+          <widget class="QCheckBox" name="filter_wheel_1_checkBox">
            <property name="text">
             <string>Filter_Wheel_1</string>
            </property>
@@ -841,7 +841,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_11">
+          <widget class="QCheckBox" name="filter_wheel_2_checkBox">
            <property name="text">
             <string>Filter_Wheel_2</string>
            </property>
@@ -851,7 +851,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_12">
+          <widget class="QCheckBox" name="grating_checkBox">
            <property name="text">
             <string>Grating</string>
            </property>
@@ -861,7 +861,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_13">
+          <widget class="QCheckBox" name="wavelength_checkBox">
            <property name="text">
             <string>Wavelength</string>
            </property>
@@ -871,7 +871,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox_14">
+          <widget class="QCheckBox" name="meas_int_checkBox">
            <property name="text">
             <string>Measurement_Interval</string>
            </property>
@@ -1152,17 +1152,17 @@
            </property>
            <item>
             <property name="text">
-             <string>Grating 1 (G1)</string>
+             <string>Grating 1</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Grating 2 (G2)</string>
+             <string>Grating 2</string>
             </property>
            </item>
            <item>
             <property name="text">
-             <string>Grating 3 (G3)</string>
+             <string>Grating 3</string>
             </property>
            </item>
           </widget>
