@@ -98,7 +98,7 @@ class masterWindow(QDialog):
 
         ##Common tab buttons: Add/Edit/Remove Sequence #############################
         self.ui.add_sequence_button_tab1.clicked.connect(self.add_sequence_tab1)
-        self.ui.add_sequence_button_tab2.clicked.connect(self.add_sequence_tab2)
+        #elf.ui.add_sequence_button_tab2.clicked.connect(self.add_sequence_tab2)
         #self.ui.edit_sequence_button_tab2.clicked.connect(self.edit_sequence)
         self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence)
         self.ui.remove_sequence_button_tab2.clicked.connect(self.remove_sequence)
@@ -203,6 +203,21 @@ class masterWindow(QDialog):
         self.ui.series_config_files_tab2.currentItemChanged.connect(self.update_highlighted_sequence)
 
     def update_gui_displayed_params(self):
+        # I/O
+        self.ui.config_path_lineEdit_tab2.setText(self.state_machine.params['io']['config_files_path'])
+        self.ui.storage_path_lineEdit_tab2.setText(self.state_machine.params['io']['permanent_storage_path'])
+        if self.state_machine.params['io']['suffix'] == 'date':
+            self.ui.filename_suffix_lineEdit_tab2.setText(self.get_date_now())
+        elif self.state_machine.params['io']['suffix'] == 'datetime':
+            self.ui.filename_suffix_lineEdit_tab2.setText(self.get_datetime_now())
+        else:
+            self.ui.filename_suffix_lineEdit_tab2.setText(self.state_machine.params['io']['suffix'])
+        index_format = self.ui.data_format_comboBox_tab2.findText(self.state_machine.params['io']['storage_type'])
+        self.ui.data_format_comboBox_tab2.setCurrentIndex(index_format)
+        index_storage = self.ui.compression_comboBox_tab2.findText(self.state_machine.params['io']['compression_type'])
+        self.ui.compression_comboBox_tab2.setCurrentIndex(index_storage)
+
+        # Monochrometer
         self.ui.sequence_wave_start_ledit.setText(self.state_machine.params['monochrometer']['start_wave'])
         self.ui.sequence_wave_end_ledit.setText(self.state_machine.params['monochrometer']['end_wave'])
         self.ui.sequence_wave_step_ledit.setText(self.state_machine.params['monochrometer']['step_wave'])
@@ -214,6 +229,7 @@ class masterWindow(QDialog):
         else:
             self.ui.shutter_position_cbox_tab2.setCurrentIndex(1)
 
+        # Metadata
         metadata_widgets = (self.ui.metadata_verticalLayout_tab2.itemAt(i).widget() for i in range(self.ui.metadata_verticalLayout_tab2.count()))
         for iwidget in metadata_widgets:
             if isinstance(iwidget, QCheckBox):
@@ -223,6 +239,8 @@ class masterWindow(QDialog):
                         iwidget.setChecked(True)
                     else:
                         iwidget.setChecked(False)
+        self.ui.keywords_lineEdit_tab2.setText(self.state_machine.params['metadata']['keywords'])
+
 
     def update_highlighted_sequence(self, value):
         highlighted_file = value.text()
@@ -290,6 +308,10 @@ class masterWindow(QDialog):
             last_line = self.get_time_now() + self.state_machine.message_box.pop(0)
             self.state_machine.message_log.append(last_line)
             self.msg.append(last_line)
+
+    def get_date_now(self):
+        dateTimeObj = datetime.datetime.now()
+        return dateTimeObj.strftime("_%d%m%Y")
 
     def get_datetime_now(self):
         dateTimeObj = datetime.datetime.now()
