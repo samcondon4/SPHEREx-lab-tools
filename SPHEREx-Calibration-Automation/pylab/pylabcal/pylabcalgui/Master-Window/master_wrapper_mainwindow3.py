@@ -15,7 +15,7 @@ sys.path.append("..\\..\\..\\pylablib\\instruments")
 # UI files
 # from cs260_dialog_ui import Ui_Dialog as cs260_dialog
 from cs260_dialog_popup import Cs260PopupDialog
-from scanWindowDialog3 import Ui_Dialog as masterDialog
+from scanWindowDialog4 import Ui_Dialog as masterDialog
 from CS260 import CS260
 
 # State Machine
@@ -77,7 +77,6 @@ class masterWindow(QDialog):
 
         ##Class attributes###############################
         # cs260 monochromator class instance
-        # self.state_machine.cs260 = cs260_obj
         # self.state_machine.cs260 = cs260_obj
         self.current_sequence = None
 

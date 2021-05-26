@@ -121,7 +121,7 @@ class SpectralCalibrationMachine(SM):
 		params = get_params_dict(config_path)
 
 		return params
-	'''
+
 	def get_parameters_from_gui(self):
 
 		pdb.set_trace()
@@ -168,7 +168,7 @@ class SpectralCalibrationMachine(SM):
 		else:
 			ret = 0
 
-		return ret'''
+		return ret
 
 
 	def write_parameters_to_file(self, config_path_out):
@@ -246,24 +246,18 @@ class SpectralCalibrationMachine(SM):
 		return 'waiting', 'Data Written to Disk'  # errors
 
 	def generateOutput(self, state):
-		if state == 'Initializing':
+		if state == 'initializing':
 			return self.initialize()
-		elif state == 'Thinking':
-			return self.construct_loop()
-		elif state == 'Collecting':
+		elif state == 'collecting':
 			return self.collect_data()
-		elif state == 'Checking':
-			return self.verify_data()
-		elif state == 'Compressing':
+		elif state == 'compressing':
 			return self.compress_data()
-		elif state == 'Writing':
+		elif state == 'storing':
 			return self.write_data_to_disk()
-		elif state == 'Resetting':
-			return self.send_reset_command()
-		elif state == 'Troubleshooting':
+		elif state == 'error':
 			return self.error_handler()
 		else:
-			return self.wait()
+			return 'wait'
 
 	def getNextValues(self, state, dict_in):
 		# pdb.set_trace()
