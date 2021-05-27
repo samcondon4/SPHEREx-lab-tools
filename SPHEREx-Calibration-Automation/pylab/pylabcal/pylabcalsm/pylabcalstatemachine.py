@@ -3,6 +3,7 @@ import sys
 import pdb
 import numpy as np
 import datetime as datetime
+from statemachine import State, StateMachine
 
 #sys.path.append(r'..\pylab')
 sys.path.append(r'..\..\..\..\pylablib')
@@ -12,37 +13,22 @@ from pylablib.utils.parameters import get_params_dict, write_config_file
 from pylablib.instruments.powermaxusb import PowermaxUSB
 from pylablib.instruments.serial_motor_dpy50601 import DPY50601
 
-class SM:
-	startState = 'waiting'
-	init = False
-	in_queue = False
-	ready_to_store = False
+class SM(StateMachine):
 
-	error_status = False
+	# Define States
+	initializing = State('Initializing', initial=True)
+	waiting = State('Waiting')
+	thinking = State('Thinking')
+	moving = State('Moving')
+	measuring = State('Measuring')
+	checking = State('Checking')
+	compressing = State('Compressing')
+	writing = State('Writing')
+	resetting = State('Resetting')
+	troubleshooting = State('Troubleshooting')
 
-	def start(self):
-		self.state = self.startState
-		self.init_status = self.init
-		self.data_in_queue = self.in_queue
-		self.data_ready_to_store = self.ready_to_store
-		self.errorStatus = self.error_status
-		self.errorDict = {}
-		self.metadata = {}
-
-
-	def step(self, inp):
-		(s, o) = self.getNextValues(self.state, inp)
-
-		#pdb.set_trace()
-		self.state = s
-
-		return o
-
-	def transduce(self, inputs):
-		self.start()
-		return [self.step(inp) for inp in inputs]
-
-class SpectralCalibrationMachine(SM):
+	# Define Transitions
+	wait =
 
 	def __init__(self, config_file='setup.ini'):
 		print('Start by Initializing')
@@ -65,7 +51,15 @@ class SpectralCalibrationMachine(SM):
 		# self.errorStatus = self.initialize()
 		self.initialize()
 
+		self.state = self.startState
+		self.init_status = self.init
+		self.data_in_queue = self.in_queue
+		self.data_ready_to_store = self.ready_to_store
+		self.errorStatus = self.error_status
+		self.errorDict = {}
+		self.metadata = {}
 	# pdb.set_trace()
+
 
 	def initialize(self):
 		#print('Initialize each device, one at a time.  Each Returns Flag and Metadata, stored in a Dict')

@@ -15,7 +15,7 @@ sys.path.append("..\\..\\..\\pylablib\\instruments")
 # UI files
 # from cs260_dialog_ui import Ui_Dialog as cs260_dialog
 from cs260_dialog_popup import Cs260PopupDialog
-from scanWindowDialog3 import Ui_Dialog as masterDialog
+from scanWindowDialog4 import Ui_Dialog as masterDialog
 from CS260 import CS260
 
 # State Machine
@@ -96,12 +96,11 @@ class masterWindow(QDialog):
         self.ui.config_path_lineEdit_tab2.setText(config_path)
 
         ##Common tab buttons: Add/Edit/Remove Sequence #############################
-        self.ui.add_sequence_button_tab1.clicked.connect(self.add_sequence_tab1)
-        #elf.ui.add_sequence_button_tab2.clicked.connect(self.add_sequence_tab2)
+        self.ui.add_sequence_button_tab1.clicked.connect(self.add_sequence_to_list_tab1)
+        #self.ui.add_sequence_button_tab2.clicked.connect(self.add_sequence_to_list_tab2)
         #self.ui.edit_sequence_button_tab2.clicked.connect(self.edit_sequence)
-        self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence)
-        self.ui.remove_sequence_button_tab2.clicked.connect(self.remove_sequence)
-        #self.ui.remove_sequence_button_tab3.clicked.connect(self.remove_sequence)
+        self.ui.remove_sequence_button_tab1.clicked.connect(self.remove_sequence_from_series)
+        self.ui.remove_sequence_button_tab2.clicked.connect(self.remove_sequence_from_series)
         #self.ui.sequence_config_files_tab1.clicked.connect(self.update_current_sequence)
         #self.ui.sequence_config_files_tab2.clicked.connect(self.update_current_sequence)
 
@@ -134,6 +133,7 @@ class masterWindow(QDialog):
         ### Sequence Files
         # Put existing Sequence files in a list
         self.saved_sequence_config_files = []
+        self.ui.save_sequence_pushButton_tab2.clicked.connect(self.save_sequence_to_file)
 
         # Establish path to sequence files
         path_config_file = self.ui.config_path_lineEdit_tab2.text()
@@ -157,6 +157,7 @@ class masterWindow(QDialog):
         #################################################################
 
         ####Manual tab buttons###########################################
+        self.ui.set_parameters_button_tab2.clicked.connect(self.set_parameters)
         self.ui.set_parameters_button_tab4.clicked.connect(self.set_parameters)
         self.ui.abort_manual_button_tab4.clicked.connect(self.abort)
         #################################################################
@@ -178,7 +179,6 @@ class masterWindow(QDialog):
 
     def retranslateUi(self):
         # Populate Series list from Series file
-        #self.ui.load_series_button_tab1.clicked.connect(self.select_series_from_file)
         self.ui.load_series_button_tab1.clicked.connect(self.load_series_from_file)
 
         # Remove Single Sequence from Series list
@@ -263,6 +263,15 @@ class masterWindow(QDialog):
         self.ui.series_config_files_tab1.clear()
         self.ui.series_config_files_tab2.clear()
 
+    def save_sequence_to_file(self):
+        filename = self.ui.sequence_name_ledit_tab2.text()
+        config_path_out = os.path.join('..','..','config','sequence',filename)
+        self.state_machine.write_parameters_to_file(config_path_out)
+        if filename not in self.saved_series_config_files:
+            self.saved_sequence_config_files.append(filename)
+            self.ui.sequence_config_files_tab1.addItem(filename)
+            self.ui.sequence_config_files_tab2.addItem(filename)
+
     def save_series_to_file(self):
         series_filename = self.ui.series_name_ledit_tab1.text()
         series_filename_out = os.path.join('..','..','config','series',series_filename)
@@ -287,7 +296,8 @@ class masterWindow(QDialog):
 
     def load_series_from_file(self):
 
-        series_filename = self.ui.saved_series_config_files_tab1.currentItem().text()
+        #series_filename = self.ui.saved_series_config_files_tab1.currentItem().text()
+        series_filename = self.ui.series_name_ledit_tab1.text()
         text = open(os.path.join('..','..','config','series', series_filename)).read()
 
         self.series_log.insertPlainText(text)
@@ -452,11 +462,13 @@ class masterWindow(QDialog):
             self.ui.shutter_current_ledit_tab1.setText("Open")
             self.ui.shutter_current_ledit_tab2.setText("Open")
             self.ui.shutter_current_ledit_tab4.setText("Open")
+            self.ui.shutter_position_cbox_tab2.setCurrentIndex(0)
             self.ui.shutter_new_cbox_tab4.setCurrentIndex(0)
         elif shutter_state == "C":
             self.ui.shutter_current_ledit_tab1.setText("Closed")
             self.ui.shutter_current_ledit_tab2.setText("Closed")
             self.ui.shutter_current_ledit_tab4.setText("Closed")
+            self.ui.shutter_position_cbox_tab2.setCurrentIndex(1)
             self.ui.shutter_new_cbox_tab4.setCurrentIndex(1)
         ###############################################################################
 
@@ -532,7 +544,7 @@ class masterWindow(QDialog):
     def abort_scan_series(self):
         pass
 
-    def add_sequence_tab1(self):
+    def add_sequence_to_list_tab1(self):
         #seq = ScanSequence()
         #c = self.get_seq_values(seq)
         #if c == 0:
@@ -545,7 +557,7 @@ class masterWindow(QDialog):
         self.ui.series_config_files_tab2.addItem(self.ui.sequence_config_files_tab1.currentItem().text())
         #pdb.set_trace()
 
-    def add_sequence_tab2(self):
+    def add_sequence_to_list_tab2(self):
         #seq = ScanSequence()
         #c = self.get_seq_values(seq)
         #if c == 0:
@@ -576,13 +588,6 @@ class masterWindow(QDialog):
             self.popup_dialog.disp_errors(["No sequence selected to edit!"])
             self.popup_dialog.popup()
 
-    def remove_sequence(self):
-        cur_row_tab1 = self.ui.series_config_files_tab1.currentRow()
-        #cur_row_tab2 = self.ui.sequence_config_files_tab2.currentRow()
-        #cur_row_tab3 = self.ui.sequence_config_files_tab3.currentRow()
-        self.ui.series_config_files_tab1.takeItem(cur_row_tab1)
-        #self.ui.sequence_config_files_tab2.takeItem(cur_row_tab2)
-        #self.ui.sequence_config_files_tab3.takeItem(cur_row_tab3)
 
     def update_current_sequence(self):
         cur_item_tab1 = self.ui.sequence_config_files_tab1.currentItem()

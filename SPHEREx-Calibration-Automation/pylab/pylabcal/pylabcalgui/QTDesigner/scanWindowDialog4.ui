@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>842</width>
-    <height>775</height>
+    <height>865</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -225,6 +225,19 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="load_series_button_tab1">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Populate Sequences from Series Config File</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="series_name_label_tab1">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -244,19 +257,6 @@
            </property>
            <property name="placeholderText">
             <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="load_series_button_tab1">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Populate Sequences from Series Config File</string>
            </property>
           </widget>
          </item>
@@ -676,7 +676,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Load Sequence From Config File</string>
+            <string>Load Parameters From Config File</string>
            </property>
           </widget>
          </item>
@@ -842,6 +842,13 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="set_parameters_button_tab2">
+           <property name="text">
+            <string>Set Parameters</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="sequence_name_label_tab2">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -861,6 +868,13 @@
            </property>
            <property name="placeholderText">
             <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="save_sequence_pushButton_tab2">
+           <property name="text">
+            <string>Save Parameters to Config File</string>
            </property>
           </widget>
          </item>
@@ -1004,13 +1018,6 @@
        </item>
        <item row="4" column="1">
         <layout class="QVBoxLayout" name="config_files_verticalLayout_tab2">
-         <item>
-          <widget class="QPushButton" name="save_sequence_pushButton_tab2">
-           <property name="text">
-            <string>Save Sequence to Config File</string>
-           </property>
-          </widget>
-         </item>
          <item>
           <widget class="QCheckBox" name="overwrite_checkBox_tab2">
            <property name="text">

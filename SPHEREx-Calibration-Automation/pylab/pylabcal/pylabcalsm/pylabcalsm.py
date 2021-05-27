@@ -184,6 +184,7 @@ class SpectralCalibrationMachine(SM):
 		else:
 			self.message_box.append(configfilename +' already exists')
 
+		#pdb.set_trace()
 	def update_parameters(self, config_file):
 		config_path = os.path.join(self.path, config_file)
 		if os.path.isfile(config_path):
