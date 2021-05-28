@@ -157,8 +157,8 @@ class masterWindow(QDialog):
         #################################################################
 
         ####Manual tab buttons###########################################
-        self.ui.set_parameters_button_tab2.clicked.connect(self.set_parameters)
-        self.ui.set_parameters_button_tab4.clicked.connect(self.set_parameters)
+        self.ui.set_parameters_button_tab2.clicked.connect(self.set_monochromator_parameters_manual)
+        self.ui.set_parameters_button_tab4.clicked.connect(self.set_monochromator_parameters_manual)
         self.ui.abort_manual_button_tab4.clicked.connect(self.abort)
         #################################################################
         #########################################################################
@@ -376,7 +376,7 @@ class masterWindow(QDialog):
     ##############################################################################
 
     ##MANUAL TAB METHODS##########################################################
-    def set_parameters(self):
+    def set_monochromator_parameters_manual(self):
 
         # Check if a monochromator control task is already running before starting anything else
         if self.state_machine.cs260_is_busy():
@@ -410,11 +410,49 @@ class masterWindow(QDialog):
 
         # If any changes were made, execute asynchronous transition function
         if len(new_params) > 0:
-            set_params_task = asyncio.create_task(self.set_parameters_async(new_params))
+            set_params_task = asyncio.create_task(self.set_monochromator_parameters_async(new_params))
             # Register newly created task w/ executing task dictionary
             self.coro_exec['set_params'] = set_params_task
 
-    async def set_parameters_async(self, params):
+    def set_monochromator_parameters_from_loop(self):
+
+        # Check if a monochromator control task is already running before starting anything else
+        if self.state_machine.cs260_is_busy():
+            return
+
+        # Always close shutter as first movement
+        new_params = [("shutter", "C")]
+
+        # If grating needs to be changed, do this next
+        cur_grating = self.state_machine.cs260.get_grating()
+        new_grating = self.state_machine.params['monochrometer']['grating'] #NO!  Construct a loop and read from it!
+        if new_grating != cur_grating:
+            new_params.append(("grating", new_grating))
+
+        # Next take care of filter
+        cur_osf = self.state_machine.cs260.get_filter()
+        new_osf = self.state_machine.params['monochrometer']['osf']
+        if cur_osf != new_osf:
+            new_params.append(("osf", new_osf))
+
+        # Now wavelength
+        cur_wave = self.state_machine.cs260.get_wavelength()
+        self.state_machine.params['monochrometer']['grating']
+        if cur_wave != new_wave:
+            new_params.append(("wave", new_wave))
+
+        # If shutter needs to be opened, do this last
+        new_shutter = self.ui.shutter_new_cbox_tab4.currentIndex()
+        if new_shutter == 0:
+            new_params.append(("shutter", "O"))
+
+        # If any changes were made, execute asynchronous transition function
+        if len(new_params) > 0:
+            set_params_task = asyncio.create_task(self.set_monochromator_parameters_async(new_params))
+            # Register newly created task w/ executing task dictionary
+            self.coro_exec['set_params'] = set_params_task
+
+    async def set_monochromator_parameters_async(self, params):
         for p in params:
             task = None
             if p[0] == "shutter":

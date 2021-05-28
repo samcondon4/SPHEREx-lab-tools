@@ -246,11 +246,34 @@ class SpectralCalibrationMachine(SM):
 		self.message_box.append('Write Data to Disk')
 		return 'waiting', 'Data Written to Disk'  # errors
 
+	def construct_series_loop(self, files_series):
+		self.series_loop = {}
+		if files_series:
+			for count, iseq in enumerate(files_series.split('\n')):
+				if iseq:
+					self.series_loop[count] = self.construct_sequence_step(iseq)
+
+
+	def construct_sequence_step(self, file_sequence):
+		''' Take sequence file and break it up into approprate steps'''
+		params = self.get_parameters_from_file(file_sequence)
+		measure_interval = params['monochrometer']['measure_interval']
+		start_wave = float(params['monochrometer']['start_wave'])
+		end_wave = float(params['monochrometer']['end_wave'])
+		step_wave = float(params['monochrometer']['step_wave'])
+		num_steps = int((end_wave - start_wave) / step_wave)
+		self.cs260.set_grating(params['monochrometer']['grating'])
+		self.cs260.set_filter(params['monochrometer']['filter_wheel_1'])
+
+		self.cs260.set_wavelength(wv_step)
+
+
+	# STATE MACHINE GUTS
 	def generateOutput(self, state):
 		if state == 'Initializing':
 			return self.initialize()
 		elif state == 'Thinking':
-			return self.construct_loop()
+			return self.construct_series_loop()
 		elif state == 'Collecting':
 			return self.collect_data()
 		elif state == 'Checking':
