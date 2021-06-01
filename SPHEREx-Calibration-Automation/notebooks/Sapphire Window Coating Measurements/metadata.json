@@ -15,7 +15,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_1.csv",
@@ -32,7 +33,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_2.csv",
@@ -49,7 +51,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_3.csv",
@@ -66,7 +69,8 @@
         "time constant": 100,
         "sensitivity": 0.5,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_4.csv",
@@ -83,7 +87,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_5.csv",
@@ -100,7 +105,8 @@
         "time constant": 100,
         "sensitivity": 0.5,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_6.csv",
@@ -117,7 +123,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_7.csv",
@@ -134,7 +141,8 @@
         "time constant": 100,
         "sensitivity": 0.5,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_8.csv",
@@ -151,7 +159,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_11.csv",
@@ -168,7 +177,8 @@
         "time constant": 100,
         "sensitivity": 1,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_9.csv",
@@ -185,7 +195,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_10.csv",
@@ -202,7 +213,8 @@
         "time constant": 100,
         "sensitivity": 1.0,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_12.csv",
@@ -219,7 +231,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_13.csv",
@@ -236,7 +249,8 @@
         "time constant": 100,
         "sensitivity": 0.5,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_14.csv",
@@ -253,7 +267,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_15.csv",
@@ -270,7 +285,8 @@
         "time constant": 100,
         "sensitivity": 0.5,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_16.csv",
@@ -287,7 +303,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_17.csv",
@@ -304,7 +321,8 @@
         "time constant": 100,
         "sensitivity": 0.5,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_18.csv",
@@ -321,7 +339,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_19.csv",
@@ -338,7 +357,8 @@
         "time constant": 100,
         "sensitivity": 0.5,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_20.csv",
@@ -355,7 +375,8 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
     },
     {
       "file-name": "data\\2021-05-18_21.csv",
@@ -372,7 +393,1319 @@
         "time constant": 100,
         "sensitivity": 0.02,
         "chop frequency": 30
-      }
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_0.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "labjack noise",
+      "description": "single-ended w/ bnc to alligator clip input to labjack",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": null,
+        "sensitivity": null,
+        "chop frequency": null
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_1.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "labjack noise",
+      "description": "Single ended w/ labjack input shorted to ground",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": null,
+        "sensitivity": null,
+        "chop frequency": null
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_2.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "labjack noise",
+      "description": "differential measurement w/ inputs shorted",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": null,
+        "sensitivity": null,
+        "chop frequency": null
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_3.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "labjack noise",
+      "description": "differential measurement w/ inputs shorted and resistor reference to ground",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": null,
+        "sensitivity": null,
+        "chop frequency": null
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_4.csv",
+      "sample-frequency": 500,
+      "sample-time": 10,
+      "type": "labjack noise",
+      "description": "differential input w/ ain0 tied to ground",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": null,
+        "sensitivity": null,
+        "chop frequency": null
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_5.csv",
+      "sample-frequency": 500,
+      "sample-time": 10,
+      "type": "labjack noise",
+      "description": "differential input w/ both floating",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": null,
+        "sensitivity": null,
+        "chop frequency": null
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_6.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "lock-in noise",
+      "description": "labjack differential input w/ ain0 referenced to ground and lock-in input shorted",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.02,
+        "chop frequency": null
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_7.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "lock-in noise",
+      "description": "labjack differential input w/ ain0 referenced to ground and lock-in input shorted",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.02,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_8.csv",
+      "sample-frequency": 500,
+      "sample-time": 10,
+      "type": "lock-in noise",
+      "description": "labjack differential input w/ ain0 referenced to ground and lock-in input shorted",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.02,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_9.csv",
+      "sample-frequency": 500,
+      "sample-time": 10,
+      "type": "lock-in noise",
+      "description": "labjack differential input w/ ain0 referenced to ground and lock-in input shorted",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": 1,
+        "sensitivity": 0.02,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_10.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "lock-in noise",
+      "description": "labjack differential input w/ ain0 referenced to ground and lock-in input shorted. Signal allowed 15 minutes to settle before starting measurement.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.02,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-24_11.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "detector noise",
+      "description": "labjack differential input w/ ain0 referenced to ground. Detector blocked off noise measurement.                signal allowed 15 minutes to settle before starting measurement.",
+      "attenuators": "Detector blocked by 4 pieces of electrical tape",
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.02,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-26_0.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "detector noise",
+      "description": "labjack differential input w/ ain0 referenced to ground. Detector blocked off noise measurement.                signal allowed 15 minutes to settle before starting measurement.",
+      "attenuators": "Detector blocked by 4 pieces of electrical tape",
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.02,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-26_1.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground. Signal measurement where                signal is allowed 15 minutes to settle before starting measurement.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.05,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-26_2.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground. Signal measurement where                signal is allowed 15 minutes to settle before starting measurement. Saw sensitivity ovld on lock-in",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.005,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-26_3.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground. Signal measurement where                signal is allowed 15 minutes to settle before starting measurement.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.01,
+        "chop frequency": 29
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-26_4.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground. Signal measurement where                signal is allowed 10 lock-in time constants to settle before starting measurement.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 1.22
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 29
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-26_5.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground. Signal measurement where                signal is allowed 10 lock-in time constants to settle before starting measurement.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 1.22
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.02,
+        "chop frequency": 29
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-26_6.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground. Signal measurement where                signal is allowed 10 lock-in time constants to settle before starting measurement.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 1.2
+      },
+      "lock-in": {
+        "time constant": 100,
+        "sensitivity": 0.02,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_0.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "detector noise",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "4 peices electrical tape covering detector",
+      "monochromator": {
+        "grating": null,
+        "osf": null,
+        "wavelength": null
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_1.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_2.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_3.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.75
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_4.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_5.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 1.22
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_6.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 2,
+        "osf": 2,
+        "wavelength": 1.79
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_7.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 2,
+        "osf": 2,
+        "wavelength": 2.17
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_8.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 2.64
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_9.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 3.11
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 1.0,
+        "chop frequency": 27
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_10.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 3.58
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 1.0,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_11.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 4.05
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_12.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 4.53
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_13.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 5.0
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_14.csv",
+      "sample-frequency": 5000,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 5.5
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_15.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_17.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.75
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_18.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 1.22
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-27_19.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 2,
+        "osf": 2,
+        "wavelength": 1.79
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_1.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_2.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_3.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.75
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_4.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.75
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_5.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": 4,
+        "wavelength": 1.22
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_6.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": 4,
+        "wavelength": 1.22
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_7.csv",
+      "sample-frequency": 500,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 2,
+        "osf": 2,
+        "wavelength": 1.79
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_8.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 2,
+        "osf": 2,
+        "wavelength": 1.79
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_9.csv",
+      "sample-frequency": 500,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 2,
+        "osf": 2,
+        "wavelength": 2.17
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_10.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 2,
+        "osf": 2,
+        "wavelength": 2.17
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_11.csv",
+      "sample-frequency": 500,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 2.64
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 1,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_12.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 2.64
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_13.csv",
+      "sample-frequency": 500,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 3.11
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 1,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_14.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 3.11
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_15.csv",
+      "sample-frequency": 500,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 3.58
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 1,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_16.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 3.58
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_17.csv",
+      "sample-frequency": 500,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 4.05
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 1,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_18.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 4.05
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_19.csv",
+      "sample-frequency": 500,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 4.53
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_20.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 4.53
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_21.csv",
+      "sample-frequency": 500,
+      "sample-time": 100,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 5.0
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.5,
+        "chop frequency": 30
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-28_22.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 3,
+        "osf": 3,
+        "wavelength": 5.0
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 31
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-30_0.csv",
+      "sample-frequency": 500,
+      "sample-time": 1000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.66
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.05,
+        "chop frequency": 31
+      },
+      "light-source": "ai sl2420"
+    },
+    {
+      "file-name": "data\\2021-05-30_1.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.66
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.05,
+        "chop frequency": 31
+      },
+      "light-source": "ai sl2420"
+    },
+    {
+      "file-name": "data\\2021-05-30_2.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.66
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.005,
+        "chop frequency": 31
+      },
+      "light-source": "ai sl2420"
+    },
+    {
+      "file-name": "data\\2021-05-31_0.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.66
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.05,
+        "chop frequency": 30
+      },
+      "light-source": "ai sl2420"
+    },
+    {
+      "file-name": "data\\2021-05-31_1.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.66
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.05,
+        "chop frequency": 30
+      },
+      "light-source": "ai sl2420"
+    },
+    {
+      "file-name": "data\\2021-05-31_2.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.66
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.05,
+        "chop frequency": 30
+      },
+      "light-source": "ai sl2420"
+    },
+    {
+      "file-name": "data\\2021-05-31_3.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.66
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.05,
+        "chop frequency": 30
+      },
+      "light-source": "ai sl2420"
+    },
+    {
+      "file-name": "data\\2021-05-31_4.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": null,
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.02,
+        "chop frequency": 32
+      },
+      "light-source": "Thorlabs SLS203L"
+    },
+    {
+      "file-name": "data\\2021-05-31_5.csv",
+      "sample-frequency": 500,
+      "sample-time": 2000,
+      "type": "signal",
+      "description": "labjack differential input w/ ain0 referenced to ground.",
+      "attenuators": "sapphire coating sample",
+      "monochromator": {
+        "grating": 1,
+        "osf": null,
+        "wavelength": 0.7
+      },
+      "lock-in": {
+        "time constant": 10,
+        "sensitivity": 0.01,
+        "chop frequency": 33
+      },
+      "light-source": "Thorlabs SLS203L"
     }
   ]
 }
