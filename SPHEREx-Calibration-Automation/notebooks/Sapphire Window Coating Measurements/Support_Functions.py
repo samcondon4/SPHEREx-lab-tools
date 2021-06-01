@@ -132,8 +132,7 @@ def multiple_ts_fft(TopDf, waves, int_t=1000, fft_plot=False):
                 ax.plot(int_t, sig_voltages)
 
             i0 += 1
-
-            
+           
             
 def create_df(metadata, metadata_mask):
     '''
@@ -151,9 +150,10 @@ def create_df(metadata, metadata_mask):
     #apply lock-in gain scale factor to each voltage time stream
     voltages = [np.multiply(voltages[i], sens[i]/10) for i in range(len(sens))]
         
-    #Create list of wavelengths
+    #Create list of wavelengths and dates
     i = np.arange(0, len(voltages))
     waves = [[] for i_ in i]
+    dates = [[] for i_ in i]
     for i_ in i:
         if np.char.find(MaskedMetaData[i_]['type'], 'noise') != -1:
             waves[i_] = ('noise ' * len(voltages[i_])).split(' ')[:-1]
@@ -161,7 +161,9 @@ def create_df(metadata, metadata_mask):
             waves[i_] = MaskedMetaData[i_]['monochromator']['wavelength'] \
                           *np.ones(len(voltages[i_]))
     
-
+        dates[i_] = ((MaskedMetaData[i_]['date'] + ' ')*len(voltages[i_])).split(' ')[:-1]
+    
+    
     fs = np.array([m['sample-frequency'] for m in MaskedMetaData])
     times = [np.arange(0, len(voltages[ind])*(1/(fs[ind])), 
                                    (1/(fs[ind]))) for ind in range(len(fs)) ]
@@ -170,10 +172,11 @@ def create_df(metadata, metadata_mask):
     waves = np.array([w for wave_list in waves for w in wave_list])
     times = np.array([t for time_list in times for t in time_list])
     voltages = np.array([v for voltage_list in voltages for v in voltage_list])
-        
+    dates = np.array([d for date_list in dates for d in date_list])
+    
 
     #Final dictionary for all signal measurements w/o attenuation#################################
-    Df = pd.DataFrame({'Type': waves, 'Time': times, 'Voltage': voltages})
+    Df = pd.DataFrame({'Type': waves, 'Time': times, 'Voltage': voltages, 'Date': dates})
     ##############################################################################################
 
     return Df
