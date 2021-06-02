@@ -1,3 +1,4 @@
+import pdb
 import subprocess as sp
 from subprocess import *
 import asyncio
@@ -59,13 +60,14 @@ class CS260:
                   0: Success
     """
 
-    def __init__(self, exe_path_, grat1_range_=(0.475, 1.400), grat2_range_=(0.925, 2.600), grat3_range_=(2.500, 12.0)):
+    def __init__(self, exe_path_="CS260-Drivers\\C++EXE.exe", grat1_range_=(0.475, 1.400), grat2_range_=(0.925, 2.600), grat3_range_=(2.500, 12.0)):
         """ initialize instance of CS260 class
 
         :param exe_path_: Path to C++ executable DLL wrapper
                grat*_range: tuples with wavelength ranges for each grating present in monochromator. On initialization,
                             these values should be specified in microns
         """
+        pdb.set_trace()
         self.exe_path = exe_path_
         self.units = "NM"
         self.wavelength = None
