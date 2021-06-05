@@ -4,13 +4,14 @@ import os
 import copy
 import datetime as datetime
 from configparser import ConfigParser
-from qasync import QEventLoop
 import asyncio
+from qasync import QEventLoop
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 sys.path.append("..\\CS260-Window")
 sys.path.append("..\\..\\..\\pylablib\\instruments")
+sys.path.append("..\\..\\..\\")
 
 # UI files
 # from cs260_dialog_ui import Ui_Dialog as cs260_dialog
@@ -19,8 +20,8 @@ from scanWindowDialog4 import Ui_Dialog as masterDialog
 from CS260 import CS260
 
 # State Machine
-sys.path.append("..\\..\\pylabcalsm")
-from pylabcalsm import SpectralCalibrationMachine
+sys.path.append("..\\..\\pylabcalsm\\")
+from pylabcal_sm import SpectralCalibrationMachine
 
 SEQUENCE_ROLE = 1
 
