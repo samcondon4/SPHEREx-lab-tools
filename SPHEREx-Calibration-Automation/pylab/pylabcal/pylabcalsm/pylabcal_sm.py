@@ -1,10 +1,81 @@
 import sys
 import os
 import asyncio
+import numpy as np
 
 from pylablib.pylablibsm import SM
 from pylablib.utils.parameters import get_params_dict, write_config_file
 
+
+class ControlLoopParams:
+    """ControlLoopParams: Class specifying all information used to build a control loop
+    """
+    def __init__(self):
+        self.integration_time = None
+        self.data = {'storage-path': None,
+                     'format': None}
+        self.monochromator = {'start-wavelength': None,
+                              'stop-wavelength': None,
+                              'step-size': None,
+                              'grating': None}
+        self.lock_in = {'time-constant': None,
+                        'sensitivity': None,
+                        'chop-frequency': None}
+        self.labjack = {'sample-frequency': None,
+                        'sample-time': None}
+
+    def reset(self):
+        self.integration_time = None
+        self.data = {'storage-path': None,
+                     'format': None}
+        self.monochromator = {'start-wavelength': None,
+                              'stop-wavelength': None,
+                              'step-size': None,
+                              'grating': None}
+        self.lock_in = {'time-constant': None,
+                        'sensitivity': None,
+                        'chop-frequency': None}
+        self.labjack = {'sample-frequency': None,
+                        'sample-time': None}
+
+    def print_params(self):
+        print("# Control Loop Parameters ################################################################################################")
+        print("Integration Time: {}".format(self.integration_time))
+        print("Data: {}".format(self.data))
+        print("Monochromator: {}".format(self.monochromator))
+        print("Lock-In: {}".format(self.lock_in))
+        print("LabJack: {}".format(self.labjack))
+        print("##########################################################################################################################")
+
+#PRIVATE CLASSES: SHOULD NOT BE INSTANTIATED FROM EXTERNAL MODULES###################################################################
+class _ControlStep:
+    """_ControlStep: Class used to specify a single step of a control loop
+    """
+    def __init__(self):
+        self.integration_time = None
+        self.monochromator = {'wavelength': None,
+                              'grating': None}
+        self.lockin = {'time-constant': None,
+                       'sensitivity': None}
+        self.labjack = {'sample-frequency': None,
+                        'sample-time': None}
+
+    def print_step(self):
+        pass
+
+class _ControlLoop:
+    """ControlLoop: Class with attributes used to store every step of a control loop
+    """
+    def __init__(self):
+        self.data = {'storage-path': None,
+                     'format': None}
+        self.loop = []
+
+    def reset(self):
+        self.data = {'storage-path': None,
+                     'format': None}
+        self.loop = []
+########################################################################################################################################
 
 class SpectralCalibrationMachine(SM):
 
@@ -24,8 +95,9 @@ class SpectralCalibrationMachine(SM):
 
         #Private attributes used in instance methods###################################
         self._task_list = []
+        self._control_loop = _ControlLoop()
 
-        #Default value for next state data is None#####################################
+        #Default value for next state data is None
         self._next_state_data = None
         ###############################################################################
 
@@ -52,7 +124,22 @@ class SpectralCalibrationMachine(SM):
         """get_state_status: Return status of the current state
 
         """
-        return SM.StateStatus 
+        return SM.StateStatus
+
+    def pause(self):
+        """pause: pause the currently executing state and enter Waiting until resume is executed
+        """
+        pass 
+
+    def resume(self):
+        """resume: resume execution of paused state.
+        """
+        pass
+
+    def stop(self):
+        """stop: stop any currently executing state and reset state-machine
+        """
+        pass
     ##################################################################################
 
 
@@ -74,14 +161,51 @@ class SpectralCalibrationMachine(SM):
         """__waiting_async: asynchronous waiting task. Simply queries instruments to ensure everything is still connected then pends.
 
         """
-        print(self._task_list)
         while(1):
             #Query instruments
             await asyncio.sleep(0.1)
 
     def on_enter_Thinking(self):
         print("Thinking")
-        print(self._task_list)
+        
+
+        next_data_type = type(self._next_state_data)
+        if(next_data_type is ControlLoopParams):
+            
+            self._next_state_data.print_params()
+
+            #Populate control loop with monochromator control information
+            if self._next_state_data.monochromator['start-wavelength'] == self._next_state_data.monochromator['stop-wavelength']:
+                loop_waves = [self._next_state_data.monochromator['start-wavelength']]
+            else:
+                loop_waves = [np.arange(self._next_state_data.monochromator['start-wavelength'][i], self._next_state_data.monochromator['stop-wavelength'][i],
+                                   self._next_state_data.monochromator['step-size'][i]) for i in range(len(self._next_state_data.monochromator['start-wavelength']))]
+
+           
+            loop_gratings = [self._next_state_data.monochromator['grating']]
+            for i in range(len(loop_gratings)):
+                loop_gratings[i] = loop_gratings[i]*np.ones(len(loop_waves))
+
+            #Flatten all control arrays before populating control loops############
+            loop_waves = np.array([wave for wave_list in loop_waves for wave in wave_list])
+            loop_gratings = np.array([g for g_list in loop_gratings for g in g_list])
+
+            #Initialize control loop
+            self._control_loop.reset()
+            loop_length = len(loop_waves)
+            self._control_loop.loop = [_ControlStep() for step in range(loop_length)]
+
+            ind = 0
+            for step in self._control_loop.loop:
+                step.monochromator['wavelength'] = loop_waves[ind]
+                step.monochromator['grating'] = loop_gratings[ind]
+
+
+            ##PRINT STEP HERE TO ENSURE VALUES ARE POPULATED CORRECTLY!####################
+
+
+        else:
+            raise TypeError("Control loop cannot be constructed with input of type {}".format(next_data_type))
 
     def on_enter_Moving(self):
         print("Moving")
@@ -118,3 +242,10 @@ class SpectralCalibrationMachine(SM):
         params = get_params_dict(config_path)
 
         return params
+
+
+
+
+
+
+

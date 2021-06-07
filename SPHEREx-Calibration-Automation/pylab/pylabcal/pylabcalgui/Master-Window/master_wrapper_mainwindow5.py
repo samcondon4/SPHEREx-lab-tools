@@ -8,7 +8,7 @@ from scanWindowDialog4 import Ui_Dialog as masterDialog
 
 #add package root directory to search path
 sys.path.append("..\\..\\..\\")
-from pylabcal.pylabcalsm.pylabcal_sm import SpectralCalibrationMachine
+from pylabcal.pylabcalsm.pylabcal_sm import SpectralCalibrationMachine, ControlLoopParams
 
 
 class masterWindow(QtWidgets.QDialog):
@@ -20,6 +20,7 @@ class masterWindow(QtWidgets.QDialog):
 
         ##State Machine#############################
         self.state_machine = SpectralCalibrationMachine()
+        self.control_loop_params = ControlLoopParams()
 
         ##Set up main UI dialog############################################################
         self.ui = masterDialog()
@@ -32,12 +33,39 @@ class masterWindow(QtWidgets.QDialog):
             self.state_machine.next_state()
 
         self.ui.set_parameters_button_tab4.clicked.connect(self.set_monochromator_parameters_manual)
+        self.ui.run_single_tab1.clicked.connect(self.start_scan_series)
+        self.ui.run_series_tab1.clicked.connect(self.start_scan_series)
+        self.ui.run_single_tab2.clicked.connect(self.start_scan_series)
+        self.ui.run_series_tab2.clicked.connect(self.start_scan_series)
 
     def set_monochromator_parameters_manual(self):
-        if self.state_machine.get_state() == 'Waiting':
+        cur_state = self.state_machine.get_state()
+        if cur_state == 'Waiting':
+            #Reset control loop parameters
+            self.control_loop_params.reset()
+
+            #Set monochromator params#################################################
+            grating = self.ui.grating_new_cbox_tab4.currentIndex() + 1
+            self.control_loop_params.monochromator['grating'] = [grating]
+            wavelength = float(self.ui.wavelength_new_ledit_tab4.text())
+            self.control_loop_params.monochromator['start-wavelength'] = [wavelength]
+            self.control_loop_params.monochromator['stop-wavelength'] = [wavelength]
+            self.control_loop_params.monochromator['step-size'] = [0]
+
+            ##Since this function should only change Monochromator, leave all other parameters in reset state
+
+            #Enter next state, pass in new control loop parameters
+            self.state_machine.next_state(next_state_data=self.control_loop_params)
+        else:
+            print("Cannot enter Thinking from {}".format(cur_state))
+
+    def start_scan_series(self):
+        cur_state = self.state_machine.get_state()
+        if cur_state == 'Waiting':
             self.state_machine.next_state()
         else:
-            print("Cannot enter Thinking state from {}".format(self.state_machine.get_state()))
+            print("Cannot enter Thinking from {}".format(cur_state))
+
 
 if __name__ == "__main__":
 
