@@ -182,52 +182,51 @@ class SpectralCalibrationMachine(SM):
             await asyncio.sleep(0.1)
 
     def on_enter_Thinking(self):
+        '''on_enter_Thinking: State function that is executed when the state machine enters the 'Thinking' state. This function expects that _next_state_data
+                              has been set to a list of ControlLoopParams instances. The function populates the _control_loop attribute after building a 
+                              list of _ControlStep instances based on the _next_state_data.
+
+            Parameters:
+                None
+
+            Returns:
+                None
+
+        '''
         print("Thinking")
         
+        self._control_loop.reset()
 
-        next_data_type = type(self._next_state_data)
-        if(next_data_type is ControlLoopParams):
-            
-            self._next_state_data.print_params()
-
-            #Populate control loop with monochromator control information
+        for cloop_params in self._next_state_data:
             loop_shutters = None
-            if self._next_state_data.monochromator['start_wavelength'] == self._next_state_data.monochromator['stop_wavelength']:
-                loop_waves = [self._next_state_data.monochromator['start_wavelength']]
-                loop_shutters = [self._next_state_data.monochromator['shutter']]
-            else:
-                loop_waves = [np.arange(self._next_state_data.monochromator['start_wavelength'][i], self._next_state_data.monochromator['stop_wavelength'][i],
-                                   self._next_state_data.monochromator['step_size'][i]) for i in range(len(self._next_state_data.monochromator['start_wavelength']))]
-           
-            loop_gratings = [self._next_state_data.monochromator['grating']]
-            for i in range(len(loop_gratings)):
-                loop_gratings[i] = loop_gratings[i]*np.ones(len(loop_waves))
 
-            #Flatten all control arrays before populating control loop steps#################
-            loop_waves = np.array([wave for wave_list in loop_waves for wave in wave_list])
-            loop_gratings = np.array([g for g_list in loop_gratings for g in g_list])
+            ##Get monochromator parameters from control loop params instance#####################
+            start_wavelength = float(cloop_params.monochromator['start_wavelength'])
+            stop_wavelength = float(cloop_params.monochromator['stop_wavelength'])
+            step_size = float(cloop_params.monochromator['step_size'])*1e-3 #multiply by 1e-3 to convert to um.
+            grating = float(cloop_params.monochromator['grating'])
+            if start_wavelength == stop_wavelength:
+                loop_waves = [start_wavelength]
+                loop_shutters = [cloop_params.monochromator['shutter']]
+            else:
+                loop_waves = np.arange(start_wavelength, stop_wavelength + step_size, step_size)
+
+            loop_gratings = grating*np.ones(len(loop_waves))
+            ######################################################################################
+            
             if loop_shutters == None:
                 loop_shutters = ["Open" for w in loop_waves]
-
-            #Initialize control loop#####################################################
-            self._control_loop.reset()
-            loop_length = len(loop_waves)
-            self._control_loop.loop = [_ControlStep() for step in range(loop_length)]
-
+            
+            cloop = [_ControlStep() for s in range(len(loop_waves))]
             ind = 0
-            for step in self._control_loop.loop:
+            for step in cloop:
                 step.monochromator['wavelength'] = loop_waves[ind]
                 step.monochromator['grating'] = loop_gratings[ind]
                 step.monochromator['shutter'] = loop_shutters[ind]
-                step.print_step()
                 ind += 1
 
-
-
-
-        else:
-            raise TypeError("Control loop cannot be constructed with input of type {}".format(next_data_type))
-
+            self._control_loop.loop = self._control_loop.loop + cloop        
+        
     def on_enter_Moving(self):
         print("Moving")
 

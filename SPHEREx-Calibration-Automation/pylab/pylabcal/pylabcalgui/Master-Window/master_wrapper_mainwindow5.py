@@ -1,6 +1,5 @@
 import sys
 import os
-import pdb
 import asyncio
 from qasync import QEventLoop
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -23,16 +22,23 @@ class masterWindow(QtWidgets.QDialog):
     def __init__(self, root_path, seq_config_path="\\pylabcal\\config\\sequence\\", default_seq_file='default_seq.ini'):
         super().__init__()
 
-        ##Save configuration paths##############################################
+        ##Configuration paths##############################################
         self.root_path = root_path
         self.seq_config_path = root_path + seq_config_path
         self.default_seq_file = self.seq_config_path + default_seq_file
+        ########################################################################
 
-        ##Saved sequence files###################################################
+        ##Sequence files and variables###########################################################
         self.saved_sequence_config_files = []
         for seq_file in os.listdir(self.seq_config_path):
             if seq_file.endswith(".ini"):
-                self.saved_sequence_config_files.append(self.seq_config_path + seq_file)
+                self.saved_sequence_config_files.append(seq_file)
+        #########################################################################################
+
+        ##Series files and variables#############################################################
+        self.saved_series_config_files = []
+        self.active_series = []
+        #########################################################################################
 
         ##State Machine###################################
         self.state_machine = SpectralCalibrationMachine()
@@ -45,15 +51,23 @@ class masterWindow(QtWidgets.QDialog):
         self.popup = popupDialog()
         ###################################################################################
 
-        # Automation Tab Buttons######################################################
+        # Automation Tab Buttons##########################################################################
         self.ui.autotab_savesequence_button.clicked.connect(self.save_sequence_to_file)
+        self.ui.autotab_savedsequences_list.currentItemChanged.connect(self.update_highlighted_sequence)
+        self.ui.autotab_addsequencetoseries_button.clicked.connect(self.add_sequence_to_series)
+        self.ui.autotab_removesequence_button.clicked.connect(self.remove_sequence_from_series)
+        self.ui.autotab_removeallsequences_button.clicked.connect(self.remove_all_sequences_from_series)
+        self.ui.autotab_runseries_button.clicked.connect(self.run_series)
+        ###################################################################################################
 
         # Monochromator Tab Buttons###################################################
         self.ui.monochromator_manualcontrol_setparameters_button.clicked.connect(
             self.set_monochromator_parameters_manual)
 
-        # Populate displays with default values
+        # Populate displays with default values#######################################
         self.load_sequence_from_file(self.default_seq_file)
+        self.update_auto_display()
+        self.update_monochromator_display()
 
         # If initialization was successful, then move on to Waiting state
         state_status = self.state_machine.get_state_status()
@@ -61,27 +75,55 @@ class masterWindow(QtWidgets.QDialog):
             self.state_machine.next_state()
 
     # AUTOMATION TAB METHODS######################################################################################
+    def run_series(self):
+        if len(self.active_series):
+            #Build list of ControlLoopParams instances to pass to state machine
+            control_loop_params_list = [0 for seq in self.active_series]
+            ind = 0
+            for seq_file in self.active_series:
+                control_loop_params = ControlLoopParams()
+                control_loop_params.__dict__ = get_params_dict(self.seq_config_path + seq_file)
+                control_loop_params_list[ind] = control_loop_params
+                ind += 1
+            self.state_machine.next_state(next_state_data=control_loop_params_list)
+        else:
+            self.popup.disp_msg(["No sequences found in series!"])
+            self.popup.popup()
+
+    def add_sequence_to_series(self):
+        cur_item = self.ui.autotab_savedsequences_list.currentItem()
+        if cur_item is not None:
+            self.active_series.append(cur_item.text())
+        else:
+            self.popup.disp_msg(["No sequence selected!"])
+            self.popup.popup()
+
+        self.update_auto_display()
+
+    def remove_sequence_from_series(self):
+        rem_seq = self.ui.autotab_series_list.currentItem()
+        if rem_seq is not None:
+            self.active_series.remove(rem_seq.text())
+            print(self.active_series)
+            self.ui.autotab_series_list.takeItem(self.ui.autotab_series_list.currentRow())
+
+    def remove_all_sequences_from_series(self):
+        self.ui.autotab_series_list.clear()
+        self.active_series = []
+
+    def update_highlighted_sequence(self):
+        self.load_sequence_from_file()
+        self.update_auto_display()
+        self.update_monochromator_display()
+
     def load_sequence_from_file(self, filename=None):
 
         if filename is None:
-            config_file = self.ui.autotab_savedsequences_list.currentItem()
+            config_file = self.ui.autotab_savedsequences_list.currentItem().data(SEQUENCE_ROLE)
         else:
             config_file = filename
 
         self.control_loop_params.__dict__ = get_params_dict(config_file)
-        self.update_auto_display()
-
-    def update_auto_display(self):
-        self.ui.autotab_integrationtime_ledit.setText(str(self.control_loop_params.data['integration_time']))
-        self.ui.autotab_storagepath_ledit.setText(str(self.control_loop_params.data['storage_path']))
-        self.ui.autotab_storageformat_combobox.setCurrentText(str(self.control_loop_params.data['format']))
-        self.ui.autotab_savedsequences_list.clear()
-        for seq_file in self.saved_sequence_config_files:
-            seq_file_name = seq_file.split('\\')[-1]
-            seq_item = QtWidgets.QListWidgetItem()
-            seq_item.setText(seq_file_name)
-            seq_item.setData(SEQUENCE_ROLE, seq_file)
-            self.ui.autotab_savedsequences_list.addItem(seq_item)
 
     def save_sequence_to_file(self):
         # First build control loop params for sequence#################################################################
@@ -101,22 +143,57 @@ class masterWindow(QtWidgets.QDialog):
         self.control_loop_params.monochromator['step_size'] = float(self.ui.monochromator_sequencecontrol_step_ledit
                                                                     .text())
         self.control_loop_params.monochromator['grating'] = self.ui.monochromator_sequencecontrol_grating_combobox. \
-                                                            currentIndex() + 1
+                                                                currentIndex() + 1
         self.control_loop_params.monochromator['shutter'] = "Open"
 
-        filename = self.ui.autotab_sequencename_ledit.text()
-        config_path_out = os.path.join('..', '..', 'config', 'sequence', filename + '.ini')
+        filename = self.ui.autotab_sequencename_ledit.text() + '.ini'
+        config_path_out = os.path.join('..', '..', 'config', 'sequence', filename)
         if not os.path.isfile(config_path_out):
             write_config_file(self.control_loop_params.__dict__, config_path_out)
-            seq_item = QtWidgets.QListWidgetItem()
-            seq_item.setText(filename)
-            seq_item.setData(SEQUENCE_ROLE, config_path_out)
-            self.ui.autotab_savedsequences_list.addItem(seq_item)
+            self.saved_sequence_config_files.append(filename)
         else:
             self.popup.disp_msg(["Sequence file {} already exists!".format(filename + '.ini')])
             self.popup.popup()
 
+        ##Update display after saving item
+        self.update_auto_display()
+
+    def update_auto_display(self):
+        self.ui.autotab_integrationtime_ledit.setText(str(self.control_loop_params.data['integration_time']))
+        self.ui.autotab_storagepath_ledit.setText(str(self.control_loop_params.data['storage_path']))
+        self.ui.autotab_storageformat_combobox.setCurrentText(str(self.control_loop_params.data['format']))
+
+        for seq_file in self.saved_sequence_config_files:
+            if len(self.ui.autotab_savedsequences_list.findItems(seq_file, QtCore.Qt.MatchExactly)) == 0:
+                seq_item = QtWidgets.QListWidgetItem()
+                seq_item.setText(seq_file)
+                seq_item.setData(SEQUENCE_ROLE, self.seq_config_path + seq_file)
+                self.ui.autotab_savedsequences_list.addItem(seq_item)
+
+        for seq_file in self.active_series:
+            if len(self.ui.autotab_series_list.findItems(seq_file, QtCore.Qt.MatchExactly)) == 0:
+                seq_item = QtWidgets.QListWidgetItem()
+                seq_item.setText(seq_file)
+                seq_item.setData(SEQUENCE_ROLE, self.seq_config_path + seq_file)
+                self.ui.autotab_series_list.addItem(seq_item)
+
     # MONOCHROMATOR TAB METHODS########################################################################################
+    def update_monochromator_display(self):
+        self.ui.monochromator_sequencecontrol_startwave_ledit.setText(
+            str(self.control_loop_params.monochromator['start_wavelength']))
+
+        self.ui.monochromator_sequencecontrol_endwave_ledit.setText(
+            str(self.control_loop_params.monochromator['stop_wavelength'])
+        )
+
+        self.ui.monochromator_sequencecontrol_step_ledit.setText(
+            str(self.control_loop_params.monochromator['step_size'])
+        )
+
+        self.ui.monochromator_sequencecontrol_grating_combobox.setCurrentIndex(
+            int(self.control_loop_params.monochromator['grating']) - 1
+        )
+
     def set_monochromator_parameters_manual(self):
         cur_state = self.state_machine.get_state()
         if cur_state == 'Waiting':
