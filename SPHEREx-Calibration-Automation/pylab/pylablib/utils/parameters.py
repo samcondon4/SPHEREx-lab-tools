@@ -34,11 +34,13 @@ def write_config_file(params_out, config_filename_out):
                 #pdb.set_trace()
                 #print(ikey, isect, ivals)
                 config_out.set(ikey, isect, str(ivals))
-
+           
     #pdb.set_trace()
     # Write config_filename_out (check if overwriting externally)
+    
     with open(config_filename_out, 'w') as conf:
         config_out.write(conf)
+    
 
 def is_float(s):
     try:

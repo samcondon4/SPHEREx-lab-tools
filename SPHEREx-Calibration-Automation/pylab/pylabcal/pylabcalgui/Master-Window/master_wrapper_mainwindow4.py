@@ -266,7 +266,7 @@ class masterWindow(QDialog):
 
     def save_sequence_to_file(self):
         filename = self.ui.sequence_name_ledit_tab2.text()
-        config_path_out = os.path.join('..','..','config','sequence',filename)
+        config_path_out = os.path.join('..', '..', 'config', 'sequence', filename)
         self.state_machine.write_parameters_to_file(config_path_out)
         if filename not in self.saved_series_config_files:
             self.saved_sequence_config_files.append(filename)

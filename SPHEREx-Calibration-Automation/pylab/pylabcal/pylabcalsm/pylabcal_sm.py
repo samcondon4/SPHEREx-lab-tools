@@ -11,41 +11,48 @@ class ControlLoopParams:
     """ControlLoopParams: Class specifying all information used to build a control loop
     """
     def __init__(self):
-        self.integration_time = None
-        self.data = {'storage-path': None,
-                     'format': None}
-        self.monochromator = {'start-wavelength': None,
-                              'stop-wavelength': None,
-                              'step-size': None,
-                              'grating': None}
-        self.lock_in = {'time-constant': None,
+        self.data = {'integration_time': None,
+                     'storage_path': None,
+                     'format': '.csv'
+                     }
+
+        self.metadata = {'cryo_temp': True,
+                         'power_meter': True,
+                         'ndf_wheel': True,
+                         'grating': True,
+                         'wavelength': True
+                         }
+
+        self.monochromator = {'start_wavelength': None,
+                              'stop_wavelength': None,
+                              'step_size': None,
+                              'grating': None,
+                              'shutter': None}
+
+        self.lockin = {'time_constant': None,
                         'sensitivity': None,
-                        'chop-frequency': None}
-        self.labjack = {'sample-frequency': None,
-                        'sample-time': None}
+                        'chop_frequency': None}
+
+        self.labjack = {'sample_frequency': None,
+                        'differential': None}
 
     def reset(self):
         self.integration_time = None
         self.data = {'storage-path': None,
                      'format': None}
-        self.monochromator = {'start-wavelength': None,
-                              'stop-wavelength': None,
-                              'step-size': None,
+        self.monochromator = {'start_wavelength': None,
+                              'stop_wavelength': None,
+                              'step_size': None,
                               'grating': None}
-        self.lock_in = {'time-constant': None,
+        self.lockin = {'time_constant': None,
                         'sensitivity': None,
-                        'chop-frequency': None}
-        self.labjack = {'sample-frequency': None,
-                        'sample-time': None}
+                        'chop_frequency': None}
+        self.labjack = {'sample_frequency': None,
+                        'differential': False}
 
     def print_params(self):
-        print("# Control Loop Parameters ################################################################################################")
-        print("Integration Time: {}".format(self.integration_time))
-        print("Data: {}".format(self.data))
-        print("Monochromator: {}".format(self.monochromator))
-        print("Lock-In: {}".format(self.lock_in))
-        print("LabJack: {}".format(self.labjack))
-        print("##########################################################################################################################")
+        for ikey, idict in self.__dict__.items():
+            print(ikey, idict)
 
 #PRIVATE CLASSES: SHOULD NOT BE INSTANTIATED FROM EXTERNAL MODULES###################################################################
 class _ControlStep:
@@ -54,14 +61,23 @@ class _ControlStep:
     def __init__(self):
         self.integration_time = None
         self.monochromator = {'wavelength': None,
-                              'grating': None}
-        self.lockin = {'time-constant': None,
+                              'grating': None,
+                              'shutter': None}
+        self.lockin = {'time_constant': None,
                        'sensitivity': None}
-        self.labjack = {'sample-frequency': None,
-                        'sample-time': None}
+        self.labjack = {'sample_frequency': None,
+                        'sample_time': None}
 
     def print_step(self):
-        pass
+        
+        ##PRINT STEP HERE TO ENSURE VALUES ARE POPULATED CORRECTLY!####################
+        print("## Control step data #####################################################")
+        print("Monochromator data:")
+        print(self.monochromator)
+        print("Lockin data:")
+        print(self.lockin)
+        print("Labjack data:")
+        print(self.labjack)
 
 class _ControlLoop:
     """ControlLoop: Class with attributes used to store every step of a control loop
@@ -143,7 +159,7 @@ class SpectralCalibrationMachine(SM):
     ##################################################################################
 
 
-    #PRIVATE METHODS: These should never be called by higher level software. State-machine code automatically calls these###########################################
+    #PRIVATE METHODS: These should never be called by higher level software. State-machine code automatically calls these upon entry of each corresponding state#################################
     def on_enter_Initializing(self):
         print("Initializing")
         SM.StateStatus = SpectralCalibrationMachine.STATE_IN_PROGRESS
@@ -175,22 +191,25 @@ class SpectralCalibrationMachine(SM):
             self._next_state_data.print_params()
 
             #Populate control loop with monochromator control information
-            if self._next_state_data.monochromator['start-wavelength'] == self._next_state_data.monochromator['stop-wavelength']:
-                loop_waves = [self._next_state_data.monochromator['start-wavelength']]
+            loop_shutters = None
+            if self._next_state_data.monochromator['start_wavelength'] == self._next_state_data.monochromator['stop_wavelength']:
+                loop_waves = [self._next_state_data.monochromator['start_wavelength']]
+                loop_shutters = [self._next_state_data.monochromator['shutter']]
             else:
-                loop_waves = [np.arange(self._next_state_data.monochromator['start-wavelength'][i], self._next_state_data.monochromator['stop-wavelength'][i],
-                                   self._next_state_data.monochromator['step-size'][i]) for i in range(len(self._next_state_data.monochromator['start-wavelength']))]
-
+                loop_waves = [np.arange(self._next_state_data.monochromator['start_wavelength'][i], self._next_state_data.monochromator['stop_wavelength'][i],
+                                   self._next_state_data.monochromator['step_size'][i]) for i in range(len(self._next_state_data.monochromator['start_wavelength']))]
            
             loop_gratings = [self._next_state_data.monochromator['grating']]
             for i in range(len(loop_gratings)):
                 loop_gratings[i] = loop_gratings[i]*np.ones(len(loop_waves))
 
-            #Flatten all control arrays before populating control loops############
+            #Flatten all control arrays before populating control loop steps#################
             loop_waves = np.array([wave for wave_list in loop_waves for wave in wave_list])
             loop_gratings = np.array([g for g_list in loop_gratings for g in g_list])
+            if loop_shutters == None:
+                loop_shutters = ["Open" for w in loop_waves]
 
-            #Initialize control loop
+            #Initialize control loop#####################################################
             self._control_loop.reset()
             loop_length = len(loop_waves)
             self._control_loop.loop = [_ControlStep() for step in range(loop_length)]
@@ -199,9 +218,11 @@ class SpectralCalibrationMachine(SM):
             for step in self._control_loop.loop:
                 step.monochromator['wavelength'] = loop_waves[ind]
                 step.monochromator['grating'] = loop_gratings[ind]
+                step.monochromator['shutter'] = loop_shutters[ind]
+                step.print_step()
+                ind += 1
 
 
-            ##PRINT STEP HERE TO ENSURE VALUES ARE POPULATED CORRECTLY!####################
 
 
         else:
