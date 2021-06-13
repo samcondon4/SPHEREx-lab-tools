@@ -19,13 +19,12 @@ class masterWindow(QtWidgets.QDialog):
     Spectral calibration master control GUI window
     """
 
-    def __init__(self, root_path, seq_config_path="\\pylabcal\\config\\sequence\\", default_seq_file='default_seq.ini'):
+    def __init__(self, root_path, seq_config_path="\\pylabcal\\config\\sequence\\"):
         super().__init__()
 
         ##Configuration paths##############################################
         self.root_path = root_path
         self.seq_config_path = root_path + seq_config_path
-        self.default_seq_file = self.seq_config_path + default_seq_file
         ########################################################################
 
         ##Sequence files and variables###########################################################
@@ -65,9 +64,7 @@ class masterWindow(QtWidgets.QDialog):
             self.set_monochromator_parameters_manual)
 
         # Populate displays with default values#######################################
-        self.load_sequence_from_file(self.default_seq_file)
         self.update_auto_display()
-        self.update_monochromator_display()
 
         # If initialization was successful, then move on to Waiting state
         state_status = self.state_machine.get_state_status()
@@ -127,12 +124,13 @@ class masterWindow(QtWidgets.QDialog):
 
     def save_sequence_to_file(self):
         # First build control loop params for sequence#################################################################
-        self.control_loop_params.data['integration_time'] = float(self.ui.autotab_integrationtime_ledit.text())
+        #monochromator parameters
         self.control_loop_params.data['storage_path'] = self.ui.autotab_storagepath_ledit.text()
         self.control_loop_params.data['format'] = self.ui.autotab_storageformat_combobox.currentText()
         self.control_loop_params.metadata['cryo_temp'] = self.ui.autotab_metadata_cryo_checkbox.isChecked()
         self.control_loop_params.metadata['power_meter'] = self.ui.autotab_metadata_powermeter_checkbox.isChecked()
-        self.control_loop_params.metadata['ndf_wheel'] = self.ui.autotab_metadata_grating_checkbox.isChecked()
+        self.control_loop_params.metadata['ndf_wheel'] = self.ui.autotab_metadata_ndf_checkbox.isChecked()
+        self.control_loop_params.metadata['grating'] = self.ui.autotab_metadata_grating_checkbox.isChecked()
         self.control_loop_params.metadata['wavelength'] = self.ui.autotab_metadata_wavelength_checkbox.isChecked()
         self.control_loop_params.monochromator['start_wavelength'] = float(self.ui.
                                                                            monochromator_sequencecontrol_startwave_ledit
@@ -141,11 +139,20 @@ class masterWindow(QtWidgets.QDialog):
                                                                           monochromator_sequencecontrol_endwave_ledit
                                                                           .text())
         self.control_loop_params.monochromator['step_size'] = float(self.ui.monochromator_sequencecontrol_step_ledit
-                                                                    .text())
-        self.control_loop_params.monochromator['grating'] = self.ui.monochromator_sequencecontrol_grating_combobox. \
-                                                                currentIndex() + 1
+                                                                    .text()) * 1e-3
         self.control_loop_params.monochromator['shutter'] = "Open"
-
+        self.control_loop_params.monochromator['g1_g2_transition'] = float(self.ui.monochromator_sequencecontrol_g1g2transition_ledit.text())
+        self.control_loop_params.monochromator['g2_g3_transition'] = float(self.ui.monochromator_sequencecontrol_g2g3transition_ledit.text())
+        self.control_loop_params.monochromator['noosf_osf1_transition'] = float(self.ui.monochromator_sequencecontrol_noosfosf1transition_ledit.text())
+        self.control_loop_params.monochromator['osf1_osf2_transition'] = float(self.ui.monochromator_sequencecontrol_osf1osf2transition_ledit.text())
+        self.control_loop_params.monochromator['osf2_osf3_transition'] = float(self.ui.monochromator_sequencecontrol_osf2osf3transition_ledit.text())
+        #lockin parameters
+        self.control_loop_params.lockin['sample_frequency'] = float(self.ui.lockin_samplefrequency_ledit.text())
+        self.control_loop_params.lockin['sample_time'] = float(self.ui.lockin_sampletime_ledit.text())
+        self.control_loop_params.lockin['time_constant'] = float(self.ui.lockin_timeconstant_ledit.text())
+        sensitivities = self.ui.lockin_sensitivitystring_ledit.text().split(',')
+        self.control_loop_params.lockin['sensitivities'] = [float(s) for s in sensitivities]
+        ###############################################################################################################
         filename = self.ui.autotab_sequencename_ledit.text() + '.ini'
         config_path_out = os.path.join('..', '..', 'config', 'sequence', filename)
         if not os.path.isfile(config_path_out):
@@ -158,8 +165,7 @@ class masterWindow(QtWidgets.QDialog):
         ##Update display after saving item
         self.update_auto_display()
 
-    def update_auto_display(self):
-        self.ui.autotab_integrationtime_ledit.setText(str(self.control_loop_params.data['integration_time']))
+    def update_auto_display(self, initial=False):
         self.ui.autotab_storagepath_ledit.setText(str(self.control_loop_params.data['storage_path']))
         self.ui.autotab_storageformat_combobox.setCurrentText(str(self.control_loop_params.data['format']))
 
@@ -180,18 +186,33 @@ class masterWindow(QtWidgets.QDialog):
     # MONOCHROMATOR TAB METHODS########################################################################################
     def update_monochromator_display(self):
         self.ui.monochromator_sequencecontrol_startwave_ledit.setText(
-            str(self.control_loop_params.monochromator['start_wavelength']))
+            self.control_loop_params.monochromator['start_wavelength'])
 
         self.ui.monochromator_sequencecontrol_endwave_ledit.setText(
-            str(self.control_loop_params.monochromator['stop_wavelength'])
+            self.control_loop_params.monochromator['stop_wavelength']
         )
 
         self.ui.monochromator_sequencecontrol_step_ledit.setText(
-            str(self.control_loop_params.monochromator['step_size'])
+            str(float(self.control_loop_params.monochromator['step_size'])*1e3)
         )
 
-        self.ui.monochromator_sequencecontrol_grating_combobox.setCurrentIndex(
-            int(self.control_loop_params.monochromator['grating']) - 1
+        self.ui.monochromator_sequencecontrol_g1g2transition_ledit.setText(
+            self.control_loop_params.monochromator['g1_g2_transition'])
+
+        self.ui.monochromator_sequencecontrol_g2g3transition_ledit.setText(
+            self.control_loop_params.monochromator['g2_g3_transition']
+        )
+
+        self.ui.monochromator_sequencecontrol_noosfosf1transition_ledit.setText(
+            self.control_loop_params.monochromator['noosf_osf1_transition']
+        )
+
+        self.ui.monochromator_sequencecontrol_osf1osf2transition_ledit.setText(
+            self.control_loop_params.monochromator['osf1_osf2_transition']
+        )
+
+        self.ui.monochromator_sequencecontrol_osf2osf3transition_ledit.setText(
+            self.control_loop_params.monochromator['osf2_osf3_transition']
         )
 
     def set_monochromator_parameters_manual(self):

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>666</width>
-    <height>515</height>
+    <width>1251</width>
+    <height>744</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -176,33 +176,6 @@
        </item>
        <item row="5" column="0" colspan="2">
         <layout class="QGridLayout" name="autotab_data_layout">
-         <item row="6" column="2">
-          <widget class="QCheckBox" name="autotab_metadata_ndf_checkbox">
-           <property name="text">
-            <string>NDF Wheel</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="5">
-          <widget class="QLabel" name="autotab_integrationtime_label">
-           <property name="text">
-            <string>Integration Time (s.):</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QCheckBox" name="autotab_metadata_grating_checkbox">
-           <property name="text">
-            <string>Grating</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
          <item row="5" column="0" colspan="2">
           <widget class="QCheckBox" name="autotab_metadata_cryo_checkbox">
            <property name="text">
@@ -223,44 +196,7 @@
            </property>
           </widget>
          </item>
-         <item row="3" column="0" rowspan="2" colspan="5">
-          <widget class="QLabel" name="autotab_metadata_label">
-           <property name="text">
-            <string>Metadata to Include:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="3" colspan="2">
-          <widget class="QCheckBox" name="autotab_metadata_integrationtime_checkbox">
-           <property name="text">
-            <string>Integration Time</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="3" colspan="2">
-          <widget class="QCheckBox" name="autotab_metadata_wavelength_checkbox">
-           <property name="text">
-            <string>Wavelength</string>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="5" rowspan="2">
-          <widget class="QLineEdit" name="autotab_integrationtime_ledit"/>
-         </item>
          <item row="7" column="5">
-          <widget class="QLabel" name="autotab_storageformat_label">
-           <property name="text">
-            <string>Storage Format:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="5">
           <widget class="QComboBox" name="autotab_storageformat_combobox">
            <item>
             <property name="text">
@@ -284,15 +220,69 @@
            </item>
           </widget>
          </item>
-         <item row="7" column="0" colspan="5">
+         <item row="6" column="5">
+          <widget class="QLabel" name="autotab_storageformat_label">
+           <property name="text">
+            <string>Storage Format:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="5">
           <widget class="QLabel" name="autotab_storagepath_label">
            <property name="text">
             <string>Storage Path:</string>
            </property>
           </widget>
          </item>
-         <item row="8" column="0" colspan="5">
+         <item row="5" column="5">
           <widget class="QLineEdit" name="autotab_storagepath_ledit"/>
+         </item>
+         <item row="7" column="0">
+          <widget class="QCheckBox" name="autotab_metadata_integrationtime_checkbox">
+           <property name="text">
+            <string>Integration Time</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2" colspan="3">
+          <widget class="QCheckBox" name="autotab_metadata_grating_checkbox">
+           <property name="text">
+            <string>Grating</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="2" colspan="3">
+          <widget class="QCheckBox" name="autotab_metadata_ndf_checkbox">
+           <property name="text">
+            <string>NDF Wheel</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="2" colspan="3">
+          <widget class="QCheckBox" name="autotab_metadata_wavelength_checkbox">
+           <property name="text">
+            <string>Wavelength</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" rowspan="3" colspan="5">
+          <widget class="QLabel" name="autotab_metadata_label">
+           <property name="text">
+            <string>Metadata to Include:</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
@@ -303,107 +293,28 @@
        <string>Monochromator</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="18" column="0">
-        <widget class="QLabel" name="monochromator_sequencecontrol_grating_label">
-         <property name="text">
-          <string>Grating:</string>
+       <item row="11" column="0" colspan="3">
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="17" column="0" colspan="2">
-        <widget class="QLineEdit" name="monochromator_sequencecontrol_step_ledit"/>
-       </item>
-       <item row="9" column="0">
-        <widget class="QComboBox" name="monochromator_manualcontrol_shutter_combobox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>Open</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Close</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="19" column="0" colspan="2">
-        <widget class="QComboBox" name="monochromator_sequencecontrol_grating_combobox">
-         <item>
-          <property name="text">
-           <string>G1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>G2</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>G3</string>
-          </property>
-         </item>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="monochromator_manualcontrol_wavelength_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Wavelength (um.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
+       <item row="1" column="0" colspan="3">
         <widget class="Line" name="line">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
         </widget>
        </item>
-       <item row="7" column="0">
-        <widget class="QComboBox" name="monochromator_manualcontrol_grating_combobox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+       <item row="22" column="0">
+        <widget class="QLabel" name="monochromator_sequencecontrol_g1g2transition_label">
+         <property name="text">
+          <string>G1 to G2 Transition Wavelength (um.):</string>
          </property>
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-         <item>
-          <property name="text">
-           <string>G1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>G2</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>G3</string>
-          </property>
-         </item>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="3" column="0" colspan="2">
         <widget class="QLineEdit" name="monochromator_manualcontrol_wavelength_ledit">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -413,66 +324,7 @@
          </property>
         </widget>
        </item>
-       <item row="16" column="0">
-        <widget class="QLabel" name="monochromator_sequencecontrol_step_label">
-         <property name="text">
-          <string>Step Size (nm.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="0" colspan="2">
-        <widget class="QLabel" name="monochromator_sequencecontrol_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>14</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Sequence Control:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="15" column="0" colspan="2">
-        <widget class="QLineEdit" name="monochromator_sequencecontrol_endwave_ledit"/>
-       </item>
-       <item row="13" column="0" colspan="2">
-        <widget class="QLineEdit" name="monochromator_sequencecontrol_startwave_ledit"/>
-       </item>
-       <item row="7" column="1" rowspan="3">
-        <widget class="QPushButton" name="monochromator_manualcontrol_abort">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Abort</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="monochromator_manualcontrol_osf_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Filter:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
+       <item row="5" column="0" colspan="2">
         <widget class="QComboBox" name="monochromator_manualcontrol_osf_combobox">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -505,42 +357,8 @@
          </item>
         </widget>
        </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="monochromator_manualcontrol_grating_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Grating:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="12" column="0">
-        <widget class="QLabel" name="monochromator_sequencecontrol_startwave_label">
-         <property name="text">
-          <string>Start Wavelength (um.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="monochromator_manualcontrol_label">
-         <property name="font">
-          <font>
-           <pointsize>14</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Manual Control:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1" rowspan="3">
-        <widget class="QPushButton" name="monochromator_manualcontrol_setparameters_button">
+       <item row="7" column="2" rowspan="3">
+        <widget class="QPushButton" name="monochromator_manualcontrol_abort">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -548,14 +366,27 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Set Parameters</string>
+          <string>Abort</string>
          </property>
         </widget>
        </item>
-       <item row="14" column="0">
-        <widget class="QLabel" name="monochromator_sequencecontrol_endwave_label">
+       <item row="4" column="0">
+        <widget class="QLabel" name="monochromator_manualcontrol_osf_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
-          <string>End Wavelength (um.):</string>
+          <string>Filter:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="0">
+        <widget class="QLabel" name="monochromator_sequencecontrol_osf2osf3transition_label">
+         <property name="text">
+          <string>OSF2 to OSF3 Transition Wavelength (um.):</string>
          </property>
         </widget>
        </item>
@@ -572,12 +403,300 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="0" colspan="2">
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+       <item row="24" column="1" colspan="2">
+        <widget class="QLineEdit" name="monochromator_sequencecontrol_g2g3transition_ledit"/>
+       </item>
+       <item row="22" column="1" colspan="2">
+        <widget class="QLineEdit" name="monochromator_sequencecontrol_g1g2transition_ledit"/>
+       </item>
+       <item row="26" column="1" colspan="2">
+        <widget class="QLineEdit" name="monochromator_sequencecontrol_osf1osf2transition_ledit"/>
+       </item>
+       <item row="26" column="0">
+        <widget class="QLabel" name="monochromator_sequencecontrol_osf1osf2transition_label">
+         <property name="text">
+          <string>OSF1 to OSF2 Transition Wavelength (um.):</string>
          </property>
         </widget>
+       </item>
+       <item row="16" column="0">
+        <widget class="QLabel" name="monochromator_sequencecontrol_endwave_label">
+         <property name="text">
+          <string>End Wavelength (um.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="0">
+        <widget class="QLabel" name="monochromator_sequencecontrol_g2g3transition_label">
+         <property name="text">
+          <string>G2 to G3 Transition Wavelength (um.): </string>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="1" colspan="2">
+        <widget class="QLineEdit" name="monochromator_sequencecontrol_osf2osf3transition_ledit"/>
+       </item>
+       <item row="3" column="2" rowspan="3">
+        <widget class="QPushButton" name="monochromator_manualcontrol_setparameters_button">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Set Parameters</string>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="1" colspan="2">
+        <widget class="QLineEdit" name="monochromator_sequencecontrol_step_ledit"/>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="monochromator_sequencecontrol_startwave_label">
+         <property name="text">
+          <string>Start Wavelength (um.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="2">
+        <widget class="QComboBox" name="monochromator_manualcontrol_grating_combobox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>G1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>G2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>G3</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="10" column="0" colspan="3">
+        <widget class="QLabel" name="monochromator_sequencecontrol_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Sequence Control:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0" colspan="2">
+        <widget class="QComboBox" name="monochromator_manualcontrol_shutter_combobox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Open</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Close</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="monochromator_manualcontrol_label">
+         <property name="font">
+          <font>
+           <pointsize>14</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Manual Control:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1" colspan="2">
+        <widget class="QLineEdit" name="monochromator_sequencecontrol_startwave_ledit"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="monochromator_manualcontrol_wavelength_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Wavelength (um.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="monochromator_manualcontrol_grating_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Grating:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1" colspan="2">
+        <widget class="QLineEdit" name="monochromator_sequencecontrol_endwave_ledit"/>
+       </item>
+       <item row="20" column="0">
+        <widget class="QLabel" name="monochromator_sequencecontrol_step_label">
+         <property name="text">
+          <string>Step Size (nm.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="0">
+        <widget class="QLabel" name="monochromator_sequencecontrol_noosfosf1transition_label">
+         <property name="text">
+          <string>No OSF to OSF1 Transition Wavelength (um.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="1" colspan="2">
+        <widget class="QLineEdit" name="monochromator_sequencecontrol_noosfosf1transition_ledit"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="lockin">
+      <attribute name="title">
+       <string>Lock-in</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <layout class="QGridLayout" name="gridLayout_4">
+         <item row="2" column="0">
+          <widget class="QLabel" name="lockin_sampletime_label">
+           <property name="text">
+            <string>Sample Time:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="lockin_samplefrequency_label">
+           <property name="text">
+            <string>Sample Frequency:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0" colspan="2">
+          <widget class="QLabel" name="label">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Manual Control:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="lockin_sensitivitystring_label">
+           <property name="text">
+            <string>Sensitivity String:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0" colspan="2">
+          <widget class="QPushButton" name="lockin_startsinglemeasure_button">
+           <property name="text">
+            <string>Start Single Measurement</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="lockin_samplefrequency_ledit"/>
+         </item>
+         <item row="7" column="0" colspan="2">
+          <widget class="QPushButton" name="lockin_stopsinglemeasure_button">
+           <property name="text">
+            <string>Stop Single Measurement</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="lockin_timeconstant_label">
+           <property name="text">
+            <string>Time Constant:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="lockin_sampletime_ledit"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="lockin_timeconstant_ledit"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="lockin_sensitivitystring_ledit"/>
+         </item>
+         <item row="0" column="0" colspan="2">
+          <widget class="QLabel" name="label_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>14</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Manual/Sequence Control:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>

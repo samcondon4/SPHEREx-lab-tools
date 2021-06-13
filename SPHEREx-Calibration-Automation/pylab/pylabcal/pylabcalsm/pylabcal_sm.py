@@ -11,8 +11,7 @@ class ControlLoopParams:
     """ControlLoopParams: Class specifying all information used to build a control loop
     """
     def __init__(self):
-        self.data = {'integration_time': None,
-                     'storage_path': None,
+        self.data = {'storage_path': None,
                      'format': '.csv'
                      }
 
@@ -26,29 +25,48 @@ class ControlLoopParams:
         self.monochromator = {'start_wavelength': None,
                               'stop_wavelength': None,
                               'step_size': None,
-                              'grating': None,
-                              'shutter': None}
+                              'shutter': None,
+                              'g1_g2_transition': None,
+                              'g2_g3_transition': None,
+                              'noosf_osf1_transition': None,
+                              'osf1_osf2_transition': None,
+                              'osf2_osf3_transition': None}
 
-        self.lockin = {'time_constant': None,
-                        'sensitivity': None,
-                        'chop_frequency': None}
-
-        self.labjack = {'sample_frequency': None,
-                        'differential': None}
+        self.lockin = {'sample_frequency': None,
+        			   'sample_time': None,
+        				'time_constant': None,
+                        'sensitivities': None,
+                        'chop_frequency': None
+                       }
 
     def reset(self):
-        self.integration_time = None
-        self.data = {'storage-path': None,
-                     'format': None}
+        self.data = {'storage_path': None,
+                     'format': '.csv'
+                     }
+
+        self.metadata = {'cryo_temp': True,
+                         'power_meter': True,
+                         'ndf_wheel': True,
+                         'grating': True,
+                         'wavelength': True
+                         }
+
         self.monochromator = {'start_wavelength': None,
                               'stop_wavelength': None,
                               'step_size': None,
-                              'grating': None}
-        self.lockin = {'time_constant': None,
-                        'sensitivity': None,
-                        'chop_frequency': None}
-        self.labjack = {'sample_frequency': None,
-                        'differential': False}
+                              'shutter': None,
+                              'g1_g2_transition': None,
+                              'g2_g3_transition': None,
+                              'noosf_osf1_transition': None,
+                              'osf1_osf2_transition': None,
+                              'osf2_osf3_transition': None}
+
+        self.lockin = {'sample_frequency': None,
+        			   'sample_time': None,
+        				'time_constant': None,
+                        'sensitivities': None,
+                        'chop_frequency': None
+                       }
 
     def print_params(self):
         for ikey, idict in self.__dict__.items():
@@ -59,14 +77,13 @@ class _ControlStep:
     """_ControlStep: Class used to specify a single step of a control loop
     """
     def __init__(self):
-        self.integration_time = None
         self.monochromator = {'wavelength': None,
                               'grating': None,
                               'shutter': None}
-        self.lockin = {'time_constant': None,
+        self.lockin = {'sample_frequency': None,
+        			   'sample_time': None,
+        			   'time_constant': None,
                        'sensitivity': None}
-        self.labjack = {'sample_frequency': None,
-                        'sample_time': None}
 
     def print_step(self):
         
@@ -76,8 +93,6 @@ class _ControlStep:
         print(self.monochromator)
         print("Lockin data:")
         print(self.lockin)
-        print("Labjack data:")
-        print(self.labjack)
 
 class _ControlLoop:
     """ControlLoop: Class with attributes used to store every step of a control loop
