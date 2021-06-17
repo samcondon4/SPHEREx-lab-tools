@@ -7,71 +7,6 @@ from pylablib.pylablibsm import SM
 from pylablib.utils.parameters import get_params_dict, write_config_file
 
 
-class ControlLoopParams:
-    """ControlLoopParams: Class specifying all information used to build a control loop
-    """
-    def __init__(self):
-        self.data = {'storage_path': None,
-                     'format': '.csv'
-                     }
-
-        self.metadata = {'cryo_temp': True,
-                         'power_meter': True,
-                         'ndf_wheel': True,
-                         'grating': True,
-                         'wavelength': True
-                         }
-
-        self.monochromator = {'start_wavelength': None,
-                              'stop_wavelength': None,
-                              'step_size': None,
-                              'shutter': None,
-                              'g1_g2_transition': None,
-                              'g2_g3_transition': None,
-                              'noosf_osf1_transition': None,
-                              'osf1_osf2_transition': None,
-                              'osf2_osf3_transition': None}
-
-        self.lockin = {'sample_frequency': None,
-        			   'sample_time': None,
-        				'time_constant': None,
-                        'sensitivities': None,
-                        'chop_frequency': None
-                       }
-
-    def reset(self):
-        self.data = {'storage_path': None,
-                     'format': '.csv'
-                     }
-
-        self.metadata = {'cryo_temp': True,
-                         'power_meter': True,
-                         'ndf_wheel': True,
-                         'grating': True,
-                         'wavelength': True
-                         }
-
-        self.monochromator = {'start_wavelength': None,
-                              'stop_wavelength': None,
-                              'step_size': None,
-                              'shutter': None,
-                              'g1_g2_transition': None,
-                              'g2_g3_transition': None,
-                              'noosf_osf1_transition': None,
-                              'osf1_osf2_transition': None,
-                              'osf2_osf3_transition': None}
-
-        self.lockin = {'sample_frequency': None,
-        			   'sample_time': None,
-        				'time_constant': None,
-                        'sensitivities': None,
-                        'chop_frequency': None
-                       }
-
-    def print_params(self):
-        for ikey, idict in self.__dict__.items():
-            print(ikey, idict)
-
 #PRIVATE CLASSES: SHOULD NOT BE INSTANTIATED FROM EXTERNAL MODULES###################################################################
 class _ControlStep:
     """_ControlStep: Class used to specify a single step of a control loop
@@ -124,6 +59,26 @@ class SpectralCalibrationMachine(SM):
         """
         super().__init__()
 
+
+        #Control loop parameters#######################################################
+        self.moving_params = {}
+    	self.measuring_params = {}
+    	self.checking_params = {}
+    	self.compressing_params = {}
+    	self.writing_params = {}
+    	self.resetting_params = {}
+        ###############################################################################
+
+        #Control loop actions##########################################################
+        self.moving_actions = {}
+        self.measuring_actions = {}
+        self.checking_actions = {}
+        self.compressing_actions = {}
+        self.writing_actions = {}
+        self.resetting_actions = {}
+        ###############################################################################
+
+
         #Private attributes used in instance methods###################################
         self._task_list = []
         self._control_loop = _ControlLoop()
@@ -137,6 +92,61 @@ class SpectralCalibrationMachine(SM):
         self.on_enter_Initializing()
 
     #PUBLIC FUNCTIONS#################################################################
+    
+    #Control loop parameters functions#
+    def add_cloop_params_dict(self, state, params_dict_name, params_dict):
+    	'''add_cloop_params_dict: add a dictionary dict, with name dict_name, to the specified state parameters dictionary. 
+
+    		Params:
+    			state: state parameters dictionary to add params_dict to
+    			params_dict_name: name of dictionary. This will be the key of the dictionary that is added to the state parameters dictionary
+    			params_dict: dictionary of control loop parameters
+
+    		Returns:
+    			None
+    	'''
+    	if state == 'Moving':
+    		self.moving_params[params_dict_name] = params_dict
+    	elif state == 'Measuring':
+    		self.measuring_params[params_dict_name] = params_dict
+    	elif state == 'Checking':
+    		self.checking_params[params_dict_name] = params_dict
+    	elif state == 'Writing':
+    		self.writing_params[params_dict_name] = params_dict
+    	elif state == 'Resetting':
+    		self.resetting_params[params_dict_name] = params_dict
+
+    def remove_cloop_params_dict(self, state, params_dict_name):
+    	'''remove_cloop_params_dict: remove a dictionary from the specified state parameters dictionary.
+
+			Params:
+				state: state parameters dictionary to remove dict from
+				params_dict_name: name (key) of dictionary to remove from state parameters dictionary
+    	'''
+    	if state == 'Moving':
+    		self.moving_params.pop(params_dict_name)
+    	elif state == 'Measuring':
+    		self.measuring_params.pop(params_dict_name)
+    	elif state == 'Checking':
+    		self.checking_params.pop(params_dict_name)
+    	elif state == 'Writing':
+    		self.writing_params.pop(params_dict_name)
+    	elif state == 'Resetting':
+    		self.resetting_params.pop(params_dict_name)
+
+
+    def add_cloop_action(self, state, action_name, action):
+    	'''add_cloop_action: Add a function that gets called in 'state' when 'action_name'
+    						 is encountered in the state parameters dict.
+
+    		Parameters:
+				state: command loop state where action should be run.
+				action_name: name of the action to be run
+				action: function pointer to be called when action should be run
+    	'''
+    	pass
+
+
     def next_state(self, next_state_data=None):
         """next_state: Trigger state-machine transition and update next_state_data
                        field with the passed in value.
