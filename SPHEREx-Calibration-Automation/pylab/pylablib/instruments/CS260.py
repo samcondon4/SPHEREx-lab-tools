@@ -60,14 +60,13 @@ class CS260:
                   0: Success
     """
 
-    def __init__(self, exe_path_="CS260-Drivers\\C++EXE.exe", grat1_range_=(0.475, 1.400), grat2_range_=(0.925, 2.600), grat3_range_=(2.500, 12.0)):
+    def __init__(self, exe_path_="pylablib\\instruments\\CS260-Drivers\\C++EXE.exe", grat1_range_=(0.475, 1.400), grat2_range_=(0.925, 2.600), grat3_range_=(2.500, 12.0)):
         """ initialize instance of CS260 class
 
         :param exe_path_: Path to C++ executable DLL wrapper
                grat*_range: tuples with wavelength ranges for each grating present in monochromator. On initialization,
                             these values should be specified in microns
         """
-        pdb.set_trace()
         self.exe_path = exe_path_
         self.units = "NM"
         self.wavelength = None
@@ -84,20 +83,26 @@ class CS260:
         self.grat2_range = grat2_range_
         self.grat3_range = grat3_range_
         self.grating_ranges = [grat1_range_, grat2_range_, grat3_range_]
-        self.open()
-        # set default units to microns
-        self.set_units("UM")
-        #Get initial values for all parameters#########################
-        self.get_units()
-        self.get_wavelength()
-        self.get_grating()
-        self.get_shutter()
-        self.get_filter()
-        self.get_slit_microns(1)
-        self.get_slit_microns(2)
-        self.get_slit_microns(3)
-        self.get_bandpass()
-        #################################################################
+        self.com_success = False
+        try:
+            self.open()
+        except Exception as e:
+            print(e)
+        else:
+            self.com_success = True
+            # set default units to microns
+            self.set_units("UM")
+            #Get initial values for all parameters#########################
+            self.get_units()
+            self.get_wavelength()
+            self.get_grating()
+            self.get_shutter()
+            self.get_filter()
+            self.get_slit_microns(1)
+            self.get_slit_microns(2)
+            self.get_slit_microns(3)
+            self.get_bandpass()
+            #################################################################
 
     ##Asynchronous methods####################################################
     async def set_wavelength(self, wave):
