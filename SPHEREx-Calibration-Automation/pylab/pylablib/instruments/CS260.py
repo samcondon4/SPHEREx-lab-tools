@@ -1,4 +1,3 @@
-import pdb
 import subprocess as sp
 from subprocess import *
 import asyncio
@@ -322,9 +321,9 @@ class CS260:
         :return: success code
         """
         ret = 0
-        if oc == "C":
+        if oc == "Close":
             self.write('SHUTTER C')
-        elif oc == "O":
+        elif oc == "Open":
             self.write('SHUTTER O')
         else:
             raise ValueError("Please specify valid value of shutter state parameter. Valid values are {'O', 'C'}")

@@ -42,7 +42,7 @@ class AutomationWindow(Ui_Form, GuiTab):
         self.add_parameter('Metadata Configuration', self.get_metadata_configuration, self.set_metadata_configuration)
         self.add_parameter('Monochromator', self.get_monochromator_parameters, self.set_monochromator_parameters)
         self.add_parameter('Lock-In', self.get_lockin_parameters, self.set_lockin_parameters)
-        #Note that the series parameter is not saved to sequence files
+        # Note that the series parameter is not saved to sequence files
         self.add_parameter('Series', self.get_series, self.set_series)
 
         self.series_seq_list = {}
@@ -77,7 +77,7 @@ class AutomationWindow(Ui_Form, GuiTab):
         self.auto_series_savedsequences_list.setCurrentItem(default_seq_item[0])
         ##############################################################################################################
 
-    ##PARAMETER GETTERS/SETTERS########################################################################################
+    # PARAMETER GETTERS/SETTERS########################################################################################
     def get_sequence_info(self):
 
         params = {
@@ -151,7 +151,7 @@ class AutomationWindow(Ui_Form, GuiTab):
             'stop wavelength': self.sequence_monochromator_endwave_ledit.text(),
             'step size': self.sequence_monochromator_stepsize_ledit.text(),
             'g1 to g2 transition wavelength': self.sequence_monochromator_g1g2_ledit.text(),
-            'g2 to g3 Transition Wavelength': self.sequence_monochromator_g2g3_ledit.text(),
+            'g2 to g3 transition wavelength': self.sequence_monochromator_g2g3_ledit.text(),
             'no osf to osf1 transition wavelength': self.sequence_monochromator_noosfosf1_ledit.text(),
             'osf1 to osf2 transition wavelength': self.sequence_monochromator_osf1osf2_ledit.text(),
             'osf2 to osf3 transition wavelength': self.sequence_monochromator_osf2osf3_ledit.text()

@@ -111,22 +111,27 @@ class SM:
             self.state_actions[state] = {}
 
     def set_action_parameters(self, state, action_name, params_dict):
-        """set_parameters_to_action: Add a parameters dictionary 'params_dict' to the queue to be passed to the action
-                                      named 'action_name' which has been added to the appropriate state action dictionary.
+        """set_parameters_to_action: Add a parameters dictionary 'params_dict' to the state parameters dictionary.
 
-                                      Adds a dictionary to the specified state parameters queue with the following form:
-                                      {'action_name': action_name, 'params': params_dict}
 
             Params:
                 state: state parameters dictionary to add params_dict to
-                params_dict_name: name of dictionary. This will be the key of the dictionary that is added to the state
-                                  parameters dictionary
+                action_name: name of the action to which params_dict should be associated.
                 params_dict: dictionary of control loop parameters
 
             Returns:
                 None
         """
         self.state_params[state][action_name] = params_dict
+
+    def clear_action_parameters(self, state, action_name):
+        """clear_action_parameters: Clear the parameters associated with the specified state action.
+
+        :param state: state containing action where parameters should be cleared.
+        :param action_name: name of action whose parameters should be cleared.
+        :return: None
+        """
+        self.state_params[state].pop(action_name)
 
     def get_state_action_data(self, state):
         """get_state_action_data: Return the dictionary of data that has been returned from all actions executed within the specified state.
@@ -185,20 +190,20 @@ class SM:
 
     async def _state_exec(self, state_id):
 
-        #Separate actions into lists of coroutines and normal functions####
+        # Separate actions into lists of coroutines and normal functions ####
         coro_list = []
         func_list = []
         for action_key in self.state_actions[state_id]:
             action = self.state_actions[state_id][action_key]
             action_dict = {'state_machine': self, 'params': None}
 
-            #Get action parameters if they exist#################
+            # Get action parameters if they exist #################
             try:
                 action_dict['params'] = self.state_params[state_id][action_key]
             except KeyError:
                 pass
 
-            #Populate coroutine and function lists
+            # Populate coroutine and function lists #
             if action['coro']:
                 coro_task = asyncio.create_task(action['function'](action_dict))
                 coro_list.append(coro_task)
@@ -206,47 +211,17 @@ class SM:
                 func_list.append((action['function'], action_dict))
         ####################################################################
 
-        #Execute coroutines#################################################
+        # Execute coroutines #################################################
         if len(coro_list) > 0:
             done, pending = await asyncio.wait(coro_list)
-            print(done)
         ####################################################################
 
-        #Execute normal functions###########################################
-        #The above loop created a list of tuples of the format:
-        #                        (<function pointer>, <function parameters>)
+        # Execute normal functions ###########################################
+        # The above loop created a list of tuples of the format: (<function pointer>, <function parameters>)
         if len(func_list) > 0:
             for func in func_list:
                 func[0](func[1])
         ####################################################################
-
-
-
-        '''
-        for action_key in self.state_actions[state_id]:
-
-            # Get next action
-            action = self.state_actions[state_id][action_key]
-            action_ret = None
-
-            #Dictionary with state machine instance and action parameters
-            act_dict = {'state_machine': self, 'params': None}
-
-            if action['takes_params']:
-                try:
-                    act_dict['params'] = self.state_params[state_id][action_key]
-                except KeyError:
-                    pass
-
-            # Execute action as either a coroutine or normal function
-            if action['coro']:
-                action_task = asyncio.create_task(action['action'](act_dict))
-                await action_task
-                action_ret = action_task.result()
-            else:
-                action_ret = action['action'](act_dict)
-
-            # Save any returned action data
-            self.state_ret_data[state_id][action_key] = action_ret
-        '''
     #######################################################################################
+
+

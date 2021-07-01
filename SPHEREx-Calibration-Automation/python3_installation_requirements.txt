@@ -7,3 +7,6 @@ pandas
 pyserial
 matplotlib
 qasync (conda install -c conda-forge qasync)
+numpy (satisfied by installing matplotlib first)
+pyvisa (conda install -c conda-forge pyvisa)
+pytransitions (conda install -c conda-forge transitions)

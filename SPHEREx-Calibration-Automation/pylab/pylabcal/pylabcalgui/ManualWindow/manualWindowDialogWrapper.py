@@ -43,14 +43,33 @@ class ManualWindow(Ui_Form, GuiTab):
 
     def set_monochromator_parameters(self, params_dict):
         for key in params_dict:
+            param = str(params_dict[key])
             if key == "wavelength":
-                self.manual_monochromator_wavelength_ledit.setText(params_dict[key])
+                self.manual_monochromator_wavelength_ledit.setText(param)
             elif key == "filter":
-                self.manual_monochromator_filter_combobox.setText(params_dict[key])
+                if param == "1":
+                    param = "OSF1"
+                elif param == "2":
+                    param = "OSF2"
+                elif param == "3":
+                    param = "OSF3"
+                elif param == "4":
+                    param = "No OSF"
+                self.manual_monochromator_filter_combobox.setCurrentText(param)
             elif key == "grating":
-                self.manual_monochromator_grating_combobox.setCurrentText(params_dict[key])
+                if param == "1":
+                    param = "G1"
+                elif param == "2":
+                    param = "G2"
+                elif param == "3":
+                    param = "G3"
+                self.manual_monochromator_grating_combobox.setCurrentText(param)
             elif key == "shutter":
-                self.manual_monochromator_shutter_combobox.setCurrentText(params_dict[key])
+                if param == "O":
+                    param = "Open"
+                elif param == "C":
+                    param = "Close"
+                self.manual_monochromator_shutter_combobox.setCurrentText(param)
 
     def get_lockin_parameters(self):
         params = {
