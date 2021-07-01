@@ -27,7 +27,7 @@ sys.path.append(r"pylabcal\\pylabcalgui\\AutomationWindow")
 from automationWindowDialogWrapper import AutomationWindow
 
 sys.path.append(r"pylablib\\instruments")
-from CS260_2 import CS260
+from CS260 import CS260
 ###################################################################################################
 
 
