@@ -1,3 +1,8 @@
+"""CS260: This module implements a getter/setter based control wrapper for the Oriel CS260 monochromator
+
+Sam Condon 07/01/2021
+"""
+
 from pylablib_instrument import Instrument
 import subprocess as sp
 from subprocess import *

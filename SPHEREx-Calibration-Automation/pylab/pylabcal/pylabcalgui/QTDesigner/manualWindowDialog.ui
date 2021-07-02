@@ -14,36 +14,44 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="10" column="1">
-    <widget class="QLabel" name="manual_lockin_timeconstant_label">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
+   <item row="23" column="0">
+    <widget class="QLabel" name="manual_lockin_measurementstorage_label">
      <property name="text">
-      <string>Time-Constant:</string>
+      <string>Measurement Storage Path:</string>
      </property>
     </widget>
    </item>
-   <item row="19" column="1">
-    <widget class="QLabel" name="manual_lockin_sampletime_label">
+   <item row="11" column="1">
+    <widget class="QLabel" name="label_4">
      <property name="text">
-      <string>Sample Time (s.):</string>
+      <string>Value:</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="manual_monochromator_filter_label">
+   <item row="15" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Units:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="manual_monochromator_label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
-      <string>Filter:</string>
+      <string>Monochromator:</string>
      </property>
     </widget>
    </item>
@@ -67,6 +75,298 @@
      </item>
     </widget>
    </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Value:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="1">
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Multiplier:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" rowspan="3">
+    <widget class="QPushButton" name="manual_monochromator_abort_button">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Abort</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLineEdit" name="manual_monochromator_wavelength_ledit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="1">
+    <widget class="QComboBox" name="manual_lockin_timeconstantunit_cbox">
+     <item>
+      <property name="text">
+       <string>ks.</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>s.</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>ms.</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>us.</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="14" column="0">
+    <widget class="QComboBox" name="manual_lockin_sensitivitymultiplier_cbox">
+     <item>
+      <property name="text">
+       <string>x1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>x10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>x100</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QComboBox" name="manual_monochromator_filter_combobox">
+     <item>
+      <property name="text">
+       <string>No OSF</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>OSF1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>OSF2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>OSF3</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="24" column="0" colspan="2">
+    <widget class="QLineEdit" name="manual_lockin_measurementstorage_ledit"/>
+   </item>
+   <item row="10" column="1">
+    <widget class="QLabel" name="manual_lockin_timeconstant_label">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Time-Constant:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="21" column="1">
+    <widget class="QLineEdit" name="manual_lockin_sampletime_ledit"/>
+   </item>
+   <item row="21" column="0">
+    <widget class="QComboBox" name="manual_lockin_samplerate_combobox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="currentText">
+      <string>0.0625</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>0.0625</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>0.125</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>0.250</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>0.5</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>8</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>16</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>32</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>64</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>128</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>256</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>512</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QLabel" name="manual_lockin_sensitivity_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Sensitivity:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="25" column="0" colspan="2">
+    <widget class="QPushButton" name="manual_lockin_startmeasurement_button">
+     <property name="text">
+      <string>Start Measurement</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="manual_monochromator_filter_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Filter:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="1">
+    <widget class="QComboBox" name="manual_lockin_timeconstantvalue_cbox">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <item>
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>3</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="manual_monochromator_shutter_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Shutter:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="20" column="1">
+    <widget class="QLabel" name="manual_lockin_sampletime_label">
+     <property name="text">
+      <string>Sample Time (s.):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Multiplier:</string>
+     </property>
+    </widget>
+   </item>
    <item row="9" column="0">
     <widget class="QLabel" name="manual_lockin_label">
      <property name="sizePolicy">
@@ -87,17 +387,29 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="manual_monochromator_wavelength_label">
+   <item row="6" column="0">
+    <widget class="QComboBox" name="manual_monochromator_grating_combobox">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="text">
-      <string>Wavelength (um.):</string>
-     </property>
+     <item>
+      <property name="text">
+       <string>G1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>G2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>G3</string>
+      </property>
+     </item>
     </widget>
    </item>
    <item row="2" column="1" rowspan="3">
@@ -113,10 +425,73 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="0">
-    <widget class="QLabel" name="label">
+   <item row="15" column="1">
+    <widget class="QLabel" name="label_6">
      <property name="text">
-      <string>Value:</string>
+      <string>Units:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="manual_monochromator_grating_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Grating:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="0">
+    <widget class="QComboBox" name="manual_lockin_sensitivityunit_cbox">
+     <item>
+      <property name="text">
+       <string>V.</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>mV.</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>uV.</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>nV.</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="14" column="1">
+    <widget class="QComboBox" name="manual_lockin_timeconstantmultiplier_cbox">
+     <item>
+      <property name="text">
+       <string>x1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>x10</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>x100</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="20" column="0">
+    <widget class="QLabel" name="manual_lockin_samplerate_label">
+     <property name="text">
+      <string>Sample Rate (Hz.):</string>
      </property>
     </widget>
    </item>
@@ -145,238 +520,8 @@
      </item>
     </widget>
    </item>
-   <item row="21" column="0">
-    <widget class="QLabel" name="manual_lockin_measurementstorage_label">
-     <property name="text">
-      <string>Measurement Storage Path:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QLabel" name="manual_monochromator_label">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Monochromator:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="22" column="0" colspan="2">
-    <widget class="QLineEdit" name="manual_lockin_measurementstorage_ledit"/>
-   </item>
-   <item row="23" column="0" colspan="2">
-    <widget class="QPushButton" name="manual_lockin_startmeasurement_button">
-     <property name="text">
-      <string>Start Measurement</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="manual_lockin_sensitivity_label">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Sensitivity:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="16" column="0">
-    <widget class="QComboBox" name="manual_lockin_sensitivityunit_cbox">
-     <item>
-      <property name="text">
-       <string>V.</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>mV.</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>uV.</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>nV.</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="20" column="1">
-    <widget class="QLineEdit" name="manual_lockin_sampletime_ledit"/>
-   </item>
-   <item row="14" column="1">
-    <widget class="QComboBox" name="manual_lockin_timeconstantmultiplier_cbox">
-     <item>
-      <property name="text">
-       <string>x1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>x10</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>x100</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QComboBox" name="manual_monochromator_grating_combobox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <item>
-      <property name="text">
-       <string>G1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>G2</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>G3</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLineEdit" name="manual_monochromator_wavelength_ledit">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item row="20" column="0">
-    <widget class="QLineEdit" name="manual_lockin_samplerate_ledit"/>
-   </item>
-   <item row="19" column="0">
-    <widget class="QLabel" name="manual_lockin_samplerate_label">
-     <property name="text">
-      <string>Sample Rate (Hz.):</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1" rowspan="3">
-    <widget class="QPushButton" name="manual_monochromator_abort_button">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="text">
-      <string>Abort</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Multiplier:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="16" column="1">
-    <widget class="QComboBox" name="manual_lockin_timeconstantunit_cbox">
-     <item>
-      <property name="text">
-       <string>ks.</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>s.</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>ms.</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>us.</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="12" column="1">
-    <widget class="QComboBox" name="manual_lockin_timeconstantvalue_cbox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <item>
-      <property name="text">
-       <string>1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>3</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="14" column="0">
-    <widget class="QComboBox" name="manual_lockin_sensitivitymultiplier_cbox">
-     <item>
-      <property name="text">
-       <string>x1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>x10</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>x100</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="manual_monochromator_shutter_label">
+   <item row="1" column="0">
+    <widget class="QLabel" name="manual_monochromator_wavelength_label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -384,73 +529,15 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>Shutter:</string>
+      <string>Wavelength (um.):</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="manual_monochromator_grating_label">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="17" column="0" colspan="2">
+    <widget class="QPushButton" name="manual_lockin_setparams_button">
      <property name="text">
-      <string>Grating:</string>
+      <string>Set Parameters</string>
      </property>
-    </widget>
-   </item>
-   <item row="15" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Units:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="1">
-    <widget class="QLabel" name="label_4">
-     <property name="text">
-      <string>Value:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="1">
-    <widget class="QLabel" name="label_5">
-     <property name="text">
-      <string>Multiplier:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="1">
-    <widget class="QLabel" name="label_6">
-     <property name="text">
-      <string>Units:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="0">
-    <widget class="QComboBox" name="manual_monochromator_filter_combobox">
-     <item>
-      <property name="text">
-       <string>No OSF</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>OSF1</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>OSF2</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>OSF3</string>
-      </property>
-     </item>
     </widget>
    </item>
   </layout>

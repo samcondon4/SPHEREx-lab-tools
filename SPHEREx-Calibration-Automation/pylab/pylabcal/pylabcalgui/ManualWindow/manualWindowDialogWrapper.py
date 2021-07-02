@@ -19,16 +19,17 @@ class ManualWindow(Ui_Form, GuiTab):
         self.form = QtWidgets.QDialog()
         self.setupUi(self.form)
 
-        ##Configure parameters###############################################################
+        ##Configure parameters#####################################################################################
         self.add_parameter("Monochromator", self.get_monochromator_parameters, self.set_monochromator_parameters)
         self.add_parameter("Lock-In", self.get_lockin_parameters, self.set_lockin_parameters)
-        #####################################################################################
+        ###########################################################################################################
 
-        ##Connect buttons to methods ########################################################
-        self.manual_monochromator_setparams_button.clicked.connect(self._on_Set_Parameters)
+        ##Connect buttons to methods #######################################################################
+        self.manual_monochromator_setparams_button.clicked.connect(self._on_Set_Monochromator_Parameters)
         self.manual_monochromator_abort_button.clicked.connect(self._on_Abort)
+        self.manual_lockin_setparams_button.clicked.connect(self._on_Set_Lockin_Parameters)
         self.manual_lockin_startmeasurement_button.clicked.connect(self._on_Start_Measurement)
-        ######################################################################################
+        #####################################################################################################
 
     #PARAMETER GETTERS/SETTERS########################################################################################
     def get_monochromator_parameters(self):
@@ -79,7 +80,7 @@ class ManualWindow(Ui_Form, GuiTab):
             'time-constant value': self.manual_lockin_timeconstantvalue_cbox.currentText(),
             'time-constant multiplier': self.manual_lockin_timeconstantmultiplier_cbox.currentText(),
             'time-constant units': self.manual_lockin_timeconstantunit_cbox.currentText(),
-            'sample rate': self.manual_lockin_samplerate_ledit.text(),
+            'sample rate': self.manual_lockin_samplerate_combobox.currentText(),
             'sample time': self.manual_lockin_sampletime_ledit.text(),
             'measurement storage path': self.manual_lockin_measurementstorage_ledit.text()
         }
@@ -101,7 +102,7 @@ class ManualWindow(Ui_Form, GuiTab):
             elif key == "time-constant units":
                 self.manual_lockin_timeconstantunit_cbox.setCurrentText(params_dict[key])
             elif key == "sample rate":
-                self.manual_lockin_samplerate_ledit.setText(params_dict[key])
+                self.manual_lockin_samplerate_combobox.setCurrentText(params_dict[key])
             elif key == "sample time":
                 self.manual_lockin_sampletime_ledit.setText(params_dict[key])
             elif key == "measurement storage path":
@@ -113,7 +114,7 @@ class ManualWindow(Ui_Form, GuiTab):
 
     ##PRIVATE METHODS################################################################################################
     #Button Methods#####
-    def _on_Set_Parameters(self):
+    def _on_Set_Monochromator_Parameters(self):
         """_on_Set_Parameters: Add the Set Parameters button identifier to button queue
 
         :return: None
@@ -126,6 +127,13 @@ class ManualWindow(Ui_Form, GuiTab):
         :return: None
         """
         self.button_queue.put("Abort")
+
+    def _on_Set_Lockin_Parameters(self):
+        """_on_Set_Lockin_Parameters: Add the lockin set parameters button identifier to the button queue.
+
+        :return: None
+        """
+        self.button_queue.put("Lock-In Set Parameters")
 
     def _on_Start_Measurement(self):
         """_on_Start_Measurement: Add the Start Measurement button identifier to button queue.

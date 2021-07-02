@@ -181,7 +181,7 @@ class AutomationWindow(Ui_Form, GuiTab):
 
     def get_lockin_parameters(self):
         params = {
-                    'sample frequency': self.sequence_lockin_samplefreq_ledit.text(),
+                    'sample frequency': self.sequence_lockin_samplerate_combobox.currentText(),
                     'sample time': self.sequence_lockin_sampletime_ledit.text(),
                     'time constant': self.sequence_lockin_timeconstant_ledit.text(),
                     'sensitivity string': self.sequence_lockin_sensitivity_ledit.text()
@@ -193,7 +193,7 @@ class AutomationWindow(Ui_Form, GuiTab):
         for key in params_dict:
             value = params_dict[key]
             if key == "sample frequency":
-                self.sequence_lockin_samplefreq_ledit.setText(value)
+                self.sequence_lockin_samplerate_combobox.setCurrentText(value)
             elif key == "sample time":
                 self.sequence_lockin_sampletime_ledit.setText(value)
             elif key == "time constant":

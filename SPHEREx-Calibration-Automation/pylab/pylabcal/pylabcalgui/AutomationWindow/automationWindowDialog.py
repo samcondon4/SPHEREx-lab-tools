@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'automationWindowDialog2.ui'
+# Form implementation generated from reading ui file 'automationWindowDialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.3
 #
@@ -230,9 +230,6 @@ class Ui_Form(object):
         self.sequence_lockin_timeconstant_label = QtWidgets.QLabel(self.SequenceParametersWindow)
         self.sequence_lockin_timeconstant_label.setObjectName("sequence_lockin_timeconstant_label")
         self.gridLayout_2.addWidget(self.sequence_lockin_timeconstant_label, 15, 0, 1, 1)
-        self.sequence_lockin_samplefreq_ledit = QtWidgets.QLineEdit(self.SequenceParametersWindow)
-        self.sequence_lockin_samplefreq_ledit.setObjectName("sequence_lockin_samplefreq_ledit")
-        self.gridLayout_2.addWidget(self.sequence_lockin_samplefreq_ledit, 13, 1, 1, 1)
         self.line = QtWidgets.QFrame(self.SequenceParametersWindow)
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -353,6 +350,23 @@ class Ui_Form(object):
         self.sequence_monochromator_label.setFont(font)
         self.sequence_monochromator_label.setObjectName("sequence_monochromator_label")
         self.gridLayout_2.addWidget(self.sequence_monochromator_label, 0, 0, 1, 1)
+        self.sequence_lockin_samplerate_combobox = QtWidgets.QComboBox(self.SequenceParametersWindow)
+        self.sequence_lockin_samplerate_combobox.setObjectName("sequence_lockin_samplerate_combobox")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.sequence_lockin_samplerate_combobox.addItem("")
+        self.gridLayout_2.addWidget(self.sequence_lockin_samplerate_combobox, 13, 1, 1, 1)
         self.automation_window.addWidget(self.SequenceParametersWindow)
         self.gridLayout.addWidget(self.automation_window, 0, 1, 1, 1)
 
@@ -404,6 +418,21 @@ class Ui_Form(object):
         self.auto_window_select_combobox_1.setItemText(0, _translate("Form", "Series Construction and Control Window"))
         self.auto_window_select_combobox_1.setItemText(1, _translate("Form", "Sequence Parameters Window"))
         self.sequence_monochromator_label.setText(_translate("Form", "Monochromator:"))
+        self.sequence_lockin_samplerate_combobox.setCurrentText(_translate("Form", "0.0625"))
+        self.sequence_lockin_samplerate_combobox.setItemText(0, _translate("Form", "0.0625"))
+        self.sequence_lockin_samplerate_combobox.setItemText(1, _translate("Form", "0.125"))
+        self.sequence_lockin_samplerate_combobox.setItemText(2, _translate("Form", "0.250"))
+        self.sequence_lockin_samplerate_combobox.setItemText(3, _translate("Form", "0.5"))
+        self.sequence_lockin_samplerate_combobox.setItemText(4, _translate("Form", "1"))
+        self.sequence_lockin_samplerate_combobox.setItemText(5, _translate("Form", "2"))
+        self.sequence_lockin_samplerate_combobox.setItemText(6, _translate("Form", "4"))
+        self.sequence_lockin_samplerate_combobox.setItemText(7, _translate("Form", "8"))
+        self.sequence_lockin_samplerate_combobox.setItemText(8, _translate("Form", "16"))
+        self.sequence_lockin_samplerate_combobox.setItemText(9, _translate("Form", "32"))
+        self.sequence_lockin_samplerate_combobox.setItemText(10, _translate("Form", "64"))
+        self.sequence_lockin_samplerate_combobox.setItemText(11, _translate("Form", "128"))
+        self.sequence_lockin_samplerate_combobox.setItemText(12, _translate("Form", "256"))
+        self.sequence_lockin_samplerate_combobox.setItemText(13, _translate("Form", "512"))
 
 
 if __name__ == "__main__":

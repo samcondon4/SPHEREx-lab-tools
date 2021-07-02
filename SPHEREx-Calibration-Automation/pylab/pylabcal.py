@@ -28,6 +28,8 @@ from automationWindowDialogWrapper import AutomationWindow
 
 sys.path.append(r"pylablib\\instruments")
 from CS260 import CS260
+
+
 ###################################################################################################
 
 
@@ -80,7 +82,8 @@ class SpectralCalibrationMachine:
         self.state_machine.add_action_to_state('Moving', 'moving_action_0', self.moving_action, coro=True)
         self.state_machine.add_action_to_state("Measuring", "measuring_action_0", self.measuring_action, coro=False)
         self.state_machine.add_action_to_state("Checking", "checking_action_0", self.checking_action, coro=False)
-        self.state_machine.add_action_to_state("Compressing", "compressing_action_0", self.compressing_action, coro=False)
+        self.state_machine.add_action_to_state("Compressing", "compressing_action_0", self.compressing_action,
+                                               coro=False)
         self.state_machine.add_action_to_state("Writing", "writing_action_0", self.writing_action, coro=False)
         self.state_machine.add_action_to_state("Resetting", "resetting_action_0", self.resetting_action, coro=False)
 
@@ -110,15 +113,15 @@ class SpectralCalibrationMachine:
         init_success = True
         # Initialize communication with monochromator ##
         self.monochromator = CS260()
-        self.monochromator.open()
+        # self.monochromator.open()
         ################################################
         # Initialize communication with lock in amplifier #
 
         ###################################################
 
         # Initialize GUI ###################################################
-        mono_params = self.monochromator.get_parameters("All")
-        self.gui.manual_gui.set_parameters({"Monochromator": mono_params})
+        # mono_params = self.monochromator.get_parameters("All")
+        # self.gui.manual_gui.set_parameters({"Monochromator": mono_params})
         ####################################################################
 
         # If all initializations were successful, transition to the Waiting state
@@ -144,6 +147,23 @@ class SpectralCalibrationMachine:
                 self.state_machine.set_action_parameters("Thinking", "thinking_action_0", thinking_params)
                 self.waiting_complete = True
                 complete_set = True
+
+            elif manual_press == "Lock-In Set Parameters":
+                lockin_params = self.gui.manual_gui.get_parameters("Lock-In")
+                thinking_params["Lock-In"] = lockin_params["Lock-In"]
+                thinking_params["Lock-In"].pop("sample time")
+                thinking_params["Lock-In"].pop("measurement storage path")
+                action_dict["state_machine"].set_action_parameters("Thinking", "thinking_action_0", thinking_params)
+                self.waiting_complete = True
+                complete_set = True
+
+            elif manual_press == "Start Measurement":
+                lockin_params = self.gui.manual_gui.get_parameters("Lock-In")
+                thinking_params["Lock-In"] = lockin_params["Lock-In"]
+                action_dict["state_machine"].set_action_parameters("Thinking", "thinking_action_0", thinking_params)
+                self.waiting_complete = True
+                complete_set = True
+
             await asyncio.sleep(0.001)
 
         # Coordination with the auto_waiting_action and state transition######
@@ -190,10 +210,13 @@ class SpectralCalibrationMachine:
         params = action_dict["params"]
         self.control_loop_index = 0
         if params["Manual"]:
+            if "Lock-In" in params:
+                measuring_control_loop = [params]
+            else:
+                measuring_control_loop = None
             moving_control_loop = [params]
             self.control_loop_length = 1
         else:
-            # Run code to generate entire control loop
             # Build monochromator control loop parameters ############################################################
             mono_params = [sequence["Monochromator"] for sequence in params["Series"]]
             # wavelengths ##
@@ -235,32 +258,76 @@ class SpectralCalibrationMachine:
                         mono_filters[transition_ind][filter_ind] = "OSF3"
                     filter_ind += 1
                 transition_ind += 1
+            ##########################################################################################################
 
-            # Flatten parameter arrays #########################################
+            # Build Lock-In Control Loop Parameters ##################################################################
+            lockin_params = [sequence["Lock-In"] for sequence in params["Series"]]
+            lockin_fs = [[lockin_params[i]["sample frequency"] for n in range(len(mono_waves[i]))]
+                         for i in range(len(lockin_params))]
+            lockin_ts = [[lockin_params[i]["sample time"] for n in range(len(mono_waves[i]))]
+                         for i in range(len(lockin_params))]
+            lockin_tc = [[lockin_params[i]["time constant"] for n in range(len(mono_waves[i]))]
+                         for i in range(len(lockin_params))]
+            lockin_sens = [lockin["sensitivity string"].split(',') for lockin in lockin_params]
+            lockin_sens_transitions = [np.linspace(mono_waves[i][0], mono_waves[i][-1], len(lockin_sens[i]))
+                                       for i in range(len(lockin_sens))]
+            lockin_sensitivites = [[0 for w in waves] for waves in mono_waves]
+            transition_ind = 0
+            for wave_arr in mono_waves:
+                sens_ind = 0
+                i = 0
+                for w in wave_arr:
+                    if w > lockin_sens_transitions[transition_ind][i]:
+                        i += 1
+                    lockin_sensitivites[transition_ind][sens_ind] = lockin_sens[transition_ind][i]
+                    sens_ind += 1
+                transition_ind += 1
+            ##########################################################################################################
+
+            # Flatten parameter arrays ################################################################
             mono_waves = [w for wave_arr in mono_waves for w in wave_arr]
             mono_gratings = [g for g_arr in mono_gratings for g in g_arr]
             mono_filters = [f for f_arr in mono_filters for f in f_arr]
-            ####################################################################
 
-            # Construct control loop for the moving state and send to the moving action #############################
+            lockin_fs = [fs for fs_arr in lockin_fs for fs in fs_arr]
+            lockin_ts = [ts for ts_arr in lockin_ts for ts in ts_arr]
+            lockin_tc = [tc for tc_arr in lockin_tc for tc in tc_arr]
+            lockin_sensitivites = [sens for sens_arr in lockin_sensitivites for sens in sens_arr]
+            ###########################################################################################
+
+            # Construct control loop for the moving action############################################################
             self.control_loop_length = len(mono_waves)
 
-            moving_control_loop = [{"Monochromator": {"wavelength": mono_waves[i], "grating": mono_gratings[i],
-                                    "filter": mono_filters[i], "shutter": "Open"}} for i in range(len(mono_waves))]
+            moving_control_loop = [{
+                "Monochromator": {"wavelength": mono_waves[i], "grating": mono_gratings[i],
+                                  "filter": mono_filters[i], "shutter": "Open"},
+
+                "Lock-In": {"sensitivity": lockin_sensitivites[i], "time constant": lockin_tc[i]}
+            }
+                for i in range(len(mono_waves))]
             ##########################################################################################################
 
+            # Construct control loop for the measuring action ########################################################
+            measuring_control_loop = [{
+                "Lock-In": {"sample rate": lockin_fs[i], "sample time": lockin_ts[i]}
+            }
+                for i in range(len(mono_waves))]
+            ##########################################################################################################
+
+        # Pass control loop parameters to actions and start the control loop #########################################
         action_dict["state_machine"].set_action_parameters("Moving", "moving_action_0", moving_control_loop)
+        action_dict["state_machine"].set_action_parameters("Measuring", "measuring_action_0", measuring_control_loop)
         action_dict["state_machine"].start_control_loop()
+        ##############################################################################################################
 
     async def moving_action(self, action_dict):
-        print((self.control_loop_index, self.control_loop_length))
         if not self.control_loop_index < self.control_loop_length:
             action_dict["state_machine"].control_loop_complete()
         else:
             move_params = action_dict["params"][self.control_loop_index]
-            print(move_params)
             for instrument in move_params:
                 inst_params = move_params[instrument]
+
                 if instrument == "Monochromator":
                     await self.monochromator.set_parameters({"shutter": inst_params["shutter"]})
                     grating = inst_params["grating"]
