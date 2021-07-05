@@ -11,7 +11,7 @@ import asyncio
 
 class Instrument:
 
-    def __init__(self, identifier):
+    def __init__(self, identifier=None):
         self.open_method = None
         self.identifier = identifier
         self.parameters = []
@@ -48,7 +48,8 @@ class Instrument:
         else:
             self.get_method_coros[parameter_name] = getter
 
-        self.parameters.append(parameter_name)
+        if parameter_name not in self.parameters:
+            self.parameters.append(parameter_name)
 
     def add_set_parameter(self, parameter_name, setter, coro=False):
         """add_parameter: add functions to the getter and setter dictionaries for the specified parameter name.
@@ -62,7 +63,8 @@ class Instrument:
         else:
             self.set_method_coros[parameter_name] = setter
 
-        self.parameters.append(parameter_name)
+        if parameter_name not in self.parameters:
+            self.parameters.append(parameter_name)
 
     def get_parameters(self, params):
         """get_parameters: return the specified instrument parameters as a dictionary

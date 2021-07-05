@@ -12,12 +12,12 @@ Contributors:
 # IMPORT PACKAGES #################################################################################
 import asyncio
 import sys
-import os
-
+import datetime
 import numpy as np
 from qasync import QEventLoop
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pylablib.pylablibsm import SM
+from pylablib.housekeeping import Housekeeping
 from pylablib.utils.parameters import write_config_file, get_params_dict
 
 sys.path.append(r"pylabcal\\pylabcalgui\\ManualWindow")
@@ -26,8 +26,12 @@ from manualWindowDialogWrapper import ManualWindow
 sys.path.append(r"pylabcal\\pylabcalgui\\AutomationWindow")
 from automationWindowDialogWrapper import AutomationWindow
 
+sys.path.append(r"pylabcal\\pylabcalgui\\PowermaxWindow")
+from powermaxLiveWindowDialogWrapper import PowermaxWindow
+
 sys.path.append(r"pylablib\\instruments")
 from CS260 import CS260
+from powermaxusb2 import Powermax
 
 
 ###################################################################################################
@@ -40,19 +44,18 @@ class MainWindow:
         This class connects all of the spectral calibration tabs into one QTabWidget
     """
 
-    def __init__(self, Dialog, root_path=".\\", seq_config_path="pylabcal\\config\\sequence"):
-        self.gridLayout = QtWidgets.QGridLayout(Dialog)
-        self.tabWidget = QtWidgets.QTabWidget(Dialog)
-        self.auto_gui = AutomationWindow()
-        self.manual_gui = ManualWindow()
-
-        self.tabWidget.addTab(self.auto_gui.form, "Automation")
-        self.tabWidget.addTab(self.manual_gui.form, "Manual Control")
+    def __init__(self, tabs, dialog, root_path=".\\", seq_config_path="pylabcal\\config\\sequence"):
+        self.gridLayout = QtWidgets.QGridLayout(dialog)
+        self.tabWidget = QtWidgets.QTabWidget(dialog)
+        self.tabs = {}
+        for tab in tabs:
+            self.tabWidget.addTab(tab["Qt"].form, tab["id"])
+            self.tabs[tab["id"]] = tab["Qt"]
 
         self.gridLayout.addWidget(self.tabWidget, 0, 0, 1, 1)
 
         self.tabWidget.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        QtCore.QMetaObject.connectSlotsByName(dialog)
 
 
 ####################################################################################################
@@ -65,13 +68,22 @@ class SpectralCalibrationMachine:
         This class defines all of the actions to execute within the state machine
     """
 
-    def __init__(self, dialog):
+    def __init__(self, control_dialog, hk_dialog):
         # Instruments##############
         self.monochromator = None
         self.lock_in = None
+        self.powermax = None
         ##########################
 
-        # State Machine##########################################################################################
+        # Gui initialization ###########################################################################################
+        hk_tabs = [{"Qt": PowermaxWindow(), "id": "Powermax"}]
+        self.hk_gui = MainWindow(hk_tabs, hk_dialog)
+
+        control_tabs = [{"Qt": AutomationWindow(), "id": "Automation"}, {"Qt": ManualWindow(), "id": "Manual"}]
+        self.control_gui = MainWindow(control_tabs, control_dialog)
+        ################################################################################################################
+
+        # State Machine################################################################################################
         # actions##################
         self.state_machine = SM()
         self.state_machine.add_action_to_state('Initializing', 'init_action_0', self.init_action)
@@ -91,15 +103,61 @@ class SpectralCalibrationMachine:
         self.waiting_complete = False
         self.control_loop_index = 0
         self.control_loop_length = 0
-        ########################################################################################################
+        ###############################################################################################################
 
-        # Gui ###########################
-        self.gui = MainWindow(dialog)
-        #################################
+        # Start housekeeping ###############
+        self.hk_task = asyncio.create_task(self.run_housekeeping())
+        ####################################
 
         # Start state machine ##############
         self.state_machine.start_machine()
         ####################################
+
+    async def run_housekeeping(self):
+        """run_housekeeping: **HOUSEKEEPING COROUTINE**
+                Run all housekeeping data-logging and gui displays.
+
+        :param: None
+        :return: None
+        """
+        # Initialize housekeeping class, instruments, and gui ###############
+        Housekeeping.time_sync_method = datetime.datetime.now
+        self.powermax = Powermax()
+        self.powermax.open()
+        active_wave = str(float(self.powermax.get_parameters("active wavelength")["active wavelength"]) * (1e-3))
+        self.hk_gui.tabs["Powermax"].set_parameters({"active wavelength": active_wave})
+        Housekeeping.start()
+        powermax_logging = False
+        #####################################################################
+
+        # Run housekeeping data logging and display #############################################
+        while True:
+            button = self.hk_gui.tabs["Powermax"].get_button()
+
+            if button == "Start Acquisition":
+                active_wave = float(
+                    self.hk_gui.tabs["Powermax"].get_parameters("active wavelength")["active wavelength"]) \
+                              * 1e3
+                await self.powermax.set_parameters({"active wavelength": active_wave})
+                await self.powermax.on_data_log()
+                powermax_logging = True
+
+            elif button == "Stop Acquisition":
+                await self.powermax.off_data_log()
+                powermax_logging = False
+
+            elif button == "Zero Sensor":
+                self.powermax.set_zero()
+
+            if powermax_logging:
+                get_log_task = asyncio.create_task(self.powermax.get_log(final_val=True))
+                await get_log_task
+                data = get_log_task.result()
+                data = float(data["Watts"])
+                self.hk_gui.tabs["Powermax"].set_parameters({"data append": data})
+
+            await asyncio.sleep(0.001)
+        ############################################################################################
 
     def init_action(self, action_dict):
         """init_action: **STATE_MACHINE ACTION**
@@ -121,7 +179,7 @@ class SpectralCalibrationMachine:
 
         # Initialize GUI ###################################################
         # mono_params = self.monochromator.get_parameters("All")
-        # self.gui.manual_gui.set_parameters({"Monochromator": mono_params})
+        # self.control_gui.tabs["Manual"].set_parameters({"Monochromator": mono_params})
         ####################################################################
 
         # If all initializations were successful, transition to the Waiting state
@@ -140,16 +198,16 @@ class SpectralCalibrationMachine:
         complete_set = False
         thinking_params = {"Manual": True}
         while not self.waiting_complete:
-            manual_press = self.gui.manual_gui.get_button()
+            manual_press = self.control_gui.tabs["Manual"].get_button()
             if manual_press == "Monochromator Set Parameters":
-                mono_params = self.gui.manual_gui.get_parameters("Monochromator")
+                mono_params = self.control_gui.tabs["Manual"].get_parameters("Monochromator")
                 thinking_params["Monochromator"] = mono_params["Monochromator"]
                 self.state_machine.set_action_parameters("Thinking", "thinking_action_0", thinking_params)
                 self.waiting_complete = True
                 complete_set = True
 
             elif manual_press == "Lock-In Set Parameters":
-                lockin_params = self.gui.manual_gui.get_parameters("Lock-In")
+                lockin_params = self.control_gui.tabs["Manual"].get_parameters("Lock-In")
                 thinking_params["Lock-In"] = lockin_params["Lock-In"]
                 thinking_params["Lock-In"].pop("sample time")
                 thinking_params["Lock-In"].pop("measurement storage path")
@@ -158,7 +216,7 @@ class SpectralCalibrationMachine:
                 complete_set = True
 
             elif manual_press == "Start Measurement":
-                lockin_params = self.gui.manual_gui.get_parameters("Lock-In")
+                lockin_params = self.control_gui.tabs["Manual"].get_parameters("Lock-In")
                 thinking_params["Lock-In"] = lockin_params["Lock-In"]
                 action_dict["state_machine"].set_action_parameters("Thinking", "thinking_action_0", thinking_params)
                 self.waiting_complete = True
@@ -184,9 +242,9 @@ class SpectralCalibrationMachine:
         complete_set = False
         thinking_params = {"Manual": False}
         while not self.waiting_complete:
-            auto_press = self.gui.auto_gui.get_button()
+            auto_press = self.control_gui.tabs["Automation"].get_button()
             if auto_press == "Run Series":
-                auto_params = self.gui.auto_gui.get_parameters("Series")
+                auto_params = self.control_gui.tabs["Automation"].get_parameters("Series")
                 thinking_params["Series"] = auto_params["Series"]
                 action_dict['state_machine'].set_action_parameters('Thinking', 'thinking_action_0', thinking_params)
                 self.waiting_complete = True
@@ -368,12 +426,16 @@ class SpectralCalibrationMachine:
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
+    ControlDialog = QtWidgets.QDialog()
+    HKDialog = QtWidgets.QDialog()
     EventLoop = QEventLoop()
     asyncio.set_event_loop(EventLoop)
     # Create SpectralCalibrationMachine################
-    SpectralCal = SpectralCalibrationMachine(Dialog)
-    Dialog.show()
+    SpectralCal = SpectralCalibrationMachine(ControlDialog, HKDialog)
+    ControlDialog.setWindowTitle("Control Window")
+    HKDialog.setWindowTitle("Housekeeping Window")
+    ControlDialog.show()
+    HKDialog.show()
     with EventLoop:
         EventLoop.run_forever()
         EventLoop.close()

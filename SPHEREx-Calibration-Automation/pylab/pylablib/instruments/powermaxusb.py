@@ -1,10 +1,18 @@
-import pdb
+"""powermaxusb:
+
+    This module implements a getter/setter wrapper for the powermax usb
+    power sensor
+
+Sam Condon, 07/02/2021
+"""
+
 import pyvisa
 import pandas as pd
-import time, threading
-from pylablib.instruments.repeatedtimer import RepeatedTimer
+import asyncio
+from pylablib.instruments.pylablib_instrument import Instrument
 
-class PowermaxUSB:
+
+class Powermax(Instrument):
     _info_dict = {'ID': '*IDN?',
                   'STATUS': 'SYSTem:STATus?',
                   'TEMP': 'SYSTem:INFormation:TEMPerature?',
@@ -47,10 +55,18 @@ class PowermaxUSB:
                  }
 
     def __init__(self):
+        super().__init__("PowermaxUSB")
+
+        # Configure open method #####################
+        self.set_open_method(self.open_com)
+        #############################################
+
+        # Configure parameters ######################
+        #############################################
+
         self.com = None  # Holds pyVISA returned resource class
         self.error_record = None  # Store error records from sensor (associated method not implemented yet)
 
-        self.open_com()  # Open communication channel to sensor
         self.data = {'Power': [],
                      'Flags': [],
                      'Timestamp': []}  # Dictionary to store measurements before converting to dataframe
@@ -81,9 +97,8 @@ class PowermaxUSB:
                     self.com = rec
                     open_fail = 0
                     break
-        if (open_fail):
-            print("PowerMax USB Sensor not found...")
-            self.error_record = 1
+        if open_fail:
+            raise RuntimeError("PowerMax USB Sensor not found")
         else:
             print("PowerMax USB Sensor found at:")
             print(self.com.resource_info.alias)

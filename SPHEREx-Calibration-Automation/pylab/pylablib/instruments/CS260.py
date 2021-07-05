@@ -11,7 +11,7 @@ import asyncio
 
 class CS260(Instrument):
 
-    def __init__(self, exe_path="pylablib\\instruments\\CS260-Drivers\\C++EXE.exe"):
+    def __init__(self, exe_path="pylablib\\instruments\\CS260_DLLs\\C++EXE.exe"):
         super().__init__("CS260")
         self.exe_path = exe_path
 

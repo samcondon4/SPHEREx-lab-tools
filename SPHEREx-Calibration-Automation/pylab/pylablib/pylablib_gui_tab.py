@@ -45,9 +45,26 @@ class GuiTab:
         :param setter: <function> function object corresponding to parameter setter.
         :return: None
         """
-        self.parameters.append(parameter_name)
+        if "parameter_name" not in self.parameters:
+            self.parameters.append(parameter_name)
         self.get_methods[parameter_name] = getter
         self.set_methods[parameter_name] = setter
+
+    def add_set_parameter(self, parameter_name, setter):
+        """add_set_parameter: add a function to the setter dictionary for the specified parameter name.
+
+        """
+        if parameter_name not in self.parameters:
+            self.parameters.append(parameter_name)
+        self.set_methods[parameter_name] = setter
+
+    def add_get_parameter(self, parameter_name, getter):
+        """add_set_parameter: add a function to the getter dictionary for the specified parameter name.
+
+        """
+        if parameter_name not in self.parameters:
+            self.parameters.append(parameter_name)
+        self.set_methods[parameter_name] = getter
 
     def get_parameters(self, params):
         """get_params: return the specified parameters as a dictionary.

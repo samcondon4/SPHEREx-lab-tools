@@ -125,9 +125,6 @@ class AutomationWindow(Ui_Form, GuiTab):
             else:
                 check_state = QtUNCHECKED
 
-            if type(params_dict[key]) == bool:
-                print("this is a boolean!")
-
             if key == "wavelength":
                 self.auto_data_metadata_wavelength_cbox.setCheckState(check_state)
             elif key == "grating":
