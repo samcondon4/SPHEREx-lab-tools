@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>389</width>
+    <height>461</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QCheckBox" name="checkBox_11">
+     <property name="text">
+      <string>DIO0</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="comboBox_11">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="checkBox_12">
+     <property name="text">
+      <string>DIO11</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QComboBox" name="comboBox_21">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="checkBox">
+     <property name="text">
+      <string>DIO1</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="comboBox_23">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QCheckBox" name="checkBox_13">
+     <property name="text">
+      <string>DIO12</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QComboBox" name="comboBox_22">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QCheckBox" name="checkBox_2">
+     <property name="text">
+      <string>DIO2</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QComboBox" name="comboBox_12">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QCheckBox" name="checkBox_14">
+     <property name="text">
+      <string>DIO13</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QComboBox" name="comboBox_24">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QCheckBox" name="checkBox_3">
+     <property name="text">
+      <string>DIO3</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QComboBox" name="comboBox_13">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QCheckBox" name="checkBox_15">
+     <property name="text">
+      <string>DIO14</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QComboBox" name="comboBox_25">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="checkBox_4">
+     <property name="text">
+      <string>DIO4</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QComboBox" name="comboBox_14">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="2">
+    <widget class="QCheckBox" name="checkBox_16">
+     <property name="text">
+      <string>DIO15</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="3">
+    <widget class="QComboBox" name="comboBox_26">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QCheckBox" name="checkBox_5">
+     <property name="text">
+      <string>DIO5</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QComboBox" name="comboBox_15">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QCheckBox" name="checkBox_17">
+     <property name="text">
+      <string>DIO16</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="3">
+    <widget class="QComboBox" name="comboBox_27">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="6" column="0">
+    <widget class="QCheckBox" name="checkBox_6">
+     <property name="text">
+      <string>DIO6</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1">
+    <widget class="QComboBox" name="comboBox_16">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QCheckBox" name="checkBox_18">
+     <property name="text">
+      <string>DIO17</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="3">
+    <widget class="QComboBox" name="comboBox_28">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QCheckBox" name="checkBox_7">
+     <property name="text">
+      <string>DIO7</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QComboBox" name="comboBox_17">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="7" column="2">
+    <widget class="QCheckBox" name="checkBox_19">
+     <property name="text">
+      <string>DIO18</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="3">
+    <widget class="QComboBox" name="comboBox_29">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="8" column="0">
+    <widget class="QCheckBox" name="checkBox_8">
+     <property name="text">
+      <string>DIO8</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QComboBox" name="comboBox_18">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="8" column="2">
+    <widget class="QCheckBox" name="checkBox_20">
+     <property name="text">
+      <string>DIO19</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="3">
+    <widget class="QComboBox" name="comboBox_30">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QCheckBox" name="checkBox_9">
+     <property name="text">
+      <string>DIO9</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QComboBox" name="comboBox_19">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="9" column="2">
+    <widget class="QCheckBox" name="checkBox_21">
+     <property name="text">
+      <string>DIO20</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="3">
+    <widget class="QComboBox" name="comboBox_31">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QCheckBox" name="checkBox_10">
+     <property name="text">
+      <string>DIO10</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QComboBox" name="comboBox_20">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="10" column="2">
+    <widget class="QCheckBox" name="checkBox_22">
+     <property name="text">
+      <string>DIO21</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="3">
+    <widget class="QComboBox" name="comboBox_32">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

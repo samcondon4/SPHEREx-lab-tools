@@ -6,16 +6,39 @@
 Sam Condon, 06/28/2021
 """
 from queue import SimpleQueue
+from PyQt5 import QtWidgets
 
 
 class GuiTab:
 
-    def __init__(self):
+    def __init__(self, child):
         self.button_queue = SimpleQueue()
-        self.form = None
         self.parameters = []
         self.get_methods = {}
         self.set_methods = {}
+        self.child = child
+        print(child)
+        # Configure stacked widget switching #########################################################
+        try:
+            is_stacked = child.is_stacked_widget
+        except AttributeError as e:
+            pass
+        else:
+            if is_stacked:
+                print("child stacked widget population")
+                widget_list = [child.stackedWidget.widget(i) for i in range(child.stackedWidget.count())]
+                self.window_selector_dict = {}
+                for widget in widget_list:
+                    window_selector = QtWidgets.QComboBox()
+                    widget_name = widget.objectName()
+                    layout = widget.layout()
+                    for w in widget_list:
+                        window_selector.addItem(w.objectName())
+                    window_selector.currentIndexChanged.connect(self._on_stacked_widget_select)
+                    layout.addWidget(window_selector, 0, layout.columnCount() - 1)
+                    widget.setLayout(layout)
+                    self.window_selector_dict[widget_name] = window_selector
+        ###############################################################################################
 
     def get_button(self):
         """get_button: return the latest button press from the button queue
@@ -96,11 +119,13 @@ class GuiTab:
         for key in params_dict:
             self.set_methods[key](params_dict[key])
 
-    def place(self, tab_widget):
-        """place: places the dialog specified by the inherited class into a tab widget.
-
-        :param tab_widget: QTabWidget
-        :return: None
+    # Stacked widget switching #
+    def _on_stacked_widget_select(self):
+        """_on_stacked_widget_select: Change the stacked widget window according to the combo box window selector
         """
-        tab_widget.addTab(self.form)
+        cur_window = self.child.stackedWidget.currentWidget().objectName()
+        new_index = self.child.window_selector_dict[cur_window].currentIndex()
+        self.child.stackedWidget.setCurrentIndex(new_index)
+        new_window = self.child.stackedWidget.currentWidget().objectName()
+        self.window_selector_dict[new_window].setCurrentIndex(new_index)
 

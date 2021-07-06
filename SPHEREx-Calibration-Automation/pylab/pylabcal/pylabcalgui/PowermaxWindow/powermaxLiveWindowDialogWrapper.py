@@ -31,7 +31,7 @@ class PowerPlot(FigureCanvasQTAgg):
 class PowermaxWindow(Ui_Form, GuiTab):
 
     def __init__(self):
-        super(PowermaxWindow, self).__init__()
+        super(PowermaxWindow, self).__init__(self)
         self.form = QtWidgets.QDialog()
         self.setupUi(self.form)
 

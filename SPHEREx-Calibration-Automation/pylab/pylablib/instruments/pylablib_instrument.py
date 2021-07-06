@@ -36,8 +36,26 @@ class Instrument:
         """
         return self.open_method()
 
-    def add_get_parameter(self, parameter_name, getter, coro=False):
+    def add_parameter(self, parameter_name, getter, setter, coro=False):
         """add_parameter: add functions to the getter and setter dictionaries for the specified parameter name.
+
+        :param parameter_name: <string> name of parameter to be added.
+        :param getter: <function object> function object corresponding to parameter getter.
+        :param setter: <function object> function object corresponding to parameter setter.
+        :return: None
+        """
+        if not coro:
+            self.get_methods[parameter_name] = getter
+            self.set_methods[parameter_name] = setter
+        else:
+            self.get_method_coros[parameter_name] = getter
+            self.set_method_coros[parameter_name] = setter
+
+        if parameter_name not in self.parameters:
+            self.parameters.append(parameter_name)
+
+    def add_get_parameter(self, parameter_name, getter, coro=False):
+        """add_get_parameter: add function to the getter dictionary for the specified parameter name.
 
         :param parameter_name: <string> name of parameter to be added.
         :param getter: <function> function object corresponding to parameter getter.
@@ -52,7 +70,7 @@ class Instrument:
             self.parameters.append(parameter_name)
 
     def add_set_parameter(self, parameter_name, setter, coro=False):
-        """add_parameter: add functions to the getter and setter dictionaries for the specified parameter name.
+        """add_set_parameter: add function to the setter dictionary for the specified parameter name.
 
         :param parameter_name: <string> name of parameter to be added.
         :param setter: <function> function object corresponding to parameter setter.

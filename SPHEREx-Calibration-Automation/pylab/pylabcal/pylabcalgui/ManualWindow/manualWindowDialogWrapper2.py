@@ -7,16 +7,17 @@ Sam Condon, 06/21/2021
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from manualWindowDialog import Ui_Form
+from pylabcal.pylabcalgui.ManualWindow.manualWindowDialog2 import Ui_Form
 from pylablib.pylablib_gui_tab import GuiTab
 
 
 class ManualWindow(Ui_Form, GuiTab):
 
     def __init__(self):
-        super().__init__()
         self.form = QtWidgets.QDialog()
         self.setupUi(self.form)
+        self.is_stacked_widget = True
+        super().__init__(self)
 
         ##Configure parameters#####################################################################################
         self.add_parameter("Monochromator", self.get_monochromator_parameters, self.set_monochromator_parameters)
@@ -25,7 +26,6 @@ class ManualWindow(Ui_Form, GuiTab):
 
         ##Connect buttons to methods #######################################################################
         self.manual_monochromator_setparams_button.clicked.connect(self._on_Set_Monochromator_Parameters)
-        self.manual_monochromator_abort_button.clicked.connect(self._on_Abort)
         self.manual_lockin_setparams_button.clicked.connect(self._on_Set_Lockin_Parameters)
         self.manual_lockin_startmeasurement_button.clicked.connect(self._on_Start_Measurement)
         #####################################################################################################
@@ -33,10 +33,10 @@ class ManualWindow(Ui_Form, GuiTab):
     #PARAMETER GETTERS/SETTERS########################################################################################
     def get_monochromator_parameters(self):
         params = {
-            'wavelength': self.manual_monochromator_wavelength_ledit.text(),
-            'filter': self.manual_monochromator_filter_combobox.currentText(),
-            'grating': self.manual_monochromator_grating_combobox.currentText(),
-            'shutter': self.manual_monochromator_shutter_combobox.currentText()
+            'wavelength': self.manual_monochromator_newwavelength_ledit.text(),
+            'filter': self.manual_monochromator_newfilter_combobox.currentText(),
+            'grating': self.manual_monochromator_newgrating_combobox.currentText(),
+            'shutter': self.manual_monochromator_newshutter_combobox.currentText()
         }
 
         return params
@@ -45,7 +45,7 @@ class ManualWindow(Ui_Form, GuiTab):
         for key in params_dict:
             param = str(params_dict[key])
             if key == "wavelength":
-                self.manual_monochromator_wavelength_ledit.setText(param)
+                self.manual_monochromator_currentwavelength_ledit.setText(param)
             elif key == "filter":
                 if param == "1":
                     param = "OSF1"
@@ -55,7 +55,7 @@ class ManualWindow(Ui_Form, GuiTab):
                     param = "OSF3"
                 elif param == "4":
                     param = "No OSF"
-                self.manual_monochromator_filter_combobox.setCurrentText(param)
+                self.manual_monochromator_currentfilter_combobox.setCurrentText(param)
             elif key == "grating":
                 if param == "1":
                     param = "G1"
@@ -63,13 +63,13 @@ class ManualWindow(Ui_Form, GuiTab):
                     param = "G2"
                 elif param == "3":
                     param = "G3"
-                self.manual_monochromator_grating_combobox.setCurrentText(param)
+                self.manual_monochromator_currentgrating_combobox.setCurrentText(param)
             elif key == "shutter":
                 if param == "O":
                     param = "Open"
                 elif param == "C":
                     param = "Close"
-                self.manual_monochromator_shutter_combobox.setCurrentText(param)
+                self.manual_monochromator_currentshutter_combobox.setCurrentText(param)
 
     def get_lockin_parameters(self):
         params = {
@@ -106,13 +106,14 @@ class ManualWindow(Ui_Form, GuiTab):
                 self.manual_lockin_sampletime_ledit.setText(params_dict[key])
             elif key == "measurement storage path":
                 self.manual_lockin_measurementstorage_ledit.setText(params_dict[key])
-##################################################################################################################
+    ##################################################################################################################
 
-##MAIN API METHODS################################################################################################
+    ##MAIN API METHODS################################################################################################
     #################################################################################################################
 
     ##PRIVATE METHODS################################################################################################
-    #Button Methods#####
+
+    # Button Methods#####
     def _on_Set_Monochromator_Parameters(self):
         """_on_Set_Parameters: Add the Set Parameters button identifier to button queue
 
@@ -149,5 +150,3 @@ if __name__ == "__main__":
     window = ManualWindow()
     window.form.show()
     sys.exit(app.exec_())
-
-

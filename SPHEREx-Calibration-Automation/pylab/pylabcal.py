@@ -21,7 +21,7 @@ from pylablib.housekeeping import Housekeeping
 from pylablib.utils.parameters import write_config_file, get_params_dict
 
 sys.path.append(r"pylabcal\\pylabcalgui\\ManualWindow")
-from manualWindowDialogWrapper import ManualWindow
+from manualWindowDialogWrapper2 import ManualWindow
 
 sys.path.append(r"pylabcal\\pylabcalgui\\AutomationWindow")
 from automationWindowDialogWrapper import AutomationWindow
@@ -171,15 +171,15 @@ class SpectralCalibrationMachine:
         init_success = True
         # Initialize communication with monochromator ##
         self.monochromator = CS260()
-        # self.monochromator.open()
+        self.monochromator.open()
         ################################################
         # Initialize communication with lock in amplifier #
 
         ###################################################
 
         # Initialize GUI ###################################################
-        # mono_params = self.monochromator.get_parameters("All")
-        # self.control_gui.tabs["Manual"].set_parameters({"Monochromator": mono_params})
+        mono_params = self.monochromator.get_parameters("All")
+        self.control_gui.tabs["Manual"].set_parameters({"Monochromator": mono_params})
         ####################################################################
 
         # If all initializations were successful, transition to the Waiting state

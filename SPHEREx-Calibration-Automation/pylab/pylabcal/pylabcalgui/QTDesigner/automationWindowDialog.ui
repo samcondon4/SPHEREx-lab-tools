@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="1">
-    <widget class="QStackedWidget" name="automation_window">
+    <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -320,20 +320,6 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QComboBox" name="auto_window_select_combobox_0">
-         <item>
-          <property name="text">
-           <string>Series Construction and Control Window</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Sequence Parameters Window</string>
-          </property>
-         </item>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="SequenceParametersWindow">
@@ -536,20 +522,6 @@
        </item>
        <item row="5" column="1">
         <widget class="QLineEdit" name="sequence_monochromator_stepsize_ledit"/>
-       </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="auto_window_select_combobox_1">
-         <item>
-          <property name="text">
-           <string>Series Construction and Control Window</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Sequence Parameters Window</string>
-          </property>
-         </item>
-        </widget>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="sequence_monochromator_label">

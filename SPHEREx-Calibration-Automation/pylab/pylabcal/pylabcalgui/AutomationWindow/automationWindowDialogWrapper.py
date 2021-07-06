@@ -27,9 +27,10 @@ SEQUENCE_ROLE = 0
 class AutomationWindow(Ui_Form, GuiTab):
 
     def __init__(self, seq_config_path="pylabcal\\config\\sequence\\", default_seq_name="default_seq"):
-        super().__init__()
         self.form = QtWidgets.QWidget()
         self.setupUi(self.form)
+        self.is_stacked_widget = True
+        super().__init__(self)
 
         # Configuration paths######################################################################
         self.default_seq_name = default_seq_name
@@ -49,9 +50,6 @@ class AutomationWindow(Ui_Form, GuiTab):
         #############################################################################################################
 
         # Connect user input to functions##############################################################################
-        self.auto_window_select_combobox_0.currentTextChanged.connect(self._on_Switch_Window_0)
-        self.auto_window_select_combobox_1.currentTextChanged.connect(self._on_Switch_Window_1)
-
         self.auto_series_sequence_save_button.clicked.connect(self._on_Save_New_Sequence)
         self.auto_series_addsequencestoseries_button.clicked.connect(self._on_Add_Sequence_To_series)
         self.auto_series_removesequencefromseries_button.clicked.connect(self._on_Remove_Sequence_From_series)
@@ -336,3 +334,11 @@ class AutomationWindow(Ui_Form, GuiTab):
         self.automation_window.setCurrentIndex(self.auto_window_select_combobox_1.currentIndex())
     #End button methods###########################################################################################
     #END PRIVATE METHODS################################################################################################
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    window = AutomationWindow()
+    window.form.show()
+    sys.exit(app.exec_())
