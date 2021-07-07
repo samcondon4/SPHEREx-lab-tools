@@ -18,7 +18,6 @@ from qasync import QEventLoop
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pylablib.pylablibsm import SM
 from pylablib.housekeeping import Housekeeping
-from pylablib.utils.parameters import write_config_file, get_params_dict
 
 sys.path.append(r"pylabcal\\pylabcalgui\\ManualWindow")
 from manualWindowDialogWrapper2 import ManualWindow
@@ -32,8 +31,7 @@ from powermaxLiveWindowDialogWrapper import PowermaxWindow
 sys.path.append(r"pylablib\\instruments")
 from CS260 import CS260
 from powermaxusb2 import Powermax
-
-
+from labjacku6 import Labjack
 ###################################################################################################
 
 
@@ -73,6 +71,7 @@ class SpectralCalibrationMachine:
         self.monochromator = None
         self.lock_in = None
         self.powermax = None
+        self.labjack = None
         ##########################
 
         # Gui initialization ###########################################################################################
@@ -130,7 +129,7 @@ class SpectralCalibrationMachine:
         powermax_logging = False
         #####################################################################
 
-        # Run housekeeping data logging and display #############################################
+        # Run housekeeping data logging and display ##############################################################
         while True:
             button = self.hk_gui.tabs["Powermax"].get_button()
 
@@ -157,7 +156,7 @@ class SpectralCalibrationMachine:
                 self.hk_gui.tabs["Powermax"].set_parameters({"data append": data})
 
             await asyncio.sleep(0.001)
-        ############################################################################################
+        ############################################################################################################
 
     def init_action(self, action_dict):
         """init_action: **STATE_MACHINE ACTION**
@@ -169,18 +168,31 @@ class SpectralCalibrationMachine:
         :return: None
         """
         init_success = True
-        # Initialize communication with monochromator ##
+        # Initialize communication with all instruments in experiment setup ##
         self.monochromator = CS260()
         self.monochromator.open()
-        ################################################
-        # Initialize communication with lock in amplifier #
+        self.labjack = Labjack()
+        self.labjack.open()
+        #######################################################################
 
-        ###################################################
+        # Initialize labjack dio ports and gui control window #############################
+        dio_cfg_init = {}
+        dio_state_init = {}
+        dio_init = {}
+        for i in range(22):
+            dio_cfg_init[i] = "Output"
+            dio_state_init[i] = 0
+            dio_init[i] = {"State": 0, "Config": "Output"}
+        self.labjack.set_dio_config(dio_cfg_init)
+        self.labjack.set_dio_state(dio_state_init)
 
-        # Initialize GUI ###################################################
+        self.control_gui.tabs["Manual"].set_parameters({"LabJack": dio_init})
+        ###################################################################################
+
+        # Initialize monochromator gui control window #####################################
         mono_params = self.monochromator.get_parameters("All")
         self.control_gui.tabs["Manual"].set_parameters({"Monochromator": mono_params})
-        ####################################################################
+        ###################################################################################
 
         # If all initializations were successful, transition to the Waiting state
         if init_success:

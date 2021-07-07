@@ -21,15 +21,78 @@ class Labjack(Instrument):
         self.com = None
         ###################################################
 
-        # Configure parameters #############################
-        self.add_parameter("dio", self.get_dio, self.set_dio)
-        ####################################################
+        # Configure parameters ####################################################
+        self.add_get_parameter("dio", self.get_dio)
+        self.add_parameter("dio config", self.get_dio_config, self.set_dio_config)
+        self.add_parameter("dio state", self.get_dio_state, self.set_dio_state)
+        ###########################################################################
 
     def open_u6_com(self):
         self.com = u6.U6()
         self.com.getCalibrationData()
 
     def get_dio(self, dios="All"):
+        """get_dio:
+            Get the dio configuration and state of the pins specified.
+
+        :param: dios: int or list of ints specifying which dio pin configurations and states to return.
+        :return: dictionary with keys corresponding to dio numbers and values corresponding to dictionaries with dio
+                 states and configurations.
+        """
+        dio_dict = {}
+        dio_config = self.get_dio_config(dios)
+        dio_state = self.get_dio_state(dios)
+        for d in dio_config:
+            dio_dict[d] = {"Config": dio_config[d], "State": dio_state[d]}
+        return dio_dict
+
+    def get_dio_config(self, dios="All"):
+        """get_dio_config:
+            Get the i/o configuration of the dio pins specified
+
+        :param: dios: int or list of ints specifying which dio pin configurations to return.
+        :return: dictionary with keys corresponding to dio numbers and values corresponding to dio configurations.
+        """
+        dio_dict = {}
+        ret = False
+        if type(dios) is int:
+            dio_dict[dios] = self.com.getFeedback(u6.BitDirRead(dios))[0]
+            ret = True
+        elif type(dios) is list:
+            for d in dios:
+                dio_dict[d] = self.com.getFeedback(u6.BitDirRead(d))[0]
+            ret = True
+        elif dios == "All":
+            for d in np.arange(23):
+                dio_dict[d] = self.com.getFeedback(u6.BitDirRead(int(d)))[0]
+            ret = True
+
+        if ret:
+            for d in dio_dict:
+                if dio_dict[d] == 0:
+                    dio_dict[d] = "Input"
+                else:
+                    dio_dict[d] = "Output"
+            return dio_dict
+        else:
+            return False
+
+    def set_dio_config(self, dios_cfg_dict):
+        """set_dio_config:
+            Set the i/o configuration of the dio pins specified in dios_cfg_dict
+
+        :param: dios_cfg_dict: dictionary with dio pin numbers as keys and dio pin configurations
+                               as values.
+        :return: None
+        """
+        for dio in dios_cfg_dict:
+            if dios_cfg_dict[dio] == "Output":
+                write = 1
+            else:
+                write = 0
+            self.com.getFeedback(u6.BitDirWrite(dio, write))
+
+    def get_dio_state(self, dios="All"):
         """get_dio:
             Return the current digital io port statuses
 
@@ -55,14 +118,19 @@ class Labjack(Instrument):
         else:
             return False
 
-    def set_dio(self, dio_dict):
+    def set_dio_state(self, dio_dict):
         """set_dio:
-            Set the digital io ports on labjack to state specified in dio_dict
+            Set the digital io ports on labjack to state specified in dio_dict. This command is only valid when the
+            specified dio port(s) have been configured as outputs.
 
         :param: dio_dict: <dictionary> keys are dio pin numbers, values are desired dio states (0 or 1).
         """
         for d in dio_dict:
+            dir = self.com.getFeedback(u6.BitDirRead(d))[0]
+            if dir != 1:
+                raise RuntimeError("DIO{} is configured as an input!".format(d))
             if dio_dict[d] == 0 or dio_dict[d] == 1:
+                print("dio set state: {}".format(dio_dict[d]))
                 self.com.setDOState(d, state=dio_dict[d])
             else:
                 raise RuntimeError("Only 0 or 1 allowed as a DIO state on the LJU6!")

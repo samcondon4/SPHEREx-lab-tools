@@ -17,7 +17,6 @@ class GuiTab:
         self.get_methods = {}
         self.set_methods = {}
         self.child = child
-        print(child)
         # Configure stacked widget switching #########################################################
         try:
             is_stacked = child.is_stacked_widget
@@ -25,7 +24,6 @@ class GuiTab:
             pass
         else:
             if is_stacked:
-                print("child stacked widget population")
                 widget_list = [child.stackedWidget.widget(i) for i in range(child.stackedWidget.count())]
                 self.window_selector_dict = {}
                 for widget in widget_list:
