@@ -124,6 +124,23 @@ class SM:
         """
         self.state_params[state][action_name] = params_dict
 
+    def add_action_parameters(self, state, action_name, params_dict):
+        """add_action_parameters: Similar to set_action_parameters but does not override any existing action parameter
+                                  dictionaries, but rather adds a new key/value pair.
+
+            Params:
+                state: state parameters dictionary to add params_dict to
+                action_name: name of the action to which params_dict should be associated.
+                params_dict: dictionary of control loop parameters to add.
+            Return:
+                None
+        """
+        for p in params_dict:
+            print(p)
+            print(params_dict[p])
+            print(self.state_params[state][action_name])
+            self.state_params[state][action_name][p] = params_dict[p]
+
     def clear_action_parameters(self, state, action_name):
         """clear_action_parameters: Clear the parameters associated with the specified state action.
 

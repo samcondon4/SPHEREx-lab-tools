@@ -8,6 +8,8 @@ Sam Condon, 07/02/2021
 
 import pyvisa
 import pandas as pd
+import numpy as np
+from datetime import datetime
 from pylablib.instruments.pylablib_instrument import Instrument
 from pylablib.housekeeping import Housekeeping
 
@@ -117,7 +119,8 @@ class Powermax(Instrument, Housekeeping):
     def log_data(self):
         data = self.get_data().split(',')[0]
         time = Housekeeping.time_sync_method()
-        write_df = pd.DataFrame({"Time-stamp": [time], "Watts": [data], "Wavelength": [float(self.get_wavelength())*1e-3]})
+        write_df = pd.DataFrame(
+            {"Time-stamp": [time], "Watts": [data], "Wavelength": [float(self.get_wavelength()) * 1e-3]})
         try:
             df = pd.read_csv(self.log_path)
         except pd.errors.EmptyDataError as e:
@@ -126,9 +129,13 @@ class Powermax(Instrument, Housekeeping):
             header = False
         write_df.to_csv(self.log_path, mode='a', header=header, index=False)
 
-    async def get_log(self, start=None, end=None, final_val=False):
+    def get_log(self, start=None, end=None, final_val=False):
         df = pd.read_csv(self.log_path)
         if final_val:
             df = df.iloc[-1]
+        else:
+            time_stamps = [datetime.strptime(ts, "%Y-%m-%d %H:%M:%S.%f") for ts in df["Time-stamp"].values]
+            indices = np.where([start < time_stamps[i] < end for i in range(len(time_stamps))])[0]
+            df = df.iloc[indices[0]:indices[-1]]
         return df
     #############################################################################

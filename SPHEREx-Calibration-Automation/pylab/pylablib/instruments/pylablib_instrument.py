@@ -7,7 +7,7 @@
 Sam Condon, 06/30/2021
 """
 import asyncio
-
+import builtins
 
 class Instrument:
 
@@ -84,7 +84,7 @@ class Instrument:
         if parameter_name not in self.parameters:
             self.parameters.append(parameter_name)
 
-    def get_parameters(self, params):
+    async def get_parameters(self, params):
         """get_parameters: return the specified instrument parameters as a dictionary
 
                             **ASYNCHRONOUS GETTERS NOT YET SUPPORTED. THIS FEATURE WILL BE IMPLEMENTED IF THE
@@ -93,17 +93,34 @@ class Instrument:
         :param params: dictionary with keys and values of parameters to update
         :return: parameters dictionary
         """
+        coro_list = {}
         return_dict = {}
         if params == 'All':
             for getter in self.get_methods:
                 return_dict[getter] = self.get_methods[getter]()
+            for getter in self.get_method_coros:
+                coro_list[getter] = self.get_method_coros[getter]
 
         elif type(params) is list:
-            for getter in self.get_methods:
-                return_dict[getter] = self.get_methods[getter]()
+            for getter in params:
+                if getter in self.get_methods:
+                    return_dict[getter] = self.get_methods[getter]()
+                elif getter in self.get_method_coros:
+                    coro_list[getter] = self.get_method_coros[getter]
+                else:
+                    raise RuntimeError("Getter {} not found!".format(getter))
 
         elif type(params) is str:
-            return_dict[params] = self.get_methods[params]()
+            if params in self.get_methods:
+                return_dict[params] = self.get_methods[params]()
+            elif params in self.get_method_coros:
+                coro_list[params] = self.get_method_coros[params]
+
+        # Execute all getter coroutines ####
+        for key in coro_list:
+            get_task = asyncio.create_task(coro_list[key]())
+            await get_task
+            return_dict[key] = get_task.result()
 
         return return_dict
 

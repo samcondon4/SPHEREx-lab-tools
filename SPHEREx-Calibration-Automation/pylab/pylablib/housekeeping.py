@@ -18,6 +18,7 @@ class Housekeeping:
         self.log_path = None
         self.log_method = None
         self.get_log_method = None
+        self.logging = False
         self.log_lock = asyncio.Lock()
 
     def set_log_path(self, log_path):
@@ -38,6 +39,7 @@ class Housekeeping:
             identifier = self.log_method["identifier"]
             log_method = self.log_method["method"]
             Housekeeping.log_methods[identifier] = {"method": log_method, "lock": self.log_lock}
+            self.logging = True
 
     async def off_data_log(self):
         """off_data_log: Turn off data logging for a Housekeeping instance by removing the instance log method from the
@@ -46,6 +48,7 @@ class Housekeeping:
         """
         async with self.log_lock:
             Housekeeping.log_methods.pop(self.log_method["identifier"])
+            self.logging = False
 
     @classmethod
     def start(cls):

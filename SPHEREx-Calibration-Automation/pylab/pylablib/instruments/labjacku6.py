@@ -130,7 +130,6 @@ class Labjack(Instrument):
             if dir != 1:
                 raise RuntimeError("DIO{} is configured as an input!".format(d))
             if dio_dict[d] == 0 or dio_dict[d] == 1:
-                print("dio set state: {}".format(dio_dict[d]))
                 self.com.setDOState(d, state=dio_dict[d])
             else:
                 raise RuntimeError("Only 0 or 1 allowed as a DIO state on the LJU6!")

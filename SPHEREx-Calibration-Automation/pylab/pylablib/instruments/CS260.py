@@ -20,25 +20,23 @@ class CS260(Instrument):
         ##########################################
 
         # Configure parameters ###############################################################
-        self.add_get_parameter("wavelength", self.get_wavelength)
-        self.add_set_parameter("wavelength", self.set_wavelength, coro=True)
-        self.add_get_parameter("grating", self.get_grating)
-        self.add_set_parameter("grating", self.set_grating, coro=True)
-        self.add_get_parameter("filter", self.get_osf)
-        self.add_set_parameter("filter", self.set_osf, coro=True)
-        self.add_get_parameter("shutter", self.get_shutter_state)
-        self.add_set_parameter("shutter", self.set_shutter_state, coro=False)
-        self.add_get_parameter("units", self.get_units)
+        self.add_parameter("wavelength", self.get_wavelength, self.set_wavelength, coro=True)
+        self.add_parameter("grating", self.get_grating, self.set_grating, coro=True)
+        self.add_parameter("filter", self.get_osf, self.set_osf, coro=True)
+        self.add_parameter("shutter", self.get_shutter_state, self.set_shutter_state, coro=True)
+        self.add_get_parameter("units", self.get_units, coro=True)
         self.add_set_parameter("units", self.set_units, coro=False)
         #######################################################################################
 
     # PARAMETER GETTER/SETTERS ##########################################################
-    def get_wavelength(self):
+    async def get_wavelength(self):
         """get_wavelength: returns exact wavelength output in current units.
 
         :return: Wavelength
         """
-        cp = self.ask('WAVE?')
+        ask_task = asyncio.create_task(self.ask("WAVE?"))
+        await ask_task
+        cp = ask_task.result()
         return float(cp.stdout.decode('utf-8'))
 
     async def set_wavelength(self, wavelength):
@@ -57,12 +55,14 @@ class CS260(Instrument):
         cp = write_task.result()
         return cp.returncode
 
-    def get_grating(self):
+    async def get_grating(self):
         """get_grating: return current grating position
 
         :return: current integer grating position
         """
-        cp = self.ask('GRAT?')
+        ask_task = asyncio.create_task(self.ask("GRAT?"))
+        await ask_task
+        cp = ask_task.result()
         return int(cp.stdout.split(b',')[0])
 
     async def set_grating(self, grating):
@@ -89,12 +89,14 @@ class CS260(Instrument):
         if task_run:
             return cp.returncode
 
-    def get_osf(self):
+    async def get_osf(self):
         """get_filter: return current filter wheel position
 
         :return:
         """
-        cp = self.ask('FILTER?')
+        ask_task = asyncio.create_task(self.ask("FILTER?"))
+        await ask_task
+        cp = ask_task.result()
         return int(cp.stdout)
 
     async def set_osf(self, osf):
@@ -119,35 +121,39 @@ class CS260(Instrument):
         if task_run:
             return cp.returncode
 
-    def get_shutter_state(self):
+    async def get_shutter_state(self):
         """get_shutter: return current shutter state. 'O' indicates closed,
                         'C' indicates open
 
         :return: 'O' or 'C'
         """
-        cp = self.ask('SHUTTER?')
+        ask_task = asyncio.create_task(self.ask("SHUTTER?"))
+        await ask_task
+        cp = ask_task.result()
         return cp.stdout.decode('utf-8')
 
-    def set_shutter_state(self, shutter_state):
+    async def set_shutter_state(self, shutter_state):
         """set_shutter: close or open shutter depending on input oc (open-close)
 
         :param shutter_state: open close: use "C" for close, "O" for open
         :return: success code
         """
         ret = 0
-        if shutter_state == "Close":
+        if shutter_state == "C":
             self.write('SHUTTER C')
-        elif shutter_state == "Open":
+        elif shutter_state == "O":
             self.write('SHUTTER O')
         else:
             raise ValueError("Please specify valid value of shutter state parameter. Valid values are {'Open', 'Close'}")
 
-    def get_units(self):
+    async def get_units(self):
         """get_units: get units that wavelength is currently expressed in.
 
         :return: two character string indicating units. String values are the same as described in set_units
         """
-        cp = self.ask('UNITS?')
+        ask_task = asyncio.create_task(self.ask("UNITS?"))
+        await ask_task
+        cp = ask_task.result()
         return cp.stdout.decode('utf-8').upper()
 
     def set_units(self, units):
@@ -194,8 +200,10 @@ class CS260(Instrument):
         cp = sp_run_task.result()
         return cp
 
-    def ask(self, query):
-        cp = sp.run([self.exe_path, 'ask', query], capture_output=True, check=True)
+    async def ask(self, query):
+        sp_task = asyncio.create_task(self.async_sp_run([self.exe_path, 'ask', query], check=True))
+        await sp_task
+        cp = sp_task.result()
         return cp
 
     #####################################################################################
@@ -231,7 +239,9 @@ class CS260(Instrument):
         val = 0
         while not complete:
             try:
-                val = query_func()
+                query_task = asyncio.create_task(query_func())
+                await query_task
+                val = query_task.result()
             except ValueError as e:
                 await asyncio.sleep(pend_time)
             else:
