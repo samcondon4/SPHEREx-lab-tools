@@ -46,6 +46,9 @@ class Powermax(Instrument, Housekeeping):
         self.set_log_method("Powermax", self.log_data)
         #####################################################
 
+        # log file reference #
+        self.log_df = None
+
     def open_com(self):
         '''open_com:
 
@@ -102,6 +105,7 @@ class Powermax(Instrument, Housekeeping):
         return self.com.query("CONFigure:WAVElength?")
 
     def set_wavelength(self, wave):
+        print("setting powermax wavelength to {}".format(wave))
         self.com.write("CONFigure:WAVElength {}".format(wave))
 
     def get_gain_compensation(self):
@@ -121,10 +125,13 @@ class Powermax(Instrument, Housekeeping):
         time = Housekeeping.time_sync_method()
         write_df = pd.DataFrame(
             {"Time-stamp": [time], "Watts": [data], "Wavelength": [float(self.get_wavelength()) * 1e-3]})
-        try:
-            df = pd.read_csv(self.log_path)
-        except pd.errors.EmptyDataError as e:
-            header = True
+        if self.log_df is None:
+            try:
+                self.log_df = pd.read_csv(self.log_path)
+            except pd.errors.EmptyDataError as e:
+                header = True
+            else:
+                header = False
         else:
             header = False
         write_df.to_csv(self.log_path, mode='a', header=header, index=False)

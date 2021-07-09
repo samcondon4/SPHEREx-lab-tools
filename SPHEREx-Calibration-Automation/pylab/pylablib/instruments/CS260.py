@@ -2,11 +2,13 @@
 
 Sam Condon 07/01/2021
 """
-
-from pylablib_instrument import Instrument
+import sys
 import subprocess as sp
 from subprocess import *
 import asyncio
+
+sys.path.append("..\\..\\")
+from pylablib.instruments.pylablib_instrument import Instrument
 
 
 class CS260(Instrument):

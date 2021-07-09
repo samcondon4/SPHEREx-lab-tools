@@ -8,13 +8,13 @@ Sam Condon, 06/21/2021
 import sys
 import os
 from PyQt5 import QtCore, QtGui, QtWidgets
-from automationWindowDialog import Ui_Form
-from QListWigetSubclass import QListWidgetItemCustom
 
 # add package root directory to search path
 sys.path.append("..\\..\\..\\")
 from pylablib.utils.parameters import get_params_dict, write_config_file
 from pylablib.pylablib_gui_tab import GuiTab
+from pylabcal.pylabcalgui.AutomationWindow.automationWindowDialog import Ui_Form
+from pylabcal.pylabcalgui.AutomationWindow.QListWigetSubclass import QListWidgetItemCustom
 
 # CONSTANTS ################################
 QtUNCHECKED = QtCore.Qt.Unchecked
@@ -145,6 +145,7 @@ class AutomationWindow(Ui_Form, GuiTab):
             'start wavelength': self.sequence_monochromator_startwave_ledit.text(),
             'stop wavelength': self.sequence_monochromator_endwave_ledit.text(),
             'step size': self.sequence_monochromator_stepsize_ledit.text(),
+            'shutter': self.sequence_monochromator_shutter_combobox.currentText(),
             'g1 to g2 transition wavelength': self.sequence_monochromator_g1g2_ledit.text(),
             'g2 to g3 transition wavelength': self.sequence_monochromator_g2g3_ledit.text(),
             'no osf to osf1 transition wavelength': self.sequence_monochromator_noosfosf1_ledit.text(),
@@ -163,6 +164,8 @@ class AutomationWindow(Ui_Form, GuiTab):
                 self.sequence_monochromator_endwave_ledit.setText(value)
             elif key == "step size":
                 self.sequence_monochromator_stepsize_ledit.setText(value)
+            elif key == "shutter":
+                self.sequence_monochromator_shutter_combobox.setCurrentText(value)
             elif key == "g1 to g2 transition wavelength":
                 self.sequence_monochromator_g1g2_ledit.setText(value)
             elif key == "g2 to g3 transition wavelength":

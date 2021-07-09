@@ -10,31 +10,21 @@ Contributors:
 """
 
 # IMPORT PACKAGES #################################################################################
-import asyncio
 import json
 import sys
 import datetime
 import numpy as np
-from qasync import QEventLoop
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pylablib.pylablibsm import SM
 from pylablib.housekeeping import Housekeeping
-
-sys.path.append(r"pylabcal\\pylabcalgui\\ManualWindow")
-from manualWindowDialogWrapper2 import ManualWindow
-
-sys.path.append(r"pylabcal\\pylabcalgui\\AutomationWindow")
-from automationWindowDialogWrapper import AutomationWindow
-
-sys.path.append(r"pylabcal\\pylabcalgui\\PowermaxWindow")
-from powermaxLiveWindowDialogWrapper import PowermaxWindow
-
-sys.path.append(r"pylablib\\instruments")
-from CS260 import CS260
-from powermaxusb2 import Powermax
-from labjacku6 import Labjack
-
-
+from pylabcal.pylabcalgui.ManualWindow.manualWindowDialogWrapper2 import ManualWindow
+from pylabcal.pylabcalgui.AutomationWindow.automationWindowDialogWrapper import AutomationWindow
+from pylabcal.pylabcalgui.PowermaxWindow.powermaxLiveWindowDialogWrapper import PowermaxWindow
+from pylablib.instruments.CS260 import CS260
+from pylablib.instruments.powermaxusb2 import Powermax
+from pylablib.instruments.labjacku6 import Labjack
+import asyncio
+from qasync import QEventLoop
 ###################################################################################################
 
 
@@ -63,8 +53,7 @@ class MainWindow:
 
 # Miscellaneous helper functions/variables ###################################################################
 FILTER_MAP = {"No OSF": 4, "OSF1": 1, "OSF2": 2, "OSF3": 3}
-
-
+SHUTTER_MAP = {"Open": "O", "Closed": "C"}
 ##############################################################################################################
 
 
@@ -205,6 +194,16 @@ class SpectralCalibrationMachine:
         self.control_gui.tabs["Manual"].set_parameters({"Monochromator": mono_params})
         ###################################################################################
 
+        # Initialize housekeeping window ##################################################
+        """
+        get_task = asyncio.create_task(self.powermax.get_parameters("active wavelength"))
+        await get_task
+        active_wave = get_task.result()
+        print(active_wave)
+        self.hk_gui.tabs["Powermax"].set_parameters({"active wavelength": active_wave["active wavelength"]})
+        """
+        ###################################################################################
+
         # If all initializations were successful, transition to the Waiting state
         if init_success:
             action_dict['state_machine'].init_to_wait()
@@ -291,14 +290,17 @@ class SpectralCalibrationMachine:
         params = action_dict["params"]
         self.control_loop_index = 0
         if params["Manual"]:
-            if "Lock-In" in params:
-                measuring_control_loop = [params]
-            else:
-                measuring_control_loop = None
             moving_control_loop = [{"Monochromator": {"wavelength": float(params["Monochromator"]["wavelength"]),
                                                       "filter": FILTER_MAP[params["Monochromator"]["filter"]],
                                                       "grating": int(params["Monochromator"]["grating"][-1]),
                                                       "shutter": params["Monochromator"]["shutter"][0]}}]
+            if "Lock-In" in params:
+                measuring_control_loop = [params]
+            else:
+                measuring_control_loop = None
+
+            writing_control_loop = None
+
             self.control_loop_length = 1
         else:
             # Build monochromator control loop parameters ############################################################
@@ -306,6 +308,9 @@ class SpectralCalibrationMachine:
             # wavelengths ##
             mono_waves = [np.arange(float(m["start wavelength"]), float(m["stop wavelength"]), float(m["step size"]))
                           for m in mono_params]
+            # shutters ##
+            mono_shutters = [[mono_params[i]["shutter"] for n in range(len(mono_waves[i]))]
+                              for i in range(len(mono_params))]
             # gratings ##
             g1g2_transitions = [float(m["g1 to g2 transition wavelength"]) for m in mono_params]
             g2g3_transitions = [float(m["g2 to g3 transition wavelength"]) for m in mono_params]
@@ -402,6 +407,7 @@ class SpectralCalibrationMachine:
             mono_waves = [w for wave_arr in mono_waves for w in wave_arr]
             mono_gratings = [int(g[-1]) for g_arr in mono_gratings for g in g_arr]
             mono_filters = [FILTER_MAP[f] for f_arr in mono_filters for f in f_arr]
+            mono_shutters = [SHUTTER_MAP[s] for s_arr in mono_shutters for s in s_arr]
 
             lockin_fs = [fs for fs_arr in lockin_fs for fs in fs_arr]
             lockin_ts = [ts for ts_arr in lockin_ts for ts in ts_arr]
@@ -426,7 +432,7 @@ class SpectralCalibrationMachine:
 
             moving_control_loop = [{
                 "Monochromator": {"wavelength": mono_waves[i], "grating": mono_gratings[i],
-                                  "filter": mono_filters[i], "shutter": "O"},
+                                  "filter": mono_filters[i], "shutter": mono_shutters[i]},
 
                 "Lock-In": {"sensitivity": lockin_sensitivites[i], "time constant": lockin_tc[i]}
             }
@@ -435,6 +441,7 @@ class SpectralCalibrationMachine:
 
             # Construct control loop for the measuring action ########################################################
             measuring_control_loop = [{
+                "Monochromator": {"wavelength": mono_waves[i]},
                 "Lock-In": {"sample rate": lockin_fs[i], "sample time": lockin_ts[i]}
             }
                 for i in range(len(mono_waves))]
@@ -470,9 +477,10 @@ class SpectralCalibrationMachine:
             Move all instruments into the desired state for a measurement.
         """
         if not self.control_loop_index < self.control_loop_length:
-            self.hk_task_gui_control = True
-            if self.powermax.logging:
-                await self.powermax.off_data_log()
+            if not self.hk_task_gui_control:
+                self.hk_task_gui_control = True
+                if self.powermax.logging:
+                    await self.powermax.off_data_log()
             action_dict["state_machine"].control_loop_complete()
         else:
             move_params = action_dict["params"][self.control_loop_index]
@@ -482,10 +490,10 @@ class SpectralCalibrationMachine:
                     get_task = asyncio.create_task(self.monochromator.get_parameters("All"))
                     await get_task
                     cur_mono = get_task.result()
-                    if cur_mono["shutter"] != inst_params["shutter"]:
-                        shutter_task = asyncio.create_task(
-                            self.monochromator.set_parameters({"shutter": inst_params["shutter"]}))
+                    if cur_mono["shutter"] != "C":
+                        shutter_task = asyncio.create_task(self.monochromator.set_parameters({"shutter": "C"}))
                         await shutter_task
+                        cur_mono["shutter"] = "C"
                     if cur_mono["grating"] != inst_params["grating"]:
                         grating_task = asyncio.create_task(
                             self.monochromator.set_parameters({"grating": inst_params["grating"]}))
@@ -496,10 +504,12 @@ class SpectralCalibrationMachine:
                         await filter_task
                     if cur_mono["wavelength"] != inst_params["wavelength"]:
                         wave = float(inst_params["wavelength"])
-                        wave_task = asyncio.gather(
-                            self.monochromator.set_parameters({"wavelength": wave}),
-                            self.powermax.set_parameters({"active wavelength": wave}))
+                        wave_task = asyncio.create_task(self.monochromator.set_parameters({"wavelength": wave}))
                         await wave_task
+                    if cur_mono["shutter"] != inst_params["shutter"]:
+                        shutter_task = asyncio.create_task(
+                            self.monochromator.set_parameters({"shutter": inst_params["shutter"]}))
+                        await shutter_task
 
                     # Update monochromator display #
                     get_task = asyncio.create_task(self.monochromator.get_parameters("All"))
@@ -524,7 +534,12 @@ class SpectralCalibrationMachine:
         if measure:
             # Turn off users ability to control hk acquisition
             self.hk_task_gui_control = False
-
+            new_active_wave = float(measure_params["Monochromator"]["wavelength"]) * 1e3
+            await self.powermax.set_parameters({"active wavelength": new_active_wave})
+            get_task = asyncio.create_task(self.powermax.get_parameters("active wavelength"))
+            await get_task
+            active_wave = float(get_task.result()["active wavelength"]) * 1e-3
+            self.hk_gui.tabs["Powermax"].set_parameters({"active wavelength": str(active_wave)})
             start_time = Housekeeping.time_sync_method()
             if not self.powermax.logging:
                 await self.powermax.on_data_log()
@@ -544,45 +559,46 @@ class SpectralCalibrationMachine:
         action_dict["state_machine"].control_loop_next()
 
     async def writing_action(self, action_dict):
-        powermax_params = action_dict["params"]["Powermax"]
-        control_loop_params = action_dict["params"]["Control Loop"][self.control_loop_index]
-        metadata_params = control_loop_params["metadata configuration"]
-        sequence_name = control_loop_params["sequence name"]
+        if action_dict["params"] is not None:
+            powermax_params = action_dict["params"]["Powermax"]
+            control_loop_params = action_dict["params"]["Control Loop"][self.control_loop_index]
+            metadata_params = control_loop_params["metadata configuration"]
+            sequence_name = control_loop_params["sequence name"]
 
-        write_dict = {"Sequence Name": sequence_name, "Monochromator": {}, "Powermax": {}}
+            write_dict = {"Sequence Name": sequence_name, "Monochromator": {}, "Powermax": {}}
 
-        get_task = asyncio.create_task(self.monochromator.get_parameters("All"))
-        await get_task
+            get_task = asyncio.create_task(self.monochromator.get_parameters("All"))
+            await get_task
 
-        mono_params = get_task.result()
-        if metadata_params["wavelength"]:
-            write_dict["Monochromator"]["wavelength"] = mono_params["wavelength"]
-        if metadata_params["grating"]:
-            write_dict["Monochromator"]["grating"] = mono_params["grating"]
-        if metadata_params["osf"]:
-            write_dict["Monochromator"]["order sort filter"] = mono_params["filter"]
-        if metadata_params["shutter"]:
-            write_dict["Monochromator"]["shutter"] = mono_params["shutter"]
+            mono_params = get_task.result()
+            if metadata_params["wavelength"]:
+                write_dict["Monochromator"]["wavelength"] = mono_params["wavelength"]
+            if metadata_params["grating"]:
+                write_dict["Monochromator"]["grating"] = mono_params["grating"]
+            if metadata_params["osf"]:
+                write_dict["Monochromator"]["order sort filter"] = mono_params["filter"]
+            if metadata_params["shutter"]:
+                write_dict["Monochromator"]["shutter"] = mono_params["shutter"]
 
-        write_dict["Powermax"]["time-stamp"] = list(powermax_params["Time-stamp"].values)
-        write_dict["Powermax"]["watts"] = list(powermax_params["Watts"].values)
-        write_dict["Powermax"]["wavelength"] = list(powermax_params["Wavelength"].values)
+            write_dict["Powermax"]["time-stamp"] = list(powermax_params["Time-stamp"].values)
+            write_dict["Powermax"]["watts"] = list(powermax_params["Watts"].values)
+            write_dict["Powermax"]["wavelength"] = list(powermax_params["Wavelength"].values)
 
-        file_path = control_loop_params["save path"] + datetime.datetime.now().strftime("%y-%m-%d") + ".json"
+            file_path = control_loop_params["save path"] + datetime.datetime.now().strftime("%y-%m-%d") + ".json"
 
-        try:
-            f = open(file_path, 'r+')
-        except FileNotFoundError as e:
-            f = open(file_path, 'a')
-            f.write('{\n "Measurements": [] \n}')
+            try:
+                f = open(file_path, 'r+')
+            except FileNotFoundError as e:
+                f = open(file_path, 'a')
+                f.write('{\n "Measurements": [] \n}')
+                f.close()
+                f = open(file_path, 'r+')
+
+            json_file = json.load(f)
+            json_file["Measurements"].append(write_dict)
+            f.seek(0)
+            json.dump(json_file, f, indent=2)
             f.close()
-            f = open(file_path, 'r+')
-
-        json_file = json.load(f)
-        json_file["Measurements"].append(write_dict)
-        f.seek(0)
-        json.dump(json_file, f, indent=2)
-        f.close()
 
         action_dict["state_machine"].control_loop_next()
 

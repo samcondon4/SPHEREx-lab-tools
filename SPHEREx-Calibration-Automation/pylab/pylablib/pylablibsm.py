@@ -1,5 +1,4 @@
 import asyncio
-from inspect import signature
 from transitions import Machine
 
 

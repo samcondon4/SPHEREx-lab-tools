@@ -324,11 +324,8 @@
      </widget>
      <widget class="QWidget" name="SequenceParametersWindow">
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="15" column="1">
-        <widget class="QLineEdit" name="sequence_lockin_timeconstant_ledit"/>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="sequence_monochromator_stepsize_label">
+       <item row="8" column="0">
+        <widget class="QLabel" name="sequence_monochromator_g2g3_label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -336,24 +333,20 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Step Size (um.): </string>
+          <string>G2 to G3 Transition Wavelength (um.):</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="sequence_monochromator_endwave_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>End Wavelength (um.): </string>
-         </property>
-        </widget>
+       <item row="8" column="1">
+        <widget class="QLineEdit" name="sequence_monochromator_g2g3_ledit"/>
        </item>
-       <item row="10" column="0">
+       <item row="17" column="1">
+        <widget class="QLineEdit" name="sequence_lockin_sensitivity_ledit"/>
+       </item>
+       <item row="11" column="1">
+        <widget class="QLineEdit" name="sequence_monochromator_osf2osf3_ledit"/>
+       </item>
+       <item row="11" column="0">
         <widget class="QLabel" name="sequence_monochromator_osf2osf3_label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -366,7 +359,20 @@
          </property>
         </widget>
        </item>
-       <item row="15" column="0">
+       <item row="5" column="1">
+        <widget class="QLineEdit" name="sequence_monochromator_stepsize_ledit"/>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLineEdit" name="sequence_monochromator_noosfosf1_ledit"/>
+       </item>
+       <item row="17" column="0">
+        <widget class="QLabel" name="sequence_lockin_sensitivity_label">
+         <property name="text">
+          <string>Sensitivity String:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="0">
         <widget class="QLabel" name="sequence_lockin_timeconstant_label">
          <property name="text">
           <string>Time Constant (s.):</string>
@@ -380,148 +386,18 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="1">
-        <widget class="QLineEdit" name="sequence_monochromator_osf2osf3_ledit"/>
-       </item>
-       <item row="7" column="1">
-        <widget class="QLineEdit" name="sequence_monochromator_g2g3_ledit"/>
-       </item>
-       <item row="16" column="0">
-        <widget class="QLabel" name="sequence_lockin_sensitivity_label">
-         <property name="text">
-          <string>Sensitivity String:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="sequence_monochromator_startwave_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Start Wavelength (um.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="sequence_monochromator_noosfosf1_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>No OSF to OSF1 Transition Wavelength (um.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QLineEdit" name="sequence_monochromator_noosfosf1_ledit"/>
-       </item>
        <item row="4" column="1">
         <widget class="QLineEdit" name="sequence_monochromator_endwave_ledit"/>
        </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="sequence_monochromator_g2g3_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>G2 to G3 Transition Wavelength (um.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="QLineEdit" name="sequence_lockin_sampletime_ledit"/>
-       </item>
-       <item row="12" column="0" colspan="2">
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="sequence_monochromator_g1g2_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>G1 to G2 Transition Wavelength (um.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="0">
+       <item row="15" column="0">
         <widget class="QLabel" name="sequence_lockin_sampletime_label">
          <property name="text">
           <string>Sample Time (s.):</string>
          </property>
         </widget>
        </item>
-       <item row="6" column="1">
-        <widget class="QLineEdit" name="sequence_monochromator_g1g2_ledit"/>
-       </item>
-       <item row="3" column="1">
-        <widget class="QLineEdit" name="sequence_monochromator_startwave_ledit"/>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="sequence_monochromator_osf1osf2_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>OSF1 to OSF2 Transition Wavelength (um.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QLabel" name="sequence_lockin_label">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Lock-In:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
+       <item row="10" column="1">
         <widget class="QLineEdit" name="sequence_monochromator_osf1osf2_ledit"/>
-       </item>
-       <item row="16" column="1">
-        <widget class="QLineEdit" name="sequence_lockin_sensitivity_ledit"/>
-       </item>
-       <item row="13" column="0">
-        <widget class="QLabel" name="sequence_lockin_samplefreq_label">
-         <property name="text">
-          <string>Sample Frequency (Hz.):</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="sequence_monochromator_stepsize_ledit"/>
        </item>
        <item row="0" column="0">
         <widget class="QLabel" name="sequence_monochromator_label">
@@ -543,7 +419,69 @@
          </property>
         </widget>
        </item>
-       <item row="13" column="1">
+       <item row="9" column="0">
+        <widget class="QLabel" name="sequence_monochromator_noosfosf1_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>No OSF to OSF1 Transition Wavelength (um.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="sequence_monochromator_startwave_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Start Wavelength (um.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="sequence_monochromator_startwave_ledit"/>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLineEdit" name="sequence_monochromator_g1g2_ledit"/>
+       </item>
+       <item row="13" column="0" colspan="2">
+        <widget class="Line" name="line_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0">
+        <widget class="QLabel" name="sequence_lockin_samplefreq_label">
+         <property name="text">
+          <string>Sample Frequency (Hz.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1">
+        <widget class="QLineEdit" name="sequence_lockin_sampletime_ledit"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="sequence_monochromator_stepsize_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Step Size (um.): </string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
         <widget class="QComboBox" name="sequence_lockin_samplerate_combobox">
          <property name="currentText">
           <string>0.0625</string>
@@ -618,6 +556,89 @@
            <string>512</string>
           </property>
          </item>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="sequence_monochromator_g1g2_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>G1 to G2 Transition Wavelength (um.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1">
+        <widget class="QLineEdit" name="sequence_lockin_timeconstant_ledit"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="sequence_monochromator_endwave_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>End Wavelength (um.): </string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="sequence_monochromator_osf1osf2_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>OSF1 to OSF2 Transition Wavelength (um.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="sequence_lockin_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Lock-In:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QComboBox" name="sequence_monochromator_shutter_combobox">
+         <item>
+          <property name="text">
+           <string>Open</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Closed</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="sequence_monochromator_shutter_label">
+         <property name="text">
+          <string>Shutter</string>
+         </property>
         </widget>
        </item>
       </layout>

@@ -6,7 +6,6 @@
 Sam Condon, 07/04/2021
 """
 import asyncio
-import pandas as pd
 
 
 class Housekeeping:
