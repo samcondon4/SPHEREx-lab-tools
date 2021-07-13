@@ -128,7 +128,7 @@ class Powermax(Instrument, Housekeeping):
         if self.log_df is None:
             try:
                 self.log_df = pd.read_csv(self.log_path)
-            except pd.errors.EmptyDataError as e:
+            except (pd.errors.EmptyDataError, FileNotFoundError) as e:
                 header = True
             else:
                 header = False

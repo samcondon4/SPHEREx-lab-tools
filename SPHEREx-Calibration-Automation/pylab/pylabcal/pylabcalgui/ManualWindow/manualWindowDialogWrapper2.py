@@ -22,13 +22,19 @@ class ManualWindow(Ui_Form, GuiTab):
         ##Configure parameters#####################################################################################
         self.add_parameter("Monochromator", self.get_monochromator_parameters, self.set_monochromator_parameters)
         self.add_parameter("Lock-In", self.get_lockin_parameters, self.set_lockin_parameters)
-        self.add_parameter("LabJack", self.get_labjack_parameters, self.set_lockin_parameters)
+        self.add_parameter("LabJack", self.get_labjack_parameters, self.set_labjack_parameters)
         ###########################################################################################################
 
         ##Connect buttons to methods #######################################################################
         self.manual_monochromator_setparams_button.clicked.connect(self._on_Set_Monochromator_Parameters)
         self.manual_lockin_setparams_button.clicked.connect(self._on_Set_Lockin_Parameters)
         self.manual_lockin_startmeasurement_button.clicked.connect(self._on_Start_Measurement)
+        self.manual_labjack_dio0state_check.stateChanged.connect(self._on_dio0state_Changed)
+        self.manual_labjack_dio1state_check.stateChanged.connect(self._on_dio1state_Changed)
+        self.manual_labjack_dio2state_check.stateChanged.connect(self._on_dio2state_Changed)
+        self.manual_labjack_dio0config_cbox.currentIndexChanged.connect(self._on_dio0config_Changed)
+        self.manual_labjack_dio1config_cbox.currentIndexChanged.connect(self._on_dio1config_Changed)
+        self.manual_labjack_dio2config_cbox.currentIndexChanged.connect(self._on_dio2config_Changed)
         #####################################################################################################
 
     # PARAMETER GETTERS/SETTERS########################################################################################
@@ -234,7 +240,6 @@ class ManualWindow(Ui_Form, GuiTab):
     ##################################################################################################################
 
     ##PRIVATE METHODS################################################################################################
-
     # Button Methods#####
     def _on_Set_Monochromator_Parameters(self):
         """_on_Set_Parameters: Add the Set Parameters button identifier to button queue
@@ -263,6 +268,58 @@ class ManualWindow(Ui_Form, GuiTab):
         :return: None
         """
         self.button_queue.put("Start Measurement")
+
+    def _on_dio0state_Changed(self):
+        """_on_dio0state_Changed: Execute when the dio0 check state changes. Place "Checked" or "Unchecked" on the
+           button queue depending on the new checkbox state.
+
+        :return: None
+        """
+        if self.manual_labjack_dio0state_check.checkState():
+            self.button_queue.put("Labjack Dio0 Checked")
+        else:
+            self.button_queue.put("Labjack Dio0 Unchecked")
+
+    def _on_dio1state_Changed(self):
+        """_on_dio1state_Changed: Execute when the dio0 check state changes. Place "Checked" or "Unchecked" on the
+           button queue depending on the new checkbox state.
+
+        :return: None
+        """
+        if self.manual_labjack_dio1state_check.checkState():
+            self.button_queue.put("Labjack Dio1 Checked")
+        else:
+            self.button_queue.put("Labjack Dio1 Unchecked")
+
+    def _on_dio2state_Changed(self):
+        """_on_dio2state_Changed: Execute when the dio0 check state changes. Place "Checked" or "Unchecked" on the
+           button queue depending on the new checkbox state.
+
+        :return: None
+        """
+        if self.manual_labjack_dio2state_check.checkState():
+            self.button_queue.put("Labjack Dio2 Checked")
+        else:
+            self.button_queue.put("Labjack Dio2 Unchecked")
+
+    def _on_dio0config_Changed(self):
+        """_on_dio0config_Changed: Set labjack dio 0 to either input or output depending on user gui input.
+
+        """
+        self.button_queue.put("Labjack Config Dio0 {}".format(self.manual_labjack_dio0config_cbox.currentText()))
+
+    def _on_dio1config_Changed(self):
+        """_on_dio1config_Changed: Set labjack dio 1 to either input or output depending on user gui input.
+
+        """
+        self.button_queue.put("Labjack Config Dio1 {}".format(self.manual_labjack_dio1config_cbox.currentText()))
+
+    def _on_dio2config_Changed(self):
+        """_on_dio2config_Changed: Set labjack dio 0 to either input or output depending on user gui input.
+
+        """
+        self.button_queue.put("Labjack Config Dio2 {}".format(self.manual_labjack_dio2config_cbox.currentText()))
+
     #################################################################################################################
 
 

@@ -86,11 +86,13 @@ class Labjack(Instrument):
         :return: None
         """
         for dio in dios_cfg_dict:
+            write = False
             if dios_cfg_dict[dio] == "Output":
                 write = 1
-            else:
+            elif dios_cfg_dict[dio] == "Input":
                 write = 0
-            self.com.getFeedback(u6.BitDirWrite(dio, write))
+            if write is not False:
+                self.com.getFeedback(u6.BitDirWrite(dio, write))
 
     def get_dio_state(self, dios="All"):
         """get_dio:

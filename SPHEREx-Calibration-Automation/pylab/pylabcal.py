@@ -174,16 +174,19 @@ class SpectralCalibrationMachine:
         #######################################################################
 
         # Initialize labjack dio ports and gui control window #############################
-        dio_cfg_init = {}
-        dio_state_init = {}
+        dio_cfg_init = {"dio config": {}}
+        dio_state_init = {"dio state": {}}
         dio_init = {}
         for i in range(22):
-            dio_cfg_init[i] = "Output"
-            dio_state_init[i] = 0
+            dio_cfg_init["dio config"][i] = "Output"
+            dio_state_init["dio state"][i] = 0
             dio_init[i] = {"State": 0, "Config": "Output"}
-        self.labjack.set_dio_config(dio_cfg_init)
-        self.labjack.set_dio_state(dio_state_init)
+        await self.labjack.set_parameters(dio_cfg_init)
+        await self.labjack.set_parameters(dio_state_init)
 
+        get_task = asyncio.create_task(self.labjack.get_parameters("All"))
+        await get_task
+        print(get_task.result())
         self.control_gui.tabs["Manual"].set_parameters({"LabJack": dio_init})
         ###################################################################################
 
@@ -243,6 +246,39 @@ class SpectralCalibrationMachine:
                 action_dict["state_machine"].set_action_parameters("Thinking", "thinking_action_0", thinking_params)
                 self.waiting_complete = True
                 complete_set = True
+
+            elif type(manual_press) is str and "Labjack" in manual_press:
+                lj_input = manual_press.split("Labjack ")[1]
+                if lj_input == "Dio0 Checked":
+                    await self.labjack.set_parameters({"dio state": {0: 1}})
+                elif lj_input == "Dio0 Unchecked":
+                    await self.labjack.set_parameters({"dio state": {0: 0}})
+                elif lj_input == "Dio1 Checked":
+                    await self.labjack.set_parameters({"dio state": {1: 1}})
+                elif lj_input == "Dio1 Unchecked":
+                    await self.labjack.set_parameters({"dio state": {1: 0}})
+                elif lj_input == "Dio2 Checked":
+                    await self.labjack.set_parameters({"dio state": {2: 1}})
+                elif lj_input == "Dio2 Unchecked":
+                    await self.labjack.set_parameters({"dio state": {2: 0}})
+                elif lj_input == "Dio3 Checked":
+                    await self.labjack.set_parameters({"dio state": {3: 1}})
+                elif lj_input == "Dio3 Unchecked":
+                    await self.labjack.set_parameters({"dio state": {3: 0}})
+                elif "Config" in lj_input:
+                    lj_config = lj_input.split("Config ")[1]
+                    if lj_config == "Dio0 Output":
+                        await self.labjack.set_parameters({"dio config": {0: "Output"}})
+                    elif lj_config == "Dio0 Input":
+                        await self.labjack.set_parameters({"dio config": {0: "Input"}})
+                    elif lj_config == "Dio1 Output":
+                        await self.labjack.set_parameters({"dio config": {1: "Output"}})
+                    elif lj_config == "Dio1 Input":
+                        await self.labjack.set_parameters({"dio config": {1: "Input"}})
+                    elif lj_config == "Dio2 Output":
+                        await self.labjack.set_parameters({"dio config": {2: "Output"}})
+                    elif lj_config == "Dio2 Input":
+                        await self.labjack.set_parameters({"dio config": {2: "Input"}})
 
             await asyncio.sleep(0.001)
 

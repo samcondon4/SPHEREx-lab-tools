@@ -8,6 +8,7 @@ Sam Condon, 06/30/2021
 """
 import asyncio
 
+
 class Instrument:
 
     def __init__(self, identifier=None):
