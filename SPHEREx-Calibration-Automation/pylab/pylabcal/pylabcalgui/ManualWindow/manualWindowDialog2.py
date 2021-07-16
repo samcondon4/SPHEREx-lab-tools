@@ -2,18 +2,16 @@
 
 # Form implementation generated from reading ui file 'manualWindowDialog2.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.3
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(566, 482)
+        Form.resize(1246, 1483)
         self.gridLayout = QtWidgets.QGridLayout(Form)
         self.gridLayout.setObjectName("gridLayout")
         self.stackedWidget = QtWidgets.QStackedWidget(Form)
@@ -303,15 +301,15 @@ class Ui_Form(object):
         self.line_2.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line_2.setObjectName("line_2")
         self.gridLayout_3.addWidget(self.line_2, 14, 0, 1, 2)
-        self.lineEdit = QtWidgets.QLineEdit(self.LockInControl)
-        self.lineEdit.setEnabled(False)
+        self.manual_lockin_sensitivity_ledit = QtWidgets.QLineEdit(self.LockInControl)
+        self.manual_lockin_sensitivity_ledit.setEnabled(False)
         font = QtGui.QFont()
         font.setPointSize(8)
-        self.lineEdit.setFont(font)
-        self.lineEdit.setReadOnly(False)
-        self.lineEdit.setClearButtonEnabled(False)
-        self.lineEdit.setObjectName("lineEdit")
-        self.gridLayout_3.addWidget(self.lineEdit, 3, 0, 1, 1)
+        self.manual_lockin_sensitivity_ledit.setFont(font)
+        self.manual_lockin_sensitivity_ledit.setReadOnly(False)
+        self.manual_lockin_sensitivity_ledit.setClearButtonEnabled(False)
+        self.manual_lockin_sensitivity_ledit.setObjectName("manual_lockin_sensitivity_ledit")
+        self.gridLayout_3.addWidget(self.manual_lockin_sensitivity_ledit, 3, 0, 1, 1)
         self.label_10 = QtWidgets.QLabel(self.LockInControl)
         font = QtGui.QFont()
         font.setBold(True)
@@ -350,11 +348,11 @@ class Ui_Form(object):
         self.manual_lockin_sampletime_ledit = QtWidgets.QLineEdit(self.LockInControl)
         self.manual_lockin_sampletime_ledit.setObjectName("manual_lockin_sampletime_ledit")
         self.gridLayout_3.addWidget(self.manual_lockin_sampletime_ledit, 17, 1, 1, 1)
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.LockInControl)
-        self.lineEdit_2.setEnabled(False)
-        self.lineEdit_2.setReadOnly(False)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.gridLayout_3.addWidget(self.lineEdit_2, 3, 1, 1, 1)
+        self.manual_lockin_timeconstant_ledit = QtWidgets.QLineEdit(self.LockInControl)
+        self.manual_lockin_timeconstant_ledit.setEnabled(False)
+        self.manual_lockin_timeconstant_ledit.setReadOnly(False)
+        self.manual_lockin_timeconstant_ledit.setObjectName("manual_lockin_timeconstant_ledit")
+        self.gridLayout_3.addWidget(self.manual_lockin_timeconstant_ledit, 3, 1, 1, 1)
         self.line = QtWidgets.QFrame(self.LockInControl)
         self.line.setFrameShape(QtWidgets.QFrame.HLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
@@ -797,3 +795,4 @@ if __name__ == "__main__":
     ui.setupUi(Form)
     Form.show()
     sys.exit(app.exec_())
+

@@ -77,7 +77,7 @@ class PowermaxWindow(Ui_Form, GuiTab):
     def get_data(self):
         return self.ydata
 
-    def set_data_append(self, data_append, max_length=150):
+    def set_data_append(self, data_append, max_length=1500):
         self.ydata.append(data_append)
         if len(self.xdata) == 0:
             self.xdata.append(0)
@@ -90,6 +90,7 @@ class PowermaxWindow(Ui_Form, GuiTab):
 
         self.power_plot.axes.cla()
         self.power_plot.axes.plot(self.xdata, self.ydata)
+        self.power_plot.axes.set_ylim(bottom=-1*1e-3, top=1e-3)
         self.power_plot.axes.set_xlabel("Time (a.u.)")
         self.power_plot.axes.set_ylabel("Watts")
 

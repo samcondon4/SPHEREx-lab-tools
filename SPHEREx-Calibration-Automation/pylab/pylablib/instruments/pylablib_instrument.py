@@ -87,10 +87,8 @@ class Instrument:
     async def get_parameters(self, params):
         """get_parameters: return the specified instrument parameters as a dictionary
 
-                            **ASYNCHRONOUS GETTERS NOT YET SUPPORTED. THIS FEATURE WILL BE IMPLEMENTED IF THE
-                            NEED ARISES**
-
-        :param params: dictionary with keys and values of parameters to update
+        :param params: string, list of strings, or "All" to specify which parameters
+                       to query.
         :return: parameters dictionary
         """
         coro_list = {}

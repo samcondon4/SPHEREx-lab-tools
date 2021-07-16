@@ -64,5 +64,5 @@ class Housekeeping:
                 await cls.log_methods[method]["lock"].acquire()
                 cls.log_methods[method]["method"]()
                 cls.log_methods[method]["lock"].release()
-            await asyncio.sleep(0.2)
+            await asyncio.sleep(2)
 

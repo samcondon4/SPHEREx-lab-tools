@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="MonochromatorControl">
       <layout class="QGridLayout" name="gridLayout_2">
@@ -598,7 +598,7 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLineEdit" name="lineEdit">
+        <widget class="QLineEdit" name="manual_lockin_sensitivity_ledit">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -697,7 +697,7 @@
         <widget class="QLineEdit" name="manual_lockin_sampletime_ledit"/>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="lineEdit_2">
+        <widget class="QLineEdit" name="manual_lockin_timeconstant_ledit">
          <property name="enabled">
           <bool>false</bool>
          </property>

@@ -44,7 +44,7 @@
 
 The SPHEREx Test and Calibration Control and Archive Software provides a set of graphical user interface based tools allowing a user to interface with the suite of spectral and focus calibration instrumentation to specify automated measurement runs or manually control instruments in a measurement setup. This document provides a practical guide on how to use this GUI toolset in the SPHEREx test and calibration lab.
 
-\textbf{Information here on how to get the software running on the b111 lab computer.}
+To run the most recent version of the GUI, navigate to the \textbf{SPHEREx-Test-Cal} folder located on the desktop of the b111-lab Lenovo laptop and double click the SpectralCalControl\_dev\_version.sh file after following the hardware setup instructions found in Appendix \ref{HW Setup Appendix}. 
 
 Once the executable has started running, you should see two windows appear that are similar to what is seen in figure \ref{Main GUI}. One window is titled the \emph{Housekeeping Window} while the other is the \emph{Control Window}. As can be readily inferred from these titles, the \emph{Control Window} can be used to control lab instrumentation and set up automated measurement runs, while the \emph{Housekeeping Window} displays live time-streams of continuously sampled data.
 
@@ -62,11 +62,17 @@ As mentioned above, the \emph{Control Window} can be used to manually control in
 \label{Automation Window Tabs Highlighted}
 \centering
 \includegraphics[width=0.7\linewidth]{./images/AutomationWindow_TabsHighlighted.png}
+\caption{Control window with Automation and Manual tabs highlighted.}
 \end{figure}
 
 \subsection{Automation Tab}
 
-Within the \emph{Control Window}, the \emph{Automation Tab} is used to setup and control entire measurement automation runs.
+Within the \emph{Control Window}, the \emph{Automation Tab} is used to setup and control entire automated measurement runs. The building blocks of an automation run are coined the \emph{Sequence} and the \emph{Series}. These terms are defined below:
+
+\begin{enumerate}
+	\item \textbf{Sequence}: A set of parameters specifying automated measurement actions to take and metadata to include in the final data package.
+	\item \textbf{Series}: A collection of sequences. Used to specify an entire automation run.
+\end{enumerate}
 
 \subsection{Manual Tab}
 
@@ -74,6 +80,7 @@ Within the \emph{Control Window}, the \emph{Automation Tab} is used to setup and
 	
 \section{Instruments Supported}
 	
-	
+\appendix
+\section{Hardware Setup} \label{HW Setup Appendix}	
 	
 \end{document}
