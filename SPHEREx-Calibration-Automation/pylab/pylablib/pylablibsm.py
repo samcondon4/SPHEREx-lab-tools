@@ -135,9 +135,6 @@ class SM:
                 None
         """
         for p in params_dict:
-            print(p)
-            print(params_dict[p])
-            print(self.state_params[state][action_name])
             self.state_params[state][action_name][p] = params_dict[p]
 
     def clear_action_parameters(self, state, action_name):

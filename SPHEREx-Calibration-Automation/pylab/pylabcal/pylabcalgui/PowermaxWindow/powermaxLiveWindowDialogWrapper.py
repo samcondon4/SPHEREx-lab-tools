@@ -90,7 +90,7 @@ class PowermaxWindow(Ui_Form, GuiTab):
 
         self.power_plot.axes.cla()
         self.power_plot.axes.plot(self.xdata, self.ydata)
-        self.power_plot.axes.set_ylim(bottom=-1*1e-3, top=1e-3)
+        #self.power_plot.axes.set_ylim(bottom=-1*1e-3, top=1e-3)
         self.power_plot.axes.set_xlabel("Time (a.u.)")
         self.power_plot.axes.set_ylabel("Watts")
 

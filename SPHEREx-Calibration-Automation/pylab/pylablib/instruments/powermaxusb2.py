@@ -8,8 +8,6 @@ Sam Condon, 07/02/2021
 
 import pyvisa
 import pandas as pd
-import numpy as np
-from datetime import datetime
 from pylablib.instruments.pylablib_instrument import Instrument
 from pylablib.housekeeping import Housekeeping
 
@@ -45,9 +43,6 @@ class Powermax(Instrument, Housekeeping):
         self.set_log_path(log_path)
         self.set_log_method("Powermax", self.log_data)
         #####################################################
-
-        # log file reference #
-        self.log_df = None
 
     def open_com(self):
         '''open_com:
@@ -125,24 +120,6 @@ class Powermax(Instrument, Housekeeping):
         time = Housekeeping.time_sync_method()
         write_df = pd.DataFrame(
             {"Time-stamp": [time], "Watts": [data], "Wavelength": [float(self.get_wavelength()) * 1e-3]})
-        if self.log_df is None:
-            try:
-                self.log_df = pd.read_csv(self.log_path)
-            except (pd.errors.EmptyDataError, FileNotFoundError) as e:
-                header = True
-            else:
-                header = False
-        else:
-            header = False
-        write_df.to_csv(self.log_path, mode='a', header=header, index=False)
+        self.append_to_log(write_df)
 
-    def get_log(self, start=None, end=None, final_val=False):
-        df = pd.read_csv(self.log_path)
-        if final_val:
-            df = df.iloc[-1]
-        else:
-            time_stamps = [datetime.strptime(ts, "%Y-%m-%d %H:%M:%S.%f") for ts in df["Time-stamp"].values]
-            indices = np.where([start < time_stamps[i] < end for i in range(len(time_stamps))])[0]
-            df = df.iloc[indices[0]:indices[-1]]
-        return df
     #############################################################################

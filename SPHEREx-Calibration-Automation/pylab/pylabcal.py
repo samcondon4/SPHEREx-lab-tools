@@ -23,9 +23,11 @@ from pylabcal.pylabcalgui.PowermaxWindow.powermaxLiveWindowDialogWrapper import 
 from pylablib.instruments.CS260 import CS260
 from pylablib.instruments.powermaxusb2 import Powermax
 from pylablib.instruments.labjacku6 import Labjack
-from pylablib.instruments.SRS830m import SRS830m
+from pylablib.instruments.SR830 import SR830
 import asyncio
 from qasync import QEventLoop
+
+
 ###################################################################################################
 
 
@@ -68,11 +70,11 @@ class SpectralCalibrationMachine:
     """
 
     def __init__(self, control_dialog, hk_dialog):
-        # Instruments##############
-        self.monochromator = None
+
+        # Instruments #############
         self.lock_in = None
+        self.monochromator = None
         self.labjack = None
-        ##########################
 
         # Gui initialization ###########################################################################################
         hk_tabs = [{"Qt": PowermaxWindow(), "id": "Powermax"}]
@@ -105,7 +107,7 @@ class SpectralCalibrationMachine:
         ###############################################################################################################
 
         # Start housekeeping #########################################
-        #self.hk_task = asyncio.create_task(self.run_housekeeping())
+        # self.hk_task = asyncio.create_task(self.run_housekeeping())
         # Flag to indicate if the hk task should control the hk gui
         self.hk_task_gui_control = True
         ###############################################################
@@ -121,16 +123,12 @@ class SpectralCalibrationMachine:
         :param: None
         :return: None
         """
-        # Initialize housekeeping class, instruments, and gui ###############
+
+        # Initialize housekeeping class ########################
         Housekeeping.time_sync_method = datetime.datetime.now
-        self.powermax = Powermax()
-        self.powermax.open()
-        get_task = asyncio.create_task(self.powermax.get_parameters("active wavelength"))
-        await get_task
-        active_wave = str(float(get_task.result()["active wavelength"]) * (1e-3))
-        self.hk_gui.tabs["Powermax"].set_parameters({"active wavelength": active_wave})
         Housekeeping.start()
-        #####################################################################
+
+        prev_time_stamp = None
 
         # Run housekeeping data logging and display ##############################################################
         while True:
@@ -138,22 +136,18 @@ class SpectralCalibrationMachine:
                 button = self.hk_gui.tabs["Powermax"].get_button()
 
                 if button == "Start Acquisition":
-                    active_wave = float(
-                        self.hk_gui.tabs["Powermax"].get_parameters("active wavelength")["active wavelength"]) \
-                                  * 1e3
-                    await self.powermax.set_parameters({"active wavelength": active_wave})
-                    await self.powermax.on_data_log()
+                    print(button)
+                    await self.lock_in.on_data_log()
 
                 elif button == "Stop Acquisition":
-                    await self.powermax.off_data_log()
+                    print(button)
+                    await self.lock_in.off_data_log()
 
-                elif button == "Zero Sensor":
-                    self.powermax.set_zero()
-
-            if self.powermax.logging:
-                data = self.powermax.get_log(final_val=True)
-                data = float(data["Watts"])
-                self.hk_gui.tabs["Powermax"].set_parameters({"data append": data})
+            if self.lock_in.logging:
+                data = await self.lock_in.get_log(final_val=True)
+                if prev_time_stamp is None or data["Time-Stamp"] != prev_time_stamp:
+                    data = float(data["Detector Voltage"])
+                    self.hk_gui.tabs["Powermax"].set_parameters({"data append": data})
 
             await asyncio.sleep(0.001)
         ############################################################################################################
@@ -171,7 +165,7 @@ class SpectralCalibrationMachine:
         # Initialize communication with all instruments in experiment setup ##
         self.monochromator = CS260()
         self.monochromator.open()
-        self.lock_in = SRS830m()
+        self.lock_in = SR830()
         self.lock_in.open()
         self.labjack = Labjack()
         self.labjack.open()
@@ -212,8 +206,8 @@ class SpectralCalibrationMachine:
         lockin_gui_dict = {
             "phase": phase,
             "reference frequency": ref_freq,
-            "sensitivity": "{}{}".format(sens["value"]*sens["multiplier"], sens["units"]),
-            "time-constant": "{}{}".format(tc["value"]*tc["multiplier"], tc["units"]),
+            "sensitivity": "{}{}".format(sens["value"] * sens["multiplier"], sens["units"]),
+            "time-constant": "{}{}".format(tc["value"] * tc["multiplier"], tc["units"]),
             "sample rate": str(fs),
             "sample time": "10"
         }
@@ -395,7 +389,7 @@ class SpectralCalibrationMachine:
                           for m in mono_params]
             # shutters ##
             mono_shutters = [[mono_params[i]["shutter"] for n in range(len(mono_waves[i]))]
-                              for i in range(len(mono_params))]
+                             for i in range(len(mono_params))]
             # gratings ##
             g1g2_transitions = [float(m["g1 to g2 transition wavelength"]) for m in mono_params]
             g2g3_transitions = [float(m["g2 to g3 transition wavelength"]) for m in mono_params]
@@ -447,11 +441,14 @@ class SpectralCalibrationMachine:
                                        for i in range(len(lockin_sens))]
             lockin_sensitivites = [[0 for w in waves] for waves in mono_waves]
             transition_ind = 0
+            print(lockin_sens_transitions)
             for wave_arr in mono_waves:
                 sens_ind = 0
                 i = 0
                 for w in wave_arr:
-                    if w > lockin_sens_transitions[transition_ind][i]:
+                    if len(lockin_sens_transitions[transition_ind]) == 1:
+                        pass
+                    elif w > lockin_sens_transitions[transition_ind][i]:
                         i += 1
                     lockin_sensitivites[transition_ind][sens_ind] = lockin_sens[transition_ind][i]
                     sens_ind += 1
@@ -474,8 +471,9 @@ class SpectralCalibrationMachine:
                                   for i in range(len(metadata_params))]
             metadata_lockin_tc = [[metadata_params[i]["lock-in time constant"] for n in range(len(mono_waves[i]))]
                                   for i in range(len(metadata_params))]
-            metadata_lockin_sensitivity = [[metadata_params[i]["lock-in sensitivity"] for n in range(len(mono_waves[i]))]
-                                           for i in range(len(metadata_params))]
+            metadata_lockin_sensitivity = [
+                [metadata_params[i]["lock-in sensitivity"] for n in range(len(mono_waves[i]))]
+                for i in range(len(metadata_params))]
             ##########################################################################################################
 
             # Sequence name control loop parameters ##################################################################
@@ -519,7 +517,8 @@ class SpectralCalibrationMachine:
                 "Monochromator": {"wavelength": mono_waves[i], "grating": mono_gratings[i],
                                   "filter": mono_filters[i], "shutter": mono_shutters[i]},
 
-                "Lock-In": {"sensitivity": lockin_sensitivites[i], "time constant": lockin_tc[i]}
+                "Lock-In": {"sensitivity": lockin_sensitivites[i], "time constant": lockin_tc[i],
+                            "sample rate": lockin_fs[i]}
             }
                 for i in range(len(mono_waves))]
             ##########################################################################################################
@@ -535,18 +534,18 @@ class SpectralCalibrationMachine:
             # Construct control loop for the writing action #########################################################
             writing_control_loop = {"Control Loop": [{"metadata configuration":
                                                           {"wavelength": metadata_waves[i],
-                                                            "osf": metadata_osf[i],
-                                                            "grating": metadata_gratings[i],
-                                                            "shutter": metadata_shutter[i],
-                                                            "lock-in fs": metadata_lockin_fs[i],
-                                                            "lock-in sample time": metadata_lockin_ts[i],
-                                                            "lock-in time constant": metadata_lockin_tc[i],
-                                                            "lock-in sensitivity": metadata_lockin_sensitivity[i]
+                                                           "osf": metadata_osf[i],
+                                                           "grating": metadata_gratings[i],
+                                                           "shutter": metadata_shutter[i],
+                                                           "lock-in fs": metadata_lockin_fs[i],
+                                                           "lock-in sample time": metadata_lockin_ts[i],
+                                                           "lock-in time constant": metadata_lockin_tc[i],
+                                                           "lock-in sensitivity": metadata_lockin_sensitivity[i]
                                                            },
-                                                        "sequence name": seq_names[i],
-                                                        "save path": save_paths[i]
+                                                      "sequence name": seq_names[i],
+                                                      "save path": save_paths[i]
                                                       }
-                                    for i in range(len(mono_waves))]}
+                                                     for i in range(len(mono_waves))]}
             #########################################################################################################
 
         # Pass control loop parameters to actions and start the control loop #########################################
@@ -562,10 +561,6 @@ class SpectralCalibrationMachine:
             Move all instruments into the desired state for a measurement.
         """
         if not self.control_loop_index < self.control_loop_length:
-            if not self.hk_task_gui_control:
-                self.hk_task_gui_control = True
-                if self.powermax.logging:
-                    await self.powermax.off_data_log()
             action_dict["state_machine"].control_loop_complete()
         else:
             move_params = action_dict["params"][self.control_loop_index]
@@ -606,7 +601,9 @@ class SpectralCalibrationMachine:
                     self.hk_gui.tabs["Powermax"].set_parameters({"active wavelength": str(new_mono["wavelength"])})
 
                 elif instrument == "Lock-In":
-                    print(move_params[instrument])
+                    move_params[instrument]["sensitivity"] = float(move_params[instrument]["sensitivity"])
+                    move_params[instrument]["time constant"] = float(move_params[instrument]["time constant"])
+                    move_params[instrument]["sample rate"] = float(move_params[instrument]["sample rate"])
                     await self.lock_in.set_parameters(move_params[instrument])
                     new_params = await self.lock_in.get_parameters("All")
                     for key in new_params:
@@ -622,9 +619,8 @@ class SpectralCalibrationMachine:
         # Lockin Measuring ###############################################################################
         if params is not None:
             measure_params = params[self.control_loop_index]
-            print(measure_params)
-            data_array = await self.lock_in.measure(measure_params["Lock-In"]["sample time"])
-            print(data_array)
+            data_dict = await self.lock_in.measure(float(measure_params["Lock-In"]["sample time"]))
+            action_dict["state_machine"].add_action_parameters("Writing", "writing_action_0", {"Lock-In": data_dict})
         #################################################################################################
 
         # Powermax Measuring #############################################################################
@@ -671,8 +667,51 @@ class SpectralCalibrationMachine:
         params = action_dict["params"]
 
         if params is not None:
-            writing_params = params[self.control_loop_index]
-            print(writing_params)
+            lockin_params = params["Lock-In"]
+            control_loop_params = params["Control Loop"][self.control_loop_index]
+            metadata_params = control_loop_params["metadata configuration"]
+            print(metadata_params)
+            sequence_name = control_loop_params["sequence name"]
+
+            write_dict = {"Sequence Name": sequence_name, "Lock-In": lockin_params}
+
+            lockin_meta_params = await self.lock_in.get_parameters("All")
+            print(lockin_meta_params)
+            if metadata_params["lock-in fs"]:
+                write_dict["Lock-In"]["sample frequency"] = lockin_meta_params["sample rate"]
+            if metadata_params["lock-in time constant"]:
+                write_dict["Lock-In"]["time constant"] = lockin_meta_params["time constant"]
+            if metadata_params["lock-in sensitivity"]:
+                write_dict["Lock-In"]["sensitivity"] = lockin_meta_params["sensitivity"]
+
+            if metadata_params["wavelength"] or metadata_params["grating"] or metadata_params["osf"] \
+                    or metadata_params["shutter"]:
+                write_dict["Monochromator"] = {}
+                mono_params = await self.monochromator.get_parameters("All")
+                if metadata_params["wavelength"]:
+                    write_dict["Monochromator"]["wavelength"] = mono_params["wavelength"]
+                if metadata_params["grating"]:
+                    write_dict["Monochromator"]["grating"] = mono_params["grating"]
+                if metadata_params["osf"]:
+                    write_dict["Monochromator"]["order sort filter"] = mono_params["filter"]
+                if metadata_params["shutter"]:
+                    write_dict["Monochromator"]["shutter"] = mono_params["shutter"]
+
+            file_path = control_loop_params["save path"] + datetime.datetime.now().strftime("%y-%m-%d") + ".json"
+
+            try:
+                f = open(file_path, 'r+')
+            except FileNotFoundError as e:
+                f = open(file_path, 'a')
+                f.write('{\n "Measurements": [] \n}')
+                f.close()
+                f = open(file_path, 'r+')
+
+            json_file = json.load(f)
+            json_file["Measurements"].append(write_dict)
+            f.seek(0)
+            json.dump(json_file, f, indent=2)
+            f.close()
 
         # Powermax writing###############################################################################
         """
