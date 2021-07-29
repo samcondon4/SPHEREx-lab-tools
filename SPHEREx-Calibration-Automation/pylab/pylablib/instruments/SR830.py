@@ -316,22 +316,22 @@ class SR830(Instrument, Housekeeping):
         if not self.is_settled and not settled_override:
             await asyncio.sleep(5 * tc)
             self.is_settled = True
-        # set output interface to GPIB
-        self.write("OUTX1")
-        # start data transfer via fast mode
-        self.write("FAST2;STRD")
-
         # initialize data dictionary
         data_dict = {"detector voltage": [0 for _ in range(int(sample_time * fs))],
                      "lia status": None,
                      "error status": None
                      }
 
+        # set output interface to GPIB
+        self.write("OUTX1")
+        # start data transfer via fast mode
+        self.write("FAST2;STRD")
+
         # read data
         for i in range(len(data_dict["detector voltage"])):
-            await asyncio.sleep(1 / 1.05*fs)
             data_read = self.inst.read_bytes(4)[:2]
             data_dict["detector voltage"][i] = (struct.unpack("h", data_read)[0] / 30000) * sens
+            await asyncio.sleep(0)
 
         # halt fast mode data transfer
         self.write("FAST0;PAUS")

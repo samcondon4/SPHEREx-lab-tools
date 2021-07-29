@@ -604,6 +604,7 @@ class SpectralCalibrationMachine:
                     move_params[instrument]["sensitivity"] = float(move_params[instrument]["sensitivity"])
                     move_params[instrument]["time constant"] = float(move_params[instrument]["time constant"])
                     move_params[instrument]["sample rate"] = float(move_params[instrument]["sample rate"])
+                    move_params[instrument]["phase"] = "auto"
                     await self.lock_in.set_parameters(move_params[instrument])
                     new_params = await self.lock_in.get_parameters("All")
                     for key in new_params:
