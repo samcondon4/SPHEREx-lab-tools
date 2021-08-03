@@ -17,13 +17,16 @@ import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pylablib.pylablibsm import SM
 from pylablib.housekeeping import Housekeeping
-from pylabcal.pylabcalgui.ManualWindow.manualWindowDialogWrapper2 import ManualWindow
+from pylabcal.pylabcalgui.ManualWindow.manualWindowDialogWrapper3 import ManualWindow
+from pylabcal.pylabcalgui.CS260Window.cs260AutoDialogWrapper import CS260AutoWindow
+from pylabcal.pylabcalgui.NDFWheelWindow.ndfAutoWindowDialogWrapper import NDFAutoWindow
+from pylabcal.pylabcalgui.LockinWindow.lockinAutoWindowDialogWrapper import LockinAutoWindow
 from pylabcal.pylabcalgui.AutomationWindow.automationWindowDialogWrapper import AutomationWindow
 from pylabcal.pylabcalgui.PowermaxWindow.powermaxLiveWindowDialogWrapper import PowermaxWindow
 from pylablib.instruments.CS260 import CS260
-from pylablib.instruments.powermaxusb2 import Powermax
-from pylablib.instruments.labjacku6 import Labjack
 from pylablib.instruments.SR830 import SR830
+from pylablib.instruments.labjacku6 import Labjack
+from pylablib.instruments.ndfwheel import NDF
 import asyncio
 from qasync import QEventLoop
 
@@ -51,7 +54,6 @@ class MainWindow:
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(dialog)
 
-
 ####################################################################################################
 
 # Miscellaneous helper functions/variables ###################################################################
@@ -75,6 +77,7 @@ class SpectralCalibrationMachine:
         self.lock_in = None
         self.monochromator = None
         self.labjack = None
+        self.ndf = None
 
         # Gui initialization ###########################################################################################
         hk_tabs = [{"Qt": PowermaxWindow(), "id": "Powermax"}]
@@ -169,6 +172,8 @@ class SpectralCalibrationMachine:
         self.lock_in.open()
         self.labjack = Labjack()
         self.labjack.open()
+        self.ndf = NDF()
+        self.ndf.open()
         #######################################################################
 
         # Initialize labjack dio ports and gui control window #############################
@@ -212,6 +217,10 @@ class SpectralCalibrationMachine:
             "sample time": "10"
         }
         self.control_gui.tabs["Manual"].set_parameters({"Lock-In": lockin_gui_dict})
+        ###################################################################################
+
+        # Initialize ndf gui control window ###############################################
+
         ###################################################################################
 
         # Initialize housekeeping window ##################################################
@@ -398,9 +407,9 @@ class SpectralCalibrationMachine:
             for wave_arr in mono_waves:
                 grating_ind = 0
                 for w in wave_arr:
-                    if w < g1g2_transitions[transition_ind]:
+                    if w <= g1g2_transitions[transition_ind]:
                         mono_gratings[transition_ind][grating_ind] = "G1"
-                    elif g1g2_transitions[transition_ind] < w < g2g3_transitions[transition_ind]:
+                    elif g1g2_transitions[transition_ind] < w <= g2g3_transitions[transition_ind]:
                         mono_gratings[transition_ind][grating_ind] = "G2"
                     elif w > g2g3_transitions[transition_ind]:
                         mono_gratings[transition_ind][grating_ind] = "G3"
@@ -416,13 +425,13 @@ class SpectralCalibrationMachine:
             for wave_arr in mono_waves:
                 filter_ind = 0
                 for w in wave_arr:
-                    if w < noosf_osf1_transitions[transition_ind]:
+                    if w <= noosf_osf1_transitions[transition_ind]:
                         mono_filters[transition_ind][filter_ind] = "No OSF"
-                    elif noosf_osf1_transitions[transition_ind] < w < osf1_osf2_transitions[transition_ind]:
+                    elif noosf_osf1_transitions[transition_ind] < w <= osf1_osf2_transitions[transition_ind]:
                         mono_filters[transition_ind][filter_ind] = "OSF1"
-                    elif osf1_osf2_transitions[transition_ind] < w < osf2_osf3_transitions[transition_ind]:
+                    elif osf1_osf2_transitions[transition_ind] < w <= osf2_osf3_transitions[transition_ind]:
                         mono_filters[transition_ind][filter_ind] = "OSF2"
-                    elif osf2_osf3_transitions[transition_ind] < w:
+                    elif osf2_osf3_transitions[transition_ind] <= w:
                         mono_filters[transition_ind][filter_ind] = "OSF3"
                     filter_ind += 1
                 transition_ind += 1

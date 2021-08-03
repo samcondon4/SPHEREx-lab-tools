@@ -1,34 +1,28 @@
-"""manualWindowDialogWrapper:
+"""labjackWindowDialogWrapper:
 
-    This module provides a wrapper class, ManualWindow, around the manualWindowDialog that was generated with
-    QT-Designer. ManualWindow follows the SXTC-SWS GUI Tab API format.
+    This module provides a wrapper class, LabjackWindow, around the labjackWindowDialog created
+    using QT-Designer. LabjackWindow follows the SXTC-SWS GUI Tab API format.
 
-Sam Condon, 06/21/2021
+Sam Condon, 08/02/2021
 """
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pylablib.pylablib_gui_tab import GuiTab
-from pylabcal.pylabcalgui.ManualWindow.manualWindowDialog2 import Ui_Form
+from pylabcal.pylabcalgui.LabJackWindow.labjackWindowDialog import Ui_Form
 
 
-class ManualWindow(Ui_Form, GuiTab):
+class LabjackWindow(Ui_Form, GuiTab):
 
     def __init__(self):
+        super().__init__(self)
         self.form = QtWidgets.QDialog()
         self.setupUi(self.form)
-        self.is_stacked_widget = True
-        super().__init__(self)
 
-        ##Configure parameters#####################################################################################
-        self.add_parameter("Monochromator", self.get_monochromator_parameters, self.set_monochromator_parameters)
-        self.add_parameter("Lock-In", self.get_lockin_parameters, self.set_lockin_parameters)
+        # Configure parameters ######################################################
         self.add_parameter("LabJack", self.get_labjack_parameters, self.set_labjack_parameters)
-        ###########################################################################################################
+        #############################################################################
 
         ##Connect buttons to methods #######################################################################
-        self.manual_monochromator_setparams_button.clicked.connect(self._on_Set_Monochromator_Parameters)
-        self.manual_lockin_setparams_button.clicked.connect(self._on_Set_Lockin_Parameters)
-        self.manual_lockin_startmeasurement_button.clicked.connect(self._on_Start_Measurement)
         self.manual_labjack_dio0state_check.stateChanged.connect(self._on_dio0state_Changed)
         self.manual_labjack_dio1state_check.stateChanged.connect(self._on_dio1state_Changed)
         self.manual_labjack_dio2state_check.stateChanged.connect(self._on_dio2state_Changed)
@@ -37,125 +31,7 @@ class ManualWindow(Ui_Form, GuiTab):
         self.manual_labjack_dio2config_cbox.currentIndexChanged.connect(self._on_dio2config_Changed)
         #####################################################################################################
 
-    # PARAMETER GETTERS/SETTERS########################################################################################
-    def get_monochromator_parameters(self):
-        params = {
-            'wavelength': self.manual_monochromator_newwavelength_ledit.text(),
-            'filter': self.manual_monochromator_newfilter_combobox.currentText(),
-            'grating': self.manual_monochromator_newgrating_combobox.currentText(),
-            'shutter': self.manual_monochromator_newshutter_combobox.currentText()
-        }
-
-        return params
-
-    def set_monochromator_parameters(self, params_dict):
-        for key in params_dict:
-            param = str(params_dict[key])
-            if key == "wavelength":
-                self.manual_monochromator_currentwavelength_ledit.setText(param)
-                self.manual_monochromator_newwavelength_ledit.setText(param)
-            elif key == "filter":
-                if param == "1":
-                    param = "OSF1"
-                elif param == "2":
-                    param = "OSF2"
-                elif param == "3":
-                    param = "OSF3"
-                elif param == "4":
-                    param = "No OSF"
-                self.manual_monochromator_currentfilter_combobox.setCurrentText(param)
-                self.manual_monochromator_newfilter_combobox.setCurrentText(param)
-            elif key == "grating":
-                if param == "1":
-                    param = "G1"
-                elif param == "2":
-                    param = "G2"
-                elif param == "3":
-                    param = "G3"
-                self.manual_monochromator_currentgrating_combobox.setCurrentText(param)
-                self.manual_monochromator_newgrating_combobox.setCurrentText(param)
-            elif key == "shutter":
-                if param == "O":
-                    param = "Open"
-                elif param == "C":
-                    param = "Close"
-                self.manual_monochromator_currentshutter_combobox.setCurrentText(param)
-                self.manual_monochromator_newshutter_combobox.setCurrentText(param)
-
-    def get_lockin_parameters(self):
-        sens_units = self.manual_lockin_sensitivityunit_cbox.currentText()
-        sens_mult = float(self.manual_lockin_sensitivitymultiplier_cbox.currentText().split('x')[1])
-        sens_val = float(self.manual_lockin_sensitivityvalue_cbox.currentText())
-        sens = None
-        if sens_units == "V.":
-            sens = sens_val*sens_mult
-        elif sens_units == "mV.":
-            sens = sens_val*sens_mult * 1e-3
-        elif sens_units == "uV.":
-            sens = sens_val*sens_mult * 1e-6
-        elif sens_units == "nV.":
-            sens = sens_val*sens_mult * 1e-9
-
-        sens = round(sens, 10)
-
-        tc_units = self.manual_lockin_timeconstantunit_cbox.currentText()
-        tc_mult = float(self.manual_lockin_timeconstantmultiplier_cbox.currentText().split('x')[1])
-        tc_val = float(self.manual_lockin_timeconstantvalue_cbox.currentText())
-        tc = None
-        if tc_units == "ks.":
-            tc = tc_val*tc_mult * 1e3
-        elif tc_units == "s.":
-            tc = tc_val*tc_mult
-        elif tc_units == "ms.":
-            tc = tc_val*tc_mult * 1e-3
-        elif tc_units == "us.":
-            tc = tc_val*tc_mult * 1e-6
-        elif tc_units == "ns.":
-            tc = tc_val*tc_mult * 1e-9
-
-        tc = round(tc, 7)
-
-        params = {
-            'sensitivity value': float(self.manual_lockin_sensitivityvalue_cbox.currentText()),
-            'sensitivity multiplier': float(self.manual_lockin_sensitivitymultiplier_cbox.currentText().split('x')[1]),
-            'sensitivity units': self.manual_lockin_sensitivityunit_cbox.currentText(),
-            'sensitivity': sens,
-            'time-constant value': float(self.manual_lockin_timeconstantvalue_cbox.currentText()),
-            'time-constant multiplier': float(self.manual_lockin_timeconstantmultiplier_cbox.currentText().split('x')[1]),
-            'time-constant units': self.manual_lockin_timeconstantunit_cbox.currentText(),
-            'time-constant': tc,
-            'sample rate': float(self.manual_lockin_samplerate_combobox.currentText()),
-            'sample time': float(self.manual_lockin_sampletime_ledit.text()),
-            'measurement storage path': self.manual_lockin_measurementstorage_ledit.text()
-        }
-
-        return params
-
-    def set_lockin_parameters(self, params_dict):
-        for key in params_dict:
-            if key == "sensitivity value":
-                self.manual_lockin_sensitivityvalue_cbox.setCurrentText(params_dict[key])
-            elif key == "sensitivity multiplier":
-                self.manual_lockin_sensitivitymultiplier_cbox.setCurrentText(params_dict[key])
-            elif key == "sensitivity units":
-                self.manual_lockin_sensitivityunit_cbox.setCurrentText(params_dict[key])
-            elif key == "sensitivity":
-                self.manual_lockin_sensitivity_ledit.setText(params_dict[key])
-            elif key == "time-constant value":
-                self.manual_lockin_timeconstantvalue_cbox.setCurrentText(params_dict[key])
-            elif key == "time-constant multiplier":
-                self.manual_lockin_timeconstantmultiplier_cbox.setCurrentText(params_dict[key])
-            elif key == "time-constant units":
-                self.manual_lockin_timeconstantunit_cbox.setCurrentText(params_dict[key])
-            elif key == "time-constant":
-                self.manual_lockin_timeconstant_ledit.setText(params_dict[key])
-            elif key == "sample rate":
-                self.manual_lockin_samplerate_combobox.setCurrentText(params_dict[key])
-            elif key == "sample time":
-                self.manual_lockin_sampletime_ledit.setText(params_dict[key])
-            elif key == "measurement storage path":
-                self.manual_lockin_measurementstorage_ledit.setText(params_dict[key])
-
+    # PARAMETER GETTERS/SETTERS #################################################
     def get_labjack_parameters(self):
         params = {
             0: {"State": self.manual_labjack_dio0state_check.checkState(),
@@ -275,38 +151,10 @@ class ManualWindow(Ui_Form, GuiTab):
                 self.manual_labjack_dio21config_cbox.setCurrentText(params_dict[dio]["Config"])
                 self.manual_labjack_dio21state_check.setCheckState(params_dict[dio]["State"])
 
-    ##################################################################################################################
+    #############################################################################
 
     ##PRIVATE METHODS################################################################################################
     # Button Methods#####
-    def _on_Set_Monochromator_Parameters(self):
-        """_on_Set_Parameters: Add the Set Parameters button identifier to button queue
-
-        :return: None
-        """
-        self.button_queue.put("Monochromator Set Parameters")
-
-    def _on_Abort(self):
-        """_on_Abort: Add the Abort button identifier to button queue.
-
-        :return: None
-        """
-        self.button_queue.put("Abort")
-
-    def _on_Set_Lockin_Parameters(self):
-        """_on_Set_Lockin_Parameters: Add the lockin set parameters button identifier to the button queue.
-
-        :return: None
-        """
-        self.button_queue.put("Lock-In Set Parameters")
-
-    def _on_Start_Measurement(self):
-        """_on_Start_Measurement: Add the Start Measurement button identifier to button queue.
-
-        :return: None
-        """
-        self.button_queue.put("Start Measurement")
-
     def _on_dio0state_Changed(self):
         """_on_dio0state_Changed: Execute when the dio0 check state changes. Place "Checked" or "Unchecked" on the
            button queue depending on the new checkbox state.
@@ -314,9 +162,11 @@ class ManualWindow(Ui_Form, GuiTab):
         :return: None
         """
         if self.manual_labjack_dio0state_check.checkState():
-            self.button_queue.put("Labjack Dio0 Checked")
+            put_string = "Labjack Dio0 Checked"
         else:
-            self.button_queue.put("Labjack Dio0 Unchecked")
+            put_string = "Labjack Dio0 Unchecked"
+        self.button_queue.put(put_string)
+        GuiTab.GlobalButtonQueue.put(put_string)
 
     def _on_dio1state_Changed(self):
         """_on_dio1state_Changed: Execute when the dio0 check state changes. Place "Checked" or "Unchecked" on the
@@ -325,9 +175,11 @@ class ManualWindow(Ui_Form, GuiTab):
         :return: None
         """
         if self.manual_labjack_dio1state_check.checkState():
-            self.button_queue.put("Labjack Dio1 Checked")
+            put_string = "Labjack Dio1 Checked"
         else:
-            self.button_queue.put("Labjack Dio1 Unchecked")
+            put_string = "Labjack Dio1 Unchecked"
+        self.button_queue.put(put_string)
+        GuiTab.GlobalButtonQueue.put(put_string)
 
     def _on_dio2state_Changed(self):
         """_on_dio2state_Changed: Execute when the dio0 check state changes. Place "Checked" or "Unchecked" on the
@@ -336,35 +188,35 @@ class ManualWindow(Ui_Form, GuiTab):
         :return: None
         """
         if self.manual_labjack_dio2state_check.checkState():
-            self.button_queue.put("Labjack Dio2 Checked")
+            put_string = "Labjack Dio2 Checked"
         else:
-            self.button_queue.put("Labjack Dio2 Unchecked")
+            put_string = "Labjack Dio2 Unchecked"
+        self.button_queue.put(put_string)
+        GuiTab.GlobalButtonQueue.put(put_string)
 
     def _on_dio0config_Changed(self):
         """_on_dio0config_Changed: Set labjack dio 0 to either input or output depending on user gui input.
 
         """
-        self.button_queue.put("Labjack Config Dio0 {}".format(self.manual_labjack_dio0config_cbox.currentText()))
+        put_string = "Labjack Config Dio0 {}".format(self.manual_labjack_dio0config_cbox.currentText())
+        self.button_queue.put(put_string)
+        GuiTab.GlobalButtonQueue.put(put_string)
 
     def _on_dio1config_Changed(self):
         """_on_dio1config_Changed: Set labjack dio 1 to either input or output depending on user gui input.
 
         """
-        self.button_queue.put("Labjack Config Dio1 {}".format(self.manual_labjack_dio1config_cbox.currentText()))
+        put_string = "Labjack Config Dio1 {}".format(self.manual_labjack_dio1config_cbox.currentText())
+        self.button_queue.put(put_string)
+        GuiTab.GlobalButtonQueue.put(put_string)
 
     def _on_dio2config_Changed(self):
         """_on_dio2config_Changed: Set labjack dio 0 to either input or output depending on user gui input.
 
         """
-        self.button_queue.put("Labjack Config Dio2 {}".format(self.manual_labjack_dio2config_cbox.currentText()))
+        put_string = "Labjack Config Dio2 {}".format(self.manual_labjack_dio2config_cbox.currentText())
+        self.button_queue.put(put_string)
+        GuiTab.GlobalButtonQueue.put(put_string)
 
     #################################################################################################################
 
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtWidgets.QApplication(sys.argv)
-    window = ManualWindow()
-    window.form.show()
-    sys.exit(app.exec_())

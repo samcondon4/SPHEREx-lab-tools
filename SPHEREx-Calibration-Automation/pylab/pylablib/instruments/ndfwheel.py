@@ -4,13 +4,13 @@
 
 Sam Condon, 07/02/2021
 """
-
 from pylablib.instruments.pylablib_instrument import Instrument
 import clr
-
+import sys
+sys.path.append("pylablib\\instruments\\NDFWheel_DLLs\\")
 clr.AddReference("OptecHID_FilterWheelAPI")
-from pylablib.instruments.NDFWheel_DLLs.OptecHID_FilterWheelAPI import FilterWheels
-from pylablib.instruments.NDFWheel_DLLs.OptecHID_FilterWheelAPI import FilterWheel
+from OptecHID_FilterWheelAPI import FilterWheels
+from OptecHID_FilterWheelAPI import FilterWheel
 
 
 class NDF(Instrument):
@@ -42,7 +42,10 @@ class NDF(Instrument):
         return self.HSFW.CurrentPosition
 
     def set_position(self, position):
-        self.HSFW.CurrentPosition = position
+        if position == "home":
+            self.home()
+        else:
+            self.HSFW.CurrentPosition = position
         self.get_error()
         if self.err_state != 0:
             raise RuntimeError("Error {} occurred during movement of NDF!".format(self.err_state))

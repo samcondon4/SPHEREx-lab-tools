@@ -7,36 +7,75 @@ Sam Condon, 06/28/2021
 """
 from queue import SimpleQueue
 from PyQt5 import QtWidgets
+from pylablib.QListWigetSubclass import QListWidgetItemCustom
 
 
 class GuiTab:
 
+    # Queue object that can be shared if multiple GuiTabs should share the same namespace #
+    GlobalButtonQueue = SimpleQueue()
+    #######################################################################################
+
+    @classmethod
+    def get_global_button(cls):
+        """get_global_button: return the latest button press from the global queue
+
+        :return: string identifying the last button that was pressed
+        """
+        if not cls.GlobalButtonQueue.empty():
+            button_ret = cls.GlobalButtonQueue.get(timeout=1)
+        else:
+            button_ret = False
+        return button_ret
+
+    @classmethod
+    def clear_global_button_queue(cls):
+        """clear_button_queue: clear the global button queue of all values
+
+        :return: None
+        """
+        while not cls.GlobalButtonQueue.empty():
+            cls.GlobalButtonQueue.get(timeout=1)
+
+    @classmethod
+    def add_item_to_list(cls, item_list, text, data, role=0):
+        """add_item_to_list: Add an item to the given list.
+
+            item_list: QListWidget to add the item to.
+            text: item text string.
+            data: item data.
+            role: item role. Most of the time this argument can be ignored.
+        """
+        list_item = QListWidgetItemCustom()
+        list_item.setData(role, data)
+        list_item.setText(text)
+        list_item.set_user_data(data)
+
+        item_list.addItem(list_item)
+
+    @classmethod
+    def remove_item_from_list(cls, item_list):
+        """remove_item_from_list: Remove the currently selected item from the given list.
+        """
+        rem_item = item_list.currentItem()
+        if rem_item is not None:
+            rem_row = item_list.currentRow()
+            item_list.takeItem(rem_row)
+
+    @classmethod
+    def remove_all_items_from_list(cls, item_list):
+        """remove_all_items_from_list: Remove all items from the given list.
+        """
+        item_list.clear()
+
     def __init__(self, child):
+        self.form = None
+        self.window_selector_dict = None
         self.button_queue = SimpleQueue()
         self.parameters = []
         self.get_methods = {}
         self.set_methods = {}
         self.child = child
-        # Configure stacked widget switching #########################################################
-        try:
-            is_stacked = child.is_stacked_widget
-        except AttributeError as e:
-            pass
-        else:
-            if is_stacked:
-                widget_list = [child.stackedWidget.widget(i) for i in range(child.stackedWidget.count())]
-                self.window_selector_dict = {}
-                for widget in widget_list:
-                    window_selector = QtWidgets.QComboBox()
-                    widget_name = widget.objectName()
-                    layout = widget.layout()
-                    for w in widget_list:
-                        window_selector.addItem(w.objectName())
-                    window_selector.currentIndexChanged.connect(self._on_stacked_widget_select)
-                    layout.addWidget(window_selector, 0, layout.columnCount() - 1)
-                    widget.setLayout(layout)
-                    self.window_selector_dict[widget_name] = window_selector
-        ###############################################################################################
 
     def get_button(self):
         """get_button: return the latest button press from the button queue
@@ -117,13 +156,34 @@ class GuiTab:
         for key in params_dict:
             self.set_methods[key](params_dict[key])
 
+    def configure_stacked_widget_switch(self):
+        """configure_stacked_widget_switch: Stacked widgets do not naturally provide any means of switching between
+                                            the tabs that have been added. This method builds a dropdown menu to switch
+                                            between the windows of a stacked widget.
+
+        params: None
+        return: None
+        """
+        widget_list = [self.form.widget(i) for i in range(self.form.count())]
+        self.window_selector_dict = {}
+        for widget in widget_list:
+            window_selector = QtWidgets.QComboBox()
+            widget_name = widget.windowTitle()
+            layout = widget.layout()
+            for w in widget_list:
+                window_selector.addItem(w.windowTitle())
+            window_selector.currentIndexChanged.connect(self._on_stacked_widget_select)
+            layout.addWidget(window_selector, 0, layout.columnCount() - 1)
+            widget.setLayout(layout)
+            self.window_selector_dict[widget_name] = window_selector
+
     # Stacked widget switching #
     def _on_stacked_widget_select(self):
         """_on_stacked_widget_select: Change the stacked widget window according to the combo box window selector
         """
-        cur_window = self.child.stackedWidget.currentWidget().objectName()
-        new_index = self.child.window_selector_dict[cur_window].currentIndex()
-        self.child.stackedWidget.setCurrentIndex(new_index)
-        new_window = self.child.stackedWidget.currentWidget().objectName()
+        cur_window = self.form.currentWidget().windowTitle()
+        new_index = self.window_selector_dict[cur_window].currentIndex()
+        self.form.setCurrentIndex(new_index)
+        new_window = self.form.currentWidget().windowTitle()
         self.window_selector_dict[new_window].setCurrentIndex(new_index)
 

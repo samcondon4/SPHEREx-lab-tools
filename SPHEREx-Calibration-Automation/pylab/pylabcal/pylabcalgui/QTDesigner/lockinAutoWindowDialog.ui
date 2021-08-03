@@ -1,0 +1,688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1709</width>
+    <height>1422</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>SR510</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="10" column="0">
+        <widget class="QLabel" name="sequence_sr510_sensitivity_units_label">
+         <property name="text">
+          <string>Sensitivity Units:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="sequence_sr510_samplefreq_label">
+         <property name="text">
+          <string>Sample Frequency (Hz.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="sequence_sr510_timeconstant_value_label">
+         <property name="text">
+          <string>Time Constant Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="sequence_sr510_samplerate_combobox">
+         <property name="currentText">
+          <string>8</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>0.0625</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>0.125</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>0.250</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>0.5</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>8</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>16</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>32</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>64</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>128</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>256</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>512</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="2">
+        <widget class="QListWidget" name="sequence_sr510_senstransitions_list"/>
+       </item>
+       <item row="11" column="0" colspan="2">
+        <widget class="QPushButton" name="sequence_sr510_senstransition_add_button">
+         <property name="text">
+          <string>Add SR510 Sensitivity Transition to Sequence</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QLabel" name="sequence_sr510_senstransitions_label">
+         <property name="text">
+          <string>SR510 Sensitivity Transitions in Sequence:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0" colspan="2">
+        <widget class="QPushButton" name="sequence_sr510_senstransition_removeall_button">
+         <property name="text">
+          <string>Remove All SR510 Transitions from Sequence</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <widget class="QLabel" name="sequence_sr510_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>SR510 Lock-In Sequence Control:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="sequence_sr510_wave_label">
+         <property name="text">
+          <string>Wavelength:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0" colspan="2">
+        <widget class="QPushButton" name="sequence_sr510_senstransition_remove_button">
+         <property name="text">
+          <string>Remove SR510 Sensitivity Transition from Sequence</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="sequence_sr510_sensitivity_value_label">
+         <property name="text">
+          <string>Sensitivity Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QComboBox" name="sequence_sr510_sensitivity_units_cbox">
+         <property name="currentText">
+          <string>mV.</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>V.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>mV.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>uV.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>nV.</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="sequence_sr510_timeconstant_multiplier_label">
+         <property name="text">
+          <string>Time Constant Multiplier:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="sequence_sr510_timeconstant_value_cbox">
+         <item>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="sequence_sr510_timeconstant_multiplier_cbox">
+         <item>
+          <property name="text">
+           <string>x1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>x10</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>x100</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLineEdit" name="sequence_sr510_wave_ledit"/>
+       </item>
+       <item row="8" column="1">
+        <widget class="QComboBox" name="sequence_sr510_sensitivity_value_cbox">
+         <property name="currentText">
+          <string>5</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>5</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QComboBox" name="sequence_sr510_sensitivity_multiplier_cbox">
+         <property name="currentText">
+          <string>x100</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>x1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>x10</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>x100</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="sequence_sr510_sensitivity_multiplier_label">
+         <property name="text">
+          <string>Sensitivity Multiplier:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="sequence_sr510_timeconstant_units_label">
+         <property name="text">
+          <string>Time Constant Units:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="sequence_sr510_timeconstant_units_cbox">
+         <property name="currentText">
+          <string>s.</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>ks.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>s.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>ms.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>us.</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>SR830</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="sequence_sr830_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>SR830 Lock-In Sequence Control:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="sequence_sr830_samplefreq_label">
+         <property name="text">
+          <string>Sample Frequency (Hz.):</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="sequence_sr830_samplerate_combobox">
+         <property name="currentText">
+          <string>8</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>0.0625</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>0.125</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>0.250</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>0.5</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>4</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>8</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>16</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>32</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>64</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>128</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>256</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>512</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="sequence_sr830_timeconstant_value_label">
+         <property name="text">
+          <string>Time Constant Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0" colspan="2">
+        <widget class="QPushButton" name="sequence_sr830_sens_transition_removeall_button">
+         <property name="text">
+          <string>Remove All SR830 Transitions from Sequence</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="sequence_sr830_senstransitions_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <weight>50</weight>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>SR830 Sensitivity Transitions in Sequence:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0" colspan="2">
+        <widget class="QListWidget" name="sequence_sr830_senstransitions_list">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0" colspan="2">
+        <widget class="QPushButton" name="sequence_sr830_senstransition_add_button">
+         <property name="text">
+          <string>Add SR830 Sensitivity Transition to Sequence</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="sequence_sr830_wave_label">
+         <property name="text">
+          <string>Wavelength:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0" colspan="2">
+        <widget class="QPushButton" name="sequence_sr830_sens_transition_remove_button">
+         <property name="text">
+          <string>Remove SR830 Sensitivity Transitions from Sequence</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QComboBox" name="sequence_sr830_sensitivity_units_cbox">
+         <item>
+          <property name="text">
+           <string>V.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>mV.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>uV.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>nV.</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="sequence_sr830_timeconstant_multiplier_label">
+         <property name="text">
+          <string>Time Constant Multiplier:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="sequence_sr830_sensitivity_multiplier_label">
+         <property name="text">
+          <string>Sensitivity Multiplier:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QComboBox" name="sequence_sr830_sensitivity_value_cbox">
+         <item>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>2</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>5</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QLabel" name="sequence_sr830_sensitivity_units_label">
+         <property name="text">
+          <string>Sensitivity Units:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="sequence_sr830_sensitivity_value_label">
+         <property name="text">
+          <string>Sensitivity Value:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QComboBox" name="sequence_sr830_sensitivity_multiplier_cbox">
+         <item>
+          <property name="text">
+           <string>x1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>x10</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>x100</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLineEdit" name="sequence_sr830_wave_ledit"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="sequence_sr830_timeconstant_units_label">
+         <property name="text">
+          <string>Time Constant Units:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QComboBox" name="sequence_sr830_timeconstant_value_cbox">
+         <item>
+          <property name="text">
+           <string>1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>3</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QComboBox" name="sequence_sr830_timeconstant_multiplier_cbox">
+         <item>
+          <property name="text">
+           <string>x1</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>x10</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>x100</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QComboBox" name="sequence_sr830_timeconstant_units_cbox">
+         <property name="currentText">
+          <string>s.</string>
+         </property>
+         <item>
+          <property name="text">
+           <string>ks.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>s.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>ms.</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>us.</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
