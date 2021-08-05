@@ -11,9 +11,9 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>NDF Wheel</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="main_layout">
    <item row="0" column="1" colspan="2">
     <widget class="QLabel" name="sequence_ndf_label">
      <property name="sizePolicy">

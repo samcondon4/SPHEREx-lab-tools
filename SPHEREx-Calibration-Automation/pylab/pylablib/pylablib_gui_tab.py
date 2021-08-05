@@ -10,8 +10,15 @@ from PyQt5 import QtWidgets
 from pylablib.QListWigetSubclass import QListWidgetItemCustom
 
 
-class GuiTab:
+# Miscellaneous helper functions ################################################################
+def flatten_list(in_list):
+    flist = []
+    [flist.extend(flatten_list(e)) if type(e) is list else flist.extend([e]) for e in in_list]
+    return flist
+#################################################################################################
 
+
+class GuiTab:
     # Queue object that can be shared if multiple GuiTabs should share the same namespace #
     GlobalButtonQueue = SimpleQueue()
     #######################################################################################
@@ -27,6 +34,10 @@ class GuiTab:
         else:
             button_ret = False
         return button_ret
+
+    @classmethod
+    def add_button_to_global_queue(cls, button):
+        cls.GlobalButtonQueue.put(button)
 
     @classmethod
     def clear_global_button_queue(cls):
@@ -68,14 +79,57 @@ class GuiTab:
         """
         item_list.clear()
 
-    def __init__(self, child):
-        self.form = None
+    def __init__(self, child, use_local_button_queue=False, use_global_button_queue=True):
+        # super().__init__(self)
         self.window_selector_dict = None
         self.button_queue = SimpleQueue()
         self.parameters = []
         self.get_methods = {}
         self.set_methods = {}
         self.child = child
+        self.use_local_button_queue = use_local_button_queue
+        self.use_global_button_queue = use_global_button_queue
+
+        # Configure button widgets to update button queues ###################################################
+        ######################################################################################################
+
+    def configure_button_queues(self, use_local=True, use_global=True):
+        """configure_button_queues: Configure all buttons in a widget to update the local and/or global button queues.
+        """
+        self.use_local_button_queue = use_local
+        self.use_global_button_queue = use_global
+        if self.use_local_button_queue or self.use_global_button_queue:
+            widgets = self.get_widgets_from_layout(self.child.form.layout())
+            for w in widgets:
+                if type(w) is QtWidgets.QWidgetItem:
+                    widget = w.widget()
+                else:
+                    widget = w
+                if type(widget) is QtWidgets.QPushButton:
+                    widget.clicked.connect(lambda state, in_widget=widget: self.add_button_to_queues(in_widget))
+
+    def configure_stacked_widget_switch(self):
+        """configure_stacked_widget_switch: Stacked widgets do not naturally provide any means of switching between
+                                            the tabs that have been added. This method builds a dropdown menu to switch
+                                            between the windows of a stacked widget.
+
+        params: None
+        return: None
+        """
+        widget_list = [self.child.form.widget(i) for i in range(self.child.form.count())]
+        self.window_selector_dict = {}
+        for widget in widget_list:
+            window_selector = QtWidgets.QComboBox()
+            widget_name = widget.windowTitle()
+            layout = widget.layout()
+
+            for w in widget_list:
+                window_selector.addItem(w.windowTitle())
+
+            window_selector.currentIndexChanged.connect(self._on_stacked_widget_select)
+            layout.addWidget(window_selector, 0, layout.columnCount() - 1)
+            widget.setLayout(layout)
+            self.window_selector_dict[widget_name] = window_selector
 
     def get_button(self):
         """get_button: return the latest button press from the button queue
@@ -88,6 +142,17 @@ class GuiTab:
             button_ret = False
 
         return button_ret
+
+    def add_button_to_queues(self, button):
+        """add_button_to_queues: Triggered when a QPushButton is clicked. Adds the button identifier to the local and
+                                 global button queues based on the use_*_button_queue attributes.
+        """
+        button_text = button.text()
+        print(button_text)
+        if self.use_global_button_queue:
+            GuiTab.add_button_to_global_queue(button_text)
+        if self.use_local_button_queue:
+            self.button_queue.put(button_text)
 
     def clear_button_queue(self):
         """clear_button_queue: clear the button queue of all values
@@ -156,34 +221,58 @@ class GuiTab:
         for key in params_dict:
             self.set_methods[key](params_dict[key])
 
-    def configure_stacked_widget_switch(self):
-        """configure_stacked_widget_switch: Stacked widgets do not naturally provide any means of switching between
-                                            the tabs that have been added. This method builds a dropdown menu to switch
-                                            between the windows of a stacked widget.
-
-        params: None
-        return: None
-        """
-        widget_list = [self.form.widget(i) for i in range(self.form.count())]
-        self.window_selector_dict = {}
-        for widget in widget_list:
-            window_selector = QtWidgets.QComboBox()
-            widget_name = widget.windowTitle()
-            layout = widget.layout()
-            for w in widget_list:
-                window_selector.addItem(w.windowTitle())
-            window_selector.currentIndexChanged.connect(self._on_stacked_widget_select)
-            layout.addWidget(window_selector, 0, layout.columnCount() - 1)
-            widget.setLayout(layout)
-            self.window_selector_dict[widget_name] = window_selector
-
     # Stacked widget switching #
     def _on_stacked_widget_select(self):
         """_on_stacked_widget_select: Change the stacked widget window according to the combo box window selector
         """
-        cur_window = self.form.currentWidget().windowTitle()
+        cur_window = self.child.form.currentWidget().windowTitle()
         new_index = self.window_selector_dict[cur_window].currentIndex()
-        self.form.setCurrentIndex(new_index)
-        new_window = self.form.currentWidget().windowTitle()
+        self.child.form.setCurrentIndex(new_index)
+        new_window = self.child.form.currentWidget().windowTitle()
         self.window_selector_dict[new_window].setCurrentIndex(new_index)
 
+    def get_widgets_from_layout(self, layout):
+        """get_widgets_from_layout: Recursively iterate through all layouts/tabs/stacks within a main widget and
+                                    retrieve all sub widgets embedded within.
+
+            Params: layout: layout, tab, or stacked widget object to iterate through
+            Returns: flat list of all widgets
+        """
+        widget_list = []
+        all_widgets = False
+        while not all_widgets:
+            # Get all widgets from the passed layout or tab/stacked widget #################################
+            layout_type = type(layout)
+            if issubclass(layout_type, QtWidgets.QLayout) or isinstance(layout, QtWidgets.QLayout):
+                widgets = [layout.itemAt(i) for i in range(layout.count())]
+            elif issubclass(layout_type, QtWidgets.QTabWidget) or isinstance(layout, QtWidgets.QTabWidget)\
+                 or issubclass(layout_type, QtWidgets.QStackedWidget) or isinstance(layout, QtWidgets.QStackedWidget):
+                widgets = [layout.widget(i) for i in range(layout.count())]
+            else:
+                widgets = None
+            ################################################################################################
+
+            # Iterate over all retrieved widgets #############################
+            for w in widgets:
+                w_type = type(w)
+                if w_type is QtWidgets.QWidgetItem:
+                    widget = w.widget()
+                else:
+                    widget = w
+                widget_type = type(widget)
+
+                if widget_type is QtWidgets.QWidget:
+                    widget = widget.layout()
+                    widget_type = type(widget)
+
+                if issubclass(widget_type, QtWidgets.QLayout) or isinstance(widget, QtWidgets.QTabWidget):
+                    widget_list.append(self.get_widgets_from_layout(widget))
+                else:
+                    widget_list.append(w)
+            all_widgets = True
+            ##################################################################
+
+        # Return flattened widget list #############################################
+        fwidget_list = flatten_list(widget_list)
+        return fwidget_list
+        ############################################################################

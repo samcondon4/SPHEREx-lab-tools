@@ -58,3 +58,11 @@ class CS260AutoWindow(Ui_Form, GuiTab):
                 self.sequence_monochromator_osf1osf2_ledit.setText(value)
             elif key == "osf2 to osf3 transition wavelength":
                 self.sequence_monochromator_osf2osf3_ledit.setText(value)
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    window = CS260AutoWindow()
+    window.form.show()
+    sys.exit(app.exec_())

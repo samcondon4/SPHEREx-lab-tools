@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from pylablib.pylablib_gui_tab import GuiTab
 from pylabcal.pylabcalgui.SeriesConstruction.seriesconstructionWindowDialog import Ui_Form
 from pylablib.utils.parameters import get_params_dict, write_config_file
-from pylabcal.pylabcalgui.AutomationWindow.QListWigetSubclass import QListWidgetItemCustom
+from pylablib.QListWigetSubclass import QListWidgetItemCustom
 
 # CONSTANTS ################################
 QtUNCHECKED = QtCore.Qt.Unchecked
@@ -23,7 +23,7 @@ SEQUENCE_ROLE = 0
 
 class SeriesConstructionWindow(Ui_Form, GuiTab):
 
-    def __init__(self, default_seq_name="default_seq", seq_config_path="pylabcal\\config\\sequence\\"):
+    def __init__(self, root_path, seq_config_path="pylabcal\\config\\sequence\\", default_seq_name="default_seq"):
         self.form = QtWidgets.QWidget()
         self.setupUi(self.form)
         super().__init__(self)
@@ -31,7 +31,7 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         # Configuration paths ###################################################################################
         self.default_seq_name = default_seq_name
         self.seq_config_path = seq_config_path
-
+        self.root_path = root_path
         self.series_seq_list = {}
         #########################################################################################################
 
@@ -43,7 +43,7 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         ##############################################################################################################
 
         # Load saved sequence files and default sequence parameters###################################################
-        for seq_file in os.listdir(self.seq_config_path):
+        for seq_file in os.listdir(self.root_path + self.seq_config_path):
             if seq_file.endswith(".ini"):
                 seq_file_name = seq_file.split('.')[0]
                 seq_file_data = get_params_dict(self.seq_config_path + seq_file)
@@ -54,6 +54,20 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         default_seq_item = self.auto_series_savedsequences_list.findItems(self.default_seq_name, QtCore.Qt.MatchExactly)
         self.auto_series_savedsequences_list.setCurrentItem(default_seq_item[0])
         ##############################################################################################################
+
+        # Connect buttons to methods ###################################################################################
+        """
+        self.auto_series_sequence_save_button.clicked.connect(self._on_Save_New_Sequence)
+        self.auto_series_addsequencestoseries_button.clicked.connect(self._on_Add_Sequence_To_series)
+        self.auto_series_removesequencefromseries_button.clicked.connect(self._on_Remove_Sequence_From_series)
+        self.auto_series_removeallsequencesfromseries_button.clicked.connect(self._on_Remove_All_Sequences_From_series)
+        self.auto_control_runseries_button.clicked.connect(self._on_Run_series)
+        self.auto_control_pauseseries_button.clicked.connect(self._on_Pause_series)
+        self.auto_control_abortseries_button.clicked.connect(self._on_Abort_series)
+
+        self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
+        """
+        ################################################################################################################
 
     def get_sequence_info(self):
         params = {
@@ -183,7 +197,7 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         seq_item.setData(SEQUENCE_ROLE, seq_name)
         seq_item.setText(seq_name)
         seq_item.set_user_data(sequence_params)
-        write_config_file(sequence_params, self.seq_config_path + seq_name + ".ini")
+        write_config_file(sequence_params, self.root_path + self.seq_config_path + seq_name + ".ini")
         self.auto_series_savedsequences_list.addItem(seq_item)
 
     def _on_Add_Sequence_To_series(self):
@@ -199,8 +213,11 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         rem_seq = self.auto_series_series_list.currentItem()
         if rem_seq is not None:
             self.series_seq_list.pop(rem_seq.text())
+            print("good")
             self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
+            print("good")
             self.auto_series_series_list.takeItem(self.auto_series_series_list.currentRow())
+            print("good")
             self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
 
     def _on_Remove_All_Sequences_From_series(self):
@@ -247,3 +264,12 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         self.set_parameters(seq_item.user_data)
     #End button methods###########################################################################################
     #END PRIVATE METHODS################################################################################################
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    root_path = "C:\\Users\\thoma\\Documents\\Github\\SPHEREx-lab-tools\\SPHEREx-Calibration-Automation\\pylab\\"
+    window = SeriesConstructionWindow(root_path)
+    window.form.show()
+    sys.exit(app.exec_())

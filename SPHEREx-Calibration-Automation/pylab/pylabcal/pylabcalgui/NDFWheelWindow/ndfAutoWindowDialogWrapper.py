@@ -22,9 +22,9 @@ SEQUENCE_ROLE = 0
 class NDFAutoWindow(Ui_Form, GuiTab):
 
     def __init__(self):
-        super().__init__(self)
         self.form = QtWidgets.QWidget()
         self.setupUi(self.form)
+        super().__init__(self, use_local_button_queue=False, use_global_button_queue=False)
 
         # Configure parameters ###################################################
         self.add_get_parameter("NDF Transitions", self.get_ndf_transitions)

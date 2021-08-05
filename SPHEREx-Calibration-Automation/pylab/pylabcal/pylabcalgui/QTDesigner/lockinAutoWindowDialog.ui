@@ -11,10 +11,36 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Lockin Amplifier(s)</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="main_layout">
    <item row="0" column="0">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="1">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="1" column="0" colspan="2">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
@@ -48,7 +74,7 @@
        <item row="1" column="1">
         <widget class="QComboBox" name="sequence_sr510_samplerate_combobox">
          <property name="currentText">
-          <string>8</string>
+          <string>0.0625</string>
          </property>
          <item>
           <property name="text">
@@ -132,13 +158,6 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0" colspan="2">
-        <widget class="QLabel" name="sequence_sr510_senstransitions_label">
-         <property name="text">
-          <string>SR510 Sensitivity Transitions in Sequence:</string>
-         </property>
-        </widget>
-       </item>
        <item row="13" column="0" colspan="2">
         <widget class="QPushButton" name="sequence_sr510_senstransition_removeall_button">
          <property name="text">
@@ -190,7 +209,7 @@
        <item row="10" column="1">
         <widget class="QComboBox" name="sequence_sr510_sensitivity_units_cbox">
          <property name="currentText">
-          <string>mV.</string>
+          <string>V.</string>
          </property>
          <item>
           <property name="text">
@@ -260,7 +279,7 @@
        <item row="8" column="1">
         <widget class="QComboBox" name="sequence_sr510_sensitivity_value_cbox">
          <property name="currentText">
-          <string>5</string>
+          <string>1</string>
          </property>
          <item>
           <property name="text">
@@ -282,7 +301,7 @@
        <item row="9" column="1">
         <widget class="QComboBox" name="sequence_sr510_sensitivity_multiplier_cbox">
          <property name="currentText">
-          <string>x100</string>
+          <string>x1</string>
          </property>
          <item>
           <property name="text">
@@ -318,7 +337,7 @@
        <item row="4" column="1">
         <widget class="QComboBox" name="sequence_sr510_timeconstant_units_cbox">
          <property name="currentText">
-          <string>s.</string>
+          <string>ks.</string>
          </property>
          <item>
           <property name="text">
@@ -340,6 +359,19 @@
            <string>us.</string>
           </property>
          </item>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="sequence_sr510_senstransitions_label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>SR510 Sensitivity Transitions in Sequence:</string>
+         </property>
         </widget>
        </item>
       </layout>
@@ -379,7 +411,7 @@
        <item row="1" column="1">
         <widget class="QComboBox" name="sequence_sr830_samplerate_combobox">
          <property name="currentText">
-          <string>8</string>
+          <string>0.0625</string>
          </property>
          <item>
           <property name="text">
@@ -470,7 +502,7 @@
        <item row="5" column="0">
         <widget class="QLabel" name="sequence_sr830_senstransitions_label">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+          <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -653,7 +685,7 @@
        <item row="4" column="1">
         <widget class="QComboBox" name="sequence_sr830_timeconstant_units_cbox">
          <property name="currentText">
-          <string>s.</string>
+          <string>ks.</string>
          </property>
          <item>
           <property name="text">
