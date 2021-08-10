@@ -14,9 +14,9 @@ from pylabcal.pylabcalgui.LabJackWindow.labjackWindowDialog import Ui_Form
 class LabjackWindow(Ui_Form, GuiTab):
 
     def __init__(self):
-        super().__init__(self)
         self.form = QtWidgets.QDialog()
         self.setupUi(self.form)
+        super().__init__(self)
 
         # Configure parameters ######################################################
         self.add_parameter("LabJack", self.get_labjack_parameters, self.set_labjack_parameters)

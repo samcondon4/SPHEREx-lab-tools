@@ -274,10 +274,10 @@
       </widget>
      </item>
      <item row="10" column="2">
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="auto_data_exposure_duration_ledit"/>
      </item>
      <item row="10" column="1">
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="auto_data_exposure_duration_label">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
          <horstretch>0</horstretch>

@@ -21,14 +21,14 @@ SEQUENCE_ROLE = 0
 
 class NDFAutoWindow(Ui_Form, GuiTab):
 
-    def __init__(self):
+    def __init__(self, button_queue_keys=None):
         self.form = QtWidgets.QWidget()
         self.setupUi(self.form)
-        super().__init__(self, use_local_button_queue=False, use_global_button_queue=False)
+        super().__init__(self, button_queue_keys=button_queue_keys)
 
-        # Configure parameters ###################################################
-        self.add_get_parameter("NDF Transitions", self.get_ndf_transitions)
-        ##########################################################################
+        # Configure parameters #############################################################################
+        self.add_parameter("position transition list", self.get_ndf_transitions, self.set_ndf_transitions)
+        ####################################################################################################
 
         # Configure button methods #####################################################################
         self.sequence_ndfaddtransition_button.clicked.connect(self._on_add_transition)
@@ -38,7 +38,24 @@ class NDFAutoWindow(Ui_Form, GuiTab):
 
     # PARAMETER GETTER/SETTERS #############################################################
     def get_ndf_transitions(self):
-        pass
+        transition_count = self.sequence_ndftransitions_list.count()
+        transition_list_str = ""
+        for i in range(transition_count):
+            item = self.sequence_ndftransitions_list.item(i)
+            item_text = item.text().replace("; ", ",")
+            if transition_list_str == "":
+                transition_list_str += item_text
+            else:
+                transition_list_str += item_text.replace("W", ";W")
+        return transition_list_str
+
+    def set_ndf_transitions(self, transition_list):
+        self.sequence_ndftransitions_list.clear()
+        transition_list = transition_list.split(";")
+        for trans in transition_list:
+            trans_text = trans.replace(",", "; ")
+            GuiTab.add_item_to_list(self.sequence_ndftransitions_list, trans_text, "")
+
     ########################################################################################
 
     # PRIVATE METHODS ######################################################################
@@ -62,7 +79,7 @@ class NDFAutoWindow(Ui_Form, GuiTab):
         if valid_input:
             item_data = {"Position": ndf_position, "Wavelength": transition_wavelength}
             list_item.setData(SEQUENCE_ROLE, item_data)
-            list_item.setText("Wavelength = {}:  NDF Position = {}".format(transition_wavelength, ndf_position))
+            list_item.setText("Wavelength = {}; Position = {}".format(transition_wavelength, ndf_position))
             list_item.set_user_data(item_data)
 
             self.sequence_ndftransitions_list.addItem(list_item)

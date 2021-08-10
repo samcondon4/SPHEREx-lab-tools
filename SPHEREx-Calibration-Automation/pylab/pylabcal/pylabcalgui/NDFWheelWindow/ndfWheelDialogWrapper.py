@@ -15,9 +15,9 @@ from pylabcal.pylabcalgui.NDFWheelWindow.ndfWheelDialog import Ui_Form
 class NDFWindow(Ui_Form, GuiTab):
 
     def __init__(self):
-        super().__init__(self)
         self.form = QtWidgets.QDialog()
         self.setupUi(self.form)
+        super().__init__(self)
 
         # Configure parameters ####################################################
         self.add_parameter("NDF", self.get_ndf_parameters, self.set_ndf_parameters)

@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(993, 946)
+        Form.resize(1003, 850)
         self.gridLayout = QtWidgets.QGridLayout(Form)
         self.gridLayout.setObjectName("gridLayout")
         self.manual_ndf_newpos_cbox = QtWidgets.QComboBox(Form)
@@ -77,6 +77,16 @@ class Ui_Form(object):
         self.manual_ndf_curpos_label.setObjectName("manual_ndf_curpos_label")
         self.gridLayout.addWidget(self.manual_ndf_curpos_label, 1, 0, 1, 1)
         self.manual_ndf_newpos_button = QtWidgets.QPushButton(Form)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.manual_ndf_newpos_button.sizePolicy().hasHeightForWidth())
+        self.manual_ndf_newpos_button.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.manual_ndf_newpos_button.setFont(font)
         self.manual_ndf_newpos_button.setObjectName("manual_ndf_newpos_button")
         self.gridLayout.addWidget(self.manual_ndf_newpos_button, 3, 0, 1, 2)
 
@@ -97,7 +107,7 @@ class Ui_Form(object):
         self.manual_ndf_label.setText(_translate("Form", "NDF Wheel:"))
         self.manual_ndf_newpos_label.setText(_translate("Form", "New Position"))
         self.manual_ndf_curpos_label.setText(_translate("Form", "Current Position:"))
-        self.manual_ndf_newpos_button.setText(_translate("Form", "Set New Position"))
+        self.manual_ndf_newpos_button.setText(_translate("Form", "Set New NDF Position"))
 
 
 if __name__ == "__main__":

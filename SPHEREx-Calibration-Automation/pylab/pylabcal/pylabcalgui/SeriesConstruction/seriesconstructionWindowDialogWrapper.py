@@ -23,10 +23,11 @@ SEQUENCE_ROLE = 0
 
 class SeriesConstructionWindow(Ui_Form, GuiTab):
 
-    def __init__(self, root_path, seq_config_path="pylabcal\\config\\sequence\\", default_seq_name="default_seq"):
+    def __init__(self, root_path, seq_config_path="pylabcal\\config\\sequence\\", default_seq_name="default_seq",
+                 button_queue_keys=None):
         self.form = QtWidgets.QWidget()
         self.setupUi(self.form)
-        super().__init__(self)
+        super().__init__(self, button_queue_keys=button_queue_keys)
 
         # Configuration paths ###################################################################################
         self.default_seq_name = default_seq_name
@@ -36,31 +37,23 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         #########################################################################################################
 
         # Configure parameters #######################################################################################
-        self.add_parameter('Sequence Info', self.get_sequence_info, self.set_sequence_info)
-        self.add_parameter('Data Configuration', self.get_data_configuration, self.set_data_configuration)
-        self.add_parameter('Metadata Configuration', self.get_metadata_configuration, self.set_metadata_configuration)
-        self.add_parameter('Series', self.get_series, self.set_series)
-        ##############################################################################################################
-
-        # Load saved sequence files and default sequence parameters###################################################
-        for seq_file in os.listdir(self.root_path + self.seq_config_path):
-            if seq_file.endswith(".ini"):
-                seq_file_name = seq_file.split('.')[0]
-                seq_file_data = get_params_dict(self.seq_config_path + seq_file)
-                self.add_list_item("savedsequences", seq_file_name, seq_file_data)
-
-        default_seq_dict = get_params_dict(self.seq_config_path + self.default_seq_name + ".ini")
-        self.set_parameters(default_seq_dict)
-        default_seq_item = self.auto_series_savedsequences_list.findItems(self.default_seq_name, QtCore.Qt.MatchExactly)
-        self.auto_series_savedsequences_list.setCurrentItem(default_seq_item[0])
+        self.add_parameter("Sequence Info", self.get_sequence_info, self.set_sequence_info)
+        self.add_parameter("Data Configuration", self.get_data_configuration, self.set_data_configuration)
+        self.add_parameter("Metadata Configuration", self.get_metadata_configuration, self.set_metadata_configuration)
+        self.add_parameter("Sequence List", self.get_sequence_list, self.set_sequence_list)
+        self.add_parameter("Current Sequence", self.get_current_sequence, self.set_current_sequence)
+        self.add_parameter("Current Series Sequence", self.get_current_series_sequence, self.set_current_series_sequence)
+        self.add_parameter("Series", self.get_series, self.set_series)
         ##############################################################################################################
 
         # Connect buttons to methods ###################################################################################
-        """
-        self.auto_series_sequence_save_button.clicked.connect(self._on_Save_New_Sequence)
         self.auto_series_addsequencestoseries_button.clicked.connect(self._on_Add_Sequence_To_series)
         self.auto_series_removesequencefromseries_button.clicked.connect(self._on_Remove_Sequence_From_series)
         self.auto_series_removeallsequencesfromseries_button.clicked.connect(self._on_Remove_All_Sequences_From_series)
+        self.auto_series_sequence_save_button.clicked.connect(self._on_Save_New_Sequence)
+        self.auto_series_savedsequences_list.currentItemChanged.connect(self._on_Sequence_Select)
+        self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
+        """
         self.auto_control_runseries_button.clicked.connect(self._on_Run_series)
         self.auto_control_pauseseries_button.clicked.connect(self._on_Pause_series)
         self.auto_control_abortseries_button.clicked.connect(self._on_Abort_series)
@@ -69,6 +62,7 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         """
         ################################################################################################################
 
+    # PARAMETER GETTER/SETTERS ########################################################################################
     def get_sequence_info(self):
         params = {
             'sequence name': self.auto_series_sequence_name_ledit.text()
@@ -83,7 +77,8 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
 
     def get_data_configuration(self):
         params = {
-            'storage path': self.auto_data_storagepath_ledit.text()
+            "storage path": self.auto_data_storagepath_ledit.text(),
+            "exposure duration": self.auto_data_exposure_duration_ledit.text()
         }
 
         return params
@@ -92,6 +87,8 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         for key in params_dict:
             if key == "storage path":
                 self.auto_data_storagepath_ledit.setText(params_dict[key])
+            elif key == "exposure duration":
+                self.auto_data_exposure_duration_ledit.setText(params_dict[key])
 
     def get_metadata_configuration(self):
         params = {
@@ -117,13 +114,13 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
             else:
                 check_state = QtUNCHECKED
 
-            if key == "wavelength":
+            if key == "monochromator wavelength":
                 self.auto_data_metadata_wavelength_cbox.setCheckState(check_state)
-            elif key == "grating":
+            elif key == "monochromator grating":
                 self.data_configuration_metadata_grating_cbox.setCheckState(check_state)
-            elif key == "order sort filter":
+            elif key == "monochromator order sort filter":
                 self.auto_data_metadata_osf_cbox.setCheckState(check_state)
-            elif key == "shutter":
+            elif key == "monochromator shutter":
                 self.data_configuration_metadata_shutter_cbox.setCheckState(check_state)
             elif key == "lock-in sample frequency":
                 self.auto_data_metadata_lockinfs_cbox.setCheckState(check_state)
@@ -137,6 +134,36 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
                 self.data_configuration_metadata_labjack_diostate_checkbox.setCheckState(check_state)
             elif key == "ndf-wheel position":
                 self.data_configuration_metadata_ndfwheel_position_checkbox.setCheckState(check_state)
+
+    def get_sequence_list(self):
+        """get_sequence_list: Return a list of the names of sequences currently present in the Saved Sequences display
+        """
+        pass
+
+    def set_sequence_list(self, sequences):
+        """set_sequence_list: Set the Saved Sequences display
+        """
+        for seq in sequences:
+            GuiTab.add_item_to_list(self.auto_series_savedsequences_list, seq, "")
+
+    def get_current_sequence(self):
+        """get_current_sequence: get the name of the currently selected sequence
+        """
+        return self.auto_series_savedsequences_list.currentItem().text()
+
+    def set_current_sequence(self, seq_name):
+        """set_current_sequence: set the currently selected sequence
+        """
+        seq_item = self.auto_series_savedsequences_list.findItems(seq_name, QtCore.Qt.MatchExactly)
+        self.auto_series_savedsequences_list.setCurrentItem(seq_item[0])
+
+    def get_current_series_sequence(self):
+        """get_current_series_sequence: get the name of the currently selected series sequence.
+        """
+        return self.auto_series_series_list.currentItem().text()
+
+    def set_current_series_sequence(self):
+        pass
 
     def get_series(self):
         seq_params_list = [0 for i in range(len(self.series_seq_list))]
@@ -153,6 +180,7 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
 
     def set_series(self):
         pass
+    ###################################################################################################################
 
     ##PRIVATE METHODS##################################################################################################
     #Start list methods################################################################
@@ -190,15 +218,9 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
     def _on_Save_New_Sequence(self):
         """on_Save_New_Sequence: add save new sequence button identifier to button queue
         """
-        sequence_params = self.get_parameters(["Sequence Info", "Data Configuration", "Metadata Configuration",
-                                               "Monochromator", "Lock-In"])
+        sequence_params = self.get_parameters(["Sequence Info"])
         seq_name = sequence_params['Sequence Info']['sequence name']
-        seq_item = QListWidgetItemCustom()
-        seq_item.setData(SEQUENCE_ROLE, seq_name)
-        seq_item.setText(seq_name)
-        seq_item.set_user_data(sequence_params)
-        write_config_file(sequence_params, self.root_path + self.seq_config_path + seq_name + ".ini")
-        self.auto_series_savedsequences_list.addItem(seq_item)
+        GuiTab.add_item_to_list(self.auto_series_savedsequences_list, seq_name, "")
 
     def _on_Add_Sequence_To_series(self):
         """on_Save_New_Sequence: add save new sequence button identifier to button queue
@@ -213,55 +235,31 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         rem_seq = self.auto_series_series_list.currentItem()
         if rem_seq is not None:
             self.series_seq_list.pop(rem_seq.text())
-            print("good")
-            self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
-            print("good")
+            #self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
             self.auto_series_series_list.takeItem(self.auto_series_series_list.currentRow())
-            print("good")
-            self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
+            #self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
 
     def _on_Remove_All_Sequences_From_series(self):
         """on_Save_New_Sequence: add save new sequence button identifier to button queue
         """
-        self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
+        #self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
         self.auto_series_series_list.clear()
         self.series_seq_list = {}
-        self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
-
-    def _on_Run_series(self):
-        """on_Save_New_Sequence: add save new sequence button identifier to button queue
-        """
-        self.button_queue.put("Run Series")
-
-    def _on_Pause_series(self):
-        """on_Save_New_Sequence: add save new sequence button identifier to button queue
-        """
-
-        self.button_queue.put("Pause Series")
-
-    def _on_Abort_series(self):
-        """on_Save_New_Sequence: add save new sequence button identifier to button queue
-        """
-
-        self.button_queue.put("Abort Series")
+        #self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
 
     def _on_Sequence_Select(self):
-        """_on_Sequence_Select: update display with parameters specified by currently selected sequence in saved sequences
-                                list.
+        """_on_Sequence_Select: Add the Sequence Select identifier to the appropriate button queues.
 
         :return: None
         """
-        seq_item = self.auto_series_savedsequences_list.currentItem()
-        self.set_parameters(seq_item.user_data)
+        self.add_button_to_queues(button_text="Sequence Select")
 
     def _on_Series_Sequence_Select(self):
-        """_on_Series_Sequence_Select: update display with parameters specified by currently selected sequence in
-                                       series list.
+        """_on_Series_Sequence_Select: Add the Series Sequence Select identifier to the appropriate button queues.
 
         :return: None
         """
-        seq_item = self.auto_series_series_list.currentItem()
-        self.set_parameters(seq_item.user_data)
+        self.add_button_to_queues(button_text="Series Sequence Select")
     #End button methods###########################################################################################
     #END PRIVATE METHODS################################################################################################
 

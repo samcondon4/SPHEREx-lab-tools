@@ -9,52 +9,32 @@ Sam Condon, 08/02/2021
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pylablib.pylablib_gui_tab import GuiTab
 from pylabcal.pylabcalgui.LockinWindow.lockinAutoWindowDialog import Ui_Form
+from pylabcal.pylabcalgui.LockinWindow.lockin_window_helpers import *
 from pylablib.QListWigetSubclass import QListWidgetItemCustom
-
-# CONSTANTS ####################################################################################
-QtUNCHECKED = QtCore.Qt.Unchecked
-QtCHECKED = QtCore.Qt.Checked
-QtFULL_MATCH = QtCore.Qt.MatchExactly
-SEQUENCE_ROLE = 0
-
-LOCKIN_UNIT_SENSITIVITY_MAP = {"V.": 1, "mV.": 1e-3, "uV.": 1e-6, "nV.": 1e-9}
-LOCKIN_UNIT_TC_MAP = {"ks.": 1e3, "s.": 1, "ms.": 1e-3, "us.": 1e-6}
-LOCKIN_TC_MOD_MAP = {1: 0, 0: 3}
-LOCKIN_TC_MULT_UNIT_MAP = {1e-6: ("x1", "us."), 1e-5: ("x10", "us."), 1e-4: ("x100", "us."),
-                           1e-3: ("x1", "ms."), 1e-2: ("x10", "ms."), 1e-1: ("x100", "ms."),
-                           1: ("x1", "s."), 1e1: ("x10", "s."), 1e2: ("x100", "s."),
-                           1e3: ("x1", "ks.")}
-LOCKIN_SENS_MOD_MAP = {0: 5, 1: 1, 2: 2}
-LOCKIN_SENS_MULT_UNIT_MAP = {1e-9: ("x1", "nV."), 1e-8: ("x10", "nV."), 1e-7: ("x100", "nV."),
-                             1e-6: ("x1", "uV."), 1e-5: ("x10", "uV."), 1e-4: ("x100", "uV."),
-                             1e-3: ("x1", "mV."), 1e-2: ("x10", "mV."), 1e-1: ("x100", "mV."),
-                             1: ("x1", "V.")}
-LOCKIN_FS = [2**i for i in range(-4, 10)]
-################################################################################################
 
 
 class LockinAutoWindow(Ui_Form, GuiTab):
 
-    def __init__(self):
+    def __init__(self, button_queue_keys=None):
         self.form = QtWidgets.QWidget()
         self.setupUi(self.form)
-        super().__init__(self, use_local_button_queue=False, use_global_button_queue=False)
+        super().__init__(self, button_queue_keys=button_queue_keys)
 
         # Configure Parameters ################################################################################
-        self.add_parameter("SR510 Sample Frequency", self.get_sr510_fs, self.set_sr510_fs)
-        self.add_parameter("SR510 Time Constant", self.get_sr510_tc, self.set_sr510_tc)
-        self.add_parameter("SR510 Sensitivity Transition List", self.get_sr510_transition_list,
+        self.add_parameter("sr510 sample frequency", self.get_sr510_fs, self.set_sr510_fs)
+        self.add_parameter("sr510 time constant", self.get_sr510_tc, self.set_sr510_tc)
+        self.add_parameter("sr510 sensitivity transition list", self.get_sr510_transition_list,
                            self.set_sr510_transition_list)
-        self.add_parameter("SR510 Sensitivity Transition Wavelength", self.get_sr510_transition_wavelength,
-                           self.set_sr510_transition_wavelength)
-        self.add_parameter("SR510 Sensitivity", self.get_sr510_sensitivity, self.set_sr510_sensitivity)
-        self.add_parameter("SR830 Sample Frequency", self.get_sr830_fs, self.set_sr830_fs)
-        self.add_parameter("SR830 Time Constant", self.get_sr830_tc, self.set_sr830_tc)
-        self.add_parameter("SR830 Sensitivity Transition List", self.get_sr830_transition_list,
+        #self.add_parameter("SR510 Sensitivity Transition Wavelength", self.get_sr510_transition_wavelength,
+        #                   self.set_sr510_transition_wavelength)
+        self.add_parameter("sr510 sensitivity", self.get_sr510_sensitivity, self.set_sr510_sensitivity)
+        self.add_parameter("sr830 sample frequency", self.get_sr830_fs, self.set_sr830_fs)
+        self.add_parameter("sr830 time constant", self.get_sr830_tc, self.set_sr830_tc)
+        self.add_parameter("sr830 sensitivity transition list", self.get_sr830_transition_list,
                            self.set_sr830_transition_list)
-        self.add_parameter("SR830 Sensitivity Transition Wavelength", self.get_sr830_transition_wavelength,
-                           self.set_sr830_transition_wavelength)
-        self.add_parameter("SR830 Sensitivity", self.get_sr830_sensitivity, self.set_sr830_sensitivity)
+        #self.add_parameter("SR830 Sensitivity Transition Wavelength", self.get_sr830_transition_wavelength,
+        #                   self.set_sr830_transition_wavelength)
+        self.add_parameter("sr830 sensitivity", self.get_sr830_sensitivity, self.set_sr830_sensitivity)
         ########################################################################################################
 
         # Configure button methods #####################################################################################
@@ -70,13 +50,17 @@ class LockinAutoWindow(Ui_Form, GuiTab):
     def get_sr510_fs(self):
         """get_sr510_fs: get the sample rate for the sr510 lockin
         """
-        return float(self.sequence_sr510_sensitivity_units_cbox.currentText())
+        return float(self.sequence_sr510_samplerate_combobox.currentText())
 
     def set_sr510_fs(self, fs):
         """set_sr510_fs: set the sample rate for the sr510 lockin
         """
+        if type(fs) is str:
+            fs = float(fs)
+            if fs >= 1.0:
+                fs = int(fs)
         if fs in LOCKIN_FS:
-            self.sequence_sr510_sensitivity_units_cbox.setCurrentText(str(fs))
+            self.sequence_sr510_samplerate_combobox.setCurrentText(str(fs))
         else:
             raise ValueError("Sample frequency must be one of the following values: {}!".format(LOCKIN_FS))
 
@@ -89,16 +73,19 @@ class LockinAutoWindow(Ui_Form, GuiTab):
         tc_unit_multiplier = LOCKIN_UNIT_TC_MAP[tc_units]
         tc = tc_value*tc_multiplier*tc_unit_multiplier
 
-        return {"value": tc, "string": "{} {}".format(tc_value*tc_multiplier, tc_units)}
+        return tc
 
     def set_sr510_tc(self, tc):
         """set_sr510_tc: set the sr510 display time-constant combo boxes
         """
 
+        if type(tc) is str:
+            tc = float(tc)
+
         tc_mod = tc % 3
         tc_value = tc_mod + LOCKIN_TC_MOD_MAP[tc_mod]
         tc_mult, tc_units = LOCKIN_TC_MULT_UNIT_MAP[tc/tc_value]
-        self.sequence_sr510_timeconstant_value_cbox.setCurrentText(tc_value)
+        self.sequence_sr510_timeconstant_value_cbox.setCurrentText(str(tc_value))
         self.sequence_sr510_timeconstant_multiplier_cbox.setCurrentText(tc_mult)
         self.sequence_sr510_timeconstant_units_cbox.setCurrentText(tc_units)
 
@@ -106,18 +93,25 @@ class LockinAutoWindow(Ui_Form, GuiTab):
         """get_sr510_transition_list: get the sr510 transition list text and data.
         """
         item_count = self.sequence_sr510_senstransitions_list.count()
-        transition_list = [0 for _ in range(item_count)]
+        transition_list_str = ""
         for i in range(item_count):
             self.sequence_sr510_senstransitions_list.setCurrentRow(i)
             item = self.sequence_sr510_senstransitions_list.currentItem()
-            transition_list[i] = {"text": item.text(), "transition": item.data()}
-        return transition_list
+            item_str = item.text().replace("; ", ",")
+            if transition_list_str == "":
+                transition_list_str += item_str
+            else:
+                transition_list_str += item_str.replace("W", ";W")
+        return transition_list_str
 
     def set_sr510_transition_list(self, transition_list):
         """set_sr510_transition_list: set the sr510 transition list text and data.
         """
+        self.sequence_sr510_senstransitions_list.clear()
+        transition_list = transition_list.split(";")
         for trans in transition_list:
-            GuiTab.add_item_to_list(self.sequence_sr510_senstransitions_list, trans["text"], trans["transition"])
+            trans_text = trans.replace(",", "; ")
+            GuiTab.add_item_to_list(self.sequence_sr510_senstransitions_list, trans_text, "")
 
     def get_sr510_transition_wavelength(self):
         """get_sr510_transition_wavelength: get the wavelength entry for a new sr510 sensitivity transition.
@@ -152,13 +146,17 @@ class LockinAutoWindow(Ui_Form, GuiTab):
     def get_sr830_fs(self):
         """get_sr830_fs: get the sample rate for the sr830 lockin
         """
-        return float(self.sequence_sr830_sensitivity_units_cbox.currentText())
+        return float(self.sequence_sr830_samplerate_combobox.currentText())
 
     def set_sr830_fs(self, fs):
         """set_sr830_fs: set the sample rate for the sr830 lockin
         """
+        if type(fs) is str:
+            fs = float(fs)
+            if fs >= 1.0:
+                fs = int(fs)
         if fs in LOCKIN_FS:
-            self.sequence_sr830_sensitivity_units_cbox.setCurrentText(str(fs))
+            self.sequence_sr830_samplerate_combobox.setCurrentText(str(fs))
         else:
             raise ValueError("Sample frequency must be one of the following values: {}!".format(LOCKIN_FS))
 
@@ -171,35 +169,43 @@ class LockinAutoWindow(Ui_Form, GuiTab):
         tc_unit_multiplier = LOCKIN_UNIT_TC_MAP[tc_units]
         tc = tc_value*tc_multiplier*tc_unit_multiplier
 
-        return {"value": tc, "string": "{} {}".format(tc_value*tc_multiplier, tc_units)}
+        return tc
 
     def set_sr830_tc(self, tc):
         """set_sr830_tc: set the sr830 display time-constant combo boxes
         """
-
+        if type(tc) is str:
+            tc = float(tc)
         tc_mod = tc % 3
         tc_value = tc_mod + LOCKIN_TC_MOD_MAP[tc_mod]
         tc_mult, tc_units = LOCKIN_TC_MULT_UNIT_MAP[tc/tc_value]
-        self.sequence_sr830_timeconstant_value_cbox.setCurrentText(tc_value)
-        self.sequence_sr830_timeconstant_multiplier_cbox.setCurrentText(tc_mult)
-        self.sequence_sr830_timeconstant_units_cbox.setCurrentText(tc_units)
+        self.sequence_sr830_timeconstant_value_cbox.setCurrentText(str(tc_value))
+        self.sequence_sr830_timeconstant_multiplier_cbox.setCurrentText(str(tc_mult))
+        self.sequence_sr830_timeconstant_units_cbox.setCurrentText(str(tc_units))
 
     def get_sr830_transition_list(self):
         """get_sr830_transition_list: get the sr830 transition list text and data.
         """
         item_count = self.sequence_sr830_senstransitions_list.count()
-        transition_list = [0 for _ in range(item_count)]
+        transition_list_str = ""
         for i in range(item_count):
             self.sequence_sr830_senstransitions_list.setCurrentRow(i)
             item = self.sequence_sr830_senstransitions_list.currentItem()
-            transition_list[i] = {"text": item.text(), "transition": item.data()}
-        return transition_list
+            item_str = item.text().replace("; ", ",")
+            if transition_list_str == "":
+                transition_list_str += item_str
+            else:
+                transition_list_str += item_str.replace("W", ";W")
+        return transition_list_str
 
     def set_sr830_transition_list(self, transition_list):
         """set_sr830_transition_list: set the sr830 transition list text and data.
         """
+        self.sequence_sr830_senstransitions_list.clear()
+        transition_list = transition_list.split(";")
         for trans in transition_list:
-            GuiTab.add_item_to_list(self.sequence_sr830_senstransitions_list, trans["text"], trans["transition"])
+            trans_text = trans.replace(",", "; ")
+            GuiTab.add_item_to_list(self.sequence_sr830_senstransitions_list, trans_text, "")
 
     def get_sr830_transition_wavelength(self):
         """get_sr830_transition_wavelength: get the wavelength entry for a new sr830 sensitivity transition.
@@ -252,7 +258,7 @@ class LockinAutoWindow(Ui_Form, GuiTab):
         except ValueError as e:
             print(e)
         else:
-            transition_text = "Wavelength = {};  Sensitivity = {}{}".format(wave, sens_value*sens_multiplier, sens_units)
+            transition_text = "Wavelength = {}; Sensitivity = {}{}".format(wave, sens_value*sens_multiplier, sens_units)
             transition_data = {"Wavelength": wave, "Sensitivity": sens}
 
             GuiTab.add_item_to_list(self.sequence_sr510_senstransitions_list, transition_text, transition_data)
@@ -282,7 +288,7 @@ class LockinAutoWindow(Ui_Form, GuiTab):
         except ValueError as e:
             print(e)
         else:
-            transition_text = "Wavelength = {};  Sensitivity = {}{}".format(wave, sens_value * sens_multiplier,
+            transition_text = "Wavelength = {}; Sensitivity = {}{}".format(wave, sens_value * sens_multiplier,
                                                                             sens_units)
             transition_data = {"Wavelength": wave, "Sensitivity": sens}
             GuiTab.add_item_to_list(self.sequence_sr830_senstransitions_list, transition_text, transition_data)

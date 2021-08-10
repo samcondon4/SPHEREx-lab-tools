@@ -19,34 +19,16 @@ def flatten_list(in_list):
 
 
 class GuiTab:
-    # Queue object that can be shared if multiple GuiTabs should share the same namespace #
-    GlobalButtonQueue = SimpleQueue()
-    #######################################################################################
+
+    ButtonQueues = {}
+    Buttons = []
 
     @classmethod
-    def get_global_button(cls):
-        """get_global_button: return the latest button press from the global queue
-
-        :return: string identifying the last button that was pressed
+    def add_button_queue(cls, key):
+        """add_button_queue: Add a new button queue with the specified key
         """
-        if not cls.GlobalButtonQueue.empty():
-            button_ret = cls.GlobalButtonQueue.get(timeout=1)
-        else:
-            button_ret = False
-        return button_ret
-
-    @classmethod
-    def add_button_to_global_queue(cls, button):
-        cls.GlobalButtonQueue.put(button)
-
-    @classmethod
-    def clear_global_button_queue(cls):
-        """clear_button_queue: clear the global button queue of all values
-
-        :return: None
-        """
-        while not cls.GlobalButtonQueue.empty():
-            cls.GlobalButtonQueue.get(timeout=1)
+        queue = SimpleQueue()
+        cls.ButtonQueues[key] = queue
 
     @classmethod
     def add_item_to_list(cls, item_list, text, data, role=0):
@@ -79,34 +61,33 @@ class GuiTab:
         """
         item_list.clear()
 
-    def __init__(self, child, use_local_button_queue=False, use_global_button_queue=True):
+    def __init__(self, child, button_queue_keys=None):
         # super().__init__(self)
+        if button_queue_keys is None:
+            self.button_queue_keys = []
+        else:
+            self.button_queue_keys = button_queue_keys
+        self.child = child
         self.window_selector_dict = None
-        self.button_queue = SimpleQueue()
         self.parameters = []
         self.get_methods = {}
         self.set_methods = {}
-        self.child = child
-        self.use_local_button_queue = use_local_button_queue
-        self.use_global_button_queue = use_global_button_queue
 
-        # Configure button widgets to update button queues ###################################################
-        ######################################################################################################
+        self.configure_button_queues()
 
-    def configure_button_queues(self, use_local=True, use_global=True):
-        """configure_button_queues: Configure all buttons in a widget to update the local and/or global button queues.
+    def configure_button_queues(self):
+        """configure_button_queues: Configure all buttons in a widget to update the button queues that a GuiTab instance
+                                    has access to.
         """
-        self.use_local_button_queue = use_local
-        self.use_global_button_queue = use_global
-        if self.use_local_button_queue or self.use_global_button_queue:
-            widgets = self.get_widgets_from_layout(self.child.form.layout())
-            for w in widgets:
-                if type(w) is QtWidgets.QWidgetItem:
-                    widget = w.widget()
-                else:
-                    widget = w
-                if type(widget) is QtWidgets.QPushButton:
-                    widget.clicked.connect(lambda state, in_widget=widget: self.add_button_to_queues(in_widget))
+        widgets = self.get_widgets_from_layout(self.child.form.layout())
+        for w in widgets:
+            if type(w) is QtWidgets.QWidgetItem:
+                widget = w.widget()
+            else:
+                widget = w
+            if type(widget) is QtWidgets.QPushButton and widget not in GuiTab.Buttons:
+                GuiTab.Buttons.extend([widget])
+                widget.clicked.connect(lambda state, in_widget=widget: self.add_button_to_queues(in_widget))
 
     def configure_stacked_widget_switch(self):
         """configure_stacked_widget_switch: Stacked widgets do not naturally provide any means of switching between
@@ -131,36 +112,48 @@ class GuiTab:
             widget.setLayout(layout)
             self.window_selector_dict[widget_name] = window_selector
 
-    def get_button(self):
+    def get_button(self, key):
         """get_button: return the latest button press from the button queue
 
         :return: string identifying the last button that was pressed
         """
-        if not self.button_queue.empty():
-            button_ret = self.button_queue.get(timeout=1)
+        if key in self.button_queue_keys:
+            queue_empty = GuiTab.ButtonQueues[key].empty()
+        else:
+            raise KeyError("GuiTab instance does not have access to button queue {}, or the specified queue has not"
+                           "been created".format(key))
+
+        if not queue_empty:
+            button_ret = GuiTab.ButtonQueues[key].get(timeout=1)
         else:
             button_ret = False
 
         return button_ret
 
-    def add_button_to_queues(self, button):
-        """add_button_to_queues: Triggered when a QPushButton is clicked. Adds the button identifier to the local and
-                                 global button queues based on the use_*_button_queue attributes.
+    def add_button_to_queues(self, button=None, button_text=None):
+        """add_button_to_queues: Triggered when a QPushButton is clicked. Adds the button identifier to all queues that
+                                 an instance has access to.
         """
-        button_text = button.text()
-        print(button_text)
-        if self.use_global_button_queue:
-            GuiTab.add_button_to_global_queue(button_text)
-        if self.use_local_button_queue:
-            self.button_queue.put(button_text)
+        if button is not None:
+            button_text = button.text()
+        elif button_text is not None:
+            pass
+        else:
+            raise ValueError("Must pass either a button or button text string argument!")
+        for key in self.button_queue_keys:
+            GuiTab.ButtonQueues[key].put(button_text)
 
-    def clear_button_queue(self):
-        """clear_button_queue: clear the button queue of all values
-
+    def clear_button_queue(self, key):
+        """clear_button_queue: clear the specified button queue of all values
         :return: None
         """
-        while not self.button_queue.empty():
-            self.button_queue.get(timeout=1)
+        if key in self.button_queue_keys:
+            queue = GuiTab.ButtonQueues[key]
+            while not queue.empty():
+                queue.get(timeout=1)
+        else:
+            raise KeyError("GuiTab instance does not have access to button queue {}, or the specified queue has not"
+                           "been created".format(key))
 
     def add_parameter(self, parameter_name, getter, setter):
         """add_parameter: add functions to the getter and setter dictionaries for the specified parameter name.
@@ -219,7 +212,10 @@ class GuiTab:
         :return: None
         """
         for key in params_dict:
-            self.set_methods[key](params_dict[key])
+            try:
+                self.set_methods[key](params_dict[key])
+            except KeyError as e:
+                pass
 
     # Stacked widget switching #
     def _on_stacked_widget_select(self):
