@@ -235,17 +235,17 @@ class SeriesConstructionWindow(Ui_Form, GuiTab):
         rem_seq = self.auto_series_series_list.currentItem()
         if rem_seq is not None:
             self.series_seq_list.pop(rem_seq.text())
-            #self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
+            self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
             self.auto_series_series_list.takeItem(self.auto_series_series_list.currentRow())
-            #self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
+            self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
 
     def _on_Remove_All_Sequences_From_series(self):
         """on_Save_New_Sequence: add save new sequence button identifier to button queue
         """
-        #self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
+        self.auto_series_series_list.currentItemChanged.disconnect(self._on_Series_Sequence_Select)
         self.auto_series_series_list.clear()
         self.series_seq_list = {}
-        #self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
+        self.auto_series_series_list.currentItemChanged.connect(self._on_Series_Sequence_Select)
 
     def _on_Sequence_Select(self):
         """_on_Sequence_Select: Add the Sequence Select identifier to the appropriate button queues.

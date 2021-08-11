@@ -9,15 +9,15 @@ Sam Condon, 08/02/2021
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from pylablib.pylablib_gui_tab import GuiTab
-import pylabcal.pylabcalgui.CS260Window.cs260Dialog as MonoDialog
+import pylabcal.pylabcalgui.CS260Window.CS260Dialog as MonoDialog
 
 
 class CS260Window(MonoDialog.Ui_Form, GuiTab):
 
-    def __init__(self):
+    def __init__(self, button_queue_keys=None):
         self.form = QtWidgets.QDialog()
         self.setupUi(self.form)
-        super().__init__(self)
+        super().__init__(self, button_queue_keys=button_queue_keys)
 
         # Configure parameters ####################################################################################
         self.add_parameter("current wavelength", self.get_current_wavelength, self.set_current_wavelength)
@@ -28,10 +28,6 @@ class CS260Window(MonoDialog.Ui_Form, GuiTab):
         self.add_parameter("new osf", self.get_new_osf, self.set_new_osf)
         self.add_parameter("new grating", self.get_new_grating, self.set_new_grating)
         self.add_parameter("new shutter", self.get_new_shutter, self.set_new_shutter)
-        ###########################################################################################################
-
-        # Connect buttons to methods ##############################################################################
-        #self.manual_monochromator_setparams_button.clicked.connect(self._on_Set_Monochromator_Parameters)
         ###########################################################################################################
 
     # PARAMETER GETTERS/SETTERS########################################################################################
@@ -145,12 +141,4 @@ class CS260Window(MonoDialog.Ui_Form, GuiTab):
 
     ##PRIVATE METHODS ##################################################################
     # Button Methods ###########################
-    def _on_Set_Monochromator_Parameters(self):
-        """_on_Set_Parameters: Add the Set Parameters button identifier to button queue
-
-        :return: None
-        """
-        set_string = "Monochromator Set Parameters"
-        self.button_queue.put(set_string)
-        GuiTab.GlobalButtonQueue.put(set_string)
     #####################################################################################

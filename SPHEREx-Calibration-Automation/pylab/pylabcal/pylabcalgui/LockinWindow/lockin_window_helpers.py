@@ -21,3 +21,15 @@ LOCKIN_SENS_MULT_UNIT_MAP = {1e-9: ("x1", "nV."), 1e-8: ("x10", "nV."), 1e-7: ("
                              1: ("x1", "V.")}
 LOCKIN_FS = [float(2**i) for i in range(-4, 10)]
 ################################################################################################
+
+
+def get_tc(value, multiplier, units):
+
+    tc_unit_multiplier = LOCKIN_UNIT_TC_MAP[units]
+    tc = value*multiplier*tc_unit_multiplier
+    return tc
+
+
+def func():
+    pass
+

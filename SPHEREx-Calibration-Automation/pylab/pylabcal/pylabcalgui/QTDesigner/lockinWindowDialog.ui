@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1192</width>
-    <height>1263</height>
+    <width>1351</width>
+    <height>1351</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -341,7 +341,7 @@
         </widget>
        </item>
        <item row="13" column="0" colspan="2">
-        <widget class="QPushButton" name="sr510_manual_lockin_setparams_button">
+        <widget class="QPushButton" name="manual_get_sr510_cfgparams_button">
          <property name="text">
           <string>Set New Parameters</string>
          </property>
@@ -479,7 +479,7 @@
         <widget class="QLineEdit" name="sr510_manual_lockin_measurementstorage_ledit"/>
        </item>
        <item row="20" column="0" colspan="2">
-        <widget class="QPushButton" name="sr510_manual_lockin_startmeasurement_button">
+        <widget class="QPushButton" name="manual_get_sr510_measurementparams_button">
          <property name="text">
           <string>Start Measurement</string>
          </property>
@@ -809,7 +809,7 @@
         </widget>
        </item>
        <item row="13" column="0" colspan="2">
-        <widget class="QPushButton" name="sr830_manual_lockin_setparams_button">
+        <widget class="QPushButton" name="manual_get_sr830_cfgparams_button">
          <property name="text">
           <string>Set New Parameters</string>
          </property>
@@ -947,7 +947,7 @@
         <widget class="QLineEdit" name="sr830_manual_lockin_measurementstorage_ledit"/>
        </item>
        <item row="20" column="0" colspan="2">
-        <widget class="QPushButton" name="sr830_manual_lockin_startmeasurement_button">
+        <widget class="QPushButton" name="manual_get_sr830_measurementparams_button">
          <property name="text">
           <string>Start Measurement</string>
          </property>

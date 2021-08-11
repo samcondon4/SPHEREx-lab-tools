@@ -13,72 +13,85 @@ from pylabcal.pylabcalgui.LabJackWindow.labjackWindowDialog import Ui_Form
 
 class LabjackWindow(Ui_Form, GuiTab):
 
-    def __init__(self):
+    def __init__(self, button_queue_keys=None):
         self.form = QtWidgets.QDialog()
         self.setupUi(self.form)
-        super().__init__(self)
+        super().__init__(self, button_queue_keys=button_queue_keys)
 
-        # Configure parameters ######################################################
+        # Configure parameters ########################################################################################
         self.add_parameter("LabJack", self.get_labjack_parameters, self.set_labjack_parameters)
-        #############################################################################
+        self.add_parameter("dio0state", lambda x=0, y="State": self.get_labjack_parameters(dio=x, state_cfg=y),
+                           self.set_labjack_parameters)
+        self.add_parameter("dio0config", lambda x=0, y="Config": self.get_labjack_parameters(dio=x, state_cfg=y),
+                           self.set_labjack_parameters)
+        self.add_parameter("dio1state", lambda x=1, y="State": self.get_labjack_parameters(dio=x, state_cfg=y),
+                           self.set_labjack_parameters)
+        self.add_parameter("dio1config", lambda x=1, y="Config": self.get_labjack_parameters(dio=x, state_cfg=y),
+                           self.set_labjack_parameters)
+        ###############################################################################################################
 
         ##Connect buttons to methods #######################################################################
-        self.manual_labjack_dio0state_check.stateChanged.connect(self._on_dio0state_Changed)
-        self.manual_labjack_dio1state_check.stateChanged.connect(self._on_dio1state_Changed)
-        self.manual_labjack_dio2state_check.stateChanged.connect(self._on_dio2state_Changed)
-        self.manual_labjack_dio0config_cbox.currentIndexChanged.connect(self._on_dio0config_Changed)
-        self.manual_labjack_dio1config_cbox.currentIndexChanged.connect(self._on_dio1config_Changed)
-        self.manual_labjack_dio2config_cbox.currentIndexChanged.connect(self._on_dio2config_Changed)
+        self.manual_get_labjack_dio0state_check.stateChanged.connect(self._on_dio0state_Changed)
+        self.manual_get_labjack_dio1state_check.stateChanged.connect(self._on_dio1state_Changed)
+        self.manual_get_labjack_dio2state_check.stateChanged.connect(self._on_dio2state_Changed)
+        self.manual_get_labjack_dio0config_cbox.currentIndexChanged.connect(self._on_dio0config_Changed)
+        self.manual_get_labjack_dio1config_cbox.currentIndexChanged.connect(self._on_dio1config_Changed)
+        self.manual_get_labjack_dio2config_cbox.currentIndexChanged.connect(self._on_dio2config_Changed)
         #####################################################################################################
 
     # PARAMETER GETTERS/SETTERS #################################################
-    def get_labjack_parameters(self):
+    def get_labjack_parameters(self, dio=None, state_cfg=None):
         params = {
-            0: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            1: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            2: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            3: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            4: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            5: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            6: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            7: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            8: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            9: {"State": self.manual_labjack_dio0state_check.checkState(),
-                "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            10: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            11: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            12: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            13: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            14: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            15: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            16: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            17: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            18: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            19: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            20: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()},
-            21: {"State": self.manual_labjack_dio0state_check.checkState(),
-                 "Config": self.manual_labjack_dio0config_cbox.currentText()}
+            0: {"State": self.manual_get_labjack_dio0state_check.checkState(),
+                "Config": self.manual_get_labjack_dio0config_cbox.currentText()},
+            1: {"State": self.manual_get_labjack_dio1state_check.checkState(),
+                "Config": self.manual_get_labjack_dio1config_cbox.currentText()},
+            2: {"State": self.manual_get_labjack_dio2state_check.checkState(),
+                "Config": self.manual_get_labjack_dio2config_cbox.currentText()},
+            3: {"State": self.manual_labjack_dio3state_check.checkState(),
+                "Config": self.manual_labjack_dio3config_cbox.currentText()},
+            4: {"State": self.manual_labjack_dio4state_check.checkState(),
+                "Config": self.manual_labjack_dio4config_cbox.currentText()},
+            5: {"State": self.manual_labjack_dio5state_check.checkState(),
+                "Config": self.manual_labjack_dio5config_cbox.currentText()},
+            6: {"State": self.manual_labjack_dio6state_check.checkState(),
+                "Config": self.manual_labjack_dio6config_cbox.currentText()},
+            7: {"State": self.manual_labjack_dio7state_check.checkState(),
+                "Config": self.manual_labjack_dio7config_cbox.currentText()},
+            8: {"State": self.manual_labjack_dio8state_check.checkState(),
+                "Config": self.manual_labjack_dio8config_cbox.currentText()},
+            9: {"State": self.manual_labjack_dio9state_check.checkState(),
+                "Config": self.manual_labjack_dio9config_cbox.currentText()},
+            10: {"State": self.manual_labjack_dio10state_check.checkState(),
+                 "Config": self.manual_labjack_dio10config_cbox.currentText()},
+            11: {"State": self.manual_labjack_dio11state_check.checkState(),
+                 "Config": self.manual_labjack_dio11config_cbox.currentText()},
+            12: {"State": self.manual_labjack_dio12state_check.checkState(),
+                 "Config": self.manual_labjack_dio12config_cbox.currentText()},
+            13: {"State": self.manual_labjack_dio13state_check.checkState(),
+                 "Config": self.manual_labjack_dio13config_cbox.currentText()},
+            14: {"State": self.manual_labjack_dio14state_check.checkState(),
+                 "Config": self.manual_labjack_dio14config_cbox.currentText()},
+            15: {"State": self.manual_labjack_dio15state_check.checkState(),
+                 "Config": self.manual_labjack_dio15config_cbox.currentText()},
+            16: {"State": self.manual_labjack_dio16state_check.checkState(),
+                 "Config": self.manual_labjack_dio16config_cbox.currentText()},
+            17: {"State": self.manual_labjack_dio17state_check.checkState(),
+                 "Config": self.manual_labjack_dio17config_cbox.currentText()},
+            18: {"State": self.manual_labjack_dio18state_check.checkState(),
+                 "Config": self.manual_labjack_dio18config_cbox.currentText()},
+            19: {"State": self.manual_labjack_dio19state_check.checkState(),
+                 "Config": self.manual_labjack_dio19config_cbox.currentText()},
+            20: {"State": self.manual_labjack_dio20state_check.checkState(),
+                 "Config": self.manual_labjack_dio20config_cbox.currentText()},
+            21: {"State": self.manual_labjack_dio21state_check.checkState(),
+                 "Config": self.manual_labjack_dio21config_cbox.currentText()}
         }
+
+        if dio is not None:
+            params = params[dio]
+            if state_cfg is not None:
+                params = params[state_cfg]
 
         return params
 
@@ -161,12 +174,8 @@ class LabjackWindow(Ui_Form, GuiTab):
 
         :return: None
         """
-        if self.manual_labjack_dio0state_check.checkState():
-            put_string = "Labjack Dio0 Checked"
-        else:
-            put_string = "Labjack Dio0 Unchecked"
-        self.button_queue.put(put_string)
-        GuiTab.GlobalButtonQueue.put(put_string)
+        put_string = self.manual_get_labjack_dio0state_check.objectName()
+        self.add_button_to_queues(button_text=put_string)
 
     def _on_dio1state_Changed(self):
         """_on_dio1state_Changed: Execute when the dio0 check state changes. Place "Checked" or "Unchecked" on the
@@ -174,12 +183,8 @@ class LabjackWindow(Ui_Form, GuiTab):
 
         :return: None
         """
-        if self.manual_labjack_dio1state_check.checkState():
-            put_string = "Labjack Dio1 Checked"
-        else:
-            put_string = "Labjack Dio1 Unchecked"
-        self.button_queue.put(put_string)
-        GuiTab.GlobalButtonQueue.put(put_string)
+        put_string = self.manual_get_labjack_dio1state_check.objectName()
+        self.add_button_to_queues(button_text=put_string)
 
     def _on_dio2state_Changed(self):
         """_on_dio2state_Changed: Execute when the dio0 check state changes. Place "Checked" or "Unchecked" on the
@@ -187,36 +192,26 @@ class LabjackWindow(Ui_Form, GuiTab):
 
         :return: None
         """
-        if self.manual_labjack_dio2state_check.checkState():
-            put_string = "Labjack Dio2 Checked"
-        else:
-            put_string = "Labjack Dio2 Unchecked"
-        self.button_queue.put(put_string)
-        GuiTab.GlobalButtonQueue.put(put_string)
+        put_string = self.manual_get_labjack_dio2state_check.objectName()
+        self.add_button_to_queues(button_text=put_string)
 
     def _on_dio0config_Changed(self):
         """_on_dio0config_Changed: Set labjack dio 0 to either input or output depending on user gui input.
-
         """
-        put_string = "Labjack Config Dio0 {}".format(self.manual_labjack_dio0config_cbox.currentText())
-        self.button_queue.put(put_string)
-        GuiTab.GlobalButtonQueue.put(put_string)
+        put_string = self.manual_get_labjack_dio0config_cbox.objectName()
+        self.add_button_to_queues(button_text=put_string)
 
     def _on_dio1config_Changed(self):
         """_on_dio1config_Changed: Set labjack dio 1 to either input or output depending on user gui input.
-
         """
-        put_string = "Labjack Config Dio1 {}".format(self.manual_labjack_dio1config_cbox.currentText())
-        self.button_queue.put(put_string)
-        GuiTab.GlobalButtonQueue.put(put_string)
+        put_string = self.manual_get_labjack_dio1config_cbox.objectName()
+        self.add_button_to_queues(button_text=put_string)
 
     def _on_dio2config_Changed(self):
         """_on_dio2config_Changed: Set labjack dio 0 to either input or output depending on user gui input.
-
         """
-        put_string = "Labjack Config Dio2 {}".format(self.manual_labjack_dio2config_cbox.currentText())
-        self.button_queue.put(put_string)
-        GuiTab.GlobalButtonQueue.put(put_string)
+        put_string = self.manual_get_labjack_dio2config_cbox.objectName()
+        self.add_button_to_queues(button_text=put_string)
 
     #################################################################################################################
 

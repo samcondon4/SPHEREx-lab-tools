@@ -130,18 +130,27 @@ class GuiTab:
 
         return button_ret
 
-    def add_button_to_queues(self, button=None, button_text=None):
+    def add_button_to_queues(self, button=None, button_text=None, queue_keys=None):
         """add_button_to_queues: Triggered when a QPushButton is clicked. Adds the button identifier to all queues that
                                  an instance has access to.
         """
         if button is not None:
-            button_text = button.text()
+            button_text = button.objectName()
         elif button_text is not None:
             pass
         else:
             raise ValueError("Must pass either a button or button text string argument!")
-        for key in self.button_queue_keys:
-            GuiTab.ButtonQueues[key].put(button_text)
+
+        button_str_split = button_text.split('_')
+        button_queue_entry = {"Tab": button_str_split[0], "Get/Set": button_str_split[1],
+                              "Instrument": button_str_split[2], "Parameter": button_str_split[3]}
+
+        if queue_keys is None:
+            for key in self.button_queue_keys:
+                GuiTab.ButtonQueues[key].put(button_queue_entry)
+        else:
+            for key in queue_keys:
+                GuiTab.ButtonQueues[key].put(button_queue_entry)
 
     def clear_button_queue(self, key):
         """clear_button_queue: clear the specified button queue of all values
@@ -184,24 +193,33 @@ class GuiTab:
             self.parameters.append(parameter_name)
         self.set_methods[parameter_name] = getter
 
-    def get_parameters(self, params):
+    def get_parameters(self, params, arg=None):
         """get_params: return the specified parameters as a dictionary.
 
         :param:
             params: string, list of strings, or "All" to specify which parameters
                     should be returned.
 
+            arg: some getters take an additional argument. This keyword argument will be passed to the getter
+                 if its value is changed from NoneType
         :return: dictionary of the desired parameters.
         """
         return_dict = {}
-        if params == 'All':
+        method_list = []
+        if params == 'all':
             for p in self.parameters:
-                return_dict[p] = self.get_methods[p]()
+                method_list.append((p, self.get_methods[p]))
         elif type(params) is list:
             for p in params:
-                return_dict[p] = self.get_methods[p]()
+                method_list.append((p, self.get_methods[p]))
         elif type(params) is str:
-            return_dict[params] = self.get_methods[params]()
+            method_list.append((params, self.get_methods[params]))
+
+        for method in method_list:
+            if arg is not None:
+                return_dict[method[0]] = method[1](arg)
+            else:
+                return_dict[method[0]] = method[1]()
 
         return return_dict
 

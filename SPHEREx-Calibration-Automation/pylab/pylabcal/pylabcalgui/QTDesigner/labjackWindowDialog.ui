@@ -62,14 +62,14 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio0state_check">
+    <widget class="QCheckBox" name="manual_get_labjack_dio0state_check">
      <property name="text">
       <string>DIO0</string>
      </property>
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio0config_cbox">
+    <widget class="QComboBox" name="manual_get_labjack_dio0config_cbox">
      <item>
       <property name="text">
        <string>Input</string>
@@ -104,14 +104,14 @@
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio1state_check">
+    <widget class="QCheckBox" name="manual_get_labjack_dio1state_check">
      <property name="text">
       <string>DIO1</string>
      </property>
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio1config_cbox">
+    <widget class="QComboBox" name="manual_get_labjack_dio1config_cbox">
      <item>
       <property name="text">
        <string>Input</string>
@@ -146,14 +146,14 @@
     </widget>
    </item>
    <item row="5" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio2state_check">
+    <widget class="QCheckBox" name="manual_get_labjack_dio2state_check">
      <property name="text">
       <string>DIO2</string>
      </property>
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio2config_cbox">
+    <widget class="QComboBox" name="manual_get_labjack_dio2config_cbox">
      <item>
       <property name="text">
        <string>Input</string>

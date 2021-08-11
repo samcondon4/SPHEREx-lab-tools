@@ -20,23 +20,33 @@ from pylabcal.pylabcalgui.LockinWindow.lockinAutoWindowDialogWrapper import Lock
 
 class AutomationTab(GuiTab):
 
-    def __init__(self, root_path, seq_config_path, instruments=None):
+    def __init__(self, root_path, seq_config_path, instruments=None, button_queue_keys=None):
+        self.form = QtWidgets.QStackedWidget()
+        self.form.setWindowTitle("Automation")
         self.root_path = root_path
         self.seq_config_path = seq_config_path
         if instruments is None:
             self.instruments = ["Monochromator", "Lockin", "NDF"]
         else:
             self.instruments = instruments
-        self.form = QtWidgets.QStackedWidget()
 
         self.seq_files = []
         self.series = []
 
         self.auto_queue_key = "Auto"
+        if button_queue_keys is not None:
+            self.queue_keys = [0 for _ in range(len(button_queue_keys))]
+            for i in range(len(self.queue_keys)):
+                self.queue_keys[i] = button_queue_keys[i]
+            self.external_button_queue_keys = button_queue_keys
+        else:
+            self.queue_keys = []
+            self.external_button_queue_keys = None
         GuiTab.add_button_queue(self.auto_queue_key)
         self.series_window = SeriesConstructionWindow(root_path, seq_config_path, button_queue_keys=[self.auto_queue_key])
         self.form.addWidget(self.series_window.form)
-        super().__init__(self, button_queue_keys=[self.auto_queue_key])
+        self.queue_keys.extend([self.auto_queue_key])
+        super().__init__(self, button_queue_keys=self.queue_keys)
 
         # Configure parameters ############################################################################
         self.add_parameter("Series", self.get_series, self.set_series)
@@ -79,7 +89,8 @@ class AutomationTab(GuiTab):
         while True:
             button_press = self.get_button(self.auto_queue_key)
             if button_press is not False:
-                button_method_str = button_press.replace(" ", "_")
+                button_text = button_press.text()
+                button_method_str = button_text.replace(" ", "_")
                 try:
                     button_method = getattr(self, "_on_{}".format(button_method_str))
                 except AttributeError as e:
@@ -117,27 +128,33 @@ class AutomationTab(GuiTab):
         write_config_file(sequence, self.root_path + self.seq_config_path + seq_file_name)
 
     def _on_Run_Series(self):
-        print("_on_Run_Series")
+        if self.external_button_queue_keys is not None:
+            self.add_button_to_queues(button_text="Run Series", queue_keys=self.external_button_queue_keys)
 
     def _on_Pause_Series(self):
-        print("_on_Pause_Series")
+        if self.external_button_queue_keys is not None:
+            self.add_button_to_queues(button_text="Pause Series", queue_keys=self.external_button_queue_keys)
 
     def _on_Abort_Series(self):
-        print("_on_Abort_Series")
+        if self.external_button_queue_keys is not None:
+            self.add_button_to_queues(button_text="Abort Series", queue_keys=self.external_button_queue_keys)
 
     def _on_Sequence_Select(self):
         cur_seq = self.series_window.get_parameters(["Current Sequence"])["Current Sequence"]
-        cur_seq_params = get_params_dict(self.root_path + self.seq_config_path + cur_seq + ".ini")
-        self.series_window.set_parameters({"Sequence Info": cur_seq_params["Sequence Info"],
-                                           "Data Configuration": cur_seq_params["Data Configuration"],
-                                           "Metadata Configuration": cur_seq_params["Metadata Configuration"]})
-        self.cs260_window.set_parameters(cur_seq_params["Monochromator"])
-        self.lockin_window.set_parameters(cur_seq_params["Lock-In"])
-        self.ndf_window.set_parameters(cur_seq_params["NDF"])
+        self.set_window_params(cur_seq)
 
     def _on_Series_Sequence_Select(self):
         cur_ser_seq = self.series_window.get_parameters(["Current Series Sequence"])["Current Series Sequence"]
-        print("_on_Series_Sequence_Selection")
+        self.set_window_params(cur_ser_seq)
+
+    def set_window_params(self, seq):
+        seq_params = get_params_dict(self.root_path + self.seq_config_path + seq + ".ini")
+        self.series_window.set_parameters({"Sequence Info": seq_params["Sequence Info"],
+                                           "Data Configuration": seq_params["Data Configuration"],
+                                           "Metadata Configuration": seq_params["Metadata Configuration"]})
+        self.cs260_window.set_parameters(seq_params["Monochromator"])
+        self.lockin_window.set_parameters(seq_params["Lock-In"])
+        self.ndf_window.set_parameters(seq_params["NDF"])
     #########################################################################################################
 
     # PARAMETER GETTER/SETTERS ##############################################################################
@@ -176,7 +193,7 @@ if __name__ == "__main__":
     EventLoop = QEventLoop()
     asyncio.set_event_loop(EventLoop)
     window.form.show()
-    asyncio.create_task(window.run())
+    #asyncio.create_task(window.run())
     with EventLoop:
         EventLoop.run_forever()
         EventLoop.close()
