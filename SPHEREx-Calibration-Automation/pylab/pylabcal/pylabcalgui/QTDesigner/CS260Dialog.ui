@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QLabel" name="manual_monochromator_label_2">
+    <widget class="QLabel" name="label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -75,7 +75,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLabel" name="manual_monochromator_wavelength_label_3">
+    <widget class="QLabel" name="label_10">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -88,7 +88,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLabel" name="manual_monochromator_wavelength_label_4">
+    <widget class="QLabel" name="label_11">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -101,7 +101,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLineEdit" name="manual_monochromator_currentwavelength_ledit">
+    <widget class="QLineEdit" name="lineedit_base_CurrentMonochromatorParams_passive_Wavelength">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -117,7 +117,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="manual_monochromator_newwavelength_ledit">
+    <widget class="QLineEdit" name="lineedit_base_NewMonochromatorParams_passive_Wavelength">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -127,7 +127,7 @@
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QLabel" name="manual_monochromator_curfilter_label">
+    <widget class="QLabel" name="label_2">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -140,7 +140,7 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QLabel" name="manual_monochromator_newfilter_label">
+    <widget class="QLabel" name="label_7">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -153,7 +153,7 @@
     </widget>
    </item>
    <item row="5" column="0">
-    <widget class="QComboBox" name="manual_monochromator_currentfilter_combobox">
+    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_OrderSortFilter">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -180,7 +180,7 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QComboBox" name="manual_monochromator_newfilter_combobox">
+    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_OrderSortFilter">
      <property name="currentIndex">
       <number>1</number>
      </property>
@@ -212,7 +212,7 @@
     </widget>
    </item>
    <item row="6" column="0">
-    <widget class="QLabel" name="manual_monochromator_grating_label_3">
+    <widget class="QLabel" name="label_5">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -225,7 +225,7 @@
     </widget>
    </item>
    <item row="6" column="1">
-    <widget class="QLabel" name="manual_monochromator_grating_label_4">
+    <widget class="QLabel" name="label_6">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -238,7 +238,7 @@
     </widget>
    </item>
    <item row="7" column="0">
-    <widget class="QComboBox" name="manual_monochromator_currentgrating_combobox">
+    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_Grating">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -266,7 +266,7 @@
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QComboBox" name="manual_monochromator_newgrating_combobox">
+    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_Grating">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -296,7 +296,7 @@
     </widget>
    </item>
    <item row="8" column="0">
-    <widget class="QLabel" name="manual_monochromator_shutter_label">
+    <widget class="QLabel" name="label_8">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -309,7 +309,7 @@
     </widget>
    </item>
    <item row="8" column="1">
-    <widget class="QLabel" name="manual_monochromator_shutter_label_2">
+    <widget class="QLabel" name="label_9">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -322,7 +322,7 @@
     </widget>
    </item>
    <item row="9" column="0">
-    <widget class="QComboBox" name="manual_monochromator_currentshutter_combobox">
+    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_Shutter">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -345,7 +345,7 @@
     </widget>
    </item>
    <item row="9" column="1">
-    <widget class="QComboBox" name="manual_monochromator_newshutter_combobox">
+    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_Shutter">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -365,7 +365,7 @@
     </widget>
    </item>
    <item row="10" column="0" colspan="2">
-    <widget class="QPushButton" name="manual_get_monochromator_all_button">
+    <widget class="QPushButton" name="button_base_NewMonochromatorParams_getter_NewMonoButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1564</width>
-    <height>1080</height>
+    <width>1982</width>
+    <height>1615</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,16 +15,16 @@
   </property>
   <layout class="QGridLayout" name="main_layout">
    <item row="9" column="1">
-    <widget class="QLineEdit" name="sequence_monochromator_osf1osf2_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_MonochromatorOsf1ToOsf2TransitionWavelength"/>
    </item>
    <item row="7" column="1">
-    <widget class="QLineEdit" name="sequence_monochromator_g2g3_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_MonochromatorG2ToG3TransitionWavelength"/>
    </item>
    <item row="10" column="1">
-    <widget class="QLineEdit" name="sequence_monochromator_osf2osf3_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_MonochromatorOsf2ToOsf3TransitionWavelength"/>
    </item>
    <item row="8" column="1">
-    <widget class="QLineEdit" name="sequence_monochromator_noosfosf1_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_MonochromatorNoOsfToOsf1TransitionWavelength"/>
    </item>
    <item row="2" column="0">
     <widget class="QLabel" name="sequence_monochromator_startwave_label">
@@ -60,7 +60,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="sequence_monochromator_endwave_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_MonochromatorEndWavelength"/>
    </item>
    <item row="3" column="0">
     <widget class="QLabel" name="sequence_monochromator_endwave_label">
@@ -76,7 +76,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QLineEdit" name="sequence_monochromator_startwave_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_MonochromatorStartWavelength"/>
    </item>
    <item row="4" column="0">
     <widget class="QLabel" name="sequence_monochromator_stepsize_label">
@@ -92,7 +92,7 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QLineEdit" name="sequence_monochromator_stepsize_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_MonochromatorStepSize"/>
    </item>
    <item row="5" column="0">
     <widget class="QLabel" name="sequence_monochromator_shutter_label">
@@ -102,10 +102,10 @@
     </widget>
    </item>
    <item row="6" column="1">
-    <widget class="QLineEdit" name="sequence_monochromator_g1g2_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_MonochromatorG1ToG2TransitionWavelength"/>
    </item>
    <item row="5" column="1">
-    <widget class="QComboBox" name="sequence_monochromator_shutter_combobox">
+    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_MonochromatorShutter">
      <item>
       <property name="text">
        <string>Open</string>

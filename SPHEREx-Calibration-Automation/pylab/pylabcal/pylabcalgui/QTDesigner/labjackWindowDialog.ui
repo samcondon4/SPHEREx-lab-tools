@@ -6,38 +6,18 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1706</width>
-    <height>1506</height>
+    <width>386</width>
+    <height>1043</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>LabJack</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0" colspan="4">
-    <widget class="QLabel" name="label_14">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>16</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
+   <item row="5" column="0">
+    <widget class="QCheckBox" name="checkbox_base_LabjackDioParameters_passive_Dio2State">
      <property name="text">
-      <string>LabJack:</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="Line" name="line_3">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <string>DIO2</string>
      </property>
     </widget>
    </item>
@@ -61,57 +41,29 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="0" colspan="3">
+    <widget class="Line" name="line_3">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
    <item row="3" column="0">
-    <widget class="QCheckBox" name="manual_get_labjack_dio0state_check">
+    <widget class="QCheckBox" name="checkbox_base_LabjackDioParameters_passive_Dio0State">
      <property name="text">
       <string>DIO0</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
-    <widget class="QComboBox" name="manual_get_labjack_dio0config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="3" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio11state_check">
-     <property name="text">
-      <string>DIO11</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio11config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
    <item row="4" column="0">
-    <widget class="QCheckBox" name="manual_get_labjack_dio1state_check">
+    <widget class="QCheckBox" name="checkbox_base_LabjackDioParameters_passive_Dio1State">
      <property name="text">
       <string>DIO1</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QComboBox" name="manual_get_labjack_dio1config_cbox">
+   <item row="5" column="1" colspan="2">
+    <widget class="QComboBox" name="combobox_base_LabjackDioParameters_passive_Dio2Config">
      <item>
       <property name="text">
        <string>Input</string>
@@ -124,403 +76,65 @@
      </item>
     </widget>
    </item>
-   <item row="4" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio12state_check">
+   <item row="3" column="1" colspan="2">
+    <widget class="QComboBox" name="combobox_base_LabjackDioParameters_passive_Dio0Config">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QComboBox" name="combobox_base_LabjackDioParameters_passive_Dio1Config">
+     <item>
+      <property name="text">
+       <string>Input</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Output</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="6" column="0" colspan="3">
+    <widget class="QPushButton" name="button_base_LabjackDioParameters_getter_DioSetParametersButton">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="text">
-      <string>DIO12</string>
+      <string>Set Dio Parameters</string>
      </property>
     </widget>
    </item>
-   <item row="4" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio12config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QCheckBox" name="manual_get_labjack_dio2state_check">
-     <property name="text">
-      <string>DIO2</string>
+   <item row="0" column="0" colspan="3">
+    <widget class="QLabel" name="label_14">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QComboBox" name="manual_get_labjack_dio2config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio13state_check">
-     <property name="text">
-      <string>DIO13</string>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
      </property>
-    </widget>
-   </item>
-   <item row="5" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio13config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio3state_check">
      <property name="text">
-      <string>DIO3</string>
+      <string>LabJack:</string>
      </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio3config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="6" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio14state_check">
-     <property name="text">
-      <string>DIO14</string>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio14config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio4state_check">
-     <property name="text">
-      <string>DIO4</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio4config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="7" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio15state_check">
-     <property name="text">
-      <string>DIO15</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio15config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio5state_check">
-     <property name="text">
-      <string>DIO5</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio5config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="8" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio16state_check">
-     <property name="text">
-      <string>DIO16</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio16config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio6state_check">
-     <property name="text">
-      <string>DIO6</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio6config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="9" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio17state_check">
-     <property name="text">
-      <string>DIO17</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio17config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="10" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio7state_check">
-     <property name="text">
-      <string>DIO7</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio7config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="10" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio18state_check">
-     <property name="text">
-      <string>DIO18</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio18config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="11" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio8state_check">
-     <property name="text">
-      <string>DIO8</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio8config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="11" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio19state_check">
-     <property name="text">
-      <string>DIO19</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio19config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="12" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio9state_check">
-     <property name="text">
-      <string>DIO9</string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio9config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="12" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio20state_check">
-     <property name="text">
-      <string>DIO20</string>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio20config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="13" column="0">
-    <widget class="QCheckBox" name="manual_labjack_dio10state_check">
-     <property name="text">
-      <string>DIO10</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="1">
-    <widget class="QComboBox" name="manual_labjack_dio10config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
-    </widget>
-   </item>
-   <item row="13" column="2">
-    <widget class="QCheckBox" name="manual_labjack_dio21state_check">
-     <property name="text">
-      <string>DIO21</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="3">
-    <widget class="QComboBox" name="manual_labjack_dio21config_cbox">
-     <item>
-      <property name="text">
-       <string>Input</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>Output</string>
-      </property>
-     </item>
     </widget>
    </item>
   </layout>

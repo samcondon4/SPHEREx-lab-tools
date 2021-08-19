@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1351</width>
-    <height>1351</height>
+    <width>1470</width>
+    <height>1356</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,7 +25,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QLabel" name="sr510_manual_lockin_label">
+        <widget class="QLabel" name="label">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -45,7 +45,7 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="sr510_current_parameters_label">
+        <widget class="QLabel" name="label_2">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -59,7 +59,7 @@
         </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="sr510_cursens_label">
+        <widget class="QLabel" name="label_7">
          <property name="font">
           <font>
            <weight>75</weight>
@@ -72,7 +72,7 @@
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLabel" name="sr510_curtc_label">
+        <widget class="QLabel" name="label_9">
          <property name="font">
           <font>
            <weight>75</weight>
@@ -85,7 +85,7 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLineEdit" name="sr510_manual_lockin_sensitivity_ledit">
+        <widget class="QLineEdit" name="lineedit_base_Sr510CurrentConfigParameters_passive_Sr510CurrentSensitivity">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -103,7 +103,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="sr510_manual_lockin_timeconstant_ledit">
+        <widget class="QLineEdit" name="lineedit_base_Sr510CurrentConfigParameters_passive_Sr510CurrentTimeConstant">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -120,7 +120,7 @@
         </widget>
        </item>
        <item row="5" column="0" colspan="2">
-        <widget class="QLabel" name="sr510_new_parameters_label">
+        <widget class="QLabel" name="label_10">
          <property name="font">
           <font>
            <pointsize>12</pointsize>
@@ -134,7 +134,7 @@
         </widget>
        </item>
        <item row="6" column="0">
-        <widget class="QLabel" name="sr510_manual_lockin_sensitivity_label">
+        <widget class="QLabel" name="label_11">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -154,7 +154,7 @@
         </widget>
        </item>
        <item row="6" column="1">
-        <widget class="QLabel" name="sr510_manual_lockin_timeconstant_label">
+        <widget class="QLabel" name="label_12">
          <property name="font">
           <font>
            <pointsize>8</pointsize>
@@ -168,7 +168,7 @@
         </widget>
        </item>
        <item row="7" column="0">
-        <widget class="QLabel" name="sr510_sens_value_label">
+        <widget class="QLabel" name="label_25">
          <property name="text">
           <string>Value:</string>
          </property>
@@ -182,7 +182,7 @@
         </widget>
        </item>
        <item row="8" column="0">
-        <widget class="QComboBox" name="sr510_manual_lockin_sensitivityvalue_cbox">
+        <widget class="QComboBox" name="combobox_base_Sr510NewConfigParameters_passive_Sr510NewSensitivityValue">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -207,7 +207,7 @@
         </widget>
        </item>
        <item row="8" column="1">
-        <widget class="QComboBox" name="sr510_manual_lockin_timeconstantvalue_cbox">
+        <widget class="QComboBox" name="combobox_base_Sr510NewConfigParameters_passive_Sr510NewTimeConstantValue">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -241,7 +241,7 @@
         </widget>
        </item>
        <item row="10" column="0">
-        <widget class="QComboBox" name="sr510_manual_lockin_sensitivitymultiplier_cbox">
+        <widget class="QComboBox" name="combobox_base_Sr510NewConfigParameters_passive_Sr510NewSensitivityMultiplier">
          <item>
           <property name="text">
            <string>x1</string>
@@ -260,7 +260,7 @@
         </widget>
        </item>
        <item row="10" column="1">
-        <widget class="QComboBox" name="sr510_manual_lockin_timeconstantmultiplier_cbox">
+        <widget class="QComboBox" name="combobox_base_Sr510NewConfigParameters_passive_Sr510NewTimeConstantMultiplier">
          <item>
           <property name="text">
            <string>x1</string>
@@ -293,7 +293,7 @@
         </widget>
        </item>
        <item row="12" column="0">
-        <widget class="QComboBox" name="sr510_manual_lockin_sensitivityunit_cbox">
+        <widget class="QComboBox" name="combobox_base_Sr510NewConfigParameters_passive_Sr510NewSensitivityUnits">
          <item>
           <property name="text">
            <string>V.</string>
@@ -317,7 +317,7 @@
         </widget>
        </item>
        <item row="12" column="1">
-        <widget class="QComboBox" name="sr510_manual_lockin_timeconstantunit_cbox">
+        <widget class="QComboBox" name="combobox_base_Sr510NewConfigParameters_passive_Sr510NewTimeConstantUnits">
          <item>
           <property name="text">
            <string>ks.</string>
@@ -341,7 +341,7 @@
         </widget>
        </item>
        <item row="13" column="0" colspan="2">
-        <widget class="QPushButton" name="manual_get_sr510_cfgparams_button">
+        <widget class="QPushButton" name="button_base_Sr510NewConfigParameters_getter_Sr510NewConfigButton">
          <property name="text">
           <string>Set New Parameters</string>
          </property>
@@ -369,21 +369,21 @@
         </widget>
        </item>
        <item row="16" column="0">
-        <widget class="QLabel" name="manual_lockin_samplerate_label">
+        <widget class="QLabel" name="label_26">
          <property name="text">
           <string>Sample Rate (Hz.):</string>
          </property>
         </widget>
        </item>
        <item row="16" column="1">
-        <widget class="QLabel" name="manual_lockin_sampletime_label">
+        <widget class="QLabel" name="label_27">
          <property name="text">
           <string>Sample Time (s.):</string>
          </property>
         </widget>
        </item>
        <item row="17" column="0">
-        <widget class="QComboBox" name="sr510_manual_lockin_samplerate_combobox">
+        <widget class="QComboBox" name="combobox_base_Sr510MeasurementParameters_passive_SampleRate">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -466,20 +466,20 @@
         </widget>
        </item>
        <item row="17" column="1">
-        <widget class="QLineEdit" name="sr510_manual_lockin_sampletime_ledit"/>
+        <widget class="QLineEdit" name="lineedit_base_Sr510MeasurementParameters_passive_SampleTime"/>
        </item>
        <item row="18" column="0">
-        <widget class="QLabel" name="manual_lockin_measurementstorage_label">
+        <widget class="QLabel" name="label_28">
          <property name="text">
           <string>Measurement Storage Path:</string>
          </property>
         </widget>
        </item>
        <item row="19" column="0" colspan="2">
-        <widget class="QLineEdit" name="sr510_manual_lockin_measurementstorage_ledit"/>
+        <widget class="QLineEdit" name="lineedit_base_Sr510MeasurementParameters_passive_MeasurementStoragePath"/>
        </item>
        <item row="20" column="0" colspan="2">
-        <widget class="QPushButton" name="manual_get_sr510_measurementparams_button">
+        <widget class="QPushButton" name="button_base_Sr510MeasurementParameters_getter_Sr510StartMeasurementButton">
          <property name="text">
           <string>Start Measurement</string>
          </property>
@@ -493,7 +493,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QLabel" name="manual_lockin_label_2">
+        <widget class="QLabel" name="label_29">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -553,7 +553,7 @@
         </widget>
        </item>
        <item row="3" column="0">
-        <widget class="QLineEdit" name="sr830_manual_lockin_sensitivity_ledit">
+        <widget class="QLineEdit" name="lineedit_base_Sr830CurrentConfigParameters_passive_Sr830CurrentSensitivity">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -571,7 +571,7 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="sr830_manual_lockin_timeconstant_ledit">
+        <widget class="QLineEdit" name="lineedit_base_Sr830CurrentConfigParameters_passive_Sr830CurrentTimeConstant">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -602,7 +602,7 @@
         </widget>
        </item>
        <item row="6" column="0">
-        <widget class="QLabel" name="manual_lockin_sensitivity_label_2">
+        <widget class="QLabel" name="label_30">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -622,7 +622,7 @@
         </widget>
        </item>
        <item row="6" column="1">
-        <widget class="QLabel" name="manual_lockin_timeconstant_label_2">
+        <widget class="QLabel" name="label_31">
          <property name="font">
           <font>
            <pointsize>8</pointsize>
@@ -650,7 +650,7 @@
         </widget>
        </item>
        <item row="8" column="0">
-        <widget class="QComboBox" name="sr830_manual_lockin_sensitivityvalue_cbox">
+        <widget class="QComboBox" name="lineedit_base_Sr830NewConfigParameters_passive_Sr830NewSensitivityValue">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -675,7 +675,7 @@
         </widget>
        </item>
        <item row="8" column="1">
-        <widget class="QComboBox" name="sr830_manual_lockin_timeconstantvalue_cbox">
+        <widget class="QComboBox" name="lineedit_base_Sr830NewConfigParameters_passive_Sr830NewTimeConstantValue">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -709,7 +709,7 @@
         </widget>
        </item>
        <item row="10" column="0">
-        <widget class="QComboBox" name="sr830_manual_lockin_sensitivitymultiplier_cbox">
+        <widget class="QComboBox" name="lineedit_base_Sr830NewConfigParameters_passive_Sr830NewSensitivityMultiplier">
          <item>
           <property name="text">
            <string>x1</string>
@@ -728,7 +728,7 @@
         </widget>
        </item>
        <item row="10" column="1">
-        <widget class="QComboBox" name="sr830_manual_lockin_timeconstantmultiplier_cbox">
+        <widget class="QComboBox" name="lineedit_base_Sr830NewConfigParameters_passive_Sr830NewTimeConstantMultiplier">
          <item>
           <property name="text">
            <string>x1</string>
@@ -761,7 +761,7 @@
         </widget>
        </item>
        <item row="12" column="0">
-        <widget class="QComboBox" name="sr830_manual_lockin_sensitivityunit_cbox">
+        <widget class="QComboBox" name="lineedit_base_Sr830NewConfigParameters_passive_Sr830NewSensitivityUnits">
          <item>
           <property name="text">
            <string>V.</string>
@@ -785,7 +785,7 @@
         </widget>
        </item>
        <item row="12" column="1">
-        <widget class="QComboBox" name="sr830_manual_lockin_timeconstantunit_cbox">
+        <widget class="QComboBox" name="lineedit_base_Sr830NewConfigParameters_passive_Sr830NewTimeConstantUnits">
          <item>
           <property name="text">
            <string>ks.</string>
@@ -809,7 +809,7 @@
         </widget>
        </item>
        <item row="13" column="0" colspan="2">
-        <widget class="QPushButton" name="manual_get_sr830_cfgparams_button">
+        <widget class="QPushButton" name="button_base_Sr830NewConfigParameters_getter_Sr830SetNewParametersButton">
          <property name="text">
           <string>Set New Parameters</string>
          </property>
@@ -837,21 +837,21 @@
         </widget>
        </item>
        <item row="16" column="0">
-        <widget class="QLabel" name="manual_lockin_samplerate_label_2">
+        <widget class="QLabel" name="label_32">
          <property name="text">
           <string>Sample Rate (Hz.):</string>
          </property>
         </widget>
        </item>
        <item row="16" column="1">
-        <widget class="QLabel" name="manual_lockin_sampletime_label_2">
+        <widget class="QLabel" name="label_33">
          <property name="text">
           <string>Sample Time (s.):</string>
          </property>
         </widget>
        </item>
        <item row="17" column="0">
-        <widget class="QComboBox" name="sr830_manual_lockin_samplerate_combobox">
+        <widget class="QComboBox" name="combobox_base_Sr830MeasurementParameters_passive_SampleRate">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -934,20 +934,20 @@
         </widget>
        </item>
        <item row="17" column="1">
-        <widget class="QLineEdit" name="sr830_manual_lockin_sampletime_ledit"/>
+        <widget class="QLineEdit" name="combobox_base_Sr830MeasurementParameters_passive_SampleTime"/>
        </item>
        <item row="18" column="0">
-        <widget class="QLabel" name="manual_lockin_measurementstorage_label_2">
+        <widget class="QLabel" name="label_34">
          <property name="text">
           <string>Measurement Storage Path:</string>
          </property>
         </widget>
        </item>
        <item row="19" column="0" colspan="2">
-        <widget class="QLineEdit" name="sr830_manual_lockin_measurementstorage_ledit"/>
+        <widget class="QLineEdit" name="combobox_base_Sr830MeasurementParameters_passive_MeasurementStoragePath"/>
        </item>
        <item row="20" column="0" colspan="2">
-        <widget class="QPushButton" name="manual_get_sr830_measurementparams_button">
+        <widget class="QPushButton" name="button_base_Sr830MeasurementParameters_getter_Sr830StartMeasurement">
          <property name="text">
           <string>Start Measurement</string>
          </property>

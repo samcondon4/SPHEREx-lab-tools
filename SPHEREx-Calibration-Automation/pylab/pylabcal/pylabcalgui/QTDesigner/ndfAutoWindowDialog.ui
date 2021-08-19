@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1062</width>
-    <height>969</height>
+    <width>1968</width>
+    <height>1609</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -62,7 +62,7 @@
     </widget>
    </item>
    <item row="3" column="1" colspan="2">
-    <widget class="QListWidget" name="sequence_ndftransitions_list">
+    <widget class="QListWidget" name="list_listXlist_NdfTransitionsXSavedSequences_listXPassiveListAll_NdfPositionTransitions">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -72,7 +72,7 @@
     </widget>
    </item>
    <item row="7" column="1" colspan="2">
-    <widget class="QPushButton" name="sequence_ndfaddtransition_button">
+    <widget class="QPushButton" name="button_list_NdfTransitions_setter_AddNdfTransitionButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -85,10 +85,10 @@
     </widget>
    </item>
    <item row="6" column="1">
-    <widget class="QLineEdit" name="sequence_ndfwave_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_NdfTransitions_ItemDisplay_wavelength"/>
    </item>
    <item row="8" column="1" colspan="2">
-    <widget class="QPushButton" name="sequence_ndfremovetransition_button">
+    <widget class="QPushButton" name="button_list_NdfTransitions_remover_RemoveNdfTransitionButton">
      <property name="text">
       <string>Remove NDF Transition From Sequence</string>
      </property>
@@ -121,10 +121,10 @@
     </widget>
    </item>
    <item row="6" column="2">
-    <widget class="QLineEdit" name="sequence_ndfpos_ledit"/>
+    <widget class="QLineEdit" name="lineedit_list_NdfTransitions_ItemDisplay_position"/>
    </item>
    <item row="9" column="1" colspan="2">
-    <widget class="QPushButton" name="sequence_ndf_removealltransitions_button">
+    <widget class="QPushButton" name="button_list_NdfTransitions_RemoverOfAll_RemoveAllNdfTransitionsButton">
      <property name="text">
       <string>Remove All NDF Transitions From Sequence</string>
      </property>
