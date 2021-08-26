@@ -9,11 +9,11 @@ Sam Condon, 08/09/2021
 import asyncio
 from qasync import QEventLoop
 from PyQt5 import QtWidgets
-from pylablib.pylablibgui_window_base import GuiCompositeWindow
-from pylabcal.pylabcalgui.CS260Window.cs260DialogWrapper import CS260Window
-from pylabcal.pylabcalgui.LockinWindow.lockinWindowDialogWrapper import LockinWindow
-from pylabcal.pylabcalgui.NDFWheelWindow.ndfWheelDialogWrapper import NDFWindow
-from pylabcal.pylabcalgui.LabJackWindow.labjackWindowDialogWrapper import LabjackWindow
+from pylabgui.pylabgui_window_base import GuiCompositeWindow
+from pylabgui.CS260Window.cs260DialogWrapper import CS260Window
+from pylabgui.LockinWindow.lockinWindowDialogWrapper import LockinWindow
+from pylabgui.NDFWheelWindow.ndfWheelDialogWrapper import NDFWindow
+from pylabgui.LabJackWindow.labjackWindowDialogWrapper import LabjackWindow
 
 
 class ManualTab(GuiCompositeWindow):

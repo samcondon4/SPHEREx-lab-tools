@@ -13,16 +13,14 @@ from pylabsm.pylabsm_states.pylabsm_statesimport import pylabsm_state_initializi
 class SpectralCalibrationMachine(AsyncMachine):
 
     def __init__(self, data_queue=None):
-        # Configure global data queue for interfacing w/ external software or internal testing #
-        if data_queue is None:
-            queue = asyncio.Queue()
-        else:
-            queue = data_queue
-        pylabsm_basestate.SmCustomState.set_global_args({"Global Queue": queue})
-        pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": [""]})
-
         # Instantiate AsyncMachine base class #
         super().__init__(model=self)
+
+        self.data_queue = data_queue
+
+        # Initialize action arguments ######################################################
+        pylabsm_basestate.SmCustomState.set_global_args({"Global Queue": self.data_queue})
+        pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": [""]})
 
         # Configure states and state actions #########################################
         self.init_state = pylabsm_state_initializing.Initializing(self)
@@ -41,10 +39,13 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.wait_state.add_transition(self.manual_state, arg="Manual or Auto", arg_result=["manual"])
         self.manual_state.add_transition(self.wait_state)
 
+    async def run(self):
+        if self.data_queue is None:
+            self.data_queue = asyncio.Queue()
+            pylabsm_basestate.SmCustomState.set_global_args({"Global Queue": self.data_queue})
+        await self.start_machine()
 
-async def main(sm):
-    await sm.start_machine()
 
 if __name__ == "__main__":
     sm = SpectralCalibrationMachine()
-    asyncio.run(main(sm))
+    asyncio.run(sm.run())

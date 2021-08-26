@@ -8,9 +8,9 @@ Sam Condon, 08/14/2021
 import asyncio
 from qasync import QEventLoop
 from PyQt5 import QtWidgets
-from pylablib.pylablibgui_window_base import GuiCompositeWindow
-from pylabcal.pylabcalgui.pylabcalgui_automationTab import AutoTab
-from pylabcal.pylabcalgui.pylabcalgui_manualTab import ManualTab
+from pylabgui.pylabgui_window_base import GuiCompositeWindow
+from pylabgui.pylabcalgui_automationTab import AutoTab
+from pylabgui.pylabcalgui_manualTab import ManualTab
 
 
 class GUI(GuiCompositeWindow):
@@ -20,8 +20,10 @@ class GUI(GuiCompositeWindow):
         self.proc_queue = asyncio.Queue()
         if data_queues is None:
             queue_list = [self.proc_queue]
+            self.standalone = True
         else:
             queue_list = data_queues
+            self.standalone = False
         self.auto = AutoTab(sequence_dir=sequence_dir, data_queues=queue_list)
         self.manual = ManualTab(data_queues=queue_list)
         self.add_widget(self.auto.form)
@@ -33,12 +35,16 @@ class GUI(GuiCompositeWindow):
         """run: main method to run the PyQt5 GUI.
         """
         # Start Tab Execution ###########################################
-        asyncio.create_task(self.manual.run())
-        asyncio.create_task(self.auto.run())
+        manual_task = asyncio.create_task(self.manual.run())
+        auto_task = asyncio.create_task(self.auto.run())
         #################################################################
         while True:
-            gui_data = await self.proc_queue.get()
-            print(gui_data)
+            if self.standalone:
+                gui_data = await self.proc_queue.get()
+                print(gui_data)
+            else:
+                break
+        await asyncio.gather(manual_task, auto_task)
 
 
 if __name__ == "__main__":

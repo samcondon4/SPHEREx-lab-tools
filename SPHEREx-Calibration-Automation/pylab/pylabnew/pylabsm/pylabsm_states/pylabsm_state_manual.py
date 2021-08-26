@@ -12,5 +12,5 @@ class Manual(SmCustomState):
     def __init__(self, sm, identifier="manual"):
         super().__init__(sm, self, identifier)
 
-    def manual_action(self):
+    def manual_action(self, action_arg):
         print("move instruments manually")

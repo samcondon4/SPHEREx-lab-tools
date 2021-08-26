@@ -4,8 +4,8 @@
 
 """
 
-from transitions.extensions.asyncio import AsyncState
 import asyncio
+from transitions.extensions.asyncio import AsyncState
 
 
 # MOVE ACTION BACK TO A DICTIONARY IMPLEMENTATION INSIDE OF THE SMCUSTOMSTATE CLASS ###########################
@@ -108,6 +108,7 @@ class SmCustomState(AsyncState):
         self.identifier = identifier
         super().__init__(identifier, **kwargs)
         self.error_flag = False
+        self.error_message = None
         self.coro_actions = {}
         self.actions = {}
         self.transitions = {}
@@ -123,16 +124,8 @@ class SmCustomState(AsyncState):
         """
         self.error_flag = False
 
-        # Execute all coroutine actions #####################################################################
-        coro_tasks = [asyncio.create_task(self.coro_actions[key].async_exec()) for key in self.coro_actions]
-        if len(coro_tasks) > 0:
-            await asyncio.wait(coro_tasks)
-        #####################################################################################################
-
-        # Execute all function actions ######################################################################
-        for key in self.actions:
-            self.actions[key].exec()
-        #####################################################################################################
+        # Execute all state actions #
+        await asyncio.create_task(self.action_exec())
 
         # Enter error handler if an action raised the error_flag else move to next state #
         transition = None
@@ -144,7 +137,7 @@ class SmCustomState(AsyncState):
                 if trans["arg"] is None:
                     transition = getattr(self.sm, key)
                 else:
-                    action_results = self.get_global_args(trans["arg"])
+                    action_results = SmCustomState.get_global_args(trans["arg"])
                     if action_results == trans["arg_result"]:
                         transition = getattr(self.sm, key)
 
@@ -153,6 +146,24 @@ class SmCustomState(AsyncState):
         else:
             raise RuntimeError("No valid state transition found. State machine stuck!")
         #################################################################################
+
+    async def action_exec(self):
+        """Description: Execute the action specified in the actions dictionary with key = action_key.
+
+        :param action_key: (str) key into state actions dictionary
+        :return: None
+        """
+        # Run all coroutines actions ###################################################################################
+        coro_args = dict([(key, SmCustomState.get_global_args(self.coro_actions[key]["args"]))
+                          for key in self.coro_actions])
+        coro_tasks = [asyncio.create_task(self.coro_actions[key]["func"](coro_args[key])) for key in self.coro_actions]
+        if len(coro_tasks) > 0:
+            await asyncio.wait(coro_tasks)
+
+        # Run all function actions ####################################################################################
+        func_args = dict([(key, SmCustomState.get_global_args(self.actions[key]["args"])) for key in self.actions])
+        for key in self.actions:
+            self.actions[key]["func"](func_args)
 
     def add_transition(self, next_state, arg=None, arg_result=None, identifier=None):
         """ Description: add a custom state transition to the state machine.
@@ -177,33 +188,21 @@ class SmCustomState(AsyncState):
         self.transitions[trans_key] = trans_dict
 
     def add_action(self, func, identifier=None, args=None):
-        """ Description: Add an action instance to the state actions dictionary.
+        """ Description: Add an action dictionary to the state actions dictionary.
 
         :param func: (function) function object for the action instance.
-        :param identifier: (str) string key for the actions dictionary
         :param args: (str, list) string or list of strings identifying which arguments func should take from the
                                  sm_global_args dictionary.
-        :return:
+        :param identifier: (str) string to identify the action within the action dictionary.
+        :return: None
         """
-        # get action identifier
         if identifier is None:
-            key = func.__name__
-        else:
-            key = identifier
-
-        # configure argument getter
-        if args is not None:
-            arg_getter = lambda in_arg=args: SmCustomState.get_global_args(in_arg)
-        else:
-            arg_getter = None
-
-        # configure error_flag setter
-        err_flag_setter = lambda val=True: setattr(self, "error_flag", val)
-
+            identifier = func.__name__
+        action_dict = {"func": func, "args": args}
         if asyncio.iscoroutinefunction(func):
-            self.coro_actions[key] = Action(func, arg_getter=arg_getter, err_flag_setter=err_flag_setter, coro=True)
+            self.coro_actions[identifier] = action_dict
         else:
-            self.actions[key] = Action(func, arg_getter=arg_getter, err_flag_setter=err_flag_setter, coro=False)
+            self.actions[identifier] = action_dict
 
     def error(self):
         """ Description: Function that executes either generic error handler, or the handler provided by the child

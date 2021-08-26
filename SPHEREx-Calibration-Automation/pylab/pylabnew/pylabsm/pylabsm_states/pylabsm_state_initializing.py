@@ -12,5 +12,6 @@ class Initializing(SmCustomState):
     def __init__(self, sm, identifier="initializing"):
         super().__init__(sm, self, identifier)
 
-    def initialize_instruments(self):
+    def initialize_instruments(self, action_arg):
+        print("initializing")
         return True

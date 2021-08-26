@@ -6,10 +6,10 @@
 Sam Condon, 08/14/2021
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from pylabcal.pylabcalgui.LockinWindow.lockinAutoWindowDialog import Ui_Form
-from pylabcal.pylabcalgui.LockinWindow.lockinWindowHelper import Lockin
-from pylablib.pylablibgui_window_base import GuiWindow
+from PyQt5 import QtWidgets
+from pylabgui.LockinWindow.lockinAutoWindowDialog import Ui_Form
+from pylabgui.LockinWindow.lockinWindowHelper import Lockin
+from pylabgui.pylabgui_window_base import GuiWindow
 
 
 class LockinAutoWindow(Lockin, Ui_Form, GuiWindow):

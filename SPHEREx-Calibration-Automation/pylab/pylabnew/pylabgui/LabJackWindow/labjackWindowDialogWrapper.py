@@ -6,9 +6,9 @@
 Sam Condon, 08/14/2021
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from pylabcal.pylabcalgui.LabJackWindow.labjackWindowDialog import Ui_Form
-from pylablib.pylablibgui_window_base import GuiWindow
+from PyQt5 import QtWidgets
+from pylabgui.LabJackWindow.labjackWindowDialog import Ui_Form
+from pylabgui.pylabgui_window_base import GuiWindow
 
 
 class LabjackWindow(Ui_Form, GuiWindow):

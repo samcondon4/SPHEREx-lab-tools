@@ -8,9 +8,9 @@ Sam Condon, 08/14/2021
 
 import asyncio
 from qasync import QEventLoop
-from PyQt5 import QtCore, QtGui, QtWidgets
-from pylabcal.pylabcalgui.LockinWindow.lockinWindowDialog import Ui_Form
-from pylablib.pylablibgui_window_base import GuiWindow
+from PyQt5 import QtWidgets
+from pylabgui.LockinWindow.lockinWindowDialog import Ui_Form
+from pylabgui.pylabgui_window_base import GuiWindow
 
 # HELPER DICTIONARIES ###############################################################################
 LOCKIN_UNIT_SENSITIVITY_MAP = {"V.": 1, "mV.": 1e-3, "uV.": 1e-6, "nV.": 1e-9}

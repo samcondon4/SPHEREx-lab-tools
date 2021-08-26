@@ -6,9 +6,9 @@
 Sam Condon, 08/16/2021
 """
 
-from PyQt5 import QtCore, QtGui, QtWidgets
-from pylabcal.pylabcalgui.CS260Window.CS260AutoDialog import Ui_Form
-from pylablib.pylablibgui_window_base import GuiWindow
+from PyQt5 import QtWidgets
+from pylabgui.CS260Window.CS260AutoDialog import Ui_Form
+from pylabgui.pylabgui_window_base import GuiWindow
 
 
 class CS260AutoWindow(Ui_Form, GuiWindow):
