@@ -1,0 +1,44 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPep8Inspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="E265" />
+          <option value="E402" />
+          <option value="E127" />
+          <option value="E731" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N802" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="cs260_dialog_main.*" />
+          <option value="pylablib.pylablibsm.SM.init_to_wait" />
+          <option value="pylablib.pylablibsm.SM.wait_to_think" />
+          <option value="pylablib.pylablibsm.SM.start_control_loop" />
+          <option value="pylablib.pylablibsm.SM.control_loop_next" />
+          <option value="pylablib.pylablibsm.SM.control_loop_complete" />
+          <option value="pylablib.pylablibsm.SM.to_trouble" />
+          <option value="pylablib.pylablibsm.SM.trouble_to_init" />
+          <option value="pylablib.pylablibsm.SM.trouble_to_wait" />
+          <option value="pylablib.pylablibsm.SM.trouble_to_think" />
+          <option value="pylablib.pylablibsm.SM.trouble_to_moving" />
+          <option value="pylablib.pylablibsm.SM.trouble_to_measure" />
+          <option value="pylablib.pylablibsm.SM.trouble_to_check" />
+          <option value="pylablib.pylablibsm.SM.trouble_to_compress" />
+          <option value="pylablib.pylablibsm.SM.trouble_to_reset" />
+          <option value="int.__getitem__" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

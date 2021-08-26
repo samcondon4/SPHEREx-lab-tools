@@ -35,7 +35,6 @@
           <option value="pylablib.pylablibsm.SM.trouble_to_check" />
           <option value="pylablib.pylablibsm.SM.trouble_to_compress" />
           <option value="pylablib.pylablibsm.SM.trouble_to_reset" />
-          <option value="int.__getitem__" />
         </list>
       </option>
     </inspection_tool>
