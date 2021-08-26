@@ -16,11 +16,14 @@ class SpectralCalibrationMachine(AsyncMachine):
         # Instantiate AsyncMachine base class #
         super().__init__(model=self)
 
+        # Action argument attributes #######
         self.data_queue = data_queue
+        self.manual_or_auto = None
 
         # Initialize action arguments ######################################################
         pylabsm_basestate.SmCustomState.set_global_args({"Global Queue": self.data_queue})
-        pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": [""]})
+        pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": property(self.get_manual_or_auto,
+                                                                                    self.set_manual_or_auto)})
 
         # Configure states and state actions #########################################
         self.init_state = pylabsm_state_initializing.Initializing(self)
@@ -36,8 +39,14 @@ class SpectralCalibrationMachine(AsyncMachine):
         # SHOULD ADDITION OF STATES BE MOVED TO STATE BASE CLASS INSTANTIATION? #
         self.add_states([self.init_state, self.wait_state, self.manual_state])
         self.init_state.add_transition(self.wait_state)
-        self.wait_state.add_transition(self.manual_state, arg="Manual or Auto", arg_result=["manual"])
+        self.wait_state.add_transition(self.manual_state, arg="Manual or Auto", arg_result="manual")
         self.manual_state.add_transition(self.wait_state)
+
+    def set_manual_or_auto(self, set_str):
+        self.manual_or_auto = set_str
+
+    def get_manual_or_auto(self):
+        return self.manual_or_auto
 
     async def run(self):
         if self.data_queue is None:

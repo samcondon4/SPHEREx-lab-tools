@@ -138,6 +138,7 @@ class SmCustomState(AsyncState):
                     transition = getattr(self.sm, key)
                 else:
                     action_results = SmCustomState.get_global_args(trans["arg"])
+                    print(action_results)
                     if action_results == trans["arg_result"]:
                         transition = getattr(self.sm, key)
 

@@ -18,7 +18,7 @@ class Waiting(SmCustomState):
         gui_data = await data_queue.get()
         gui_input_type = type(gui_data)
         if gui_input_type is list:
-            in_dict["Manual or Auto"][0] = "auto"
+            in_dict["Manual or Auto"] = "auto"
         else:
-            in_dict["Manual or Auto"][0] = "manual"
+            in_dict["Manual or Auto"] = "manual"
         print(gui_data)
