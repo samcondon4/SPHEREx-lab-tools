@@ -13,5 +13,6 @@ class Initializing(SmCustomState):
         super().__init__(sm, self, identifier)
 
     def initialize_instruments(self, action_arg):
-        print("initializing")
+        print("Initializing instruments")
+        print(action_arg)
         return True

@@ -14,8 +14,8 @@ from pylabgui.pylabgui_window_base import GuiWindow
 
 class LockinAutoWindow(Lockin, Ui_Form, GuiWindow):
 
-    def __init__(self, data_queues=None):
-        super().__init__(child=self, data_queues=data_queues)
+    def __init__(self, **kwargs):
+        super().__init__(child=self, **kwargs)
         self.setupUi(self.form)
         if not self.configured:
             self.configure()

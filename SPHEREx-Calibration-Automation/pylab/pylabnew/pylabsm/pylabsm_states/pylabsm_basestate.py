@@ -138,7 +138,6 @@ class SmCustomState(AsyncState):
                     transition = getattr(self.sm, key)
                 else:
                     action_results = SmCustomState.get_global_args(trans["arg"])
-                    print(action_results)
                     if action_results == trans["arg_result"]:
                         transition = getattr(self.sm, key)
 
@@ -164,7 +163,7 @@ class SmCustomState(AsyncState):
         # Run all function actions ####################################################################################
         func_args = dict([(key, SmCustomState.get_global_args(self.actions[key]["args"])) for key in self.actions])
         for key in self.actions:
-            self.actions[key]["func"](func_args)
+            self.actions[key]["func"](func_args[key])
 
     def add_transition(self, next_state, arg=None, arg_result=None, identifier=None):
         """ Description: add a custom state transition to the state machine.

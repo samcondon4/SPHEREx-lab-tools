@@ -191,7 +191,7 @@ class WidgetGroup:
         self.configured = True
 
     def configure_passive(self):
-        """configure_passive: Configure getter methods for passive widgets in a WidgetGroup.
+        """configure_passive: Configure getter/setter methods for passive widgets in a WidgetGroup.
         """
         # Iterate over all widgets in the list of passive widgets #####################################################
         for widge_dict in self.passive:

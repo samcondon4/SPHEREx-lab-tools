@@ -18,40 +18,20 @@ from pylabgui.LabJackWindow.labjackWindowDialogWrapper import LabjackWindow
 
 class ManualTab(GuiCompositeWindow):
 
-    def __init__(self, data_queues=None):
-        super().__init__(child=self, window_type="stacked")
+    def __init__(self, **kwargs):
+        super().__init__(child=self, window_type="stacked", **kwargs)
         self.form.setWindowTitle("Manual")
         self.proc_queue = asyncio.Queue()
-        if data_queues is None:
-            queue_list = [self.proc_queue]
-            self.standalone = True
-        else:
-            queue_list = data_queues
-            self.standalone = False
-        self.cs260_window = CS260Window(data_queues=queue_list)
-        self.lockin_window = LockinWindow(data_queues=queue_list)
-        self.ndf_window = NDFWindow(data_queues=queue_list)
-        self.labjack_window = LabjackWindow(data_queues=queue_list)
+        self.cs260_window = CS260Window(**kwargs)
+        self.lockin_window = LockinWindow(**kwargs)
+        self.ndf_window = NDFWindow(**kwargs)
+        self.labjack_window = LabjackWindow(**kwargs)
         self.add_widget(self.cs260_window.form)
         self.add_widget(self.lockin_window.form)
         self.add_widget(self.ndf_window.form)
         self.add_widget(self.labjack_window.form)
         if not self.configured:
             self.configure()
-
-    async def run(self):
-        """run: Coroutine to run the manual tab gui window, this is mainly used for debugging purposes.
-        """
-        # Initialize GUI run tasks ######################################
-        asyncio.create_task(self.lockin_window.run())
-        #################################################################
-        while True:
-            if self.standalone:
-                gui_data = await self.proc_queue.get()
-                print("##### ManualTab Queue Data Received ########")
-                print(gui_data)
-            else:
-                break
 
 
 if __name__ == "__main__":

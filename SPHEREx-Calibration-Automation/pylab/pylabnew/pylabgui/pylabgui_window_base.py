@@ -126,13 +126,14 @@ class GuiWindow:
 
         return widget_dict
 
-    def __init__(self, child=None, form=None, data_queues=None):
+    def __init__(self, child=None, form=None, data_queue_tx=None, data_queue_rx=None):
         self.child = child
-        self.data_queues = data_queues
         if form is None:
             self.form = QtWidgets.QDialog()
         else:
             self.form = form
+        self.data_queue_tx = data_queue_tx
+        self.data_queue_rx = data_queue_rx
         self.widget_list = None
         self.configured = False
 
@@ -155,9 +156,9 @@ class GuiWindow:
                     igtype = group_types[i]
                     iaction = actions[i].replace(" ", "_")
                     if igroup not in GuiWindow.WidgetGroups:
-                        GuiWindow.WidgetGroups[igroup] = WidgetGroup(igroup, data_queues=self.data_queues) \
+                        GuiWindow.WidgetGroups[igroup] = WidgetGroup(igroup, data_queues=[self.data_queue_tx]) \
                                                          if igtype == "base" else \
-                                                         ListWidgetGroup(igroup, data_queues=self.data_queues)
+                                                         ListWidgetGroup(igroup, data_queues=[self.data_queue_tx])
                     getattr(GuiWindow.WidgetGroups[igroup], "add_{}".format(iaction))(widget_dict)
         ##########################################################################################################
 
@@ -202,10 +203,30 @@ class GuiWindow:
             raise RuntimeError("Group {} has not been configured yet!".format(group))
         """
 
+    async def standalone_run(self):
+        """run: Monitors traffic on the tx and rx queues for debugging.
+        """
+        while True:
+            try:
+                rx = self.data_queue_rx.get_nowait()
+            except asyncio.QueueEmpty:
+                pass
+            else:
+                print("Rx data = {}".format(rx))
+
+            try:
+                tx = self.data_queue_tx.get_nowait()
+            except asyncio.QueueEmpty:
+                pass
+            else:
+                print("Tx data = {}".format(tx))
+
+            await asyncio.sleep(0)
+
 
 class GuiCompositeWindow(GuiWindow):
 
-    def __init__(self, child=None, window_type=None):
+    def __init__(self, child=None, window_type=None, **kwargs):
         self.child = child
         if window_type == "stacked":
             form = QtWidgets.QStackedWidget()
@@ -214,7 +235,7 @@ class GuiCompositeWindow(GuiWindow):
         else:
             form = None
         self.stacked_selector_dict = None
-        super().__init__(child=self.child, form=form)
+        super().__init__(child=self.child, form=form, **kwargs)
 
     def add_widget(self, widget):
         """add_widget: add a widget to the form attribute according to the widget type of self.form

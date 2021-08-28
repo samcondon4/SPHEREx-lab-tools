@@ -16,6 +16,9 @@ class Waiting(SmCustomState):
         print("waiting for gui input... {}".format(in_dict))
         data_queue = in_dict["Global Queue"]
         gui_data = await data_queue.get()
+
+        # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
+        # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
         gui_input_type = type(gui_data)
         if gui_input_type is list:
             in_dict["Manual or Auto"] = "auto"

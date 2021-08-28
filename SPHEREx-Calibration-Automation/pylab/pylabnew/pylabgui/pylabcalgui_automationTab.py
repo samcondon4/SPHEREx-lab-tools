@@ -22,21 +22,15 @@ from pylabgui.SeriesConstruction.seriesconstructionWindowDialogWrapper import Se
 
 class AutoTab(GuiCompositeWindow):
 
-    def __init__(self, sequence_dir=None, data_queues=None):
-        super().__init__(child=self, window_type="stacked")
+    def __init__(self, sequence_dir=None, **kwargs):
+        super().__init__(child=self, window_type="stacked", **kwargs)
         self.sequence_dir = sequence_dir
         self.proc_queue = asyncio.Queue()
-        if data_queues is None:
-            self.queue_list = [self.proc_queue]
-            self.standalone = True
-        else:
-            self.queue_list = data_queues
-            self.standalone = False
         self.form.setWindowTitle("Automation")
         self.cs260_sequence_window = CS260AutoWindow()
         self.lockin_sequence_window = LockinAutoWindow()
         self.ndf_sequence_window = NDFAutoWindow()
-        self.series_window = SeriesConstructionWindow(data_queues=self.queue_list)
+        self.series_window = SeriesConstructionWindow(**kwargs)
         self.add_widget(self.series_window.form)
         self.add_widget(self.cs260_sequence_window.form)
         self.add_widget(self.lockin_sequence_window.form)
@@ -49,14 +43,6 @@ class AutoTab(GuiCompositeWindow):
         self.WidgetGroups["series"].set_setter_proc(self.passive_series_setter_proc)
         if self.sequence_dir is not None:
             self.load_sequences()
-
-    async def run(self):
-        while True:
-            if self.standalone:
-                gui_data = await self.proc_queue.get()
-                print(gui_data)
-            else:
-                break
 
     def load_sequences(self):
         for seq_file in os.listdir(self.sequence_dir):
