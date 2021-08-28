@@ -24,9 +24,6 @@ async def main():
     sm_to_gui_data_queue = asyncio.Queue()
     #########################################################
 
-    app = QtWidgets.QApplication(sys.argv)
-    EventLoop = QEventLoop()
-    asyncio.set_event_loop(EventLoop)
     queue = asyncio.Queue()
     seq_dir = ".\\config\\sequence\\"
     gui = GUI(sequence_dir=seq_dir, data_queue_rx=sm_to_gui_data_queue, data_queue_tx=gui_to_sm_data_queue)
@@ -35,11 +32,14 @@ async def main():
     gui_task = asyncio.create_task(gui.standalone_run())
     gui.form.show()
     await asyncio.gather(sm_task, gui_task)
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    EventLoop = QEventLoop()
+    asyncio.set_event_loop(EventLoop)
+    asyncio.create_task(main())
     with EventLoop:
         EventLoop.run_forever()
         EventLoop.close()
     sys.exit(app.exec_())
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
