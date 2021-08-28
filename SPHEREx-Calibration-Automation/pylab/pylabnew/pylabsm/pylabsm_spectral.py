@@ -37,11 +37,16 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Configure states and state actions #########################################
         self.init_state = pylabsm_state_initializing.Initializing(self)
-        self.init_state.add_action(self.init_state.initialize_instruments, args=list(self.inst_dict.keys()))
+        idk = list(self.inst_dict.keys())
+        self.init_state.add_action(self.init_state.initialize_instruments, args=idk + ["Tx Queue"])
+
+        self.wait_state = pylabsm_state_waiting.Waiting(self)
+        self.wait_state.add_action(self.wait_state.waiting_action, args=["Rx Queue"])
         ##############################################################################
 
-        # Add states to the state machine #
-        self.add_states(self.init_state)
+        # Add states and transitions to the state machine #
+        self.add_states([self.init_state, self.wait_state])
+        self.init_state.add_transition(self.wait_state)
 
     def set_manual_or_auto(self, set_str):
         self.manual_or_auto = set_str

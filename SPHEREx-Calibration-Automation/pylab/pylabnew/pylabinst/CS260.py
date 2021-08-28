@@ -13,7 +13,7 @@ from pylabinst.pylabinst_instrument_base import Instrument
 
 class CS260(Instrument):
 
-    def __init__(self, exe_path="pylablib\\instruments\\CS260_DLLs\\C++EXE.exe"):
+    def __init__(self, exe_path="pylabinst\\CS260_DLLs\\C++EXE.exe"):
         super().__init__("CS260")
         self.exe_path = exe_path
 

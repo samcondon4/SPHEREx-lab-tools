@@ -14,7 +14,7 @@ class Waiting(SmCustomState):
 
     async def waiting_action(self, in_dict):
         print("waiting for gui input... {}".format(in_dict))
-        data_queue = in_dict["Global Queue"]
+        data_queue = in_dict["Rx Queue"]
         gui_data = await data_queue.get()
 
         # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters

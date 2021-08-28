@@ -22,7 +22,7 @@ class Labjack(Instrument):
         ###################################################
 
         # Configure parameters ####################################################
-        self.add_get_parameter("dio", self.get_dio)
+        #self.add_get_parameter("dio", self.get_dio)
         self.add_parameter("dio config", self.get_dio_config, self.set_dio_config)
         self.add_parameter("dio state", self.get_dio_state, self.set_dio_state)
         ###########################################################################

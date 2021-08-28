@@ -2,17 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42f7f5eb-ac91-4f47-b14c-767facd8eb30" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_initializing.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_moving.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_state_base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_thinking.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_waiting.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pylabnew/pylabwrapper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/pylab.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pylab.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/CS260Window/cs260AutoDialogWrapper.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylabcal/pylabcalgui/CS260Window/cs260AutoDialogWrapper.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_state_initializing.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_state_initializing.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,9 +31,9 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pylabnew" />
   </component>
-  <component name="RunManager" selected="Python.pylabcalgui_main">
+  <component name="RunManager" selected="Python.pylabwrapper">
     <configuration name="pylabcalgui_automationTab (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pylab" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -125,7 +118,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pylabcalgui_manualTab" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="pylabwrapper" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pylab" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -133,11 +126,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pylabnew/pylabgui" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pylabnew" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pylabnew/pylabgui/pylabcalgui_manualTab.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pylabnew/pylabwrapper.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -148,11 +141,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.pylabwrapper" />
         <item itemvalue="Python.pylabcalgui_main" />
         <item itemvalue="Python.pylabcalgui_automationTab (1)" />
         <item itemvalue="Python.pylabcalgui_main (1)" />
         <item itemvalue="Python.pylabcalgui_automationTab" />
-        <item itemvalue="Python.pylabcalgui_manualTab" />
       </list>
     </recent_temporary>
   </component>
