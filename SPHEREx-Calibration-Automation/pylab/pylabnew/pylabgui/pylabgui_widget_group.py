@@ -270,13 +270,19 @@ class WidgetGroup:
         """
         # Run the setter dictionary through the process method if one exists.
         if self.setter_proc is not None:
-            text, setter_dict = self.setter_proc(setter_dict)
+            setter_dict = self.setter_proc(setter_dict)
         # Run setter methods according to key value pairs in setter_dict
+        print("## SET PASSIVE: setter_dict={}, set_methods={}".format(setter_dict, self.set_methods))
+        setters_found = False
         for key in setter_dict:
             if key in list(self.set_methods.keys()):
-                self.set_methods[key](setter_dict[key])
-            else:
-                raise RuntimeError("Key {} not found in self methods for group {}".format(key, self.group_name))
+                setters_found = True
+                try:
+                    self.set_methods[key](setter_dict[key])
+                except Exception as e:
+                    print(e)
+
+        return setters_found
 
 
 class ListWidgetGroup(WidgetGroup):

@@ -19,8 +19,8 @@ class GUI(GuiCompositeWindow):
         super().__init__(child=self, window_type="tab", **kwargs)
         self.auto = AutoTab(sequence_dir=sequence_dir, **kwargs)
         self.manual = ManualTab(**kwargs)
-        self.add_widget(self.auto.form)
-        self.add_widget(self.manual.form)
+        self.add_window(self.auto)
+        self.add_window(self.manual)
         if not self.configured:
             self.configure()
 

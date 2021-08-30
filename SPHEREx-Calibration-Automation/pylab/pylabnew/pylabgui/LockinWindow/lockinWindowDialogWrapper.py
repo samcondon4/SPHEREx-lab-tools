@@ -9,16 +9,40 @@ Sam Condon, 08/14/2021
 import asyncio
 from qasync import QEventLoop
 from PyQt5 import QtWidgets
-from pylabgui.LockinWindow.lockinWindowDialog import Ui_Form
+from pylabgui.LockinWindow.sr510Dialog import Ui_Sr510Dialog
+from pylabgui.LockinWindow.sr830Dialog import Ui_Sr830Dialog
 from pylabgui.LockinWindow.lockinWindowHelper import Lockin
-from pylabgui.pylabgui_window_base import GuiWindow
+from pylabgui.pylabgui_window_base import GuiWindow, GuiCompositeWindow
 
 
-class LockinWindow(Ui_Form, GuiWindow):
+class Sr510Window(Ui_Sr510Dialog, GuiWindow):
 
     def __init__(self, **kwargs):
         super().__init__(child=self, **kwargs)
         self.setupUi(self.form)
+        if not self.configured:
+            self.configure()
+
+
+class Sr830Window(Ui_Sr830Dialog, GuiWindow):
+
+    def __init__(self, **kwargs):
+        super().__init__(child=self, **kwargs)
+        self.setupUi(self.form)
+        if not self.configured:
+            self.configure()
+
+
+class LockinWindow(GuiCompositeWindow):
+
+    def __init__(self, **kwargs):
+        super().__init__(child=self, window_type="tab", **kwargs)
+        if "identifier" in list(kwargs.keys()):
+            kwargs.pop("identifier")
+        self.sr510_window = Sr510Window(identifier="Sr510", **kwargs)
+        self.sr830_window = Sr830Window(identifier="Sr830", **kwargs)
+        self.add_window(self.sr510_window)
+        self.add_window(self.sr830_window)
         if not self.configured:
             self.configure()
 

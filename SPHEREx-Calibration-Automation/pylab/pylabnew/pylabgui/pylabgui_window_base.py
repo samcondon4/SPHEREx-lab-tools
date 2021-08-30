@@ -22,6 +22,7 @@ def flatten_list(in_list):
 
 class GuiWindow:
     WidgetGroups = {}
+    WindowCoros = {}
 
     @classmethod
     def get_widgets_from_layout(cls, layout):
@@ -126,7 +127,9 @@ class GuiWindow:
 
         return widget_dict
 
-    def __init__(self, child=None, form=None, data_queue_tx=None, data_queue_rx=None):
+    def __init__(self, child=None, form=None, data_queue_tx=None, data_queue_rx=None, identifier=None):
+        self.identifier = identifier
+        self.widget_groups = {}
         self.child = child
         if form is None:
             self.form = QtWidgets.QDialog()
@@ -156,9 +159,11 @@ class GuiWindow:
                     igtype = group_types[i]
                     iaction = actions[i].replace(" ", "_")
                     if igroup not in GuiWindow.WidgetGroups:
-                        GuiWindow.WidgetGroups[igroup] = WidgetGroup(igroup, data_queues=[self.data_queue_tx]) \
+                        new_group = WidgetGroup(igroup, data_queues=[self.data_queue_tx]) \
                                                          if igtype == "base" else \
                                                          ListWidgetGroup(igroup, data_queues=[self.data_queue_tx])
+                        GuiWindow.WidgetGroups[igroup] = new_group
+                        self.widget_groups[igroup] = new_group
                     getattr(GuiWindow.WidgetGroups[igroup], "add_{}".format(iaction))(widget_dict)
         ##########################################################################################################
 
@@ -195,7 +200,8 @@ class GuiWindow:
                          arguments to pass to the setter method.
         :return: None
         """
-        widget_group = self.WidgetGroups[group]
+        widget_group = self.widget_groups[group]
+        widget_group.set_passive(set_dict)
         """
         if widget_group.configure:
             widget_group.set_passive(set_dict)
@@ -203,16 +209,19 @@ class GuiWindow:
             raise RuntimeError("Group {} has not been configured yet!".format(group))
         """
 
-    async def standalone_run(self):
-        """run: Monitors traffic on the tx and rx queues for debugging.
+    async def run(self):
+        """Description: Monitors traffic on the tx and rx queues for debugging.
         """
         while True:
-            try:
-                rx = self.data_queue_rx.get_nowait()
-            except asyncio.QueueEmpty:
-                pass
-            else:
-                print("Rx data = {}".format(rx))
+            if self.identifier is not None:
+                try:
+                    rx = self.data_queue_rx.pop(self.identifier)
+                except KeyError:
+                    pass
+                else:
+                    print("Rx data = {}".format(rx))
+                    for group_key in self.widget_groups:
+                        self.widget_groups[group_key].set_passive(rx)
 
             try:
                 tx = self.data_queue_tx.get_nowait()
@@ -236,12 +245,23 @@ class GuiCompositeWindow(GuiWindow):
             form = None
         self.stacked_selector_dict = None
         super().__init__(child=self.child, form=form, **kwargs)
+        self.windows = []
+        self.layout = QtWidgets.QGridLayout()
 
-    def add_widget(self, widget):
+    async def run(self):
+        """ Description: Initiate all run coroutines in every widget that is part of the composite window.
+        :return:
+        """
+        coro_tasks = [asyncio.create_task(w.run()) for w in self.windows]
+        await asyncio.wait(coro_tasks)
+
+    def add_window(self, window):
         """add_widget: add a widget to the form attribute according to the widget type of self.form
         :return: None
         """
+        self.windows.append(window)
         form_type = type(self.form)
+        widget = window.form
         if form_type == QtWidgets.QStackedWidget:
             self.form.addWidget(widget)
         elif form_type == QtWidgets.QTabWidget:
@@ -253,6 +273,7 @@ class GuiCompositeWindow(GuiWindow):
         form_type = type(self.form)
         if form_type is QtWidgets.QStackedWidget:
             self.configure_stacked_widget_switch()
+        self.form.setLayout(self.layout)
 
     def configure_stacked_widget_switch(self):
         """configure_stacked_widget_switch: Stacked widgets do not naturally provide any means of switching between
@@ -268,6 +289,7 @@ class GuiCompositeWindow(GuiWindow):
             window_selector = QtWidgets.QComboBox()
             widget_name = widget.windowTitle()
             layout = widget.layout()
+            print(widget_name, layout)
 
             for w in widget_list:
                 window_selector.addItem(w.windowTitle())

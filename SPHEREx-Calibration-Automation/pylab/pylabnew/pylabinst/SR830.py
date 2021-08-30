@@ -57,7 +57,7 @@ class SR830(Instrument):
 
     # PARAMETER GETTER/SETTERS ##############################################################
     def get_phase(self):
-        return self.query("PHAS")
+        return str(self.query("PHAS"))
 
     def set_phase(self, phase):
         """set_phase:
@@ -77,7 +77,7 @@ class SR830(Instrument):
                             "but {} was given".format(type(phase)))
 
     def get_reference_frequency(self):
-        return self.query("FREQ")
+        return str(self.query("FREQ"))
 
     def set_reference_frequency(self, rfreq):
         arg_type = type(rfreq)
@@ -105,7 +105,7 @@ class SR830(Instrument):
             sens = val * 10 ** (-8 + sens_ind // 3)
 
         self.sensitivity = round(sens, 7)
-        return self.sensitivity
+        return str(self.sensitivity)
 
     def set_sensitivity(self, sens):
         self.is_settled = False
@@ -182,7 +182,7 @@ class SR830(Instrument):
 
         tc = val * 10 ** (-5 + tc_ind // 2)
         self.time_constant = tc
-        return tc
+        return str(tc)
 
     def set_time_constant(self, tc):
         self.is_settled = False
@@ -237,7 +237,7 @@ class SR830(Instrument):
     def get_sample_rate(self):
         srate_ind = self.query("SRAT")
         self.sample_rate = 2 ** (srate_ind - 4)
-        return self.sample_rate
+        return str(self.sample_rate)
 
     def set_sample_rate(self, srate):
         valid_input = False

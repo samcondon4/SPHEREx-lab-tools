@@ -27,6 +27,12 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Instrument classes ##############
         self.inst_dict = {"Cs260": CS260(), "Labjack": Labjack(), "NDF": NDF(), "Sr830": SR830()}
+        self.inst_dict.pop("Cs260")
+        self.inst_dict.pop("Labjack")
+        #self.inst_dict.pop("Sr830")
+        self.inst_dict.pop("NDF")
+
+        # Gui class #######################
 
         # Initialize action arguments ######################################################
         pylabsm_basestate.SmCustomState.set_global_args({"Tx Queue": self.data_queue_tx,

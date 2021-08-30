@@ -4,10 +4,12 @@
 
 Sam Condon, 07/02/2021
 """
+import asyncio
 from pylabinst.pylabinst_instrument_base import Instrument
 import clr
 import sys
 sys.path.append("pylabinst\\NDFWheel_DLLs\\")
+sys.path.append(".\\NDFWheel_DLLs\\")
 clr.AddReference("OptecHID_FilterWheelAPI")
 from OptecHID_FilterWheelAPI import FilterWheels
 from OptecHID_FilterWheelAPI import FilterWheel
@@ -26,8 +28,8 @@ class NDF(Instrument):
         ##################################################
 
         # Configure parameters ################################
-        self.add_get_parameter("position", self.get_position)
-        self.add_set_parameter("position", self.set_position)
+        self.add_get_parameter("current position", self.get_position)
+        self.add_set_parameter("current position", self.set_position)
         self.add_get_parameter("error", self.get_error)
         self.add_set_parameter("error", self.clear_error)
         self.add_set_parameter("home", self.home)
@@ -37,9 +39,10 @@ class NDF(Instrument):
         self.HSFW = FilterWheels().FilterWheelList[0]
         self.home()
         self.clear_error()
+        pass
 
     def get_position(self):
-        return self.HSFW.CurrentPosition
+        return str(self.HSFW.CurrentPosition)
 
     def set_position(self, position):
         if position == "home":

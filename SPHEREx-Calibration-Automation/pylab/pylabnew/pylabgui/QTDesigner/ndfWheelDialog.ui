@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="1">
-    <widget class="QComboBox" name="combobox_base_NewNdfParameters_passive_Position">
+    <widget class="QComboBox" name="combobox_base_NewNdfParameters_passive_NewPosition">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -65,7 +65,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QLineEdit" name="lineedit_base_CurrentNdfPosition_passive_CurrentNdfLedit">
+    <widget class="QLineEdit" name="lineedit_base_CurrentNdfPosition_passive_CurrentPosition">
      <property name="enabled">
       <bool>false</bool>
      </property>

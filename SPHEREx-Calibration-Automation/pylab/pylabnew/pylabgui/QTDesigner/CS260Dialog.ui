@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1686</width>
-    <height>1518</height>
+    <width>739</width>
+    <height>597</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -101,7 +101,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLineEdit" name="lineedit_base_CurrentMonochromatorParams_passive_Wavelength">
+    <widget class="QLineEdit" name="lineedit_base_CurrentMonochromatorParams_passive_CurrentWavelength">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -117,7 +117,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="lineedit_base_NewMonochromatorParams_passive_Wavelength">
+    <widget class="QLineEdit" name="lineedit_base_NewMonochromatorParams_passive_NewWavelength">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -153,7 +153,7 @@
     </widget>
    </item>
    <item row="5" column="0">
-    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_OrderSortFilter">
+    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_CurrentOrderSortFilter">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -180,7 +180,7 @@
     </widget>
    </item>
    <item row="5" column="1">
-    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_OrderSortFilter">
+    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_NewOrderSortFilter">
      <property name="currentIndex">
       <number>1</number>
      </property>
@@ -238,7 +238,7 @@
     </widget>
    </item>
    <item row="7" column="0">
-    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_Grating">
+    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_CurrentGrating">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -266,7 +266,7 @@
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_Grating">
+    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_NewGrating">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -322,7 +322,7 @@
     </widget>
    </item>
    <item row="9" column="0">
-    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_Shutter">
+    <widget class="QComboBox" name="combobox_base_CurrentMonochromatorParams_passive_CurrentShutter">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -345,7 +345,7 @@
     </widget>
    </item>
    <item row="9" column="1">
-    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_Shutter">
+    <widget class="QComboBox" name="combobox_base_NewMonochromatorParams_passive_NewShutter">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
        <horstretch>0</horstretch>

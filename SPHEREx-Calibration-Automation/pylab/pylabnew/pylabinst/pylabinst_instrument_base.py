@@ -29,12 +29,16 @@ class Instrument:
         """
         self.open_method = open_method
 
-    def open(self):
+    async def open(self):
         """open: open the communication interface by calling the previously set open_method()
 
         :return: communication interface object
         """
-        return self.open_method()
+        if asyncio.iscoroutinefunction(self.open_method):
+            ret = await self.open_method()
+        else:
+            ret = self.open_method()
+        return ret
 
     def add_parameter(self, parameter_name, getter, setter, coro=False):
         """add_parameter: add functions to the getter and setter dictionaries for the specified parameter name.

@@ -125,6 +125,7 @@ class SmCustomState(AsyncState):
         self.error_flag = False
 
         # Execute all state actions #
+        print("executing state {}".format(self.identifier))
         await asyncio.create_task(self.action_exec())
 
         # Enter error handler if an action raised the error_flag else move to next state #

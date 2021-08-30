@@ -22,12 +22,12 @@ class CS260(Instrument):
         ##########################################
 
         # Configure parameters ###############################################################
-        self.add_parameter("wavelength", self.get_wavelength, self.set_wavelength, coro=True)
-        self.add_parameter("grating", self.get_grating, self.set_grating, coro=True)
-        self.add_parameter("filter", self.get_osf, self.set_osf, coro=True)
-        self.add_parameter("shutter", self.get_shutter_state, self.set_shutter_state, coro=True)
-        self.add_get_parameter("units", self.get_units, coro=True)
-        self.add_set_parameter("units", self.set_units, coro=False)
+        self.add_parameter("current wavelength", self.get_wavelength, self.set_wavelength, coro=True)
+        self.add_parameter("current grating", self.get_grating, self.set_grating, coro=True)
+        self.add_parameter("current order sort filter", self.get_osf, self.set_osf, coro=True)
+        self.add_parameter("current shutter", self.get_shutter_state, self.set_shutter_state, coro=True)
+        self.add_get_parameter("current units", self.get_units, coro=True)
+        self.add_set_parameter("current units", self.set_units, coro=False)
         #######################################################################################
 
     # PARAMETER GETTER/SETTERS ##########################################################
@@ -39,7 +39,7 @@ class CS260(Instrument):
         ask_task = asyncio.create_task(self.ask("WAVE?"))
         await ask_task
         cp = ask_task.result()
-        return float(cp.stdout.decode('utf-8'))
+        return cp.stdout.decode('utf-8')
 
     async def set_wavelength(self, wavelength):
         """set_wavelength: move wavelength drive to step position closest
@@ -65,7 +65,7 @@ class CS260(Instrument):
         ask_task = asyncio.create_task(self.ask("GRAT?"))
         await ask_task
         cp = ask_task.result()
-        return int(cp.stdout.split(b',')[0])
+        return (cp.stdout.split(b',')[0]).decode("utf-8")
 
     async def set_grating(self, grating):
         """set_grating: move wavelength drive to grating specified in integer parameter
@@ -99,7 +99,7 @@ class CS260(Instrument):
         ask_task = asyncio.create_task(self.ask("FILTER?"))
         await ask_task
         cp = ask_task.result()
-        return int(cp.stdout)
+        return cp.stdout.decode("utf-8")
 
     async def set_osf(self, osf):
         """set_filter: move filter wheel to position specified by integer f
