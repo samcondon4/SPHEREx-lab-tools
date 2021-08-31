@@ -125,7 +125,7 @@ class SmCustomState(AsyncState):
         self.error_flag = False
 
         # Execute all state actions #
-        print("executing state {}".format(self.identifier))
+        print("## START {} ##".format(self.identifier.upper()))
         await asyncio.create_task(self.action_exec())
 
         # Enter error handler if an action raised the error_flag else move to next state #
@@ -142,6 +142,7 @@ class SmCustomState(AsyncState):
                     if action_results == trans["arg_result"]:
                         transition = getattr(self.sm, key)
 
+        print("## END {} ##".format(self.identifier.upper()))
         if transition is not None:
             await transition()
         else:

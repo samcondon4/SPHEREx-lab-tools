@@ -14,13 +14,13 @@ class Initializing(SmCustomState):
         super().__init__(sm, self, identifier)
 
     async def initialize_instruments(self, action_arg):
-        print("Initializing instruments")
+        print("initializing instruments...")
         for key in action_arg:
-            print(key)
             if issubclass(type(action_arg[key]), Instrument):
                 await action_arg[key].open()
                 inst_params = await action_arg[key].get_parameters("All")
                 action_arg["Tx Queue"][key] = inst_params
+                print(inst_params)
         action_arg["Tx Queue"]["Instrument Initialization"] = True
-        print("Initialization complete")
+        print("initialization complete")
         return True

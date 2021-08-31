@@ -17,8 +17,16 @@ class Instrument:
         self.parameters = []
         self.get_methods = {}
         self.get_method_coros = {}
+        self.getter_proc = None
         self.set_methods = {}
         self.set_method_coros = {}
+        self.setter_proc = None
+
+    def set_setter_proc(self, setter_proc):
+        self.setter_proc = setter_proc
+
+    def set_getter_proc(self, getter_proc):
+        self.getter_proc = getter_proc
 
     def set_open_method(self, open_method):
         """set_open_method: set the open communication interface method
@@ -124,6 +132,8 @@ class Instrument:
             await get_task
             return_dict[key] = get_task.result()
 
+        if self.getter_proc is not None:
+            return_dict = self.getter_proc(return_dict)
         return return_dict
 
     async def set_parameters(self, params_dict):
@@ -132,27 +142,33 @@ class Instrument:
         :param params_dict: dictionary with keys and values of parameters to update
         :return: None
         """
-        coro_list = []
-        func_list = []
-        # Separate setters into coroutines and normal functions ######################
-        for p in params_dict:
-            if p in self.set_method_coros:
-                task = asyncio.create_task(self.set_method_coros[p](params_dict[p]))
-                coro_list.append(task)
-            elif p in self.set_methods:
-                func_list.append((self.set_methods[p], params_dict[p]))
-        ##############################################################################
+        if self.setter_proc is not None:
+            if asyncio.iscoroutinefunction(self.setter_proc):
+                await self.setter_proc(params_dict)
+            else:
+                self.setter_proc(params_dict)
+        else:
+            coro_list = []
+            func_list = []
+            # Separate setters into coroutines and normal functions ######################
+            for p in params_dict:
+                if p in self.set_method_coros:
+                    task = asyncio.create_task(self.set_method_coros[p](params_dict[p]))
+                    coro_list.append(task)
+                elif p in self.set_methods:
+                    func_list.append((self.set_methods[p], params_dict[p]))
+            ##############################################################################
 
-        # Execute coroutines ###############################
-        if len(coro_list) > 0:
-            done, pending = await asyncio.wait(coro_list)
-        ####################################################
+            # Execute coroutines ###############################
+            if len(coro_list) > 0:
+                done, pending = await asyncio.wait(coro_list)
+            ####################################################
 
-        # Execute functions ################################
-        # The above loop created a list of tuples of the format: (<function pointer>, <function parameters>)
-        for func in func_list:
-            func[0](func[1])
-        ####################################################
+            # Execute functions ################################
+            # The above loop created a list of tuples of the format: (<function pointer>, <function parameters>)
+            for func in func_list:
+                func[0](func[1])
+            ####################################################
 
     def get_identifier(self):
         """get_identifier: get the instrument identifier string.

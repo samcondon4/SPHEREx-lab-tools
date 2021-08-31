@@ -23,42 +23,39 @@ class SpectralCalibrationMachine(AsyncMachine):
         # Action argument attributes #######
         self.data_queue_tx = data_queue_tx
         self.data_queue_rx = data_queue_rx
-        self.manual_or_auto = None
+        self.manual_or_auto = [""]
+        self.control_args = {}
 
         # Instrument classes ##############
-        self.inst_dict = {"Cs260": CS260(), "Labjack": Labjack(), "NDF": NDF(), "Sr830": SR830()}
-        self.inst_dict.pop("Cs260")
-        self.inst_dict.pop("Labjack")
-        #self.inst_dict.pop("Sr830")
+        self.inst_dict = {"CS260": CS260(), "LABJACK": Labjack(), "NDF": NDF(), "SR830": SR830()}
+        self.inst_dict.pop("LABJACK")
         self.inst_dict.pop("NDF")
-
-        # Gui class #######################
+        self.inst_dict.pop("SR830")
+        inst_dict_keys = list(self.inst_dict.keys())
 
         # Initialize action arguments ######################################################
         pylabsm_basestate.SmCustomState.set_global_args({"Tx Queue": self.data_queue_tx,
                                                          "Rx Queue": self.data_queue_rx})
-        pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": property(self.get_manual_or_auto,
-                                                                                    self.set_manual_or_auto)})
+        pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": self.manual_or_auto})
         pylabsm_basestate.SmCustomState.set_global_args(self.inst_dict)
+        pylabsm_basestate.SmCustomState.set_global_args({"Control": self.control_args})
 
         # Configure states and state actions #########################################
         self.init_state = pylabsm_state_initializing.Initializing(self)
-        idk = list(self.inst_dict.keys())
-        self.init_state.add_action(self.init_state.initialize_instruments, args=idk + ["Tx Queue"])
+        self.init_state.add_action(self.init_state.initialize_instruments, args=inst_dict_keys + ["Tx Queue"])
 
         self.wait_state = pylabsm_state_waiting.Waiting(self)
-        self.wait_state.add_action(self.wait_state.waiting_action, args=["Rx Queue"])
+        self.wait_state.add_action(self.wait_state.waiting_action, args=["Rx Queue", "Manual or Auto", "Control"])
+
+        self.manual_state = pylabsm_state_manual.Manual(self)
+        self.manual_state.add_action(self.manual_state.manual_action, args=inst_dict_keys + ["Control", "Tx Queue"])
         ##############################################################################
 
         # Add states and transitions to the state machine #
-        self.add_states([self.init_state, self.wait_state])
+        self.add_states([self.init_state, self.wait_state, self.manual_state])
         self.init_state.add_transition(self.wait_state)
-
-    def set_manual_or_auto(self, set_str):
-        self.manual_or_auto = set_str
-
-    def get_manual_or_auto(self):
-        return self.manual_or_auto
+        self.wait_state.add_transition(self.manual_state, arg="Manual or Auto", arg_result=["manual"])
+        self.manual_state.add_transition(self.wait_state)
 
     async def run(self):
         if self.data_queue is None:

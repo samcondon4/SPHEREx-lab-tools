@@ -26,12 +26,11 @@ async def main():
     sm_to_gui_data_dict = {}
     seq_dir = ".\\config\\sequence\\"
     gui = GUI(sequence_dir=seq_dir, data_queue_rx=sm_to_gui_data_dict, data_queue_tx=gui_to_sm_data_queue)
-    gui.form.show()
     SM = SpectralCalibrationMachine(data_queue_rx=gui_to_sm_data_queue, data_queue_tx=sm_to_gui_data_dict)
     sm_task = asyncio.create_task(SM.start_machine())
     inst_init_complete = False
     await asyncio.sleep(5)
-    print("starting gui task")
+    gui.form.show()
     gui_task = asyncio.create_task(gui.run())
     await asyncio.gather(sm_task, gui_task)
 

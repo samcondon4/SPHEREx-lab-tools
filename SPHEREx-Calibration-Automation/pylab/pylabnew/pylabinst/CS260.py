@@ -13,6 +13,54 @@ from pylabinst.pylabinst_instrument_base import Instrument
 
 class CS260(Instrument):
 
+    G1_UPPER = 1.4
+    G2_LOWER = G1_UPPER
+    G2_UPPER = 2.5
+    G3_LOWER = G2_UPPER
+
+    NO_OSF_UPPER = 1.3
+    OSF1_LOWER = NO_OSF_UPPER
+    OSF1_UPPER = 1.65
+    OSF2_LOWER = OSF1_UPPER
+    OSF2_UPPER = 2.5
+    OSF3_LOWER = OSF2_UPPER
+
+    @classmethod
+    def auto_grating(cls, wavelength):
+        """Description: Return the grating associated with the passed wavelength as specified by the grating range
+                        class parameters.
+
+        :param: wavelength: (float) wavelength value
+        :return: (int) grating number
+        """
+        grating = None
+        if wavelength <= cls.G1_UPPER:
+            grating = 1
+        elif cls.G2_LOWER < wavelength <= cls.G2_UPPER:
+            grating = 2
+        elif wavelength > cls.G3_LOWER:
+            grating = 3
+        return grating
+
+    @classmethod
+    def auto_osf(cls, wavelength):
+        """Description: Return the grating associated with the passed wavelength as specified by the osf range class
+                        parameters.
+
+        :param wavelength: (float) wavelength value
+        :return: (int) osf number
+        """
+        osf = None
+        if wavelength <= cls.NO_OSF_UPPER:
+            osf = 4
+        elif wavelength > cls.OSF1_LOWER:
+            osf = 1
+        elif cls.OSF1_UPPER < wavelength <= cls.OSF3_LOWER:
+            osf = 2
+        elif cls.OSF3_LOWER < wavelength:
+            osf = 3
+        return osf
+
     def __init__(self, exe_path="pylabinst\\CS260_DLLs\\C++EXE.exe"):
         super().__init__("CS260")
         self.exe_path = exe_path
@@ -28,9 +76,48 @@ class CS260(Instrument):
         self.add_parameter("current shutter", self.get_shutter_state, self.set_shutter_state, coro=True)
         self.add_get_parameter("current units", self.get_units, coro=True)
         self.add_set_parameter("current units", self.set_units, coro=False)
+
+        self.set_setter_proc(self.setter)
         #######################################################################################
 
     # PARAMETER GETTER/SETTERS ##########################################################
+    async def setter(self, setter_dict):
+        """Description: set the values specified by setter dict in the proper order.
+
+        :param setter_dict: dictionary of cs260 parameters.
+        :return: None
+        """
+        setter_dict_keys = list(setter_dict.keys())
+        await self.set_shutter_state("C")
+
+        coro_args = {"wavelength": None, "grating": None, "osf": None}
+        if "current wavelength" in setter_dict_keys:
+            wavelength = float(setter_dict["current wavelength"])
+            coro_args["wavelength"] = wavelength
+        else:
+            wavelength = await self.get_wavelength()
+
+        if "current grating" in setter_dict_keys:
+            grating = setter_dict["current grating"]
+            if grating == "Auto":
+                grating = CS260.auto_grating(wavelength)
+            coro_args["grating"] = grating
+
+        if "current order sort filter" in setter_dict_keys:
+            osf = setter_dict["current order sort filter"]
+            if osf == "Auto":
+                osf = CS260.auto_osf(wavelength)
+            coro_args["osf"] = osf
+
+        if coro_args["grating"] is not None:
+            await self.set_grating(coro_args["grating"])
+        if coro_args["osf"] is not None:
+            await self.set_osf(coro_args["osf"])
+        if coro_args["wavelength"] is not None:
+            await self.set_wavelength(coro_args["wavelength"])
+        if "current shutter" in setter_dict_keys and setter_dict["current shutter"] == "Open":
+            await self.set_shutter_state("O")
+
     async def get_wavelength(self):
         """get_wavelength: returns exact wavelength output in current units.
 
@@ -49,8 +136,10 @@ class CS260(Instrument):
         :return:
         """
         t = type(wavelength)
-        if not (t == int or t == float):
-            raise TypeError("Expected input of type int or float but type {} given.".format(t))
+        if t is str:
+            wavelength = float(wavelength)
+        elif not (t == int or t == float):
+            raise TypeError("Expected input of type int, float, or string but type {} given.".format(t))
         write_task = asyncio.create_task(self.write_async("GOWAVE {}".format(wavelength)))
         await write_task
         await asyncio.create_task(self.async_pend("wave", arg=wavelength))
@@ -76,7 +165,9 @@ class CS260(Instrument):
         """
         task_run = 0
         t = type(grating)
-        if t != int:
+        if t is str:
+            grating = int(grating.split("G")[-1])
+        elif t is not int:
             raise TypeError("Expected input of type int but type {} given.".format(t))
 
         if grating in range(1, 4):
@@ -109,8 +200,11 @@ class CS260(Instrument):
         """
         task_run = 0
         t = type(osf)
-        if t != int:
+        if t is str:
+            osf = int(osf.split("OSF")[-1])
+        elif t is not int:
             raise TypeError("Input type int expected but type {} was given.".format(t))
+
         if osf in range(1, 7):
             sf_task = asyncio.create_task(self.write_async('FILTER {}'.format(osf)))
             await sf_task
@@ -146,7 +240,7 @@ class CS260(Instrument):
         elif shutter_state == "O":
             self.write('SHUTTER O')
         else:
-            raise ValueError("Please specify valid value of shutter state parameter. Valid values are {'Open', 'Close'}")
+            raise ValueError("Please specify valid value of shutter state parameter. Valid values are {'O', 'C'}")
 
     async def get_units(self):
         """get_units: get units that wavelength is currently expressed in.
@@ -249,11 +343,13 @@ class CS260(Instrument):
             else:
                 complete = True
 
+        """
         # Check if monochromator queried value matches desired value. Raise exception if it doesn't
         if (arg is not None) and (not (abs(val - arg) < 0.2)):
             raise RuntimeError("Monochromator {} task set unspecified value {} instead of {}".format(pend_task, val, arg))
         else:
             return val
+        """
 
     @staticmethod
     async def async_sp_run(args, check=False):
@@ -268,7 +364,7 @@ class CS260(Instrument):
             # wait for process to complete
             while retcode is None:
                 retcode = process.poll()
-                await asyncio.sleep(0.001)
+                await asyncio.sleep(0)
 
             stdout = process.stdout.read()
             stderr = process.stderr.read()

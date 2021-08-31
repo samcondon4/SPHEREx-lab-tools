@@ -127,8 +127,7 @@ class GuiWindow:
 
         return widget_dict
 
-    def __init__(self, child=None, form=None, data_queue_tx=None, data_queue_rx=None, identifier=None):
-        self.identifier = identifier
+    def __init__(self, child=None, form=None, data_queue_tx=None, data_queue_rx=None, rx_identifier=None, debug=False):
         self.widget_groups = {}
         self.child = child
         if form is None:
@@ -138,6 +137,8 @@ class GuiWindow:
         self.data_queue_tx = data_queue_tx
         self.data_queue_rx = data_queue_rx
         self.widget_list = None
+        self.rx_identifier = rx_identifier
+        self.debug = debug
         self.configured = False
 
     def configure(self):
@@ -213,22 +214,24 @@ class GuiWindow:
         """Description: Monitors traffic on the tx and rx queues for debugging.
         """
         while True:
-            if self.identifier is not None:
+            if self.rx_identifier is not None:
                 try:
-                    rx = self.data_queue_rx.pop(self.identifier)
+                    rx = self.data_queue_rx.pop(self.rx_identifier)
                 except KeyError:
                     pass
                 else:
-                    print("Rx data = {}".format(rx))
+                    if self.debug:
+                        print("Rx data = {}".format(rx))
                     for group_key in self.widget_groups:
                         self.widget_groups[group_key].set_passive(rx)
 
-            try:
-                tx = self.data_queue_tx.get_nowait()
-            except asyncio.QueueEmpty:
-                pass
-            else:
-                print("Tx data = {}".format(tx))
+            if self.debug:
+                try:
+                    tx = self.data_queue_tx.get_nowait()
+                except asyncio.QueueEmpty:
+                    pass
+                else:
+                    print("Tx data = {}".format(tx))
 
             await asyncio.sleep(0)
 
@@ -289,7 +292,6 @@ class GuiCompositeWindow(GuiWindow):
             window_selector = QtWidgets.QComboBox()
             widget_name = widget.windowTitle()
             layout = widget.layout()
-            print(widget_name, layout)
 
             for w in widget_list:
                 window_selector.addItem(w.windowTitle())

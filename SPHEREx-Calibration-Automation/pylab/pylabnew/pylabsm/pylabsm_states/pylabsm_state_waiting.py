@@ -13,7 +13,9 @@ class Waiting(SmCustomState):
         super().__init__(sm, self, identifier)
 
     async def waiting_action(self, in_dict):
-        print("waiting for gui input... {}".format(in_dict))
+        ret_code = True
+
+        print("waiting for gui input... {}")
         data_queue = in_dict["Rx Queue"]
         gui_data = await data_queue.get()
 
@@ -21,7 +23,9 @@ class Waiting(SmCustomState):
         # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
         gui_input_type = type(gui_data)
         if gui_input_type is list:
-            in_dict["Manual or Auto"] = "auto"
+            in_dict["Manual or Auto"][0] = "auto"
         else:
-            in_dict["Manual or Auto"] = "manual"
-        print(gui_data)
+            in_dict["Manual or Auto"][0] = "manual"
+            in_dict["Control"].update(gui_data)
+
+        return ret_code

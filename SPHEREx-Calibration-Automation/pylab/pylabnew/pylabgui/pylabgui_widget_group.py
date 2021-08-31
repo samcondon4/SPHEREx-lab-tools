@@ -272,7 +272,6 @@ class WidgetGroup:
         if self.setter_proc is not None:
             setter_dict = self.setter_proc(setter_dict)
         # Run setter methods according to key value pairs in setter_dict
-        print("## SET PASSIVE: setter_dict={}, set_methods={}".format(setter_dict, self.set_methods))
         setters_found = False
         for key in setter_dict:
             if key in list(self.set_methods.keys()):
