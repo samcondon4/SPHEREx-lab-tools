@@ -25,7 +25,21 @@ class Labjack(Instrument):
         #self.add_get_parameter("dio", self.get_dio)
         self.add_parameter("dio config", self.get_dio_config, self.set_dio_config)
         self.add_parameter("dio state", self.get_dio_state, self.set_dio_state)
+
+        self.set_setter_proc(self.labjack_setter_proc)
         ###########################################################################
+
+    def labjack_setter_proc(self, setter_dict):
+        config_dict = {}
+        state_dict = {}
+        for key in setter_dict:
+            dio_num = int(key.split(" ")[0][-1])
+            if "config" in key:
+                config_dict[dio_num] = setter_dict[key]
+            elif "state" in key:
+                state_dict[dio_num] = setter_dict[key]
+        self.set_dio_config(config_dict)
+        self.set_dio_state(state_dict)
 
     def open_u6_com(self):
         self.com = u6.U6()
@@ -130,9 +144,14 @@ class Labjack(Instrument):
         for d in dio_dict:
             dir = self.com.getFeedback(u6.BitDirRead(d))[0]
             if dir != 1:
-                raise RuntimeError("DIO{} is configured as an input!".format(d))
-            if dio_dict[d] == 0 or dio_dict[d] == 1:
-                self.com.setDOState(d, state=dio_dict[d])
+                pass
             else:
-                raise RuntimeError("Only 0 or 1 allowed as a DIO state on the LJU6!")
+                if dio_dict[d] == 0 or dio_dict[d] == 1:
+                    self.com.setDOState(d, state=dio_dict[d])
+                elif dio_dict[d] == "True":
+                    self.com.setDOState(d, state=1)
+                elif dio_dict[d] == "False":
+                    self.com.setDOState(d, state=0)
+                else:
+                    raise RuntimeError("Only 0 or 1 allowed as a DIO state on the LJU6!")
 

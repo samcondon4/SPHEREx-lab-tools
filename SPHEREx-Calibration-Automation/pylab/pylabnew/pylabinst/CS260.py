@@ -107,6 +107,8 @@ class CS260(Instrument):
             osf = setter_dict["current order sort filter"]
             if osf == "Auto":
                 osf = CS260.auto_osf(wavelength)
+            elif osf == "No OSF":
+                osf = 4
             coro_args["osf"] = osf
 
         if coro_args["grating"] is not None:
@@ -164,6 +166,8 @@ class CS260(Instrument):
         :return: success code
         """
         task_run = 0
+        cur_grating = await self.get_grating()
+        cur_grating = int(cur_grating)
         t = type(grating)
         if t is str:
             grating = int(grating.split("G")[-1])
@@ -171,10 +175,20 @@ class CS260(Instrument):
             raise TypeError("Expected input of type int but type {} given.".format(t))
 
         if grating in range(1, 4):
-            sg_task = asyncio.create_task(self.write_async("GRAT {}".format(grating)))
-            await sg_task
-            await asyncio.create_task(self.async_pend("grating", arg=grating))
-            cp = sg_task.result()
+            delta_grating = cur_grating - grating
+            if abs(delta_grating) > 1 and delta_grating > 0:
+                await asyncio.create_task(self.write_async("GRAT {}".format(cur_grating - 1)))
+                await asyncio.create_task(self.async_pend("grating", arg=cur_grating-1))
+                sg_task = await asyncio.create_task(self.write_async("GRAT {}".format(cur_grating - 2)))
+                await asyncio.create_task(self.async_pend("grating", arg=cur_grating-2))
+            elif abs(delta_grating) > 1 and delta_grating < 0:
+                await asyncio.create_task(self.write_async("GRAT {}".format(cur_grating + 1)))
+                await asyncio.create_task(self.async_pend("grating", arg=cur_grating+1))
+                sg_task = await asyncio.create_task(self.write_async("GRAT {}".format(cur_grating + 2)))
+                await asyncio.create_task(self.async_pend("grating", arg=cur_grating+2))
+            else:
+                sg_task = await asyncio.create_task(self.write_async("GRAT {}".format(grating)))
+            cp = sg_task
             task_run = 1
         else:
             raise ValueError("Input should be integer values 1, 2, or 3")
@@ -305,7 +319,7 @@ class CS260(Instrument):
     #####################################################################################
 
     # OTHER SUPPORT METHODS #########################################################################################
-    async def async_pend(self, pend_task, arg=None, pend_time=0.5):
+    async def async_pend(self, pend_task, arg=None, pend_time=0.1):
         """async_pend: additional layer of pending. Sometimes the low-level "blocking" cs260 communication
                        functions exit before their action is actually complete. This function waits until
                        a valid return has been read from the cs260 before leaving. Also can serve as a check
@@ -335,9 +349,7 @@ class CS260(Instrument):
         val = 0
         while not complete:
             try:
-                query_task = asyncio.create_task(query_func())
-                await query_task
-                val = query_task.result()
+                val = await query_func()
             except ValueError as e:
                 await asyncio.sleep(pend_time)
             else:

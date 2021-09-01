@@ -28,9 +28,6 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Instrument classes ##############
         self.inst_dict = {"CS260": CS260(), "LABJACK": Labjack(), "NDF": NDF(), "SR830": SR830()}
-        self.inst_dict.pop("LABJACK")
-        self.inst_dict.pop("NDF")
-        self.inst_dict.pop("SR830")
         inst_dict_keys = list(self.inst_dict.keys())
 
         # Initialize action arguments ######################################################

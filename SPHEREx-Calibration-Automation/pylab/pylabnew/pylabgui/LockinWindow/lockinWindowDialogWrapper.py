@@ -38,7 +38,7 @@ def lockin_getter_proc(lockin_input):
                   float(Lockin.UNIT_SENSITIVITY_MAP[sensitivity_dict["units"]])
     tc = float(timeconstant_dict["value"]) * float(timeconstant_dict["multiplier"].split("x")[-1]) * \
          float(Lockin.UNIT_TC_MAP[timeconstant_dict["units"]])
-    lockin_output = {"sensitivity": sensitivity, "time-constant": tc}
+    lockin_output = {"current sensitivity": sensitivity, "current time constant": tc}
 
     return lockin_output
 
@@ -76,8 +76,8 @@ class Sr830Window(Ui_Sr830Dialog, GuiWindow):
         if not self.configured:
             self.configure()
 
-        self.WidgetGroups["sr830 new config parameters"].set_getter_proc(lockin_getter_proc)
-        self.WidgetGroups["sr830 measurement parameters"].set_setter_proc(lockin_measurement_setter_proc)
+        self.WidgetGroups["new sr830 config parameters"].set_getter_proc(lockin_getter_proc)
+        self.WidgetGroups["new sr830 measurement parameters"].set_setter_proc(lockin_measurement_setter_proc)
 
 
 class LockinWindow(GuiCompositeWindow):

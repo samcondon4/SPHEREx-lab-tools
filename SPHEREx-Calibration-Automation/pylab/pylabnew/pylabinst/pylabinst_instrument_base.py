@@ -144,9 +144,9 @@ class Instrument:
         """
         if self.setter_proc is not None:
             if asyncio.iscoroutinefunction(self.setter_proc):
-                await self.setter_proc(params_dict)
+                params_dict = await self.setter_proc(params_dict)
             else:
-                self.setter_proc(params_dict)
+                params_dict = self.setter_proc(params_dict)
         else:
             coro_list = []
             func_list = []

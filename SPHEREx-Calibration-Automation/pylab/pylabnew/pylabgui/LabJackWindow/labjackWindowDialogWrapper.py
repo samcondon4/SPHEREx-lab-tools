@@ -21,7 +21,7 @@ class LabjackWindow(Ui_Form, GuiWindow):
         self.setupUi(self.form)
         if not self.configured:
             self.configure()
-        GuiWindow.WidgetGroups["labjack dio parameters"].set_setter_proc(self.set_dio_proc)
+        GuiWindow.WidgetGroups["newcur labjack dio parameters"].set_setter_proc(self.set_dio_proc)
 
     def set_dio_proc(self, in_dict):
         config_str = "dio{} config"

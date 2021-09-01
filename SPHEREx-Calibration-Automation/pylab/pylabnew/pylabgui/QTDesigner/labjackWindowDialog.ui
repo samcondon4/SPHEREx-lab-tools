@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>386</width>
-    <height>1043</height>
+    <width>780</width>
+    <height>724</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="5" column="0">
-    <widget class="QCheckBox" name="checkbox_base_LabjackDioParameters_passive_Dio2State">
+    <widget class="QCheckBox" name="checkbox_base_NewcurLabjackDioParameters_passive_Dio2State">
      <property name="text">
       <string>DIO2</string>
      </property>
@@ -49,21 +49,21 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QCheckBox" name="checkbox_base_LabjackDioParameters_passive_Dio0State">
+    <widget class="QCheckBox" name="checkbox_base_NewcurLabjackDioParameters_passive_Dio0State">
      <property name="text">
       <string>DIO0</string>
      </property>
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QCheckBox" name="checkbox_base_LabjackDioParameters_passive_Dio1State">
+    <widget class="QCheckBox" name="checkbox_base_NewcurLabjackDioParameters_passive_Dio1State">
      <property name="text">
       <string>DIO1</string>
      </property>
     </widget>
    </item>
    <item row="5" column="1" colspan="2">
-    <widget class="QComboBox" name="combobox_base_LabjackDioParameters_passive_Dio2Config">
+    <widget class="QComboBox" name="combobox_base_NewcurLabjackDioParameters_passive_Dio2Config">
      <item>
       <property name="text">
        <string>Input</string>
@@ -77,7 +77,7 @@
     </widget>
    </item>
    <item row="3" column="1" colspan="2">
-    <widget class="QComboBox" name="combobox_base_LabjackDioParameters_passive_Dio0Config">
+    <widget class="QComboBox" name="combobox_base_NewcurLabjackDioParameters_passive_Dio0Config">
      <item>
       <property name="text">
        <string>Input</string>
@@ -91,7 +91,7 @@
     </widget>
    </item>
    <item row="4" column="1" colspan="2">
-    <widget class="QComboBox" name="combobox_base_LabjackDioParameters_passive_Dio1Config">
+    <widget class="QComboBox" name="combobox_base_NewcurLabjackDioParameters_passive_Dio1Config">
      <item>
       <property name="text">
        <string>Input</string>
@@ -105,7 +105,7 @@
     </widget>
    </item>
    <item row="6" column="0" colspan="3">
-    <widget class="QPushButton" name="button_base_LabjackDioParameters_getter_DioSetParametersButton">
+    <widget class="QPushButton" name="button_base_NewcurLabjackDioParameters_getter_DioSetParametersButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
        <horstretch>0</horstretch>

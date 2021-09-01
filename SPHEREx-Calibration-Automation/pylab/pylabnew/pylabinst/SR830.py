@@ -24,16 +24,16 @@ class SR830(Instrument):
         #############################################################################
 
         # Add getter and setter methods to Instrument base class ###############################
-        self.add_get_parameter("sr830 current phase", self.get_phase)
-        self.add_set_parameter("sr830 current phase", self.set_phase)
-        self.add_get_parameter("sr830 reference frequency", self.get_reference_frequency)
-        self.add_set_parameter("sr830 reference frequency", self.set_reference_frequency)
-        self.add_get_parameter("sr830 current sensitivity", self.get_sensitivity)
-        self.add_set_parameter("sr830 current sensitivity", self.set_sensitivity)
-        self.add_get_parameter("sr830 current time constant", self.get_time_constant)
-        self.add_set_parameter("sr830 current time constant", self.set_time_constant)
-        self.add_get_parameter("sr830 sample rate", self.get_sample_rate)
-        self.add_set_parameter("sr830 sample rate", self.set_sample_rate)
+        self.add_get_parameter("current phase", self.get_phase)
+        self.add_set_parameter("current phase", self.set_phase)
+        self.add_get_parameter("reference frequency", self.get_reference_frequency)
+        self.add_set_parameter("reference frequency", self.set_reference_frequency)
+        self.add_get_parameter("current sensitivity", self.get_sensitivity)
+        self.add_set_parameter("current sensitivity", self.set_sensitivity)
+        self.add_get_parameter("current time constant", self.get_time_constant)
+        self.add_set_parameter("current time constant", self.set_time_constant)
+        self.add_get_parameter("sample rate", self.get_sample_rate)
+        self.add_set_parameter("sample rate", self.set_sample_rate)
 
         # Status registers ###############
         self.add_get_parameter("sr830 lia status", self.get_lia_status)

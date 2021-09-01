@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1190</width>
-    <height>1003</height>
+    <width>746</width>
+    <height>603</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="2" column="1">
-    <widget class="QComboBox" name="combobox_base_NewNdfParameters_passive_NewPosition">
+    <widget class="QComboBox" name="combobox_base_NewNdf_passive_NewPosition">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -136,7 +136,7 @@
     </widget>
    </item>
    <item row="3" column="0" colspan="2">
-    <widget class="QPushButton" name="button_base_NewNdfParameters_getter_NewNdfButton">
+    <widget class="QPushButton" name="button_base_NewNdf_getter_NewNdfButton">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>
