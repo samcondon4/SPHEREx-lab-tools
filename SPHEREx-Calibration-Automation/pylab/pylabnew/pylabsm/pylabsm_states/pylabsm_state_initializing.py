@@ -10,11 +10,12 @@ from pylabinst.pylabinst_instrument_base import Instrument
 
 class Initializing(SmCustomState):
 
-    def __init__(self, sm, identifier="initializing"):
-        super().__init__(sm, self, identifier)
+    def __init__(self, sm, identifier="initializing", **kwargs):
+        super().__init__(sm, self, identifier, **kwargs)
 
     async def initialize_instruments(self, action_arg):
         print("initializing instruments...")
+        print(action_arg)
         for key in action_arg:
             if issubclass(type(action_arg[key]), Instrument):
                 await action_arg[key].open()

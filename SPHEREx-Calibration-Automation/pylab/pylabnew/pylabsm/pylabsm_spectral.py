@@ -28,6 +28,10 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Instrument classes ##############
         self.inst_dict = {"CS260": CS260(), "LABJACK": Labjack(), "NDF": NDF(), "SR830": SR830()}
+        self.inst_dict.pop("CS260")
+        self.inst_dict.pop("LABJACK")
+        self.inst_dict.pop("NDF")
+        self.inst_dict.pop("SR830")
         inst_dict_keys = list(self.inst_dict.keys())
 
         # Initialize action arguments ######################################################
@@ -37,8 +41,8 @@ class SpectralCalibrationMachine(AsyncMachine):
         pylabsm_basestate.SmCustomState.set_global_args(self.inst_dict)
         pylabsm_basestate.SmCustomState.set_global_args({"Control": self.control_args})
 
-        # Configure states and state actions #########################################
-        self.init_state = pylabsm_state_initializing.Initializing(self)
+        # Configure states and state actions ###########################################################################
+        self.init_state = pylabsm_state_initializing.Initializing(self, initial=True)
         self.init_state.add_action(self.init_state.initialize_instruments, args=inst_dict_keys + ["Tx Queue"])
 
         self.wait_state = pylabsm_state_waiting.Waiting(self)
@@ -46,13 +50,18 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         self.manual_state = pylabsm_state_manual.Manual(self)
         self.manual_state.add_action(self.manual_state.manual_action, args=inst_dict_keys + ["Control", "Tx Queue"])
-        ##############################################################################
+
+        self.auto_state = pylabsm_state_auto.Auto(self)
+        self.auto_state.add_action(self.auto_state.auto_sm_exec, args=["Control"])
+        ################################################################################################################
 
         # Add states and transitions to the state machine #
-        self.add_states([self.init_state, self.wait_state, self.manual_state])
+        self.add_states([self.init_state, self.wait_state, self.manual_state, self.auto_state])
         self.init_state.add_transition(self.wait_state)
         self.wait_state.add_transition(self.manual_state, arg="Manual or Auto", arg_result=["manual"])
+        self.wait_state.add_transition(self.auto_state, arg="Manual or Auto", arg_result=["auto"])
         self.manual_state.add_transition(self.wait_state)
+        self.auto_state.add_transition(self.wait_state)
 
     async def run(self):
         if self.data_queue is None:

@@ -45,7 +45,7 @@ class NDF(Instrument):
         return str(self.HSFW.CurrentPosition)
 
     def set_position(self, position):
-        if position == "home":
+        if position == 0:
             self.home()
         else:
             self.HSFW.CurrentPosition = position

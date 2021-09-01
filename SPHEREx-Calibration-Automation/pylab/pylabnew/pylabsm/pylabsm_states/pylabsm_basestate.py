@@ -8,53 +8,6 @@ import asyncio
 from transitions.extensions.asyncio import AsyncState
 
 
-# MOVE ACTION BACK TO A DICTIONARY IMPLEMENTATION INSIDE OF THE SMCUSTOMSTATE CLASS ###########################
-
-
-class Action:
-    """
-    class to implement state machine actions.
-    """
-    def __init__(self, func, arg_getter=None, err_flag_setter=None, coro=False):
-        """ Description: Initialization for the Action class
-
-        :param func: function object to execute
-        :param arg_getter: function object to retrieve arguments to pass to func
-        :param err_flag_setter: function to set the error flag of state class
-        :param coro: flag to indicate if func is a coroutine
-        """
-        self.func = func
-        self.arg_getter = arg_getter
-        self.err_flag_setter = err_flag_setter
-        self.coro = coro
-
-    def exec(self):
-        """ Description: execute func with the specified arguments
-        :return: return value from the action function
-        """
-        if self.arg_getter is None:
-            ret = self.func()
-        else:
-            func_args = self.arg_getter()
-            ret = self.func(func_args)
-
-        if ret is False and self.err_flag_setter is not None:
-            self.err_flag_setter()
-
-    async def async_exec(self):
-        """ Description: same as exec except func is awaited as a coroutine
-        :return: return value from the action function
-        """
-        if self.arg_getter is None:
-            ret = await self.func()
-        else:
-            func_args = self.arg_getter()
-            ret = await self.func(func_args)
-
-        if ret is False and self.err_flag_setter is not None:
-            self.err_flag_setter()
-
-
 class SmCustomState(AsyncState):
 
     sm = None
@@ -94,24 +47,31 @@ class SmCustomState(AsyncState):
 
         return ret
 
-    def __init__(self, sm, child, identifier, **kwargs):
+    def __init__(self, sm, child, identifier, hold_on_complete=False, initial=False, **kwargs):
         """ Description: initialization for the state base class.
 
         :param sm: State machine instance that the state is a member of.
         :param child: Subclass instance.
         :param identifier: String used to identify the state within the state machine class.
         """
-        if SmCustomState.sm is None:
-            SmCustomState.sm = sm
-            SmCustomState.sm.add_transition("start_machine", source="initial", dest=identifier)
+        self.sm = sm
+        if initial:
+            self.sm.add_transition("start_machine", source="initial", dest=identifier)
         self.child = child
         self.identifier = identifier
-        super().__init__(identifier, **kwargs)
+        kewargs = {}
+        for key in kwargs:
+            kewargs[key] = kwargs[key]
+        if "model" in kewargs:
+            kewargs.pop("model")
+        super().__init__(identifier, kewargs)
         self.error_flag = False
         self.error_message = None
         self.coro_actions = {}
         self.actions = {}
         self.transitions = {}
+        self.hold_complete = hold_on_complete
+        self.complete = False
 
         self.sm.add_transition("error", self.identifier, None, after="error")
         self.add_callback("enter", self.state_exec)
@@ -145,6 +105,9 @@ class SmCustomState(AsyncState):
         print("## END {} ##".format(self.identifier.upper()))
         if transition is not None:
             await transition()
+        elif self.hold_complete:
+            while not self.complete:
+                await asyncio.sleep(0)
         else:
             raise RuntimeError("No valid state transition found. State machine stuck!")
         #################################################################################

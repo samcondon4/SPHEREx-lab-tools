@@ -13,7 +13,7 @@ from qasync import QEventLoop
 from PyQt5 import QtWidgets
 from pylabgui.pylabgui_window_base import GuiCompositeWindow
 from pylabgui.CS260Window.cs260AutoDialogWrapper import CS260AutoWindow
-from pylabgui.LockinWindow.lockinAutoWindowDialogWrapper import LockinAutoWindow
+from pylabgui.LockinWindow.lockinAutoWindowDialogWrapper import Sr830AutoWindow
 from pylabgui.LockinWindow.lockinWindowHelper import Lockin
 from pylabgui.NDFWheelWindow.ndfAutoWindowDialogWrapper import NDFAutoWindow
 from pylabgui.NDFWheelWindow.ndfWindowHelper import NDF
@@ -28,7 +28,7 @@ class AutoTab(GuiCompositeWindow):
         self.proc_queue = asyncio.Queue()
         self.form.setWindowTitle("Automation")
         self.cs260_sequence_window = CS260AutoWindow(rx_identifier="Cs260 Auto")
-        self.lockin_sequence_window = LockinAutoWindow(rx_identifier="Lockin Auto")
+        self.lockin_sequence_window = Sr830AutoWindow(rx_identifier="Sr830 Auto")
         self.ndf_sequence_window = NDFAutoWindow(rx_identifier="NDF Auto")
         self.series_window = SeriesConstructionWindow(rx_identifier="Series Construction", **kwargs)
         self.add_window(self.series_window)
@@ -64,10 +64,12 @@ class AutoTab(GuiCompositeWindow):
                     sr510_tc[tc_key] = internal_sequence_dict.pop(key)
                 elif "sr830 time constant" in key:
                     sr830_tc[tc_key] = internal_sequence_dict.pop(key)
-            sr510_tc = Lockin.get_tc(sr510_tc)
-            sr830_tc = Lockin.get_tc(sr830_tc)
-            internal_sequence_dict["sr510 time constant"] = sr510_tc
-            internal_sequence_dict["sr830 time constant"] = sr830_tc
+            if not sr510_tc == {}:
+                sr510_tc = Lockin.get_tc(sr510_tc)
+                internal_sequence_dict["sr510 time constant"] = sr510_tc
+            if not sr830_tc == {}:
+                sr830_tc = Lockin.get_tc(sr830_tc)
+                internal_sequence_dict["sr830 time constant"] = sr830_tc
             output_sequence_dict = self.save_ini(internal_sequence_dict, text)
             output_sequence_dict["from ini"] = {}
         else:
@@ -86,7 +88,7 @@ class AutoTab(GuiCompositeWindow):
                 ini_key2 += string + " "
             if ini_key1 not in ini_seq_dict:
                 ini_seq_dict[ini_key1] = {}
-            ini_seq_dict[ini_key1][ini_key2[:-1]] = seq_dict[key]
+            ini_seq_dict[ini_key1][ini_key2[:-1]] = str(seq_dict[key])
 
         ini_seq_dict["sequence info"] = {"sequence name": seq_name}
         seq_file_name = self.sequence_dir + seq_name + ".ini"
@@ -120,7 +122,7 @@ class AutoTab(GuiCompositeWindow):
                 new_key = key1 + " " + key2
                 output_dict[new_key] = proc_dict[key1][key2]
 
-        return text, output_dict
+        return output_dict
 
     @staticmethod
     def passive_series_setter_proc(ini_dict):
@@ -171,7 +173,8 @@ if __name__ == "__main__":
     EventLoop = QEventLoop()
     asyncio.set_event_loop(EventLoop)
     seq_dir = "..\\config\\sequence\\"
-    window = AutoTab(sequence_dir=seq_dir)
+    data_queue_tx = asyncio.Queue()
+    window = AutoTab(sequence_dir=seq_dir, data_queue_tx=data_queue_tx)
     window.form.show()
     asyncio.create_task(window.run())
     with EventLoop:

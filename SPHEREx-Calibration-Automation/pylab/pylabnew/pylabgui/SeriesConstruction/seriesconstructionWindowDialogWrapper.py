@@ -20,6 +20,10 @@ class SeriesConstructionWindow(Ui_Form, GuiWindow):
             self.configure()
     #################################################################################################################
 
+    def getter_proc(self, get_dict):
+        print("Getter process dictionary: {}".format(get_dict))
+        return get_dict
+
 
 if __name__ == "__main__":
     import sys

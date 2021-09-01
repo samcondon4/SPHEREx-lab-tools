@@ -339,7 +339,6 @@ class ListWidgetGroup(WidgetGroup):
         else:
             passive_data = external
         #############################################################################################
-
         # If a setter process method has been set, then call it with the list data otherwise extract #
         # list item display text from the data #######################################################
         if self.list_setter_proc is not None:

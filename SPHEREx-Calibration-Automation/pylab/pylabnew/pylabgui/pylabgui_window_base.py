@@ -219,6 +219,8 @@ class GuiWindow:
                     rx = self.data_queue_rx.pop(self.rx_identifier)
                 except KeyError:
                     pass
+                except AttributeError:
+                    pass
                 else:
                     if self.debug:
                         print("Rx data = {}".format(rx))

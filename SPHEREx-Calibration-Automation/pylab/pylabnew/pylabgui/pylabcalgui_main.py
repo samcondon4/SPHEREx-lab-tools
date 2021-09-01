@@ -35,7 +35,7 @@ if __name__ == "__main__":
     rx_queue = asyncio.Queue()
     window = GUI(seq_dir, data_queue_tx=tx_queue, data_queue_rx=rx_queue)
     window.form.show()
-    asyncio.create_task(window.standalone_run())
+    #asyncio.create_task(window.standalone_run())
     with event_loop:
         event_loop.run_forever()
         event_loop.close()
