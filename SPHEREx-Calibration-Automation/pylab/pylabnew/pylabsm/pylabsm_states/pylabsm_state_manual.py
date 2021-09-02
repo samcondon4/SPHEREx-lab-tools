@@ -15,8 +15,8 @@ class Manual(SmCustomState):
     async def manual_action(self, action_arg):
         print("moving instruments manually...")
         control_args = action_arg["Control"]
+        instruments = action_arg["Instruments"]
         command_dict = {}
-        print(control_args)
         key1_list = [0 for _ in range(len(control_args))]
         i = 0
         for key1 in control_args:
@@ -25,8 +25,8 @@ class Manual(SmCustomState):
                 inst_param_data = control_args[key1][key2]
                 inst_param_key = key2.replace("new", "current")
                 command_dict[inst_param_key] = inst_param_data
-            await action_arg[inst_key].set_parameters(command_dict)
-            inst_dict = await action_arg[inst_key].get_parameters("All")
+            await instruments[inst_key].set_parameters(command_dict)
+            inst_dict = await instruments[inst_key].get_parameters("All")
             inst_dict2 = {}
             for key in inst_dict:
                 new_key = key.replace("current", "new")

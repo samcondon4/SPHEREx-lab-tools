@@ -32,8 +32,8 @@ class SR830(Instrument):
         self.add_set_parameter("current sensitivity", self.set_sensitivity)
         self.add_get_parameter("current time constant", self.get_time_constant)
         self.add_set_parameter("current time constant", self.set_time_constant)
-        self.add_get_parameter("sample rate", self.get_sample_rate)
-        self.add_set_parameter("sample rate", self.set_sample_rate)
+        self.add_get_parameter("current sample rate", self.get_sample_rate)
+        self.add_set_parameter("current sample rate", self.set_sample_rate)
 
         # Status registers ###############
         self.add_get_parameter("sr830 lia status", self.get_lia_status)

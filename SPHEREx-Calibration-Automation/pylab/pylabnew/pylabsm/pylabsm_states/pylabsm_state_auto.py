@@ -63,6 +63,8 @@ class Auto(SmCustomState):
         :param action_arg: (list) input control loop
         :return: None
         """
+        control_loop = action_arg["Control"]
+        instruments = action_arg["Instruments"]
         auto_sm_task = asyncio.create_task(self.auto_sm.to_moving())
         while not self.auto_sm.state == self.auto_sm.done_state.identifier:
             await asyncio.sleep(0)

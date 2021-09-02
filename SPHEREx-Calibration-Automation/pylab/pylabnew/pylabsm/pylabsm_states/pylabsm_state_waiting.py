@@ -43,23 +43,22 @@ class Waiting(SmCustomState):
         :return: control loop
         """
         # initialize control loop dictionary #
-        control_dict = {}
+        control_loop_dict = {}
         i = 0
         for sequence in series:
             for key in sequence:
-                if key not in control_dict:
-                    control_dict[key] = [self.build_sequence(key, sequence)]
+                if key not in control_loop_dict:
+                    control_loop_dict[key] = [self.build_sequence(key, sequence)]
                 else:
-                    control_dict[key].extend([self.build_sequence(key, sequence)])
+                    control_loop_dict[key].extend([self.build_sequence(key, sequence)])
             for key in self.seq_gen_later:
-                control_dict[key][i] = self.build_sequence(key, sequence)
+                control_loop_dict[key][i] = self.build_sequence(key, sequence)
 
             self.seq_waves = None
             self.seq_gen_later = []
             i += 1
 
-        print("Control Loop = {}".format(control_dict))
-        return series
+        return control_loop_dict
 
     def build_sequence(self, key, seq_params):
         """Description: route the seq params to the proper sequence generator function defined below.
@@ -150,3 +149,51 @@ class Waiting(SmCustomState):
                 seqi += 1
 
         return ndf_seq
+
+    def sr510_sequence(self, sr510_parmas):
+        """ Description: Wrapper around self.lockin_sequence for the Sr510
+
+        :param sr510_parmas: (dict) dictionary with sr830 sequence parameters.
+        :return: (list) list of sr510 command dictionaries
+        """
+        return self.lockin_sequence(sr510_parmas)
+
+    def sr830_sequence(self, sr830_parmas):
+        """ Description: Wrapper around self.lockin_sequence for the Sr830
+
+        :param sr830_parmas: (dict) dictionary with sr830 sequence parameters.
+        :return: (list) list of sr830 command dictionaries
+        """
+        return self.lockin_sequence(sr830_parmas)
+
+    def lockin_sequence(self, lockin_params):
+        """ Description: Generate lockin control loop for both the sr830 and sr510 lockins.
+
+        :param self:
+        :param lockin_params: (dict) dictionary with lockin sequence parameters.
+        :return: (list) list of lockin command dictionaries
+        """
+        if self.seq_waves is None:
+            lockin_seq = "later"
+        else:
+            tc = float(lockin_params["time constant"])
+            fs = float(lockin_params["sample frequency"])
+            lockin_seq = [{"current sensitivity": 0.5, "current time constant": tc, "current sample rate": fs}
+                          for _ in self.seq_waves]
+            sens_transitions = json.loads(lockin_params["sensitivity transitions"].replace("'", '"'))
+            transition_total = len(sens_transitions)
+            transi = 0
+            seqi = 0
+            sens = 0.5
+            for w in self.seq_waves:
+                if w > float(sens_transitions[transi]["wavelength"]):
+                    sens = float(sens_transitions[transi]["sensitivity"])
+                    if not transi == transition_total - 1:
+                        transi += 1
+                    lockin_seq[seqi]["current sensitivity"] = sens
+                else:
+                    lockin_seq[seqi]["current sensitivity"] = sens
+                seqi += 1
+
+        return lockin_seq
+

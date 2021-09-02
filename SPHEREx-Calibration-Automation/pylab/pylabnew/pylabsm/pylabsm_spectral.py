@@ -38,21 +38,21 @@ class SpectralCalibrationMachine(AsyncMachine):
         pylabsm_basestate.SmCustomState.set_global_args({"Tx Queue": self.data_queue_tx,
                                                          "Rx Queue": self.data_queue_rx})
         pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": self.manual_or_auto})
-        pylabsm_basestate.SmCustomState.set_global_args(self.inst_dict)
+        pylabsm_basestate.SmCustomState.set_global_args({"Instruments": self.inst_dict})
         pylabsm_basestate.SmCustomState.set_global_args({"Control": self.control_args})
 
         # Configure states and state actions ###########################################################################
         self.init_state = pylabsm_state_initializing.Initializing(self, initial=True)
-        self.init_state.add_action(self.init_state.initialize_instruments, args=inst_dict_keys + ["Tx Queue"])
+        self.init_state.add_action(self.init_state.initialize_instruments, args=["Tx Queue", "Instruments"])
 
         self.wait_state = pylabsm_state_waiting.Waiting(self)
         self.wait_state.add_action(self.wait_state.waiting_action, args=["Rx Queue", "Manual or Auto", "Control"])
 
         self.manual_state = pylabsm_state_manual.Manual(self)
-        self.manual_state.add_action(self.manual_state.manual_action, args=inst_dict_keys + ["Control", "Tx Queue"])
+        self.manual_state.add_action(self.manual_state.manual_action, args=["Control", "Tx Queue", "Instruments"])
 
         self.auto_state = pylabsm_state_auto.Auto(self)
-        self.auto_state.add_action(self.auto_state.auto_sm_exec, args=["Control"])
+        self.auto_state.add_action(self.auto_state.auto_sm_exec, args=["Control", "Instruments"])
         ################################################################################################################
 
         # Add states and transitions to the state machine #
