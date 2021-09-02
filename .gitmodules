@@ -1,0 +1,3 @@
+[submodule "SPHEREx-Calibration-Automation/pymeasure"]
+	path = SPHEREx-Calibration-Automation/pymeasure
+	url = https://github.com/samcondon4/pymeasure.git
