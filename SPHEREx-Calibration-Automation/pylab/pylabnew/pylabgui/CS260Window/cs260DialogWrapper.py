@@ -23,7 +23,7 @@ class CS260Window(Ui_Form, GuiWindow):
         if not self.configured:
             self.configure()
 
-        self.WidgetGroups["current cs260"].set_setter_proc(self.setter_proc)
+        self.WidgetGroups["current cs260 state"].set_setter_proc(self.setter_proc)
 
     def setter_proc(self, setter_dict):
         for key in setter_dict:

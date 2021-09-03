@@ -170,6 +170,13 @@ class Instrument:
                 func[0](func[1])
             ####################################################
 
+    def start_measurement(self, *args, **kwargs):
+        """Description: some instruments can read and return data. This method should be overridden by such instruments
+
+        :return:
+        """
+        raise RuntimeError("start_measurement has not been overridden by a suitable measurement function.")
+
     def get_identifier(self):
         """get_identifier: get the instrument identifier string.
 

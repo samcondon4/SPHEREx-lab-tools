@@ -76,8 +76,8 @@ class Sr830Window(Ui_Sr830Dialog, GuiWindow):
         if not self.configured:
             self.configure()
 
-        self.WidgetGroups["new sr830 config parameters"].set_getter_proc(lockin_getter_proc)
-        self.WidgetGroups["new sr830 measurement parameters"].set_setter_proc(lockin_measurement_setter_proc)
+        self.WidgetGroups["new sr830 state"].set_getter_proc(lockin_getter_proc)
+        self.WidgetGroups["new sr830 measurement"].set_setter_proc(lockin_measurement_setter_proc)
 
 
 class LockinWindow(GuiCompositeWindow):

@@ -7,11 +7,67 @@ import pyvisa
 import numpy as np
 import asyncio
 import struct
-import pandas as pd
+from time import sleep
+import datetime
+from pymeasure.experiment import Procedure, Worker, Results
+from pymeasure.experiment import FloatParameter
 from pylabinst.pylabinst_instrument_base import Instrument
 
 
+class Sr830Measurement(Procedure):
+
+    sr830_instance = None
+    sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
+                                      minimum=2**-4, maximum=2**9)
+    sample_time = FloatParameter("Sample Time", units="s.", default=10)
+    metadata = {}
+
+    DATA_COLUMNS = ["Time Stamp", "X Channel Voltage (V.)", "Y Channel Voltage (V.)", "Lia Status Register",
+                    "Error Status Register"]
+
+    def execute(self):
+        """ Description: main method for the procedure.
+        :return: Outputs a .csv file with Sr830 data
+        """
+        if self.sr830_instance is not None:
+            sample_period = 1/self.sample_frequency
+            samples = int(np.ceil(self.sample_frequency * self.sample_time))
+            for i in range(samples):
+                time_stamp = datetime.datetime.now()
+                voltage = self.sr830_instance.snap().split(",")
+                x_voltage = voltage[0]
+                y_voltage = voltage[1]
+                lia_status = self.sr830_instance.get_lia_status()
+                err_status = self.sr830_instance.get_error_status()
+                out_dict = {"Time Stamp": time_stamp}
+                for key in self.metadata:
+                    out_dict[key] = self.metadata[key]
+                out_dict["X Channel Voltage (V.)"] = x_voltage
+                out_dict["Y Channel Voltage (V.)"] = y_voltage
+                out_dict["Lia Status Register"] = lia_status
+                out_dict["Error Status Register"] = err_status
+                self.emit('results', out_dict)
+                sleep(sample_period)
+        else:
+            raise RuntimeError("No valid SR830 class instance has been passed to the procedure.")
+
+    def set_metadata(self, meta_dict):
+        """Description: add metadata to include to the output .csv file
+
+        :param meta_dict: (dict) Dictionary with keys corresponding to .csv column header and values corresponding to
+                          the value to place under the header.
+        :return: None
+        """
+        keys_list = list(meta_dict.keys())
+        self.DATA_COLUMNS = [self.DATA_COLUMNS[0]] + keys_list + self.DATA_COLUMNS[-4:]
+        self.metadata = meta_dict
+
+
 class SR830(Instrument):
+
+    SNAP_ENUMERATION = {"x": 1, "y": 2, "r": 3, "theta": 4,
+                        "aux in 1": 5, "aux in 2": 6, "aux in 3": 7, "aux in 4": 8,
+                        "frequency": 9, "ch1": 10, "ch2": 11}
 
     def __init__(self, gpib_id="GPIB0::8::INSTR", log_path=".\\housekeeping\\Lockin.csv"):
         Instrument.__init__(self)
@@ -22,6 +78,10 @@ class SR830(Instrument):
         self.pyvisa_rm = None
         self.inst = None
         #############################################################################
+
+        # Measurement class ###########################
+        self.measure_procedure = Sr830Measurement()
+        ###############################################
 
         # Add getter and setter methods to Instrument base class ###############################
         self.add_get_parameter("current phase", self.get_phase)
@@ -87,7 +147,7 @@ class SR830(Instrument):
             raise TypeError("set_reference_frequency() expects input of type float but {} was given".format(arg_type))
 
     def get_sensitivity(self):
-        sens_ind = self.query("SENS")
+        sens_ind = float(self.query("SENS"))
         if sens_ind == 0:
             sens = 2e-9
         elif sens_ind == 1:
@@ -172,7 +232,7 @@ class SR830(Instrument):
             self.sensitivity = sens
 
     def get_time_constant(self):
-        tc_ind = self.query("OFLT")
+        tc_ind = float(self.query("OFLT"))
         tc_ind_mod = tc_ind % 2
         val = 1
         if tc_ind_mod == 0:
@@ -235,7 +295,7 @@ class SR830(Instrument):
             self.write(cmd)
 
     def get_sample_rate(self):
-        srate_ind = self.query("SRAT")
+        srate_ind = float(self.query("SRAT"))
         self.sample_rate = 2 ** (srate_ind - 4)
         return str(self.sample_rate)
 
@@ -266,81 +326,58 @@ class SR830(Instrument):
         err_bytes = self.query("ERRS")
         return "{0:b}".format(int(err_bytes))
 
+    def snap(self, val1="X", val2="Y", *vals):
+        """ Method that records and retrieves 2 to 6 parameters at a single
+        instant. The parameters can be one of: X, Y, R, Theta, Aux In 1,
+        Aux In 2, Aux In 3, Aux In 4, Frequency, CH1, CH2.
+        Default is "X" and "Y".
+        :param val1: first parameter to retrieve
+        :param val2: second parameter to retrieve
+        :param vals: other parameters to retrieve (optional)
+        """
+        if len(vals) > 4:
+            raise ValueError("No more that 6 values (in total) can be captured"
+                             "simultaneously.")
+
+        # check if additional parameters are given as a list
+        if len(vals) == 1 and isinstance(vals[0], (list, tuple)):
+            vals = vals[0]
+
+        # make a list of all vals
+        vals = [val1, val2] + list(vals)
+
+        vals_idx = [str(self.SNAP_ENUMERATION[val.lower()]) for val in vals]
+
+        command = "SNAP? " + ",".join(vals_idx)
+        return self.query(command)
+
     def write(self, command):
         self.inst.write(command)
 
     def query(self, parameter):
-        return float(self.inst.query("{}?".format(parameter)))
+        return self.inst.query("{}?".format(parameter))
 
-    async def measure_hk(self):
-        """measure_hk:
+    async def start_measurement(self, measure_parameters, metadata=None):
+        """Description: Run a measurement on the sr830 lockin.
 
-            This coroutine records data from the SR830 lockin as housekeeping.
-            That is, all data recorded here is logged to the Lockin.csv hk file.
+        :param measure_parameters: (dict) dictionary containing parameters of the measurement. Should be of the form:
+                                          {"sample rate": <(float) sampling frequency in Hz.>,
+                                           "sample time": <(float) sample time in s.>,
+                                          "measurement storage path": <(str) .csv file path>}
+        :param metadata: (dict) dictionary containing additional metadata to include
+        :return: None, but outputs a .csv file
         """
-        async with self.log_lock:
-            data = float(self.inst.query("OUTP?1"))
-            lia = self.get_lia_status()
-            err = self.get_error_status()
-            time = Housekeeping.time_sync_method()
-            write_df = pd.DataFrame(
-                {"Time-stamp": [time], "Detector Voltage": [data], "lia status": [lia], "error status": [err]}
-            )
-            self.append_to_log(write_df)
+        sr830_proc = Sr830Measurement()
+        sr830_proc.sr830_instance = self
+        sr830_proc.sample_frequency = measure_parameters["sample rate"]
+        sr830_proc.sample_time = measure_parameters["sample time"]
+        if metadata is not None:
+            sr830_proc.set_metadata(metadata)
 
-    async def measure(self, sample_time, settled_override=False):
-        """measure:
-            
-            This coroutine continuously reads data from the SR830 lockin
-            at the set sample rate for the specified sample time and returns
-            all data that was read. The array of data that is returned is the 
-            output voltage from the detector input to the lockin
-            
-            Params:
-                sample_time: time (in seconds) to record data from the lockin
-                settled_override: Normally, this method will wait for 5 times
-                                  the set time constant to begin recording data.
-                                  If this argument is set to True, then data
-                                  recording begins without waiting this time.
-        """
-        fs = self.get_sample_rate()
-        tc = self.get_time_constant()
-        sens = self.get_sensitivity()
-        if not self.is_settled and not settled_override:
-            await asyncio.sleep(5 * tc)
-            self.is_settled = True
-        # initialize data dictionary
-        data_dict = {"detector voltage": [0 for _ in range(int(sample_time * fs))],
-                     "lia status": None,
-                     "error status": None
-                     }
-
-        # set output interface to GPIB
-        self.write("OUTX1")
-        # start data transfer via fast mode
-        self.write("FAST2;STRD")
-
-        # read data
-        for i in range(len(data_dict["detector voltage"])):
-            data_read = self.inst.read_bytes(4)[:2]
-            data_dict["detector voltage"][i] = (struct.unpack("h", data_read)[0] / 30000) * sens
-            await asyncio.sleep(0)
-
-        # halt fast mode data transfer
-        self.write("FAST0;PAUS")
-        # reset the data buffer #
-        self.write("REST")
-        # dummy query to clear GPIB queue
-        try:
-            self.inst.query("OEXP?1")
-        except UnicodeDecodeError as e:
-            pass
-
-        data_dict["lia status"] = self.get_lia_status()
-        data_dict["error status"] = self.get_error_status()
-
-        return data_dict
-
+        results = Results(sr830_proc, measure_parameters["measurement storage path"])
+        worker = Worker(results)
+        worker.start()
+        worker.join(timeout=100)
     #########################################################################################
 
     # STATIC METHOD HELPERS ####################################################

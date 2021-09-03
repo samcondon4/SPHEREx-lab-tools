@@ -172,7 +172,7 @@
     </widget>
    </item>
    <item row="8" column="0">
-    <widget class="QComboBox" name="lineedit_base_NewSr830ConfigParameters_passive_Sr830NewSensitivityValue">
+    <widget class="QComboBox" name="lineedit_base_NewSr830State_passive_Sr830NewSensitivityValue">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -197,7 +197,7 @@
     </widget>
    </item>
    <item row="8" column="1">
-    <widget class="QComboBox" name="lineedit_base_NewSr830ConfigParameters_passive_Sr830NewTimeConstantValue">
+    <widget class="QComboBox" name="lineedit_base_NewSr830State_passive_Sr830NewTimeConstantValue">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -231,7 +231,7 @@
     </widget>
    </item>
    <item row="10" column="0">
-    <widget class="QComboBox" name="lineedit_base_NewSr830ConfigParameters_passive_Sr830NewSensitivityMultiplier">
+    <widget class="QComboBox" name="lineedit_base_NewSr830State_passive_Sr830NewSensitivityMultiplier">
      <item>
       <property name="text">
        <string>x1</string>
@@ -250,7 +250,7 @@
     </widget>
    </item>
    <item row="10" column="1">
-    <widget class="QComboBox" name="lineedit_base_NewSr830ConfigParameters_passive_Sr830NewTimeConstantMultiplier">
+    <widget class="QComboBox" name="lineedit_base_NewSr830State_passive_Sr830NewTimeConstantMultiplier">
      <item>
       <property name="text">
        <string>x1</string>
@@ -283,7 +283,7 @@
     </widget>
    </item>
    <item row="12" column="0">
-    <widget class="QComboBox" name="lineedit_base_NewSr830ConfigParameters_passive_Sr830NewSensitivityUnits">
+    <widget class="QComboBox" name="lineedit_base_NewSr830State_passive_Sr830NewSensitivityUnits">
      <item>
       <property name="text">
        <string>V.</string>
@@ -307,7 +307,7 @@
     </widget>
    </item>
    <item row="12" column="1">
-    <widget class="QComboBox" name="lineedit_base_NewSr830ConfigParameters_passive_Sr830NewTimeConstantUnits">
+    <widget class="QComboBox" name="lineedit_base_NewSr830State_passive_Sr830NewTimeConstantUnits">
      <item>
       <property name="text">
        <string>ks.</string>
@@ -331,7 +331,7 @@
     </widget>
    </item>
    <item row="13" column="0" colspan="2">
-    <widget class="QPushButton" name="button_base_NewSr830ConfigParameters_getter_Sr830SetNewParametersButton">
+    <widget class="QPushButton" name="button_base_NewSr830State_getter_Sr830SetNewParametersButton">
      <property name="text">
       <string>Set New Parameters</string>
      </property>
@@ -373,7 +373,7 @@
     </widget>
    </item>
    <item row="17" column="0">
-    <widget class="QComboBox" name="combobox_base_NewSr830MeasurementParameters_passive_Sr830SampleRate">
+    <widget class="QComboBox" name="combobox_base_NewSr830Measurement_passive_Sr830SampleRate">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -456,7 +456,7 @@
     </widget>
    </item>
    <item row="17" column="1">
-    <widget class="QLineEdit" name="combobox_base_NewSr830MeasurementParameters_passive_Sr830SampleTime"/>
+    <widget class="QLineEdit" name="combobox_base_NewSr830Measurement_passive_Sr830SampleTime"/>
    </item>
    <item row="18" column="0">
     <widget class="QLabel" name="label_34">
@@ -466,10 +466,10 @@
     </widget>
    </item>
    <item row="19" column="0" colspan="2">
-    <widget class="QLineEdit" name="combobox_base_NewSr830MeasurementParameters_passive_Sr830MeasurementStoragePath"/>
+    <widget class="QLineEdit" name="combobox_base_NewSr830Measurement_passive_Sr830MeasurementStoragePath"/>
    </item>
    <item row="20" column="0" colspan="2">
-    <widget class="QPushButton" name="button_base_NewSr830MeasurementParameters_getter_Sr830StartMeasurement">
+    <widget class="QPushButton" name="button_base_NewSr830Measurement_getter_Sr830StartMeasurement">
      <property name="text">
       <string>Start Measurement</string>
      </property>
