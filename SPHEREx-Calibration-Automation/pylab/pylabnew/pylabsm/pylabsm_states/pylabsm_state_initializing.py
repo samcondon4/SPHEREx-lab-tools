@@ -17,9 +17,13 @@ class Initializing(SmCustomState):
         print("initializing instruments...")
         instruments = action_arg["Instruments"]
         for key in instruments:
-            await instruments[key].open()
-            inst_params = await instruments[key].get_parameters("All")
-            action_arg["Tx Queue"][key] = inst_params
+            try:
+                await instruments[key].open()
+            except Exception as e:
+                self.error_flag = True
+                break
+            else:
+                inst_params = await instruments[key].get_parameters("All")
+                action_arg["Tx Queue"][key] = inst_params
         action_arg["Tx Queue"]["Instrument Initialization"] = True
         print("initialization complete")
-        return True

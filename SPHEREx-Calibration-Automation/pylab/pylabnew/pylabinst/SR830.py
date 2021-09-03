@@ -6,6 +6,7 @@ Sam Condon, 07/01/2021
 import pyvisa
 import numpy as np
 import asyncio
+import os
 import struct
 from time import sleep
 import datetime
@@ -32,6 +33,7 @@ class Sr830Measurement(Procedure):
         if self.sr830_instance is not None:
             sample_period = 1/self.sample_frequency
             samples = int(np.ceil(self.sample_frequency * self.sample_time))
+            print("executing")
             for i in range(samples):
                 time_stamp = datetime.datetime.now()
                 voltage = self.sr830_instance.snap().split(",")
@@ -374,10 +376,15 @@ class SR830(Instrument):
         if metadata is not None:
             sr830_proc.set_metadata(metadata)
 
-        results = Results(sr830_proc, measure_parameters["measurement storage path"])
+        file_name = measure_parameters["measurement storage path"]
+        if os.path.exists(file_name):
+            file_name_split = file_name.split(".")
+            file_name = file_name_split[0] + "_." + file_name_split[1]
+
+        results = Results(sr830_proc, file_name)
         worker = Worker(results)
         worker.start()
-        worker.join(timeout=100)
+        #worker.join(timeout=100)
     #########################################################################################
 
     # STATIC METHOD HELPERS ####################################################
