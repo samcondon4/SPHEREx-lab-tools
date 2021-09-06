@@ -18,6 +18,7 @@ from pylabinst.pylabinst_instrument_base import Instrument
 class Sr830Measurement(Procedure):
 
     sr830_instance = None
+    running = False
     sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
                                       minimum=2**-4, maximum=2**9)
     sample_time = FloatParameter("Sample Time", units="s.", default=10)
@@ -31,9 +32,9 @@ class Sr830Measurement(Procedure):
         :return: Outputs a .csv file with Sr830 data
         """
         if self.sr830_instance is not None:
+            self.running = True
             sample_period = 1/self.sample_frequency
             samples = int(np.ceil(self.sample_frequency * self.sample_time))
-            print("executing")
             for i in range(samples):
                 time_stamp = datetime.datetime.now()
                 voltage = self.sr830_instance.snap().split(",")
@@ -50,8 +51,11 @@ class Sr830Measurement(Procedure):
                 out_dict["Error Status Register"] = err_status
                 self.emit('results', out_dict)
                 sleep(sample_period)
+            self.running = False
         else:
+            self.running = False
             raise RuntimeError("No valid SR830 class instance has been passed to the procedure.")
+
 
     def set_metadata(self, meta_dict):
         """Description: add metadata to include to the output .csv file
@@ -359,7 +363,7 @@ class SR830(Instrument):
     def query(self, parameter):
         return self.inst.query("{}?".format(parameter))
 
-    async def start_measurement(self, measure_parameters, metadata=None):
+    async def start_measurement(self, measure_parameters, metadata=None, append_to_existing=False, hold=False):
         """Description: Run a measurement on the sr830 lockin.
 
         :param measure_parameters: (dict) dictionary containing parameters of the measurement. Should be of the form:
@@ -367,8 +371,12 @@ class SR830(Instrument):
                                            "sample time": <(float) sample time in s.>,
                                           "measurement storage path": <(str) .csv file path>}
         :param metadata: (dict) dictionary containing additional metadata to include
+        :param append_to_existing: (bool) boolean to indicate if data should be saved to an existing file or to create
+                                   a new file.
+        :param hold: (bool) boolean to indicate if the coroutine should wait to return until the measurement is complete.
         :return: None, but outputs a .csv file
         """
+        print("SR830 Start Measurement: {}".format(measure_parameters))
         sr830_proc = Sr830Measurement()
         sr830_proc.sr830_instance = self
         sr830_proc.sample_frequency = measure_parameters["sample rate"]
@@ -376,14 +384,19 @@ class SR830(Instrument):
         if metadata is not None:
             sr830_proc.set_metadata(metadata)
 
-        file_name = measure_parameters["measurement storage path"]
-        if os.path.exists(file_name):
-            file_name_split = file_name.split(".")
-            file_name = file_name_split[0] + "_." + file_name_split[1]
+        file_name = measure_parameters["storage path"]
+        if not append_to_existing:
+            while os.path.exists(file_name):
+                file_name_split = file_name.split(".")
+                file_name = file_name_split[0] + "_." + file_name_split[1]
 
         results = Results(sr830_proc, file_name)
         worker = Worker(results)
         worker.start()
+        sr830_proc.running = True
+        if hold:
+            while sr830_proc.running:
+                await asyncio.sleep(0)
         #worker.join(timeout=100)
     #########################################################################################
 

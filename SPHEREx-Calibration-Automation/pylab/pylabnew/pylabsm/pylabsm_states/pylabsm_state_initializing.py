@@ -5,7 +5,6 @@
 """
 
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
-from pylabinst.pylabinst_instrument_base import Instrument
 
 
 class Initializing(SmCustomState):

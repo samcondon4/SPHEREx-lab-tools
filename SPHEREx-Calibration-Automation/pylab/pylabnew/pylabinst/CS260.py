@@ -172,7 +172,10 @@ class CS260(Instrument):
         if t is str:
             grating = int(grating.split("G")[-1])
         elif t is not int:
-            raise TypeError("Expected input of type int but type {} given.".format(t))
+            try:
+                grating = int(grating)
+            except ValueError:
+                raise TypeError("cannot convert grating argument {} to an integer".format(grating))
 
         if grating in range(1, 4):
             delta_grating = cur_grating - grating

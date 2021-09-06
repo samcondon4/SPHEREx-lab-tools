@@ -67,7 +67,8 @@ class Waiting(SmCustomState):
         try:
             seq_gen_func = getattr(self, "{}_sequence".format(key))
         except AttributeError as e:
-            pass
+            if key in list(seq_params.keys()):
+                ret_seq = seq_params[key]
         else:
             ret_seq = seq_gen_func(seq_params[key])
 
@@ -177,7 +178,7 @@ class Waiting(SmCustomState):
             lockin_seq = "later"
         else:
             tc = float(lockin_params["time constant"])
-            fs = float(lockin_params["sample frequency"])
+            fs = float(lockin_params["sample rate"])
             lockin_seq = [{"current sensitivity": 0.5, "current time constant": tc, "current sample rate": fs}
                           for _ in self.seq_waves]
             sens_transitions = json.loads(lockin_params["sensitivity transitions"].replace("'", '"'))

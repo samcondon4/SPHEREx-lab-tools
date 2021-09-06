@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1967</width>
-    <height>1605</height>
+    <width>599</width>
+    <height>608</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -162,106 +162,12 @@
      <item row="0" column="1" colspan="2">
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Metadata to Include:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataNdfPosition">
-       <property name="text">
-        <string>NDF Wheel Position</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataLabjackDioState">
-       <property name="text">
-        <string>LabJack DIO State</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2" rowspan="2">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataMonochromatorGrating">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Monochromator Grating</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataLockinSampleTime">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Lock-in Sample Time</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="2">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataLockinSensitivity">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Lock-in Sensitivity</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataMonochromatorShutter">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Monochromator Shutter</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataLockinSampleRate">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Lock-in Sample Rate</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
+        <string>Record Data From:</string>
        </property>
       </widget>
      </item>
      <item row="1" column="1" rowspan="2">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataMonochromatorWavelength">
+      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MeasureSr510">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -269,15 +175,15 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Monochromator Wavelength</string>
+        <string>Sr510</string>
        </property>
        <property name="checked">
         <bool>true</bool>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataMonochromatorOsf">
+     <item row="1" column="2" rowspan="2">
+      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MeasureSr830">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -285,33 +191,14 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Monochromator Order Sort Filter</string>
+        <string>Sr830</string>
        </property>
        <property name="checked">
         <bool>true</bool>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MetadataLockinTimeConstant">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>Lock-in Time Constant</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="2">
-      <widget class="QLineEdit" name="ledit_list_SavedSequences_passive_DataExposureDuration"/>
-     </item>
-     <item row="10" column="1">
+     <item row="6" column="1">
       <widget class="QLabel" name="label_8">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -320,11 +207,17 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Exposure Duration (s.):</string>
+        <string>Sample Time:</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
+     <item row="6" column="2">
+      <widget class="QLineEdit" name="ledit_list_SavedSequences_passive_MeasureSampleTime"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLineEdit" name="ledit_list_SavedSequences_passive_MeasureStoragePath"/>
+     </item>
+     <item row="3" column="1">
       <widget class="QLabel" name="label_7">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -336,9 +229,6 @@
         <string>Storage Path:</string>
        </property>
       </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QLineEdit" name="ledit_list_SavedSequences_passive_DataStoragePath"/>
      </item>
     </layout>
    </item>
