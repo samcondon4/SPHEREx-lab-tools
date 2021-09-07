@@ -10,13 +10,13 @@ from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 
 class Moving(SmCustomState):
+    meta_keys = ["CS260 WAVELENGTH", "CS260 GRATING", "CS260 ORDER SORT FILTER", "CS260 SHUTTER", "NDF POSITION",
+                 "SR830 SENSITIVITY", "SR830 TIME CONSTANT"]
 
     def __init__(self, sm, identifier="moving", **kwargs):
         super().__init__(sm, self, identifier, **kwargs)
 
     async def moving_action(self, move_dict):
-        meta_keys = ["CS260 WAVELENGTH", "CS260 GRATING", "CS260 ORDER SORT FILTER",
-                     "CS260 SHUTTER", "NDF POSITION", "SR830 SENSITIVITY", "SR830 TIME CONSTANT"]
 
         instruments = move_dict["Instruments"]
         moving = move_dict["Moving"]
@@ -31,7 +31,7 @@ class Moving(SmCustomState):
                 move_dict["Tx Queue"][key] = inst_dict
                 metadata = self.parse_meta({key: inst_dict})
                 for new_key in metadata:
-                    if new_key in meta_keys:
+                    if new_key in self.meta_keys:
                         move_dict["Metadata"][new_key] = metadata[new_key]
             except Exception as e:
                 print(e)
@@ -50,6 +50,7 @@ class Moving(SmCustomState):
 
         return meta_dict
 
+
 class Measuring(SmCustomState):
 
     def __init__(self, sm, identifier="measuring", **kwargs):
@@ -60,11 +61,15 @@ class Measuring(SmCustomState):
         for key in measure:
             try:
                 measurement_params = measure[key][self.sm.ser_index][self.sm.seq_index]
-                measurement_params["storage path"] += key + ".csv"
+                storage_path = measurement_params["storage path"] + measurement_params["sequence name"] + "_" + key + \
+                               ".csv"
+                measurement_params["storage path"] = storage_path
                 metadata = measuring_dict["Metadata"]
-                await measuring_dict["Instruments"][key.upper()].start_measurement(measurement_params, metadata=metadata,
+                await measuring_dict["Instruments"][key.upper()].start_measurement(measurement_params,
+                                                                                   metadata=metadata,
                                                                                    append_to_existing=True, hold=True)
             except Exception as e:
+                print(e)
                 self.error_flag = True
 
 
@@ -72,19 +77,32 @@ class Indexing(SmCustomState):
 
     def __init__(self, sm, identifier="indexing", **kwargs):
         super().__init__(sm, self, identifier, **kwargs)
+        self.sequence = None
+        self.series = None
 
     def indexing_action(self, in_dict):
         print("## INDEX VALUES: series = {}, sequence = {}".format(self.sm.ser_index, self.sm.seq_index))
         in_dict["Control Loop Complete"][0] = False
         mdk_list = list(in_dict["Moving"].keys())
-        if self.sm.seq_index < len(in_dict["Moving"][mdk_list[self.sm.ser_index]][0]):
+
+        # update the current sequence/series if necessary ######################
+        if self.sequence is None:
+            self.sequence = in_dict["Moving"][mdk_list[0]][self.sm.ser_index]
+        if self.series is None:
+            self.series = in_dict["Moving"][mdk_list[0]]
+
+        # perform indexing using the lengths of the sequences/series ############
+        if self.sm.seq_index < len(self.sequence) - 1:
             self.sm.seq_index += 1
-        elif self.sm.ser_index < len(in_dict["Moving"][mdk_list[self.sm.ser_index]]):
+        elif self.sm.ser_index < len(self.series) - 1:
+            self.sequence = None
             self.sm.ser_index += 1
             self.sm.seq_index = 0
         else:
             self.sm.ser_index = 0
             self.sm.seq_index = 0
+            self.sequence = None
+            self.series = None
             in_dict["Control Loop Complete"][0] = True
 
 
@@ -177,6 +195,7 @@ class Auto(SmCustomState):
                 for mdict in seq:
                     mdict["sample time"] = control_loop["measure"][i]["sample time"]
                     mdict["storage path"] = control_loop["measure"][i]["storage path"]
+                    mdict["sequence name"] = control_loop["sequence info"][i]["sequence name"]
                 i += 1
         #################################################################################
 
