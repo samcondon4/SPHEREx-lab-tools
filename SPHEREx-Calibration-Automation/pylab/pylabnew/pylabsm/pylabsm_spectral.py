@@ -5,13 +5,21 @@
 """
 
 import asyncio
+from transitions.extensions.asyncio import AsyncMachine
+# instrument drivers #######################
 from pylabinst.CS260 import CS260
 from pylabinst.labjacku6 import Labjack
 from pylabinst.ndfwheel import NDF
-from pylabinst.SR830 import SR830
-from transitions.extensions.asyncio import AsyncMachine
+from pymeasure.instruments.srs.sr510 import SR510
+from pymeasure.instruments.srs.sr830 import SR830
+
+# measurement procedures #####################################
+from pylabsm.pylabsm_procs.sr830proc import Sr830Measurement
+from pylabsm.pylabsm_procs.sr510proc import Sr510Measurement
+
+# state classes ####################################################################################################
 from pylabsm.pylabsm_states.pylabsm_statesimport import pylabsm_state_initializing, pylabsm_state_waiting, \
-                                                        pylabsm_state_manual, pylabsm_basestate, pylabsm_state_auto
+    pylabsm_state_manual, pylabsm_basestate, pylabsm_state_auto
 
 
 class SpectralCalibrationMachine(AsyncMachine):
@@ -27,17 +35,25 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.control_args = {}
 
         # Instrument classes ##############
-        self.inst_dict = {"CS260": CS260(), "LABJACK": Labjack(), "NDF": NDF(), "SR830": SR830()}
-        #self.inst_dict.pop("CS260")
-        #self.inst_dict.pop("LABJACK")
-        #self.inst_dict.pop("NDF")
-        #self.inst_dict.pop("SR830")
+        self.inst_dict = {"CS260": CS260(),}
+        """
+         "LABJACK": Labjack(), "NDF": NDF(), "SR510": SR510("GPIB0::6::INSTR"),
+                          "SR830": SR830("GPIB0::15::INSTR")}"""
+        """
+        self.inst_dict["SR510"].quick_properties_list = ["phase", "pre_time_constant", "sensitivity",
+                                                         "reference_frequency"]
+        self.inst_dict["SR830"].quick_properties_list = ["time_constant", "sensitivity"]
+        """
+
+        # Procedure classes ################
+        self.proc_dict = {"SR830": Sr830Measurement(), "SR510": Sr510Measurement()}
 
         # Initialize action arguments ######################################################
         pylabsm_basestate.SmCustomState.set_global_args({"Tx Queue": self.data_queue_tx,
                                                          "Rx Queue": self.data_queue_rx})
         pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": self.manual_or_auto})
         pylabsm_basestate.SmCustomState.set_global_args({"Instruments": self.inst_dict})
+        pylabsm_basestate.SmCustomState.set_global_args({"Procedures": self.proc_dict})
         pylabsm_basestate.SmCustomState.set_global_args({"Control": self.control_args})
 
         # Configure states and state actions ###########################################################################
@@ -48,10 +64,12 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.wait_state.add_action(self.wait_state.waiting_action, args=["Rx Queue", "Manual or Auto", "Control"])
 
         self.manual_state = pylabsm_state_manual.Manual(self)
-        self.manual_state.add_action(self.manual_state.manual_action, args=["Control", "Tx Queue", "Instruments"])
+        self.manual_state.add_action(self.manual_state.manual_action, args=["Control", "Tx Queue", "Instruments",
+                                                                            "Procedures"])
 
         self.auto_state = pylabsm_state_auto.Auto(self)
-        self.auto_state.add_action(self.auto_state.auto_sm_exec, args=["Control", "Instruments"])
+        self.auto_state.add_action(self.auto_state.auto_sm_exec, args=["Control", "Tx Queue", "Instruments",
+                                                                       "Procedures"])
         ################################################################################################################
 
         # Add states and transitions to the state machine #

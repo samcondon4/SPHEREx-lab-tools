@@ -53,9 +53,9 @@ class CS260(Instrument):
         osf = None
         if wavelength <= cls.NO_OSF_UPPER:
             osf = 4
-        elif wavelength > cls.OSF1_LOWER:
+        elif cls.OSF1_LOWER < wavelength <= cls.OSF2_LOWER:
             osf = 1
-        elif cls.OSF1_UPPER < wavelength <= cls.OSF3_LOWER:
+        elif cls.OSF2_LOWER < wavelength <= cls.OSF3_LOWER:
             osf = 2
         elif cls.OSF3_LOWER < wavelength:
             osf = 3
@@ -70,12 +70,12 @@ class CS260(Instrument):
         ##########################################
 
         # Configure parameters ###############################################################
-        self.add_parameter("current wavelength", self.get_wavelength, self.set_wavelength, coro=True)
-        self.add_parameter("current grating", self.get_grating, self.set_grating, coro=True)
-        self.add_parameter("current order sort filter", self.get_osf, self.set_osf, coro=True)
-        self.add_parameter("current shutter", self.get_shutter_state, self.set_shutter_state, coro=True)
-        self.add_get_parameter("current units", self.get_units, coro=True)
-        self.add_set_parameter("current units", self.set_units, coro=False)
+        self.add_parameter("wavelength", self.get_wavelength, self.set_wavelength, coro=True)
+        self.add_parameter("grating", self.get_grating, self.set_grating, coro=True)
+        self.add_parameter("order_sort_filter", self.get_osf, self.set_osf, coro=True)
+        self.add_parameter("shutter", self.get_shutter_state, self.set_shutter_state, coro=True)
+        self.add_get_parameter("units", self.get_units, coro=True)
+        self.add_set_parameter("units", self.set_units, coro=False)
 
         self.set_setter_proc(self.setter)
         #######################################################################################
@@ -91,20 +91,20 @@ class CS260(Instrument):
         await self.set_shutter_state("C")
 
         coro_args = {"wavelength": None, "grating": None, "osf": None}
-        if "current wavelength" in setter_dict_keys:
-            wavelength = float(setter_dict["current wavelength"])
+        if "wavelength" in setter_dict_keys:
+            wavelength = float(setter_dict["wavelength"])
             coro_args["wavelength"] = wavelength
         else:
             wavelength = await self.get_wavelength()
 
-        if "current grating" in setter_dict_keys:
-            grating = setter_dict["current grating"]
+        if "grating" in setter_dict_keys:
+            grating = setter_dict["grating"]
             if grating == "Auto":
                 grating = CS260.auto_grating(wavelength)
             coro_args["grating"] = grating
 
-        if "current order sort filter" in setter_dict_keys:
-            osf = setter_dict["current order sort filter"]
+        if "order_sort_filter" in setter_dict_keys:
+            osf = setter_dict["order_sort_filter"]
             if osf == "Auto":
                 osf = CS260.auto_osf(wavelength)
             elif osf == "No OSF":
@@ -117,7 +117,7 @@ class CS260(Instrument):
             await self.set_osf(coro_args["osf"])
         if coro_args["wavelength"] is not None:
             await self.set_wavelength(coro_args["wavelength"])
-        if "current shutter" in setter_dict_keys and setter_dict["current shutter"] == "Open":
+        if "shutter" in setter_dict_keys and setter_dict["shutter"] == "Open":
             await self.set_shutter_state("O")
 
     async def get_wavelength(self):

@@ -23,6 +23,7 @@ def flatten_list(in_list):
 class GuiWindow:
     WidgetGroups = {}
     WindowCoros = {}
+    Delimiter = "_"
 
     @classmethod
     def get_widgets_from_layout(cls, layout):
@@ -111,7 +112,7 @@ class GuiWindow:
                     if len(upper_inds) > 0:
                         new_str = ""
                         for i in range(len(upper_inds) - 1):
-                            new_str += string[upper_inds[i]: upper_inds[i+1]].lower() + " "
+                            new_str += string[upper_inds[i]: upper_inds[i+1]].lower() + "_"
                         new_str += string[upper_inds[-1]:].lower()
                     else:
                         new_str = string
@@ -242,16 +243,17 @@ class GuiCompositeWindow(GuiWindow):
 
     def __init__(self, child=None, window_type=None, **kwargs):
         self.child = child
+        self.form = QtWidgets.QDialog()
         if window_type == "stacked":
-            form = QtWidgets.QStackedWidget()
+            self.composite = QtWidgets.QStackedWidget()
         elif window_type == "tab":
-            form = QtWidgets.QTabWidget()
+            self.composite = QtWidgets.QTabWidget()
         else:
-            form = None
+            self.composite = None
+        self.layout = QtWidgets.QGridLayout(self.form)
         self.stacked_selector_dict = None
-        super().__init__(child=self.child, form=form, **kwargs)
+        super().__init__(child=self.child, form=self.form, **kwargs)
         self.windows = []
-        self.layout = QtWidgets.QGridLayout()
 
     async def run(self):
         """ Description: Initiate all run coroutines in every widget that is part of the composite window.
@@ -265,20 +267,20 @@ class GuiCompositeWindow(GuiWindow):
         :return: None
         """
         self.windows.append(window)
-        form_type = type(self.form)
+        form_type = type(self.composite)
         widget = window.form
         if form_type == QtWidgets.QStackedWidget:
-            self.form.addWidget(widget)
+            self.composite.addWidget(widget)
         elif form_type == QtWidgets.QTabWidget:
-            self.form.addTab(widget, widget.windowTitle())
+            self.composite.addTab(widget, widget.windowTitle())
 
     def configure(self):
         """configure: Override the GuiWindow class configure method to configure a composite widget window.
         """
-        form_type = type(self.form)
+        form_type = type(self.composite)
+        self.layout.addWidget(self.composite, 1, 0)
         if form_type is QtWidgets.QStackedWidget:
             self.configure_stacked_widget_switch()
-        self.form.setLayout(self.layout)
 
     def configure_stacked_widget_switch(self):
         """configure_stacked_widget_switch: Stacked widgets do not naturally provide any means of switching between
@@ -288,13 +290,12 @@ class GuiCompositeWindow(GuiWindow):
         params: None
         return: None
         """
-        widget_list = [self.child.form.widget(i) for i in range(self.child.form.count())]
+        widget_list = [self.child.composite.widget(i) for i in range(self.child.composite.count())]
         self.stacked_selector_dict = {}
         for widget in widget_list:
             window_selector = QtWidgets.QComboBox()
             widget_name = widget.windowTitle()
             layout = widget.layout()
-
             for w in widget_list:
                 window_selector.addItem(w.windowTitle())
 
@@ -306,8 +307,8 @@ class GuiCompositeWindow(GuiWindow):
     def _on_stacked_widget_select(self):
         """_on_stacked_widget_select: Change the stacked widget window according to the combo box window selector
         """
-        cur_window = self.child.form.currentWidget().windowTitle()
+        cur_window = self.child.composite.currentWidget().windowTitle()
         new_index = self.stacked_selector_dict[cur_window].currentIndex()
-        self.child.form.setCurrentIndex(new_index)
-        new_window = self.child.form.currentWidget().windowTitle()
+        self.child.composite.setCurrentIndex(new_index)
+        new_window = self.child.composite.currentWidget().windowTitle()
         self.stacked_selector_dict[new_window].setCurrentIndex(new_index)

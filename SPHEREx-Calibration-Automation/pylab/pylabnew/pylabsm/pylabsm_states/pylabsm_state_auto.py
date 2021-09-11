@@ -6,7 +6,10 @@
 
 import asyncio
 from transitions.extensions.asyncio import AsyncMachine
+from pylabgui.pylabgui_window_base import GuiWindow
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
+import pylabinst.pylabinst_instrument_base as pylabinst
+import pymeasure.instruments.instrument as pymeasureinst
 
 
 class Moving(SmCustomState):
@@ -26,8 +29,12 @@ class Moving(SmCustomState):
             command_dict = moving[key][self.sm.ser_index][self.sm.seq_index]
             # Try sending a command dictionary to each instrument. If a movement fails, enter the error state
             try:
-                await instruments[key].set_parameters(command_dict)
-                inst_dict = await instruments[key].get_parameters("All")
+                if issubclass(type(instruments[key]), pylabinst.Instrument):
+                    await instruments[key].set_parameters(command_dict)
+                    inst_dict = await instruments[key].get_parameters("All")
+                else:
+                    instruments[key].quick_properties = command_dict
+                    inst_dict = instruments[key].quick_properties
                 move_dict["Tx Queue"][key] = inst_dict
                 metadata = self.parse_meta({key: inst_dict})
                 for new_key in metadata:
@@ -57,17 +64,20 @@ class Measuring(SmCustomState):
         super().__init__(sm, self, identifier, **kwargs)
 
     async def measuring_action(self, measuring_dict):
+        print(measuring_dict)
         measure = measuring_dict["Measuring"]
         for key in measure:
             try:
                 measurement_params = measure[key][self.sm.ser_index][self.sm.seq_index]
-                storage_path = measurement_params["storage path"] + measurement_params["sequence name"] + "_" + key + \
+                storage_path = measurement_params["storage_path"] + measurement_params["sequence_name"] + "_" + key + \
                                ".csv"
-                measurement_params["storage path"] = storage_path
+                measurement_params["storage_path"] = storage_path
+                measurement_params[key.upper()] = measuring_dict["Instruments"][key.upper()]
                 metadata = measuring_dict["Metadata"]
-                await measuring_dict["Instruments"][key.upper()].start_measurement(measurement_params,
-                                                                                   metadata=metadata,
-                                                                                   append_to_existing=True, hold=True)
+                print(measurement_params)
+                print(metadata)
+                await measuring_dict["Procedures"][key.upper()].run(measurement_params, metadata=metadata,
+                                                                    append_to_existing=True, hold=True)
             except Exception as e:
                 print(e)
                 self.error_flag = True
@@ -139,7 +149,7 @@ class AutoStateMachine(AsyncMachine):
 
         self.measuring_state = Measuring(self)
         self.measuring_state.add_action(self.measuring_state.measuring_action, args=["Measuring", "Instruments",
-                                                                                     "Metadata"])
+                                                                                     "Procedures", "Metadata"])
 
         self.indexing_state = Indexing(self)
         self.indexing_state.add_action(self.indexing_state.indexing_action, args=["Control Loop Complete", "Moving"])
@@ -170,44 +180,51 @@ class Auto(SmCustomState):
         :param action_arg: (list) input control loop
         :return: None
         """
-        control_loop = action_arg["Control"]["Loop"]
-        cl_keys = list(control_loop.keys())
-        instruments = action_arg["Instruments"]
-        measure_args = control_loop["measure"]
-        for key in instruments:
-            key = key.lower()
-            if key in cl_keys:
-                self.auto_sm.moving_dict[key.upper()] = control_loop[key]
+        try:
+            control_loop = action_arg["Control"]["Loop"]
+            cl_keys = list(control_loop.keys())
+            instruments = action_arg["Instruments"]
+            measure_args = control_loop["measure"]
+            for key in instruments:
+                key = key.lower()
+                if key in cl_keys:
+                    self.auto_sm.moving_dict[key.upper()] = control_loop[key]
 
-        # Get instrument specific measurement parameters #########################################
-        for seq in measure_args:
-            for key in seq:
-                if (key.upper() in instruments) and seq[key]:
-                    measure_list_getter = getattr(self, "{}_measure_dict".format(key))
-                    if self.auto_sm.measuring_dict == {}:
-                        self.auto_sm.measuring_dict[key] = measure_list_getter(control_loop[key])
-        ##########################################################################################
+            # Get instrument specific measurement parameters #########################################
+            for seq in measure_args:
+                print(seq)
+                for key in seq:
+                    print(key, seq[key])
+                    if (key.upper() in instruments) and seq[key] == "True":
+                        measure_list_getter = getattr(self, "{}_measure_dict".format(key))
+                        if self.auto_sm.measuring_dict == {}:
+                            self.auto_sm.measuring_dict[key] = measure_list_getter(control_loop[key])
+            ##########################################################################################
 
-        # Get sequence measurement parameters ###########################################
-        for key in self.auto_sm.measuring_dict:
-            i = 0
-            for seq in self.auto_sm.measuring_dict[key]:
-                for mdict in seq:
-                    mdict["sample time"] = control_loop["measure"][i]["sample time"]
-                    mdict["storage path"] = control_loop["measure"][i]["storage path"]
-                    mdict["sequence name"] = control_loop["sequence info"][i]["sequence name"]
-                i += 1
-        #################################################################################
+            # Get sequence measurement parameters ###########################################
+            for key in self.auto_sm.measuring_dict:
+                i = 0
+                for seq in self.auto_sm.measuring_dict[key]:
+                    for mdict in seq:
+                        mdict["sample_time"] = control_loop["measure"][i]["sample time"]
+                        mdict["storage_path"] = control_loop["measure"][i]["storage path"]
+                        mdict["sequence_name"] = control_loop["sequence info"][i]["sequence name"]
+                    i += 1
+            #################################################################################
 
-        auto_sm_task = asyncio.create_task(self.auto_sm.to_moving())
-        while not self.auto_sm.state == self.auto_sm.done_state.identifier:
-            await asyncio.sleep(0)
-        self.auto_sm.measuring_dict = []
-        self.auto_sm.done_state.hold_complete = True
+            auto_sm_task = asyncio.create_task(self.auto_sm.to_moving())
+            while not self.auto_sm.state == self.auto_sm.done_state.identifier:
+                await asyncio.sleep(0)
+            self.auto_sm.measuring_dict = []
+            self.auto_sm.done_state.hold_complete = True
+
+        except Exception as e:
+            print(e)
 
     @staticmethod
     def sr830_measure_dict(lockin_cl):
+        print(lockin_cl)
         out_list = [{} for _ in range(len(lockin_cl))]
         for i in range(len(lockin_cl)):
-            out_list[i] = [{"sample rate": lockin_seq["current sample rate"]} for lockin_seq in lockin_cl[i]]
+            out_list[i] = [{"sample_rate": lockin_seq["sample_rate"]} for lockin_seq in lockin_cl[i]]
         return out_list

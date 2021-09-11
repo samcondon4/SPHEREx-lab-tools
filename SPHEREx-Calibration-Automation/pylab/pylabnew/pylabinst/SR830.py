@@ -15,60 +15,6 @@ from pymeasure.experiment import FloatParameter
 from pylabinst.pylabinst_instrument_base import Instrument
 
 
-class Sr830Measurement(Procedure):
-
-    sr830_instance = None
-    running = False
-    sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
-                                      minimum=2**-4, maximum=2**9)
-    sample_time = FloatParameter("Sample Time", units="s.", default=10)
-    metadata = {}
-
-    DATA_COLUMNS = ["Time Stamp", "X Channel Voltage (V.)", "Y Channel Voltage (V.)", "Lia Status Register",
-                    "Error Status Register"]
-
-    def execute(self):
-        """ Description: main method for the procedure.
-        :return: Outputs a .csv file with Sr830 data
-        """
-        if self.sr830_instance is not None:
-            self.running = True
-            sample_period = 1/self.sample_frequency
-            samples = int(np.ceil(self.sample_frequency * self.sample_time))
-            for i in range(samples):
-                time_stamp = datetime.datetime.now()
-                voltage = self.sr830_instance.snap().split(",")
-                x_voltage = voltage[0]
-                y_voltage = voltage[1]
-                lia_status = self.sr830_instance.get_lia_status()
-                err_status = self.sr830_instance.get_error_status()
-                out_dict = {"Time Stamp": time_stamp}
-                for key in self.metadata:
-                    out_dict[key] = self.metadata[key]
-                out_dict["X Channel Voltage (V.)"] = x_voltage
-                out_dict["Y Channel Voltage (V.)"] = y_voltage
-                out_dict["Lia Status Register"] = lia_status
-                out_dict["Error Status Register"] = err_status
-                self.emit('results', out_dict)
-                sleep(sample_period)
-            self.running = False
-        else:
-            self.running = False
-            raise RuntimeError("No valid SR830 class instance has been passed to the procedure.")
-
-
-    def set_metadata(self, meta_dict):
-        """Description: add metadata to include to the output .csv file
-
-        :param meta_dict: (dict) Dictionary with keys corresponding to .csv column header and values corresponding to
-                          the value to place under the header.
-        :return: None
-        """
-        keys_list = list(meta_dict.keys())
-        self.DATA_COLUMNS = [self.DATA_COLUMNS[0]] + keys_list + self.DATA_COLUMNS[-4:]
-        self.metadata = meta_dict
-
-
 class SR830(Instrument):
 
     SNAP_ENUMERATION = {"x": 1, "y": 2, "r": 3, "theta": 4,
@@ -85,15 +31,11 @@ class SR830(Instrument):
         self.inst = None
         #############################################################################
 
-        # Measurement class ###########################
-        self.measure_procedure = Sr830Measurement()
-        ###############################################
-
         # Add getter and setter methods to Instrument base class ###############################
         self.add_get_parameter("current phase", self.get_phase)
         self.add_set_parameter("current phase", self.set_phase)
-        self.add_get_parameter("reference frequency", self.get_reference_frequency)
-        self.add_set_parameter("reference frequency", self.set_reference_frequency)
+        self.add_get_parameter("current reference frequency", self.get_reference_frequency)
+        self.add_set_parameter("current reference frequency", self.set_reference_frequency)
         self.add_get_parameter("current sensitivity", self.get_sensitivity)
         self.add_set_parameter("current sensitivity", self.set_sensitivity)
         self.add_get_parameter("current time constant", self.get_time_constant)
@@ -363,41 +305,6 @@ class SR830(Instrument):
     def query(self, parameter):
         return self.inst.query("{}?".format(parameter))
 
-    async def start_measurement(self, measure_parameters, metadata=None, append_to_existing=False, hold=False):
-        """Description: Run a measurement on the sr830 lockin.
-
-        :param measure_parameters: (dict) dictionary containing parameters of the measurement. Should be of the form:
-                                          {"sample rate": <(float) sampling frequency in Hz.>,
-                                           "sample time": <(float) sample time in s.>,
-                                          "measurement storage path": <(str) .csv file path>}
-        :param metadata: (dict) dictionary containing additional metadata to include
-        :param append_to_existing: (bool) boolean to indicate if data should be saved to an existing file or to create
-                                   a new file.
-        :param hold: (bool) boolean to indicate if the coroutine should wait to return until the measurement is complete.
-        :return: None, but outputs a .csv file
-        """
-        print("SR830 Start Measurement: {}".format(measure_parameters))
-        sr830_proc = Sr830Measurement()
-        sr830_proc.sr830_instance = self
-        sr830_proc.sample_frequency = measure_parameters["sample rate"]
-        sr830_proc.sample_time = measure_parameters["sample time"]
-        if metadata is not None:
-            sr830_proc.set_metadata(metadata)
-
-        file_name = measure_parameters["storage path"]
-        if not append_to_existing:
-            while os.path.exists(file_name):
-                file_name_split = file_name.split(".")
-                file_name = file_name_split[0] + "_." + file_name_split[1]
-
-        results = Results(sr830_proc, file_name)
-        worker = Worker(results)
-        worker.start()
-        sr830_proc.running = True
-        if hold:
-            while sr830_proc.running:
-                await asyncio.sleep(0)
-        #worker.join(timeout=100)
     #########################################################################################
 
     # STATIC METHOD HELPERS ####################################################

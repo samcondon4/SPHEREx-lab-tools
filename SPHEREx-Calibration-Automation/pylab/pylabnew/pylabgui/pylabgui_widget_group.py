@@ -202,8 +202,12 @@ class WidgetGroup:
 
             # Assign getter or setter method based on the type of the passive widget ############################
             if wtype is QtWidgets.QLineEdit:
+                # define line edit setter
+                def setter(in_str, widge=widget):
+                    widge.setText(str(in_str))
+
                 get_method = widget.text
-                set_method = widget.setText
+                set_method = setter
 
             elif wtype is QtWidgets.QComboBox:
                 get_method = widget.currentText
@@ -213,13 +217,13 @@ class WidgetGroup:
                 get_method = lambda in_widget=widget: str(in_widget.checkState() > 0)
                 set_method = lambda check_state, in_widget=widget: self.set_check_state(check_state, in_widget=in_widget)
 
-            elif wtype is QtWidgets.QListWidget and "passive list all" not in wactions:
+            elif wtype is QtWidgets.QListWidget and "passive_list_all" not in wactions:
                 get_method = lambda in_widget=widget, textordata="data": \
                                     WidgetGroup.get_item_from_list(in_widget, textordata=textordata)
                 set_method = lambda item_dict=None, in_widget=widget: \
                                     WidgetGroup.set_list_item_from_text(in_widget, item_text=item_dict)
 
-            elif wtype is QtWidgets.QListWidget and "passive list all" in wactions:
+            elif wtype is QtWidgets.QListWidget and "passive_list_all" in wactions:
                 get_method = lambda in_widget=widget, textordata="data": \
                     WidgetGroup.get_all_items_from_list(in_widget, textordata=textordata)
                 set_method = lambda item_dict_list, in_widget=widget: \
@@ -339,10 +343,16 @@ class ListWidgetGroup(WidgetGroup):
         else:
             passive_data = external
         #############################################################################################
+        print(passive_data)
         # If a setter process method has been set, then call it with the list data otherwise extract #
         # list item display text from the data #######################################################
         if self.list_setter_proc is not None:
-            text, data = self.list_setter_proc(passive_data)
+            print("good")
+            try:
+                text, data = self.list_setter_proc(passive_data)
+            except Exception as e:
+                print(e)
+            print("good")
         else:
             display_keys = self.item_display
             entry_str = ""
@@ -358,6 +368,7 @@ class ListWidgetGroup(WidgetGroup):
             data, text = (passive_data, entry_str)
         ################################################################################################
 
+        print("good")
         # Add the newly created list item to the list widget ###########################################
         WidgetGroup.add_item_to_list(self.item_list, {"text": text, "data": data})
         ################################################################################################

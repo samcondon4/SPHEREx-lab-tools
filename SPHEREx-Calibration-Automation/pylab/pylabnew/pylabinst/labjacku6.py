@@ -23,8 +23,8 @@ class Labjack(Instrument):
 
         # Configure parameters ####################################################
         #self.add_get_parameter("dio", self.get_dio)
-        self.add_parameter("dio config", self.get_dio_config, self.set_dio_config)
-        self.add_parameter("dio state", self.get_dio_state, self.set_dio_state)
+        self.add_parameter("dio_config", self.get_dio_config, self.set_dio_config)
+        self.add_parameter("dio_state", self.get_dio_state, self.set_dio_state)
 
         self.set_setter_proc(self.labjack_setter_proc)
         ###########################################################################
@@ -33,11 +33,13 @@ class Labjack(Instrument):
         config_dict = {}
         state_dict = {}
         for key in setter_dict:
-            dio_num = int(key.split(" ")[0][-1])
+            dio_num = int(key.split("_")[0][-1])
             if "config" in key:
                 config_dict[dio_num] = setter_dict[key]
             elif "state" in key:
                 state_dict[dio_num] = setter_dict[key]
+        print(config_dict)
+        print(state_dict)
         self.set_dio_config(config_dict)
         self.set_dio_state(state_dict)
 

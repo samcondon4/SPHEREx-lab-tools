@@ -5,13 +5,8 @@
 Sam Condon, 08/09/2021
 """
 
-
-import asyncio
-from qasync import QEventLoop
-from PyQt5 import QtWidgets
-from pylabgui.pylabgui_window_base import GuiCompositeWindow
 from pylabgui.CS260Window.cs260DialogWrapper import CS260Window
-from pylabgui.LockinWindow.lockinWindowDialogWrapper import Sr830Window
+from pylabgui.LockinWindow.lockinWindowDialogWrapper import *
 from pylabgui.NDFWheelWindow.ndfWheelDialogWrapper import NDFWindow
 from pylabgui.LabJackWindow.labjackWindowDialogWrapper import LabjackWindow
 
@@ -23,7 +18,7 @@ class ManualTab(GuiCompositeWindow):
         self.form.setWindowTitle("Manual")
         self.proc_queue = asyncio.Queue()
         self.cs260_window = CS260Window(rx_identifier="CS260", **kwargs)
-        self.lockin_window = Sr830Window(rx_identifier="SR830", **kwargs)
+        self.lockin_window = LockinWindow(**kwargs)
         self.ndf_window = NDFWindow(rx_identifier="NDF", **kwargs)
         self.labjack_window = LabjackWindow(rx_identifier="LABJACK", **kwargs)
         self.add_window(self.cs260_window)

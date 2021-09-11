@@ -22,17 +22,20 @@ from pylabsm.pylabsm_spectral import SpectralCalibrationMachine
 
 
 async def main():
-    gui_to_sm_data_queue = asyncio.Queue()
-    sm_to_gui_data_dict = {}
-    seq_dir = ".\\config\\sequence\\"
-    gui = GUI(sequence_dir=seq_dir, data_queue_rx=sm_to_gui_data_dict, data_queue_tx=gui_to_sm_data_queue)
-    SM = SpectralCalibrationMachine(data_queue_rx=gui_to_sm_data_queue, data_queue_tx=sm_to_gui_data_dict)
-    sm_task = asyncio.create_task(SM.start_machine())
-    inst_init_complete = False
-    await asyncio.sleep(5)
-    gui.form.show()
-    gui_task = asyncio.create_task(gui.run())
-    await asyncio.gather(sm_task, gui_task)
+    try:
+        gui_to_sm_data_queue = asyncio.Queue()
+        sm_to_gui_data_dict = {}
+        seq_dir = ".\\config\\sequence\\"
+        gui = GUI(sequence_dir=seq_dir, data_queue_rx=sm_to_gui_data_dict, data_queue_tx=gui_to_sm_data_queue)
+        SM = SpectralCalibrationMachine(data_queue_rx=gui_to_sm_data_queue, data_queue_tx=sm_to_gui_data_dict)
+        sm_task = asyncio.create_task(SM.start_machine())
+        inst_init_complete = False
+        await asyncio.sleep(5)
+        gui.form.show()
+        gui_task = asyncio.create_task(gui.run())
+        await asyncio.gather(sm_task, gui_task)
+    except Exception as e:
+        print("Exception {} occured".format(e))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

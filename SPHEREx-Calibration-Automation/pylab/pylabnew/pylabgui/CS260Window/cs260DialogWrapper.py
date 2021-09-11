@@ -7,7 +7,7 @@ Sam Condon, 08/12/2021
 """
 
 from PyQt5 import QtWidgets
-from pylabgui.CS260Window.CS260Dialog import Ui_Form
+from pylabgui.CS260Window.cs260Dialog import Ui_Form
 from pylabgui.pylabgui_window_base import GuiWindow
 
 
@@ -23,7 +23,7 @@ class CS260Window(Ui_Form, GuiWindow):
         if not self.configured:
             self.configure()
 
-        self.WidgetGroups["current cs260 state"].set_setter_proc(self.setter_proc)
+        self.WidgetGroups["current_cs260_state"].set_setter_proc(self.setter_proc)
 
     def setter_proc(self, setter_dict):
         for key in setter_dict:

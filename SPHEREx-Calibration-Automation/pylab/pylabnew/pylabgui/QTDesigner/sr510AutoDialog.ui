@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Sr830</class>
- <widget class="QWidget" name="Sr830">
+ <class>Sr510</class>
+ <widget class="QWidget" name="Sr510">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>639</width>
-    <height>502</height>
+    <width>593</width>
+    <height>605</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Sr830</string>
+   <string>Sr510</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -30,7 +30,7 @@
       </font>
      </property>
      <property name="text">
-      <string>SR830 Lock-In Sequence Control:</string>
+      <string>SR510 Lock-In Sequence Control:</string>
      </property>
     </widget>
    </item>
@@ -42,7 +42,7 @@
     </widget>
    </item>
    <item row="1" column="1">
-    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr830SampleRate">
+    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr510SampleRate">
      <property name="currentText">
       <string>0.0625</string>
      </property>
@@ -126,7 +126,7 @@
     </widget>
    </item>
    <item row="2" column="1">
-    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr830TimeConstantValue">
+    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr510TimeConstantValue">
      <item>
       <property name="text">
        <string>1</string>
@@ -147,7 +147,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr830TimeConstantMultiplier">
+    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr510TimeConstantMultiplier">
      <item>
       <property name="text">
        <string>x1</string>
@@ -173,15 +173,10 @@
     </widget>
    </item>
    <item row="4" column="1">
-    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr830TimeConstantUnits">
+    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr510TimeConstantUnits">
      <property name="currentText">
-      <string>ks.</string>
+      <string>s.</string>
      </property>
-     <item>
-      <property name="text">
-       <string>ks.</string>
-      </property>
-     </item>
      <item>
       <property name="text">
        <string>s.</string>
@@ -214,12 +209,12 @@
       </font>
      </property>
      <property name="text">
-      <string>SR830 Sensitivity Transitions in Sequence:</string>
+      <string>SR510 Sensitivity Transitions in Sequence:</string>
      </property>
     </widget>
    </item>
    <item row="6" column="0" colspan="2">
-    <widget class="QListWidget" name="list_listXlist_Sr830SensTransitionsXSavedSequences_listXPassiveListAll_Sr830SensitivityTransitions">
+    <widget class="QListWidget" name="list_listXlist_Sr510SensTransitionsXSavedSequences_listXPassiveListAll_Sr510SensitivityTransitions">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -236,7 +231,7 @@
     </widget>
    </item>
    <item row="7" column="1">
-    <widget class="QLineEdit" name="lineedit_list_Sr830SensTransitions_ItemDisplay_wavelength"/>
+    <widget class="QLineEdit" name="lineedit_list_Sr510SensTransitions_ItemDisplay_wavelength"/>
    </item>
    <item row="8" column="0">
     <widget class="QLabel" name="label_15">
@@ -246,7 +241,7 @@
     </widget>
    </item>
    <item row="8" column="1">
-    <widget class="QComboBox" name="lineedit_list_Sr830SensTransitions_passive_SensitivityValue">
+    <widget class="QComboBox" name="lineedit_list_Sr510SensTransitions_passive_SensitivityValue">
      <item>
       <property name="text">
        <string>1</string>
@@ -272,7 +267,7 @@
     </widget>
    </item>
    <item row="9" column="1">
-    <widget class="QComboBox" name="lineedit_list_Sr830SensTransitions_passive_SensitivityMultiplier">
+    <widget class="QComboBox" name="lineedit_list_Sr510SensTransitions_passive_SensitivityMultiplier">
      <item>
       <property name="text">
        <string>x1</string>
@@ -298,12 +293,7 @@
     </widget>
    </item>
    <item row="10" column="1">
-    <widget class="QComboBox" name="lineedit_list_Sr830SensTransitions_passive_SensitivityUnits">
-     <item>
-      <property name="text">
-       <string>V.</string>
-      </property>
-     </item>
+    <widget class="QComboBox" name="lineedit_list_Sr510SensTransitions_passive_SensitivityUnits">
      <item>
       <property name="text">
        <string>mV.</string>
@@ -322,23 +312,23 @@
     </widget>
    </item>
    <item row="11" column="0" colspan="2">
-    <widget class="QPushButton" name="button_list_Sr830SensTransitions_setter_AddSr830SensTransition">
+    <widget class="QPushButton" name="button_list_Sr510SensTransitions_setter_AddSr510SensTransition">
      <property name="text">
-      <string>Add SR830 Sensitivity Transition to Sequence</string>
+      <string>Add SR510 Sensitivity Transition to Sequence</string>
      </property>
     </widget>
    </item>
    <item row="12" column="0" colspan="2">
-    <widget class="QPushButton" name="button_list_Sr830SensTransitions_remover_RemoveSr830SensTransition">
+    <widget class="QPushButton" name="button_list_Sr510SensTransitions_remover_RemoveSr510SensTransition">
      <property name="text">
-      <string>Remove SR830 Sensitivity Transitions from Sequence</string>
+      <string>Remove SR510 Sensitivity Transitions from Sequence</string>
      </property>
     </widget>
    </item>
    <item row="13" column="0" colspan="2">
-    <widget class="QPushButton" name="button_list_Sr830SensTransitions_RemoverOfAll_RemoveAllSr830SensTransitions">
+    <widget class="QPushButton" name="button_list_Sr510SensTransitions_RemoverOfAll_RemoveAllSr510SensTransitions">
      <property name="text">
-      <string>Remove All SR830 Transitions from Sequence</string>
+      <string>Remove All SR510 Transitions from Sequence</string>
      </property>
     </widget>
    </item>

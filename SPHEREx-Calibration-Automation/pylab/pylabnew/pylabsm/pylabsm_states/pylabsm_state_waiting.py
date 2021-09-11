@@ -118,8 +118,8 @@ class Waiting(SmCustomState):
                 filters[i] = "OSF3"
             i += 1
 
-        cs260_seq = [{"current wavelength": waves[i], "current grating": gratings[i],
-                               "current order sort filter": filters[i], "current shutter": cs260_params["shutter"]}
+        cs260_seq = [{"wavelength": waves[i], "grating": gratings[i],
+                               "order_sort_filter": filters[i], "shutter": cs260_params["shutter"]}
                      for i in range(len(waves))]
 
         return cs260_seq
@@ -133,7 +133,7 @@ class Waiting(SmCustomState):
         if self.seq_waves is None:
             ndf_seq = "later"
         else:
-            ndf_seq = [{"current position": 0} for _ in range(len(self.seq_waves))]
+            ndf_seq = [{"position": 0} for _ in range(len(self.seq_waves))]
             ndf_transitions = json.loads(ndf_params["position transitions"].replace("'", '"'))
             transition_total = len(ndf_transitions)
             transi = 0
@@ -144,9 +144,9 @@ class Waiting(SmCustomState):
                     position = int(ndf_transitions[transi]["position"])
                     if not transi == transition_total - 1:
                         transi += 1
-                    ndf_seq[seqi]["current position"] = position
+                    ndf_seq[seqi]["position"] = position
                 else:
-                    ndf_seq[seqi]["current position"] = position
+                    ndf_seq[seqi]["position"] = position
                 seqi += 1
 
         return ndf_seq
@@ -179,7 +179,7 @@ class Waiting(SmCustomState):
         else:
             tc = float(lockin_params["time constant"])
             fs = float(lockin_params["sample rate"])
-            lockin_seq = [{"current sensitivity": 0.5, "current time constant": tc, "current sample rate": fs}
+            lockin_seq = [{"sensitivity": 0.5, "time_constant": tc, "sample_rate": fs}
                           for _ in self.seq_waves]
             sens_transitions = json.loads(lockin_params["sensitivity transitions"].replace("'", '"'))
             transition_total = len(sens_transitions)
@@ -191,9 +191,9 @@ class Waiting(SmCustomState):
                     sens = float(sens_transitions[transi]["sensitivity"])
                     if not transi == transition_total - 1:
                         transi += 1
-                    lockin_seq[seqi]["current sensitivity"] = sens
+                    lockin_seq[seqi]["sensitivity"] = sens
                 else:
-                    lockin_seq[seqi]["current sensitivity"] = sens
+                    lockin_seq[seqi]["sensitivity"] = sens
                 seqi += 1
 
         return lockin_seq

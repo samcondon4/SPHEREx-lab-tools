@@ -75,7 +75,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLineEdit" name="lineedit_base_Sr830CurrentConfigParameters_passive_CurrentSensitivity">
+    <widget class="QLineEdit" name="lineedit_base_Sr830CurrentConfigParameters_passive_Sensitivity">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -93,7 +93,7 @@
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="QLineEdit" name="lineedit_base_Sr830CurrentConfigParameters_passive_CurrentTimeConstant">
+    <widget class="QLineEdit" name="lineedit_base_Sr830CurrentConfigParameters_passive_TimeConstant">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -466,7 +466,7 @@
     </widget>
    </item>
    <item row="19" column="0" colspan="2">
-    <widget class="QLineEdit" name="combobox_base_NewSr830Measurement_passive_Sr830MeasurementStoragePath"/>
+    <widget class="QLineEdit" name="combobox_base_NewSr830Measurement_passive_Sr830StoragePath"/>
    </item>
    <item row="20" column="0" colspan="2">
     <widget class="QPushButton" name="button_base_NewSr830Measurement_getter_Sr830StartMeasurement">

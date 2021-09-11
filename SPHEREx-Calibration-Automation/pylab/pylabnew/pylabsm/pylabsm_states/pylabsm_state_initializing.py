@@ -3,7 +3,9 @@
     This module provides the initialization state class.
 
 """
+import pymeasure.instruments.instrument
 
+import pylabinst.pylabinst_instrument_base
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 
@@ -16,13 +18,17 @@ class Initializing(SmCustomState):
         print("initializing instruments...")
         instruments = action_arg["Instruments"]
         for key in instruments:
-            try:
+            if issubclass(type(instruments[key]), pylabinst.pylabinst_instrument_base.Instrument):
                 await instruments[key].open()
-            except Exception as e:
-                self.error_flag = True
-                break
-            else:
                 inst_params = await instruments[key].get_parameters("All")
-                action_arg["Tx Queue"][key] = inst_params
+
+            elif issubclass(type(instruments[key]), pymeasure.instruments.instrument.Instrument):
+                inst_params = instruments[key].quick_properties
+
+            else:
+                inst_params = None
+
+            action_arg["Tx Queue"][key] = inst_params
+
         action_arg["Tx Queue"]["Instrument Initialization"] = True
         print("initialization complete")

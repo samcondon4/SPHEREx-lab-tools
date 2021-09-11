@@ -21,16 +21,16 @@ class LabjackWindow(Ui_Form, GuiWindow):
         self.setupUi(self.form)
         if not self.configured:
             self.configure()
-        GuiWindow.WidgetGroups["newcur labjack state"].set_setter_proc(self.set_dio_proc)
+        GuiWindow.WidgetGroups["newcur_labjack_state"].set_setter_proc(self.set_dio_proc)
 
     def set_dio_proc(self, in_dict):
-        config_str = "dio{} config"
-        state_str = "dio{} state"
+        config_str = "dio{}_config"
+        state_str = "dio{}_state"
         out_dict = {}
-        for key in in_dict["dio config"]:
-            out_dict[config_str.format(key)] = in_dict["dio config"][key]
-        for key in in_dict["dio state"]:
-            out_dict[state_str.format(key)] = str(in_dict["dio state"][key] > 0)
+        for key in in_dict["dio_config"]:
+            out_dict[config_str.format(key)] = in_dict["dio_config"][key]
+        for key in in_dict["dio_state"]:
+            out_dict[state_str.format(key)] = str(in_dict["dio_state"][key] > 0)
 
         return out_dict
 

@@ -13,7 +13,7 @@ from qasync import QEventLoop
 from PyQt5 import QtWidgets
 from pylabgui.pylabgui_window_base import GuiCompositeWindow
 from pylabgui.CS260Window.cs260AutoDialogWrapper import CS260AutoWindow
-from pylabgui.LockinWindow.lockinAutoWindowDialogWrapper import Sr830AutoWindow
+from pylabgui.LockinWindow.lockinAutoWindowDialogWrapper import *
 from pylabgui.LockinWindow.lockinWindowHelper import Lockin
 from pylabgui.NDFWheelWindow.ndfAutoWindowDialogWrapper import NDFAutoWindow
 from pylabgui.NDFWheelWindow.ndfWindowHelper import NDF
@@ -28,7 +28,7 @@ class AutoTab(GuiCompositeWindow):
         self.proc_queue = asyncio.Queue()
         self.form.setWindowTitle("Automation")
         self.cs260_sequence_window = CS260AutoWindow(rx_identifier="Cs260 Auto")
-        self.lockin_sequence_window = Sr830AutoWindow(rx_identifier="Sr830 Auto")
+        self.lockin_sequence_window = LockinAutoWindow(rx_identifier="Sr830 Auto")
         self.ndf_sequence_window = NDFAutoWindow(rx_identifier="NDF Auto")
         self.series_window = SeriesConstructionWindow(rx_identifier="Series Construction", **kwargs)
         self.add_window(self.series_window)
@@ -37,8 +37,8 @@ class AutoTab(GuiCompositeWindow):
         self.add_window(self.ndf_sequence_window)
         if not self.configured:
             self.configure()
-        self.WidgetGroups["saved sequences"].set_list_setter_proc(self.savedsequences_list_item_proc)
-        self.WidgetGroups["saved sequences"].set_setter_proc(self.passive_sequence_setter_proc)
+        self.WidgetGroups["saved_sequences"].set_list_setter_proc(self.savedsequences_list_item_proc)
+        self.WidgetGroups["saved_sequences"].set_setter_proc(self.passive_sequence_setter_proc)
         self.WidgetGroups["series"].set_list_setter_proc(self.series_list_item_proc)
         self.WidgetGroups["series"].set_setter_proc(self.passive_series_setter_proc)
         if self.sequence_dir is not None:
@@ -48,28 +48,29 @@ class AutoTab(GuiCompositeWindow):
         for seq_file in os.listdir(self.sequence_dir):
             if seq_file.endswith(".ini"):
                 seq_dict = self.get_sequence_dict(self.sequence_dir + seq_file)
+                print(seq_dict)
                 seq_dict["from ini"] = {}
-                self.WidgetGroups["saved sequences"].set_list_item(external=seq_dict)
+                self.WidgetGroups["saved_sequences"].set_list_item(external=seq_dict)
 
     # STATIC PROCESS METHODS AND HELPERS #############################################################################
     def savedsequences_list_item_proc(self, internal_sequence_dict, from_ini=False):
         if "from ini" not in list(internal_sequence_dict.keys()):
-            text = internal_sequence_dict.pop("sequence name")
+            text = internal_sequence_dict.pop("sequence_name")
             sr510_tc = {}
             sr830_tc = {}
             isd_keys = list(internal_sequence_dict.keys())
             for key in isd_keys:
-                tc_key = key.split(" ")[-1]
-                if "sr510 time constant" in key:
+                tc_key = key.split(self.Delimiter)[-1]
+                if "sr510_time_constant" in key:
                     sr510_tc[tc_key] = internal_sequence_dict.pop(key)
-                elif "sr830 time constant" in key:
+                elif "sr830_time_constant" in key:
                     sr830_tc[tc_key] = internal_sequence_dict.pop(key)
             if not sr510_tc == {}:
                 sr510_tc = Lockin.get_tc(sr510_tc)
-                internal_sequence_dict["sr510 time constant"] = sr510_tc
+                internal_sequence_dict["sr510_time_constant"] = sr510_tc
             if not sr830_tc == {}:
                 sr830_tc = Lockin.get_tc(sr830_tc)
-                internal_sequence_dict["sr830 time constant"] = sr830_tc
+                internal_sequence_dict["sr830_time_constant"] = sr830_tc
             output_sequence_dict = self.save_ini(internal_sequence_dict, text)
             output_sequence_dict["from ini"] = {}
         else:
@@ -78,10 +79,11 @@ class AutoTab(GuiCompositeWindow):
 
         return text, output_sequence_dict
 
+
     def save_ini(self, seq_dict, seq_name):
         ini_seq_dict = {}
         for key in seq_dict:
-            key_split = key.split(" ")
+            key_split = key.split(self.Delimiter)
             ini_key1 = key_split[0]
             ini_key2 = ""
             for string in key_split[1:]:
@@ -116,11 +118,11 @@ class AutoTab(GuiCompositeWindow):
         proc_dict.pop("from ini")
         text = proc_dict["sequence info"]["sequence name"]
         proc_dict.pop("sequence info")
-        output_dict = {"sequence name": text}
+        output_dict = {"sequence_name": text}
         for key1 in proc_dict:
             for key2 in proc_dict[key1]:
                 new_key = key1 + " " + key2
-                output_dict[new_key] = proc_dict[key1][key2]
+                output_dict[new_key.replace(" ", "_")] = proc_dict[key1][key2]
 
         return output_dict
 

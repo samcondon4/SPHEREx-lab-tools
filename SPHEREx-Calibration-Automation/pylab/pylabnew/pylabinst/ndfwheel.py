@@ -28,8 +28,8 @@ class NDF(Instrument):
         ##################################################
 
         # Configure parameters ################################
-        self.add_get_parameter("current position", self.get_position)
-        self.add_set_parameter("current position", self.set_position)
+        self.add_get_parameter("position", self.get_position)
+        self.add_set_parameter("position", self.set_position)
         self.add_get_parameter("error", self.get_error)
         self.add_set_parameter("error", self.clear_error)
         self.add_set_parameter("home", self.home)

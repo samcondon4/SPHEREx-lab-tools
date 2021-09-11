@@ -101,7 +101,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLineEdit" name="lineedit_base_CurrentCs260State_passive_CurrentWavelength">
+    <widget class="QLineEdit" name="lineedit_base_CurrentCs260State_passive_Wavelength">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -153,7 +153,7 @@
     </widget>
    </item>
    <item row="5" column="0">
-    <widget class="QComboBox" name="combobox_base_CurrentCs260State_passive_CurrentOrderSortFilter">
+    <widget class="QComboBox" name="combobox_base_CurrentCs260State_passive_OrderSortFilter">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -238,7 +238,7 @@
     </widget>
    </item>
    <item row="7" column="0">
-    <widget class="QComboBox" name="combobox_base_CurrentCs260State_passive_CurrentGrating">
+    <widget class="QComboBox" name="combobox_base_CurrentCs260State_passive_Grating">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -322,7 +322,7 @@
     </widget>
    </item>
    <item row="9" column="0">
-    <widget class="QComboBox" name="combobox_base_CurrentCs260State_passive_CurrentShutter">
+    <widget class="QComboBox" name="combobox_base_CurrentCs260State_passive_Shutter">
      <property name="enabled">
       <bool>false</bool>
      </property>
