@@ -1,0 +1,8 @@
+#Procedure: <__main__.LockinProcedure>
+#Parameters:
+#Data:
+Time Stamp,phase,frequency,sensitivity,time constant,Status Byte,Output Voltage (V.)
+2021-09-11 09:45:08.379512,32.0,15.34,0.1,1,1,0.0002
+2021-09-11 09:45:09.073108,32.0,15.34,0.1,1,1,0.0002
+2021-09-11 09:45:09.746856,32.0,15.34,0.1,1,1,0.00018
+2021-09-11 09:45:10.432003,32.0,15.34,0.1,1,1,0.00018

@@ -1,0 +1,4 @@
+#Procedure: <__main__.LockinProcedure>
+#Parameters:
+#Data:
+Time Stamp,phase,frequency,sensitivity,time constant,Status Byte,Output Voltage (V.),LIA Status Byte,ERR Status Byte,X-Channel Voltage (V.),Y-Channel Voltage (V.)

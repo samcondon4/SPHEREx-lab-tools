@@ -1,28 +1,266 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="42f7f5eb-ac91-4f47-b14c-767facd8eb30" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="4c085aaf-ca52-4300-83d7-95927dfa6ee0" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pylabgui/PowermaxWindow/.idea/PowermaxWindow.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/pylab.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pylab.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_state_initializing.py" beforeDir="false" afterPath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_state_initializing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/housekeeping/Powermax.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/config/sequence/sample_scan.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/config/sequence/sample_scan2.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/config/series/default_series.cfg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/config/series/series_test.cfg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/config/series/series_test2.cfg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/notebooks/GUI Development.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcal.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/CS260Window/CS260AutoDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/CS260Window/cs260AutoDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/CS260Window/cs260Dialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/CS260Window/cs260DialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/LabJackWindow/labjackWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/LabJackWindow/labjackWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/LockinWindow/lockinAutoWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/LockinWindow/lockinAutoWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/LockinWindow/lockinWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/LockinWindow/lockinWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/LockinWindow/lockinWindowHelper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/NDFWheelWindow/ndfAutoWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/NDFWheelWindow/ndfAutoWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/NDFWheelWindow/ndfWheelDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/NDFWheelWindow/ndfWheelDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/NDFWheelWindow/ndfWindowHelper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/.idea/PowermaxWindow.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/powermaxLiveWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/powermaxLiveWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/PowermaxWindow/powermax_window_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/CS260AutoDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/CS260Dialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/Main_with_Tabs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/Main_with_Tabs.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/PowermaxLiveWindow.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/automationWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/labjackAutoWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/labjackWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/lockinAutoWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/lockinWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/manualWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/manualWindowDialog2.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/ndfAutoWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/ndfWheelDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/scanWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/scanWindowDialog2.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/scanWindowDialog3.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/scanWindowDialog4.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/scanWindowDialog5.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/sequenceWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/seriesconstructionWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/QTDesigner/statusWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/SeriesConstruction/seriesconstructionWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/SeriesConstruction/seriesconstructionWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/pylabcalgui_automationTab.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/pylabcalgui_main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalgui/pylabcalgui_manualTab.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcallib/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcallib/settings.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/.idea/pylabcalsm.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/gui/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/gui/pylabcalgui.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/pylabcal_sm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/pylabcalsm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/pylabcalstatemachine.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabcal/pylabcalsm/smtest.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabfocus.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabfocus/QTDesigner/MotorControlDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabfocus/pylabfocusd/pylabfocusd.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabfocus/pylabfocusd/pylabfocusdlib/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabfocus/pylabfocusd/pylabfocusdlib/settings.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/QListWigetSubclass.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/housekeeping.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/C++EXE.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/MS257USB_ODEV.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/MS257USB_ODEV.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/ODevice.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/ODevice_API.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/ORIEL_CONTROL.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/ORIEL_CONTROL.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/Oriel_USB_ODEV.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/Oriel_USB_ODEV.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/USB_SCSI.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/cyapi.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/libs/CyAPI.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/libs/MS257USB_ODEV.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/libs/ODevice.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/libs/ORIEL_CONTROL.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/libs/Oriel_USB_ODEV.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/msvcp120.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/msvcr120.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/CS260_DLLs/vccorlib120.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/NDFWheel_DLLs/OptecHIDTools.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/NDFWheel_DLLs/OptecHID_FilterWheelAPI.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/SR830.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/labjacku6.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/ndfwheel.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/powermaxusb.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/powermaxusb2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/pylablib_instrument.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/repeatedtimer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/instruments/serial_motor_dpy50601.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/pylablibgui_widgetGroup.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/pylablibgui_window_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/pylablibsm.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/utils/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/utils/logging_dict.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/utils/parameters.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylablib/utils/value_logger.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/.idea/pylabnew.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/config/sequence/test_seq.ini" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/notebooks/s830_test.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/notebooks/test.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/CS260Window/CS260AutoDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/CS260Window/cs260AutoDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/CS260Window/cs260Dialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/CS260Window/cs260DialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LabJackWindow/labjackWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LabJackWindow/labjackWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/lockinAutoWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/lockinAutoWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/lockinWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/lockinWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/lockinWindowHelper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/sr510AutoDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/sr510Dialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/sr830AutoDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/LockinWindow/sr830Dialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/NDFWheelWindow/ndfAutoWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/NDFWheelWindow/ndfAutoWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/NDFWheelWindow/ndfWheelDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/NDFWheelWindow/ndfWheelDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/NDFWheelWindow/ndfWindowHelper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/.idea/PowermaxWindow.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/powermaxLiveWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/powermaxLiveWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/PowermaxWindow/powermax_window_test.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/CS260AutoDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/CS260Dialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/Main_with_Tabs.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/Main_with_Tabs.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/PowermaxLiveWindow.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/automationWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/labjackAutoWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/labjackWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/lockinAutoWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/lockinWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/manualWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/manualWindowDialog2.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/ndfAutoWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/ndfWheelDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/scanWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/scanWindowDialog2.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/scanWindowDialog3.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/scanWindowDialog4.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/scanWindowDialog5.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/sequenceWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/seriesconstructionWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/sr510AutoDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/sr510Dialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/sr830AutoDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/sr830Dialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/QTDesigner/statusWindowDialog.ui" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/SeriesConstruction/seriesconstructionWindowDialog.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/SeriesConstruction/seriesconstructionWindowDialogWrapper.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/pylabcalgui_automationTab.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/pylabcalgui_main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/pylabcalgui_manualTab.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/pylabgui_QListWigetSubclass.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/pylabgui_widget_group.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabgui/pylabgui_window_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/C++EXE.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/MS257USB_ODEV.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/MS257USB_ODEV.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/ODevice.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/ODevice_API.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/ORIEL_CONTROL.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/ORIEL_CONTROL.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/Oriel_USB_ODEV.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/Oriel_USB_ODEV.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/USB_SCSI.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/cyapi.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/libs/CyAPI.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/libs/MS257USB_ODEV.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/libs/ODevice.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/libs/ORIEL_CONTROL.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/libs/Oriel_USB_ODEV.lib" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/msvcp120.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/msvcr120.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/CS260_DLLs/vccorlib120.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/NDFWheel_DLLs/OptecHIDTools.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/NDFWheel_DLLs/OptecHID_FilterWheelAPI.dll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/SR830.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/labjacku6.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/ndfwheel.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/powermaxusb.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/powermaxusb2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/pylabinst_instrument_base.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/repeatedtimer.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabinst/serial_motor_dpy50601.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_procs/lockinProc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_procs/sr510proc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_procs/sr830proc.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_spectral.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_basestate.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_state_auto.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_state_initializing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_state_manual.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_state_waiting.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabsm/pylabsm_states/pylabsm_statesimport.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pylabnew/pylabwrapper.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectId" id="1x98M3buvELXHTqpbaZHfW6TbNf" />
+  <component name="ProjectId" id="1y5vYibL7veF8EVXqrSAUDPuyqs" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -31,22 +269,23 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/pylabnew" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pylabwrapper.py" />
   </component>
-  <component name="RunManager" selected="Python.pylabwrapper">
-    <configuration name="pylabcalgui_automationTab (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager">
+    <configuration name="pylabwrapper" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pylab" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pylabcal/pylabcalgui" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="SDK_HOME" value="C:\Users\b111-lab\Anaconda3\envs\SPHEREx\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pylabcal/pylabcalgui/pylabcalgui_automationTab.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pylabwrapper.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -55,108 +294,15 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pylabcalgui_automationTab" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="pylab" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pylabnew/pylabgui" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pylabnew/pylabgui/pylabcalgui_automationTab.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pylabcalgui_main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="pylab" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pylabcal/pylabcalgui" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pylabcal/pylabcalgui/pylabcalgui_main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pylabcalgui_main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="pylab" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pylabnew/pylabgui" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pylabnew/pylabgui/pylabcalgui_main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pylabwrapper" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="pylab" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/pylabnew" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/pylabnew/pylabwrapper.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python.pylabwrapper" />
-        <item itemvalue="Python.pylabcalgui_main" />
-        <item itemvalue="Python.pylabcalgui_automationTab (1)" />
-        <item itemvalue="Python.pylabcalgui_main (1)" />
-        <item itemvalue="Python.pylabcalgui_automationTab" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="42f7f5eb-ac91-4f47-b14c-767facd8eb30" name="Default Changelist" comment="" />
-      <created>1629755891652</created>
+      <changelist id="4c085aaf-ca52-4300-83d7-95927dfa6ee0" name="Default Changelist" comment="" />
+      <created>1631554313577</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1629755891652</updated>
+      <updated>1631554313577</updated>
     </task>
     <servers />
   </component>
@@ -170,6 +316,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
