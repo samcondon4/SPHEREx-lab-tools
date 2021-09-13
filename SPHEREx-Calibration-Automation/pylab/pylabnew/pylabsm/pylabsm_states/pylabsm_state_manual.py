@@ -66,7 +66,6 @@ class Manual(SmCustomState):
                     measure_params[measure_param_key] = control_args[key1][key2]
                 # call the instrument measurement function
                 measure_params[inst_key] = instruments[inst_key]
-                print(inst_key, measure_params)
                 await procedures[inst_key].run(measure_params)
 
         # remove instrument control parameters from the control dictionary so that we don't repeat the same thing we

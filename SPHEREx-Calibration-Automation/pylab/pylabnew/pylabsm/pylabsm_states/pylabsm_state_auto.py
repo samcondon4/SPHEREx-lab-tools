@@ -6,15 +6,13 @@
 
 import asyncio
 from transitions.extensions.asyncio import AsyncMachine
-from pylabgui.pylabgui_window_base import GuiWindow
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 import pylabinst.pylabinst_instrument_base as pylabinst
 import pymeasure.instruments.instrument as pymeasureinst
 
 
 class Moving(SmCustomState):
-    meta_keys = ["CS260 WAVELENGTH", "CS260 GRATING", "CS260 ORDER SORT FILTER", "CS260 SHUTTER", "NDF POSITION",
-                 "SR830 SENSITIVITY", "SR830 TIME CONSTANT"]
+    meta_keys = ["CS260 WAVELENGTH", "CS260 GRATING", "CS260 ORDER_SORT_FILTER", "CS260 SHUTTER", "NDF POSITION"]
 
     def __init__(self, sm, identifier="moving", **kwargs):
         super().__init__(sm, self, identifier, **kwargs)
@@ -24,7 +22,6 @@ class Moving(SmCustomState):
         instruments = move_dict["Instruments"]
         moving = move_dict["Moving"]
         moving_key_list = list(moving.keys())
-
         for key in moving:
             command_dict = moving[key][self.sm.ser_index][self.sm.seq_index]
             # Try sending a command dictionary to each instrument. If a movement fails, enter the error state
@@ -32,9 +29,11 @@ class Moving(SmCustomState):
                 if issubclass(type(instruments[key]), pylabinst.Instrument):
                     await instruments[key].set_parameters(command_dict)
                     inst_dict = await instruments[key].get_parameters("All")
-                else:
+                elif issubclass(type(instruments[key]), pymeasureinst.Instrument):
                     instruments[key].quick_properties = command_dict
                     inst_dict = instruments[key].quick_properties
+                else:
+                    inst_dict = None
                 move_dict["Tx Queue"][key] = inst_dict
                 metadata = self.parse_meta({key: inst_dict})
                 for new_key in metadata:
@@ -51,7 +50,7 @@ class Moving(SmCustomState):
         meta_dict = {}
         new_keys = []
         for inst_param in inst_dict[inst_key]:
-            nk = inst_param.replace("current", inst_key).upper()
+            nk = inst_key + " " + inst_param.upper()
             new_keys.append(nk)
             meta_dict[nk] = inst_dict[inst_key][inst_param]
 
@@ -64,23 +63,34 @@ class Measuring(SmCustomState):
         super().__init__(sm, self, identifier, **kwargs)
 
     async def measuring_action(self, measuring_dict):
-        print(measuring_dict)
         measure = measuring_dict["Measuring"]
+        measure_coros = [None for _ in range(len(measure))]
+        k = 0
+        exception = None
         for key in measure:
             try:
+                procedure = measuring_dict["Procedures"][key.upper()]
                 measurement_params = measure[key][self.sm.ser_index][self.sm.seq_index]
                 storage_path = measurement_params["storage_path"] + measurement_params["sequence_name"] + "_" + key + \
                                ".csv"
                 measurement_params["storage_path"] = storage_path
                 measurement_params[key.upper()] = measuring_dict["Instruments"][key.upper()]
                 metadata = measuring_dict["Metadata"]
-                print(measurement_params)
-                print(metadata)
-                await measuring_dict["Procedures"][key.upper()].run(measurement_params, metadata=metadata,
-                                                                    append_to_existing=True, hold=True)
+                procedure.metadata = metadata
+                measure_coros[k] = asyncio.create_task(procedure.run(measurement_params, append_to_existing=True,
+                                                                     hold=True))
             except Exception as e:
                 print(e)
                 self.error_flag = True
+                break
+
+            else:
+                # iterate to next measurement
+                k += 1
+
+        # if no exception occured, run the measuring coroutines
+        if exception is None:
+            await asyncio.wait(measure_coros)
 
 
 class Indexing(SmCustomState):
@@ -188,16 +198,22 @@ class Auto(SmCustomState):
             for key in instruments:
                 key = key.lower()
                 if key in cl_keys:
-                    self.auto_sm.moving_dict[key.upper()] = control_loop[key]
+                    try:
+                        move_list_getter = getattr(self, "{}_move_cl".format(key))
+                    except AttributeError:
+                        self.auto_sm.moving_dict[key.upper()] = control_loop[key]
+                    else:
+                        self.auto_sm.moving_dict[key.upper()] = move_list_getter(control_loop[key])
 
             # Get instrument specific measurement parameters #########################################
             for seq in measure_args:
-                print(seq)
                 for key in seq:
-                    print(key, seq[key])
                     if (key.upper() in instruments) and seq[key] == "True":
-                        measure_list_getter = getattr(self, "{}_measure_dict".format(key))
-                        if self.auto_sm.measuring_dict == {}:
+                        try:
+                            measure_list_getter = getattr(self, "{}_measure_cl".format(key))
+                        except AttributeError:
+                            self.auto_sm.measuring_dict[key] = control_loop[key]
+                        else:
                             self.auto_sm.measuring_dict[key] = measure_list_getter(control_loop[key])
             ##########################################################################################
 
@@ -215,16 +231,35 @@ class Auto(SmCustomState):
             auto_sm_task = asyncio.create_task(self.auto_sm.to_moving())
             while not self.auto_sm.state == self.auto_sm.done_state.identifier:
                 await asyncio.sleep(0)
-            self.auto_sm.measuring_dict = []
+            self.auto_sm.measuring_dict = {}
             self.auto_sm.done_state.hold_complete = True
 
         except Exception as e:
             print(e)
 
+    def sr510_move_cl(self, lockin_cl):
+        return self.lockin_move_cl(lockin_cl)
+
+    def sr510_measure_cl(self, lockin_cl):
+        return self.lockin_measure_cl(lockin_cl)
+
+    def sr830_move_cl(self, lockin_cl):
+        return self.lockin_move_cl(lockin_cl)
+
+    def sr830_measure_cl(self, lockin_cl):
+        return self.lockin_measure_cl(lockin_cl)
+
     @staticmethod
-    def sr830_measure_dict(lockin_cl):
-        print(lockin_cl)
+    def lockin_measure_cl(lockin_cl):
         out_list = [{} for _ in range(len(lockin_cl))]
         for i in range(len(lockin_cl)):
             out_list[i] = [{"sample_rate": lockin_seq["sample_rate"]} for lockin_seq in lockin_cl[i]]
+        return out_list
+
+    @staticmethod
+    def lockin_move_cl(lockin_cl):
+        out_list = [{} for _ in range(len(lockin_cl))]
+        for i in range(len(lockin_cl)):
+            out_list[i] = [{"sensitivity": lockin_seq["sensitivity"],
+                            "time_constant": lockin_seq["time_constant"]} for lockin_seq in lockin_cl[i]]
         return out_list

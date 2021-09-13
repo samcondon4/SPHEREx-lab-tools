@@ -48,7 +48,6 @@ class AutoTab(GuiCompositeWindow):
         for seq_file in os.listdir(self.sequence_dir):
             if seq_file.endswith(".ini"):
                 seq_dict = self.get_sequence_dict(self.sequence_dir + seq_file)
-                print(seq_dict)
                 seq_dict["from ini"] = {}
                 self.WidgetGroups["saved_sequences"].set_list_item(external=seq_dict)
 
@@ -161,8 +160,6 @@ class AutoTab(GuiCompositeWindow):
 
                 config_out.add_section(ikey)
                 for isect, ivals in idict.items():
-                    # pdb.set_trace()
-                    # print(ikey, isect, ivals)
                     config_out.set(ikey, isect, str(ivals))
 
         with open(config_filename_out, 'w') as conf:

@@ -23,7 +23,6 @@ class Waiting(SmCustomState):
         print("waiting for gui input... {}")
         data_queue = in_dict["Rx Queue"]
         gui_data = await data_queue.get()
-
         # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
         # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
         gui_input_type = type(gui_data)
@@ -37,7 +36,7 @@ class Waiting(SmCustomState):
         return ret_code
 
     def build_control_loop(self, series):
-        """Description: construct a control from a list of sequence parameters.
+        """Description: construct a control loop from a list of sequence parameters.
 
         :param series:
         :return: control loop
@@ -64,16 +63,17 @@ class Waiting(SmCustomState):
         """Description: route the seq params to the proper sequence generator function defined below.
         """
         ret_seq = None
+        # look for a sequence generator function, if one doesn't exist then just return the sequence as is ###########
         try:
             seq_gen_func = getattr(self, "{}_sequence".format(key))
         except AttributeError as e:
-            if key in list(seq_params.keys()):
-                ret_seq = seq_params[key]
+            ret_seq = seq_params[key]
         else:
             ret_seq = seq_gen_func(seq_params[key])
 
         if ret_seq == "later":
             self.seq_gen_later.append(key)
+        ###############################################################################################################
 
         return ret_seq
 
@@ -83,7 +83,6 @@ class Waiting(SmCustomState):
         :param cs260_params: (dict) CS260 sequence parameters dictionary
         :return: List of cs260 instrument command dictionaries.
         """
-
         # generate monochromator scan wavelengths
         waves = np.arange(float(cs260_params["start wavelength"]), float(cs260_params["end wavelength"]) +
                           float(cs260_params["step size"]),

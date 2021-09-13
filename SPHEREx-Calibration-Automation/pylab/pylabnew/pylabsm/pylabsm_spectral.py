@@ -14,8 +14,7 @@ from pymeasure.instruments.srs.sr510 import SR510
 from pymeasure.instruments.srs.sr830 import SR830
 
 # measurement procedures #####################################
-from pylabsm.pylabsm_procs.sr830proc import Sr830Measurement
-from pylabsm.pylabsm_procs.sr510proc import Sr510Measurement
+from pylabsm.pylabsm_procs.lockinProc import LockinMeasurement
 
 # state classes ####################################################################################################
 from pylabsm.pylabsm_states.pylabsm_statesimport import pylabsm_state_initializing, pylabsm_state_waiting, \
@@ -35,18 +34,13 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.control_args = {}
 
         # Instrument classes ##############
-        self.inst_dict = {"CS260": CS260(),}
-        """
-         "LABJACK": Labjack(), "NDF": NDF(), "SR510": SR510("GPIB0::6::INSTR"),
-                          "SR830": SR830("GPIB0::15::INSTR")}"""
-        """
-        self.inst_dict["SR510"].quick_properties_list = ["phase", "pre_time_constant", "sensitivity",
-                                                         "reference_frequency"]
+        self.inst_dict = {"CS260": CS260(), "SR830": SR830(15), "SR510": SR510(6), "NDF": NDF(), "LABJACK": Labjack()}
         self.inst_dict["SR830"].quick_properties_list = ["time_constant", "sensitivity"]
-        """
+        self.inst_dict["SR510"].quick_properties_list = ["time_constant", "sensitivity"]
 
         # Procedure classes ################
-        self.proc_dict = {"SR830": Sr830Measurement(), "SR510": Sr510Measurement()}
+        self.proc_dict = {"SR830": LockinMeasurement(self.inst_dict["SR830"]),
+                          "SR510": LockinMeasurement(self.inst_dict["SR510"])}
 
         # Initialize action arguments ######################################################
         pylabsm_basestate.SmCustomState.set_global_args({"Tx Queue": self.data_queue_tx,

@@ -343,16 +343,10 @@ class ListWidgetGroup(WidgetGroup):
         else:
             passive_data = external
         #############################################################################################
-        print(passive_data)
         # If a setter process method has been set, then call it with the list data otherwise extract #
         # list item display text from the data #######################################################
         if self.list_setter_proc is not None:
-            print("good")
-            try:
-                text, data = self.list_setter_proc(passive_data)
-            except Exception as e:
-                print(e)
-            print("good")
+            text, data = self.list_setter_proc(passive_data)
         else:
             display_keys = self.item_display
             entry_str = ""
@@ -368,7 +362,6 @@ class ListWidgetGroup(WidgetGroup):
             data, text = (passive_data, entry_str)
         ################################################################################################
 
-        print("good")
         # Add the newly created list item to the list widget ###########################################
         WidgetGroup.add_item_to_list(self.item_list, {"text": text, "data": data})
         ################################################################################################
