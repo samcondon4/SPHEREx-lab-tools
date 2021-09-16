@@ -12,6 +12,7 @@ class LockinMeasurement(Procedure):
     sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
                                       minimum=2 ** -4, maximum=2 ** 9)
     sample_time = FloatParameter("Sample time", units="s.", default=10)
+    phase = FloatParameter("Phase", units="degrees")
     DATA_COLUMNS = []
 
     def __init__(self, lockin_instance):

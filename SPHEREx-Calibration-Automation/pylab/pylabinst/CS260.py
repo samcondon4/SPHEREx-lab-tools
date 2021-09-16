@@ -22,7 +22,7 @@ class CS260(Instrument):
     OSF1_LOWER = NO_OSF_UPPER
     OSF1_UPPER = 1.65
     OSF2_LOWER = OSF1_UPPER
-    OSF2_UPPER = 2.5
+    OSF2_UPPER = 2.4
     OSF3_LOWER = OSF2_UPPER
 
     @classmethod

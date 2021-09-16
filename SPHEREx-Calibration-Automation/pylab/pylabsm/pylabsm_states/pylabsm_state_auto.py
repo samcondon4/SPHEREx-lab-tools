@@ -74,7 +74,7 @@ class Measuring(SmCustomState):
                 storage_path = measurement_params["storage_path"] + measurement_params["sequence_name"] + "_" + key + \
                                ".csv"
                 measurement_params["storage_path"] = storage_path
-                measurement_params[key.upper()] = measuring_dict["Instruments"][key.upper()]
+                #measurement_params[key.upper()] = measuring_dict["Instruments"][key.upper()]
                 metadata = measuring_dict["Metadata"]
                 procedure.metadata = metadata
                 measure_coros[k] = asyncio.create_task(procedure.run(measurement_params, append_to_existing=True,

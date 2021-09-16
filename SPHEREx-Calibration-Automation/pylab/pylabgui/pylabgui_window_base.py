@@ -235,6 +235,7 @@ class GuiWindow:
                     pass
                 else:
                     print("Tx data = {}".format(tx))
+                    self.data_queue_tx.put_nowait(tx)
 
             await asyncio.sleep(0)
 

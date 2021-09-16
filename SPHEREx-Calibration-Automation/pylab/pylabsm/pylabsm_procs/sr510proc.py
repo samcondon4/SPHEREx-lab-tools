@@ -1,13 +1,14 @@
-import asyncio
 import os
-from time import sleep
+import asyncio
 import datetime
 import numpy as np
-from pymeasure.experiment import Procedure, Worker, Results
+from time import sleep
 from pymeasure.experiment import FloatParameter
+from pymeasure.experiment import Procedure, Worker, Results
+from pylabsm.pylabsm_procs.lockinProc import LockinMeasurement
 
 
-class Sr510Measurement(Procedure):
+class Sr510Measurement(Procedure, LockinMeasurement):
 
     sr510_instance = None
     running = False
@@ -16,7 +17,8 @@ class Sr510Measurement(Procedure):
     sample_time = FloatParameter("Sample Time", units="s.", default=10)
     metadata = {}
 
-    DATA_COLUMNS = ["Time Stamp", "Output Voltage (V.)", "Status Register"]
+    def __init__(self, lockin_instance):
+        super().__init__(lockin_instance)
 
     def execute(self):
         """ Description: main method for the procedure.

@@ -27,11 +27,11 @@ class CS260Window(Ui_Form, GuiWindow):
 
     def setter_proc(self, setter_dict):
         for key in setter_dict:
-            if key == "current grating":
+            if key == "grating":
                 setter_dict[key] = CS260Window.GRATING_MAP[setter_dict[key]]
-            elif key == "current order sort filter":
+            elif key == "order_sort_filter":
                 setter_dict[key] = CS260Window.OSF_MAP[setter_dict[key]]
-            elif key == "current shutter":
+            elif key == "shutter":
                 setter_dict[key] = CS260Window.SHUTTER_MAP[setter_dict[key]]
 
         return setter_dict

@@ -99,7 +99,6 @@ class Sr830Measurement(Procedure):
         results = Results(self, file_name)
         worker = Worker(results)
         worker.start()
-        print("running")
         self.running = True
         if hold:
             while self.running:

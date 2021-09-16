@@ -56,6 +56,7 @@ class Manual(SmCustomState):
                 """
 
                 # place updated instrument parameter dictionary onto the Tx Queue for external processing
+                print(inst_dict)
                 action_arg["Tx Queue"][inst_key] = inst_dict
 
             # run a measurement
