@@ -5,10 +5,11 @@
 """
 
 import asyncio
-from transitions.extensions.asyncio import AsyncMachine
-from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 import pylabinst.pylabinst_instrument_base as pylabinst
+from transitions.extensions.asyncio import AsyncMachine
 import pymeasure.instruments.instrument as pymeasureinst
+from pylabsm.pylab_inst_sm_data_mappings import INST_SM_MAP
+from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 
 class Moving(SmCustomState):
@@ -24,21 +25,38 @@ class Moving(SmCustomState):
         moving_key_list = list(moving.keys())
         for key in moving:
             command_dict = moving[key][self.sm.ser_index][self.sm.seq_index]
+            cmd_keys = list(command_dict.keys())
             # Try sending a command dictionary to each instrument. If a movement fails, enter the error state
             try:
                 if issubclass(type(instruments[key]), pylabinst.Instrument):
-                    await instruments[key].set_parameters(command_dict)
+                    cur_params = await instruments[key].get_parameters("All")
+                    # remove set parameters if the instrument is already in that state
+                    for cmd_key in cmd_keys:
+                        inst_cmd = INST_SM_MAP[key][cmd_key](cur_params[cmd_key])
+                        if command_dict[cmd_key] == inst_cmd:
+                            command_dict.pop(cmd_key)
+                    if command_dict != {}:
+                        await instruments[key].set_parameters(command_dict)
                     inst_dict = await instruments[key].get_parameters("All")
+
                 elif issubclass(type(instruments[key]), pymeasureinst.Instrument):
-                    instruments[key].quick_properties = command_dict
+                    cur_params = instruments[key].quick_properties
+                    # remove set parameters if the instrument is already in that state
+                    for cmd_key in cmd_keys:
+                        if command_dict[cmd_key] == INST_SM_MAP[key][cmd_key](cur_params[cmd_key]):
+                            command_dict.pop(cmd_key)
+                    if command_dict != {}:
+                        instruments[key].quick_properties = command_dict
                     inst_dict = instruments[key].quick_properties
                 else:
-                    inst_dict = None
+                    raise RuntimeError("Unknown instrument type provided!")
+
                 move_dict["Tx Queue"][key] = inst_dict
                 metadata = self.parse_meta({key: inst_dict})
                 for new_key in metadata:
                     if new_key in self.meta_keys:
                         move_dict["Metadata"][new_key] = metadata[new_key]
+
             except Exception as e:
                 print(e)
                 self.error_flag = True
@@ -74,7 +92,6 @@ class Measuring(SmCustomState):
                 storage_path = measurement_params["storage_path"] + measurement_params["sequence_name"] + "_" + key + \
                                ".csv"
                 measurement_params["storage_path"] = storage_path
-                #measurement_params[key.upper()] = measuring_dict["Instruments"][key.upper()]
                 metadata = measuring_dict["Metadata"]
                 procedure.metadata = metadata
                 measure_coros[k] = asyncio.create_task(procedure.run(measurement_params, append_to_existing=True,

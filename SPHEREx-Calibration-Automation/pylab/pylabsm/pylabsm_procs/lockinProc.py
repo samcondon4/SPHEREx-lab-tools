@@ -12,7 +12,6 @@ class LockinMeasurement(Procedure):
     sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
                                       minimum=2 ** -4, maximum=2 ** 9)
     sample_time = FloatParameter("Sample time", units="s.", default=10)
-    phase = FloatParameter("Phase", units="degrees")
     DATA_COLUMNS = []
 
     def __init__(self, lockin_instance):
@@ -135,6 +134,11 @@ class LockinMeasurement(Procedure):
             while os.path.exists(file_name):
                 file_name_split = file_name.split(".")
                 file_name = file_name_split[0] + "_." + file_name_split[1]
+
+        # set phase of sr830 using the auto-phase function
+        if self.lockin_type is SR830:
+            self.lockin_instance.auto_phase()
+
         results = Results(self, file_name)
         worker = Worker(results)
         worker.start()

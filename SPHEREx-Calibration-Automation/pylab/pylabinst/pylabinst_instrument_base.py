@@ -20,10 +20,10 @@ class Instrument:
         self.getter_proc = None
         self.set_methods = {}
         self.set_method_coros = {}
-        self.setter_proc = None
+        self.top_setter = None
 
-    def set_setter_proc(self, setter_proc):
-        self.setter_proc = setter_proc
+    def set_top_setter(self, top_setter):
+        self.top_setter = top_setter
 
     def set_getter_proc(self, getter_proc):
         self.getter_proc = getter_proc
@@ -142,11 +142,11 @@ class Instrument:
         :param params_dict: dictionary with keys and values of parameters to update
         :return: None
         """
-        if self.setter_proc is not None:
-            if asyncio.iscoroutinefunction(self.setter_proc):
-                params_dict = await self.setter_proc(params_dict)
+        if self.top_setter is not None:
+            if asyncio.iscoroutinefunction(self.top_setter):
+                params_dict = await self.top_setter(params_dict)
             else:
-                params_dict = self.setter_proc(params_dict)
+                params_dict = self.top_setter(params_dict)
         else:
             coro_list = []
             func_list = []

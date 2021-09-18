@@ -2,12 +2,9 @@
 
 Sam Condon 07/01/2021
 """
-import sys
+import asyncio
 import subprocess as sp
 from subprocess import *
-import asyncio
-
-sys.path.append("..\\..\\")
 from pylabinst.pylabinst_instrument_base import Instrument
 
 
@@ -24,6 +21,10 @@ class CS260(Instrument):
     OSF2_LOWER = OSF1_UPPER
     OSF2_UPPER = 2.4
     OSF3_LOWER = OSF2_UPPER
+
+    GRATING_MAP = {"G1": "1", "G2": "2", "G3": "3"}
+    OSF_MAP = {"OSF1": "1", "OSF2": "2", "OSF3": "3", "No OSF": "4"}
+    SHUTTER_MAP = {"Open": "O", "Close": "C"}
 
     @classmethod
     def auto_grating(cls, wavelength):
@@ -77,7 +78,7 @@ class CS260(Instrument):
         self.add_get_parameter("units", self.get_units, coro=True)
         self.add_set_parameter("units", self.set_units, coro=False)
 
-        self.set_setter_proc(self.setter)
+        self.set_top_setter(self.setter)
         #######################################################################################
 
     # PARAMETER GETTER/SETTERS ##########################################################
@@ -88,9 +89,8 @@ class CS260(Instrument):
         :return: None
         """
         setter_dict_keys = list(setter_dict.keys())
-        await self.set_shutter_state("C")
 
-        coro_args = {"wavelength": None, "grating": None, "osf": None}
+        coro_args = {"wavelength": None, "grating": None, "osf": None, "shutter": None}
         if "wavelength" in setter_dict_keys:
             wavelength = float(setter_dict["wavelength"])
             coro_args["wavelength"] = wavelength
@@ -111,14 +111,22 @@ class CS260(Instrument):
                 osf = 4
             coro_args["osf"] = osf
 
-        if coro_args["grating"] is not None:
-            await self.set_grating(coro_args["grating"])
-        if coro_args["osf"] is not None:
-            await self.set_osf(coro_args["osf"])
-        if coro_args["wavelength"] is not None:
-            await self.set_wavelength(coro_args["wavelength"])
-        if "shutter" in setter_dict_keys and setter_dict["shutter"] == "Open":
-            await self.set_shutter_state("O")
+        if "shutter" in setter_dict_keys:
+            shutter = "O" if setter_dict["shutter"] == "Open" else "C"
+            print("shutter = {}".format(shutter))
+            coro_args["shutter"] = shutter
+
+        try:
+            if coro_args["grating"] is not None:
+                await self.set_grating(coro_args["grating"])
+            if coro_args["osf"] is not None:
+                await self.set_osf(coro_args["osf"])
+            if coro_args["wavelength"] is not None:
+                await self.set_wavelength(coro_args["wavelength"])
+            if coro_args["shutter"] is not None:
+                await self.set_shutter_state(coro_args["shutter"])
+        except Exception as e:
+            print(e)
 
     async def get_wavelength(self):
         """get_wavelength: returns exact wavelength output in current units.

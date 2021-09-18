@@ -15,18 +15,16 @@ class Labjack(Instrument):
 
     def __init__(self):
         super().__init__("Labjack")
-
         # Configure open method ###########################
         self.set_open_method(self.open_u6_com)
         self.com = None
         ###################################################
 
         # Configure parameters ####################################################
-        #self.add_get_parameter("dio", self.get_dio)
         self.add_parameter("dio_config", self.get_dio_config, self.set_dio_config)
         self.add_parameter("dio_state", self.get_dio_state, self.set_dio_state)
 
-        self.set_setter_proc(self.labjack_setter_proc)
+        self.set_top_setter(self.labjack_setter_proc)
         ###########################################################################
 
     def labjack_setter_proc(self, setter_dict):
@@ -38,8 +36,6 @@ class Labjack(Instrument):
                 config_dict[dio_num] = setter_dict[key]
             elif "state" in key:
                 state_dict[dio_num] = setter_dict[key]
-        print(config_dict)
-        print(state_dict)
         self.set_dio_config(config_dict)
         self.set_dio_state(state_dict)
 

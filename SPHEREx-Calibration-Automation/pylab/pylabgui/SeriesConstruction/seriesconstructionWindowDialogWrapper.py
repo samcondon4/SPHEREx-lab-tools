@@ -21,7 +21,6 @@ class SeriesConstructionWindow(Ui_Form, GuiWindow):
     #################################################################################################################
 
     def getter_proc(self, get_dict):
-        print("Getter process dictionary: {}".format(get_dict))
         return get_dict
 
 

@@ -31,7 +31,7 @@ def lockin_sens_transition_listitem_proc(sens_transition):
     wavelength = sens_transition["wavelength"]
     sens_dict = Lockin.get_sensitivity(get_sens_dict)
     sens_data = {"wavelength": sens_transition["wavelength"], "sensitivity": sens_dict["sensitivity"]}
-    sens_text = "{}{}".format(sens_dict["sensitivity"] / sens_dict["unit_multiplier"], get_sens_dict["units"])
+    sens_text = str(sens_dict["sensitivity"])
     text = "wavelength = {}, sensitivity = {};".format(wavelength, sens_text)
     return text, sens_data
 

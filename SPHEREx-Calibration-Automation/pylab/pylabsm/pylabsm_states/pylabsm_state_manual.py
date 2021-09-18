@@ -6,6 +6,7 @@
 import pymeasure.instruments.instrument
 
 import pylabinst.pylabinst_instrument_base
+from pylabsm.pylab_inst_sm_data_mappings import SM_INST_MAP
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 
@@ -36,27 +37,27 @@ class Manual(SmCustomState):
                     inst_param_key = key2.replace("new_", "")
                     # update command dictionary
                     command_dict[inst_param_key] = inst_param_data
+                cmd_keys = list(command_dict.keys())
                 # get the type of the instrument and call the appropriate parameter getter/setter for that type
                 inst_type = type(instruments[inst_key])
                 if issubclass(inst_type, pylabinst.pylabinst_instrument_base.Instrument):
-                    await instruments[inst_key].set_parameters(command_dict)
+                    cur_params = await instruments[inst_key].get_parameters("All")
+                    print(cur_params)
+                    # remove set parameters if the instrument is already in that state
+                    for cmd_key in cmd_keys:
+                        if cur_params[cmd_key] == SM_INST_MAP[inst_key][cmd_key](command_dict[cmd_key]):
+                            command_dict.pop(cmd_key)
+                    print(command_dict)
+                    if command_dict != {}:
+                        await instruments[inst_key].set_parameters(command_dict)
                     inst_dict = await instruments[inst_key].get_parameters("All")
                 elif issubclass(inst_type, pymeasure.instruments.instrument.Instrument):
-                    print(command_dict)
                     instruments[inst_key].quick_properties = command_dict
                     inst_dict = instruments[inst_key].quick_properties
                 else:
                     inst_dict = None
 
-                """
-                inst_dict2 = {}
-                for key in inst_dict:
-                    new_key = key.replace("current", "new")
-                    inst_dict2[new_key] = inst_dict[key]
-                """
-
                 # place updated instrument parameter dictionary onto the Tx Queue for external processing
-                print(inst_dict)
                 action_arg["Tx Queue"][inst_key] = inst_dict
 
             # run a measurement

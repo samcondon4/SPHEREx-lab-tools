@@ -6,6 +6,7 @@ Sam Condon, 08/16/2021
 """
 
 import json
+import numpy as np
 
 
 class Lockin:
@@ -47,7 +48,9 @@ class Lockin:
         value = float(sens_dict["value"])
         multiplier = float(sens_dict["multiplier"].split("x")[-1])
         unit_multiplier = float(cls.UNIT_SENSITIVITY_MAP[sens_dict["units"]])
-        sensitivity = value * multiplier * unit_multiplier
+        total_mult = multiplier*unit_multiplier
+        round_off = abs(int(np.log10(total_mult)))
+        sensitivity = round(value * multiplier * unit_multiplier, round_off)
         sens_dict = {"sensitivity": sensitivity, "value": value, "multiplier": multiplier,
                      "unit_multiplier": unit_multiplier}
         return sens_dict

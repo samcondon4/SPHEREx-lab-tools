@@ -87,6 +87,7 @@ class Waiting(SmCustomState):
         waves = np.arange(float(cs260_params["start wavelength"]), float(cs260_params["end wavelength"]) +
                           float(cs260_params["step size"]),
                           float(cs260_params["step size"]))
+        print(np.unique(waves))
         self.seq_waves = waves
         gratings = np.zeros_like(waves)
         filters = ["" for _ in range(len(waves))]

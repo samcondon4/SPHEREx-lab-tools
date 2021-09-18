@@ -34,7 +34,7 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.control_args = {}
 
         # Instrument classes ##############
-        self.inst_dict = {"CS260": CS260(), "SR830": SR830(15), "SR510": SR510(6), "NDF": NDF(), "LABJACK": Labjack()}
+        self.inst_dict = {"SR830": SR830(15), "SR510": SR510(6), "CS260": CS260(), "NDF": NDF(), "LABJACK": Labjack()}
         self.inst_dict["SR830"].quick_properties_list = ["time_constant", "sensitivity"]
         self.inst_dict["SR510"].quick_properties_list = ["time_constant", "sensitivity"]
 

@@ -10,13 +10,6 @@ from pylabsm.pylabsm_procs.lockinProc import LockinMeasurement
 
 class Sr510Measurement(Procedure, LockinMeasurement):
 
-    sr510_instance = None
-    running = False
-    sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
-                                      minimum=2**-4, maximum=2**9)
-    sample_time = FloatParameter("Sample Time", units="s.", default=10)
-    metadata = {}
-
     def __init__(self, lockin_instance):
         super().__init__(lockin_instance)
 
