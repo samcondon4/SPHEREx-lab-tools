@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Sr510(object):
     def setupUi(self, Sr510):
         Sr510.setObjectName("Sr510")
-        Sr510.resize(593, 605)
+        Sr510.resize(773, 822)
         self.gridLayout = QtWidgets.QGridLayout(Sr510)
         self.gridLayout.setObjectName("gridLayout")
         self.label_11 = QtWidgets.QLabel(Sr510)
@@ -31,6 +31,8 @@ class Ui_Sr510(object):
         self.label_12.setObjectName("label_12")
         self.gridLayout.addWidget(self.label_12, 1, 0, 1, 1)
         self.combobox_list_SavedSequences_passive_Sr510SampleRate = QtWidgets.QComboBox(Sr510)
+        self.combobox_list_SavedSequences_passive_Sr510SampleRate.setEnabled(False)
+        self.combobox_list_SavedSequences_passive_Sr510SampleRate.setEditable(True)
         self.combobox_list_SavedSequences_passive_Sr510SampleRate.setObjectName("combobox_list_SavedSequences_passive_Sr510SampleRate")
         self.combobox_list_SavedSequences_passive_Sr510SampleRate.addItem("")
         self.combobox_list_SavedSequences_passive_Sr510SampleRate.addItem("")
@@ -137,6 +139,7 @@ class Ui_Sr510(object):
         self.gridLayout.addWidget(self.button_list_Sr510SensTransitions_RemoverOfAll_RemoveAllSr510SensTransitions, 13, 0, 1, 2)
 
         self.retranslateUi(Sr510)
+        self.combobox_list_SavedSequences_passive_Sr510SampleRate.setCurrentIndex(4)
         QtCore.QMetaObject.connectSlotsByName(Sr510)
 
     def retranslateUi(self, Sr510):
@@ -144,7 +147,7 @@ class Ui_Sr510(object):
         Sr510.setWindowTitle(_translate("Sr510", "Sr510"))
         self.label_11.setText(_translate("Sr510", "SR510 Lock-In Sequence Control:"))
         self.label_12.setText(_translate("Sr510", "Sample Rate (Hz.):"))
-        self.combobox_list_SavedSequences_passive_Sr510SampleRate.setCurrentText(_translate("Sr510", "0.0625"))
+        self.combobox_list_SavedSequences_passive_Sr510SampleRate.setCurrentText(_translate("Sr510", "1"))
         self.combobox_list_SavedSequences_passive_Sr510SampleRate.setItemText(0, _translate("Sr510", "0.0625"))
         self.combobox_list_SavedSequences_passive_Sr510SampleRate.setItemText(1, _translate("Sr510", "0.125"))
         self.combobox_list_SavedSequences_passive_Sr510SampleRate.setItemText(2, _translate("Sr510", "0.250"))

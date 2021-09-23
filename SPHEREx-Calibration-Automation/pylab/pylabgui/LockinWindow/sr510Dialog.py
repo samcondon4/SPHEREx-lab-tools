@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Sr510Dialog(object):
     def setupUi(self, Sr510Dialog):
         Sr510Dialog.setObjectName("Sr510Dialog")
-        Sr510Dialog.resize(727, 643)
+        Sr510Dialog.resize(727, 954)
         self.gridLayout = QtWidgets.QGridLayout(Sr510Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.label = QtWidgets.QLabel(Sr510Dialog)
@@ -183,11 +183,13 @@ class Ui_Sr510Dialog(object):
         self.label_27.setObjectName("label_27")
         self.gridLayout.addWidget(self.label_27, 16, 1, 1, 1)
         self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate = QtWidgets.QComboBox(Sr510Dialog)
+        self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setEnabled(False)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.sizePolicy().hasHeightForWidth())
         self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setSizePolicy(sizePolicy)
+        self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setEditable(False)
         self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setObjectName("combobox_base_NewSr510Measurement_passive_Sr510SampleRate")
         self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.addItem("")
         self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.addItem("")
@@ -218,6 +220,7 @@ class Ui_Sr510Dialog(object):
         self.gridLayout.addWidget(self.button_base_NewSr510Measurement_getter_Sr510StartMeasurementButton, 20, 0, 1, 2)
 
         self.retranslateUi(Sr510Dialog)
+        self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setCurrentIndex(4)
         QtCore.QMetaObject.connectSlotsByName(Sr510Dialog)
 
     def retranslateUi(self, Sr510Dialog):
@@ -257,7 +260,7 @@ class Ui_Sr510Dialog(object):
         self.label_13.setText(_translate("Sr510Dialog", "Measurement:"))
         self.label_26.setText(_translate("Sr510Dialog", "Sample Rate (Hz.):"))
         self.label_27.setText(_translate("Sr510Dialog", "Sample Time (s.):"))
-        self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setCurrentText(_translate("Sr510Dialog", "0.0625"))
+        self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setCurrentText(_translate("Sr510Dialog", "1"))
         self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setItemText(0, _translate("Sr510Dialog", "0.0625"))
         self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setItemText(1, _translate("Sr510Dialog", "0.125"))
         self.combobox_base_NewSr510Measurement_passive_Sr510SampleRate.setItemText(2, _translate("Sr510Dialog", "0.250"))

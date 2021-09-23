@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'CS260Dialog.ui'
+# Form implementation generated from reading ui file 'cs260Dialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.9.2
 #
@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(739, 597)
+        Form.resize(1602, 1138)
         self.gridLayout = QtWidgets.QGridLayout(Form)
         self.gridLayout.setObjectName("gridLayout")
         self.label = QtWidgets.QLabel(Form)
@@ -197,7 +197,7 @@ class Ui_Form(object):
         self.combobox_base_NewCs260State_passive_NewShutter.addItem("")
         self.gridLayout.addWidget(self.combobox_base_NewCs260State_passive_NewShutter, 9, 1, 1, 1)
         self.button_base_NewCs260State_getter_NewMonoButton = QtWidgets.QPushButton(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.button_base_NewCs260State_getter_NewMonoButton.sizePolicy().hasHeightForWidth())
@@ -248,7 +248,7 @@ class Ui_Form(object):
         self.combobox_base_CurrentCs260State_passive_Shutter.setItemText(1, _translate("Form", "Close"))
         self.combobox_base_NewCs260State_passive_NewShutter.setItemText(0, _translate("Form", "Open"))
         self.combobox_base_NewCs260State_passive_NewShutter.setItemText(1, _translate("Form", "Close"))
-        self.button_base_NewCs260State_getter_NewMonoButton.setText(_translate("Form", "-> Press Here to Set New Monochromator Parameters <-"))
+        self.button_base_NewCs260State_getter_NewMonoButton.setText(_translate("Form", "Set New Monochromator Parameters"))
 
 
 if __name__ == "__main__":

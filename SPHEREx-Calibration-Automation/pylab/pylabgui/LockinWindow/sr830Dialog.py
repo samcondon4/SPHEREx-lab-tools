@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Sr830Dialog(object):
     def setupUi(self, Sr830Dialog):
         Sr830Dialog.setObjectName("Sr830Dialog")
-        Sr830Dialog.resize(677, 639)
+        Sr830Dialog.resize(677, 954)
         self.gridLayout = QtWidgets.QGridLayout(Sr830Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.label_29 = QtWidgets.QLabel(Sr830Dialog)
@@ -185,6 +185,7 @@ class Ui_Sr830Dialog(object):
         self.label_33.setObjectName("label_33")
         self.gridLayout.addWidget(self.label_33, 16, 1, 1, 1)
         self.combobox_base_NewSr830Measurement_passive_Sr830SampleRate = QtWidgets.QComboBox(Sr830Dialog)
+        self.combobox_base_NewSr830Measurement_passive_Sr830SampleRate.setEnabled(False)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -220,6 +221,7 @@ class Ui_Sr830Dialog(object):
         self.gridLayout.addWidget(self.button_base_NewSr830Measurement_getter_Sr830StartMeasurement, 20, 0, 1, 2)
 
         self.retranslateUi(Sr830Dialog)
+        self.combobox_base_NewSr830Measurement_passive_Sr830SampleRate.setCurrentIndex(4)
         QtCore.QMetaObject.connectSlotsByName(Sr830Dialog)
 
     def retranslateUi(self, Sr830Dialog):
@@ -261,7 +263,7 @@ class Ui_Sr830Dialog(object):
         self.label_19.setText(_translate("Sr830Dialog", "Measurement:"))
         self.label_32.setText(_translate("Sr830Dialog", "Sample Rate (Hz.):"))
         self.label_33.setText(_translate("Sr830Dialog", "Sample Time (s.):"))
-        self.combobox_base_NewSr830Measurement_passive_Sr830SampleRate.setCurrentText(_translate("Sr830Dialog", "0.0625"))
+        self.combobox_base_NewSr830Measurement_passive_Sr830SampleRate.setCurrentText(_translate("Sr830Dialog", "1"))
         self.combobox_base_NewSr830Measurement_passive_Sr830SampleRate.setItemText(0, _translate("Sr830Dialog", "0.0625"))
         self.combobox_base_NewSr830Measurement_passive_Sr830SampleRate.setItemText(1, _translate("Sr830Dialog", "0.125"))
         self.combobox_base_NewSr830Measurement_passive_Sr830SampleRate.setItemText(2, _translate("Sr830Dialog", "0.250"))

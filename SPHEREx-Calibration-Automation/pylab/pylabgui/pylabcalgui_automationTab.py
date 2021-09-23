@@ -171,7 +171,10 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     EventLoop = QEventLoop()
     asyncio.set_event_loop(EventLoop)
-    seq_dir = "..\\config\\sequence\\"
+    if len(sys.argv) > 1: 
+        seq_dir = sys.argv[1]
+    else:
+        raise RuntimeError("No valid sequence configuration directory specified!")
     data_queue_tx = asyncio.Queue()
     window = AutoTab(sequence_dir=seq_dir, data_queue_tx=data_queue_tx)
     window.form.show()

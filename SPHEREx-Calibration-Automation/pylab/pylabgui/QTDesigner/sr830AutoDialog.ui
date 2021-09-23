@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>639</width>
-    <height>502</height>
+    <width>773</width>
+    <height>822</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,8 +43,17 @@
    </item>
    <item row="1" column="1">
     <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr830SampleRate">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="editable">
+      <bool>true</bool>
+     </property>
      <property name="currentText">
-      <string>0.0625</string>
+      <string>1</string>
+     </property>
+     <property name="currentIndex">
+      <number>4</number>
      </property>
      <item>
       <property name="text">
