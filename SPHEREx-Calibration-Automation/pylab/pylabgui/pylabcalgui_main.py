@@ -8,9 +8,9 @@ Sam Condon, 08/14/2021
 import asyncio
 from qasync import QEventLoop
 from PyQt5 import QtWidgets
-from pylabgui.pylabgui_window_base import GuiCompositeWindow
-from pylabgui.pylabcalgui_automationTab import AutoTab
-from pylabgui.pylabcalgui_manualTab import ManualTab
+from .pylabgui_window_base import GuiCompositeWindow
+from .pylabcalgui_automationTab import AutoTab
+from .pylabcalgui_manualTab import ManualTab
 
 
 class GUI(GuiCompositeWindow):
@@ -30,7 +30,8 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     event_loop = QEventLoop()
     asyncio.set_event_loop(event_loop)
-    seq_dir = "..\\config\\sequence\\"
+    if len(sys.argv) > 1: 
+        seq_dir = sys.argv[1] 
     tx_queue = asyncio.Queue()
     rx_queue = asyncio.Queue()
     window = GUI(seq_dir, data_queue_tx=tx_queue, data_queue_rx=rx_queue)

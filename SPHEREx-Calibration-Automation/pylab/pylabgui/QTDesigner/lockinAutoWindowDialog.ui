@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1969</width>
-    <height>1606</height>
+    <width>1550</width>
+    <height>1460</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -285,12 +285,23 @@
        </item>
        <item row="1" column="1">
         <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr510SampleFrequency">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
          <property name="currentText">
-          <string>0.0625</string>
+          <string>1.5</string>
+         </property>
+         <property name="currentIndex">
+          <number>1</number>
          </property>
          <item>
           <property name="text">
            <string>0.0625</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1.5</string>
           </property>
          </item>
          <item>
@@ -410,8 +421,14 @@
        </item>
        <item row="1" column="1">
         <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Sr830SampleFrequency">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
          <property name="currentText">
-          <string>0.0625</string>
+          <string>1.5</string>
+         </property>
+         <property name="currentIndex">
+          <number>4</number>
          </property>
          <item>
           <property name="text">
@@ -431,6 +448,11 @@
          <item>
           <property name="text">
            <string>0.5</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>1.5</string>
           </property>
          </item>
          <item>

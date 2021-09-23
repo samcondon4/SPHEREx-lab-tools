@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>599</width>
-    <height>608</height>
+    <width>1110</width>
+    <height>1205</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -198,7 +198,7 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="8" column="1">
       <widget class="QLabel" name="label_8">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -211,13 +211,13 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="2">
+     <item row="8" column="2">
       <widget class="QLineEdit" name="ledit_list_SavedSequences_passive_MeasureSampleTime"/>
      </item>
-     <item row="3" column="2">
+     <item row="5" column="2">
       <widget class="QLineEdit" name="ledit_list_SavedSequences_passive_MeasureStoragePath"/>
      </item>
-     <item row="3" column="1">
+     <item row="5" column="1">
       <widget class="QLabel" name="label_7">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -227,6 +227,27 @@
        </property>
        <property name="text">
         <string>Storage Path:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MeasureS122vc">
+       <property name="text">
+        <string>S122VC</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MeasureS122c">
+       <property name="text">
+        <string>S122C</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MeasureS401c">
+       <property name="text">
+        <string>S401C</string>
        </property>
       </widget>
      </item>

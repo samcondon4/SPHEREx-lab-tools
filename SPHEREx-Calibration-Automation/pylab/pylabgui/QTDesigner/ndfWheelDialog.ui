@@ -6,15 +6,34 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>746</width>
-    <height>603</height>
+    <width>1844</width>
+    <height>1549</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>NDF Wheel</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="1">
+   <item row="2" column="2">
+    <widget class="QLabel" name="manual_ndf_newpos_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>New Position:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
     <widget class="QComboBox" name="combobox_base_NewNdfState_passive_NewPosition">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -64,19 +83,6 @@
      </item>
     </widget>
    </item>
-   <item row="2" column="0">
-    <widget class="QLineEdit" name="lineedit_base_CurrentNdfPosition_passive_Position">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="manual_ndf_label">
      <property name="sizePolicy">
@@ -97,26 +103,27 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="manual_ndf_newpos_label">
+   <item row="5" column="0" colspan="4">
+    <widget class="QPushButton" name="button_base_NewNdfState_getter_NewNdfButton">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="font">
       <font>
+       <pointsize>12</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
      </property>
      <property name="text">
-      <string>New Position</string>
+      <string>Set New NDF Position</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QLabel" name="manual_ndf_curpos_label">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
@@ -135,23 +142,16 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="2">
-    <widget class="QPushButton" name="button_base_NewNdfState_getter_NewNdfButton">
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="lineedit_base_CurrentNdfPosition_passive_Position">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Set New NDF Position</string>
      </property>
     </widget>
    </item>

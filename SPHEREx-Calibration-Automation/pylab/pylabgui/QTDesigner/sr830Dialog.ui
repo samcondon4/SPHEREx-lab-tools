@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>677</width>
-    <height>639</height>
+    <height>954</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -374,6 +374,9 @@
    </item>
    <item row="17" column="0">
     <widget class="QComboBox" name="combobox_base_NewSr830Measurement_passive_Sr830SampleRate">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -381,7 +384,10 @@
       </sizepolicy>
      </property>
      <property name="currentText">
-      <string>0.0625</string>
+      <string>1</string>
+     </property>
+     <property name="currentIndex">
+      <number>4</number>
      </property>
      <item>
       <property name="text">
