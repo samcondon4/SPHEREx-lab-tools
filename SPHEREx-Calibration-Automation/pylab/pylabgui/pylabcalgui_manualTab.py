@@ -5,10 +5,10 @@
 Sam Condon, 08/09/2021
 """
 
-from pylabgui.CS260Window.cs260DialogWrapper import CS260Window
-from pylabgui.LockinWindow.lockinWindowDialogWrapper import *
-from pylabgui.NDFWheelWindow.ndfWheelDialogWrapper import NDFWindow
-from pylabgui.LabJackWindow.labjackWindowDialogWrapper import LabjackWindow
+from .CS260Window.cs260DialogWrapper import CS260Window
+from .LockinWindow.lockinWindowDialogWrapper import *
+from .NDFWheelWindow.ndfWheelDialogWrapper import NDFWindow
+from .LabJackWindow.labjackWindowDialogWrapper import LabjackWindow
 
 
 class ManualTab(GuiCompositeWindow):

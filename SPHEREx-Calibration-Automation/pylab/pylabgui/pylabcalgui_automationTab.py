@@ -11,13 +11,13 @@ import os
 from configparser import ConfigParser
 from qasync import QEventLoop
 from PyQt5 import QtWidgets
-from pylabgui.pylabgui_window_base import GuiCompositeWindow
-from pylabgui.CS260Window.cs260AutoDialogWrapper import CS260AutoWindow
-from pylabgui.LockinWindow.lockinAutoWindowDialogWrapper import *
-from pylabgui.LockinWindow.lockinWindowHelper import Lockin
-from pylabgui.NDFWheelWindow.ndfAutoWindowDialogWrapper import NDFAutoWindow
-from pylabgui.NDFWheelWindow.ndfWindowHelper import NDF
-from pylabgui.SeriesConstruction.seriesconstructionWindowDialogWrapper import SeriesConstructionWindow
+from .pylabgui_window_base import GuiCompositeWindow
+from .CS260Window.cs260AutoDialogWrapper import CS260AutoWindow
+from .LockinWindow.lockinAutoWindowDialogWrapper import *
+from .LockinWindow.lockinWindowHelper import Lockin
+from .NDFWheelWindow.ndfAutoWindowDialogWrapper import NDFAutoWindow
+from .NDFWheelWindow.ndfWindowHelper import NDF
+from .SeriesConstruction.seriesconstructionWindowDialogWrapper import SeriesConstructionWindow
 
 
 class AutoTab(GuiCompositeWindow):
