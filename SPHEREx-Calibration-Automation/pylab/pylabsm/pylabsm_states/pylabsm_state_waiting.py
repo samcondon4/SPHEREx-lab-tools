@@ -20,7 +20,8 @@ class Waiting(SmCustomState):
         ret_code = True
 
         print("waiting for gui input...")
-        gui_data = await self.DataQueueRx.get()
+        gui_data = await self.pend_for_data()
+
         # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
         # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
         gui_input_type = type(gui_data)

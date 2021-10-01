@@ -1,7 +1,20 @@
-"""state:
+"""pylabsm_basestate:
 
     This module provides a base class for a state within a pytransitions Async finite state machine.
 
+    Note that the mechanism to pass data into a state is via the DataQueueRx name. Data that is placed on this queue
+    falls within two categories:
+
+        1) control message strings:
+            "pause": when this string is seen on the queue, the running state will pause until "resume" or "abort"
+                    is received.
+            "resume": resume a paused state.
+            "abort": end state execution
+
+        2) control data:
+            Any data placed on the DataQueueRx name which is not one of the control message strings is treated as
+            control data. The control data that is expected within various states depends on the specific actions executed
+            within them.
 """
 
 import asyncio
@@ -12,9 +25,49 @@ class SmCustomState(AsyncState):
 
     SM = None
     DataQueueRx = asyncio.Queue()
+    # DataQueueTx may be replaced by an alternative interface by higher level sw.
     DataQueueTx = asyncio.Queue()
+    ControlMsgStrings = ["pause", "resume", "abort"]
+
+    # private class names
     _sm_global_args = {}
     _coro_tasks = None
+
+    @classmethod
+    async def pend_for_message(cls):
+        """ Pend for a control message string to be received on the DataQueueRx name. If control data is seen, then place
+            it back on the queue.
+        """
+        msg_rec = False
+        msg = None
+        while not msg_rec:
+            msg = await cls.DataQueueRx.get()
+            if msg not in cls.ControlMsgStrings:
+                cls.DataQueueRx.put_nowait(msg)
+            else:
+                msg_rec = True
+
+            await asyncio.sleep(0)
+
+        return msg
+
+    @classmethod
+    async def pend_for_data(cls):
+        """ Pend for control data to be received on the DataQueueRx name. If a control message stirng is seen, then
+            place it back on the queue.
+        """
+        data_rec = False
+        data = None
+        while not data_rec:
+            data = await cls.DataQueueRx.get()
+            if data in cls.ControlMsgStrings:
+                cls.DataQueueRx.put_nowait(data)
+            else:
+                data_rec = True
+
+            await asyncio.sleep(0)
+
+        return data
 
     @classmethod
     def set_global_args(cls, arg_dict):
@@ -73,6 +126,10 @@ class SmCustomState(AsyncState):
         self.coro_actions = {}
         self.actions = {}
         self.transitions = {}
+        # flag to indicate that actions are currently running
+        self.actions_running = False
+        # flags to create a mechanism allowing states to pend at the end of action execution until external software
+        # sets the complete flag
         self.hold_complete = hold_on_complete
         self.complete = False
 
