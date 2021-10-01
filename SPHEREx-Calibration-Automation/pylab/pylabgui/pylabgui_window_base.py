@@ -212,7 +212,8 @@ class GuiWindow:
         """
 
     async def run(self):
-        """Description: Monitors traffic on the tx and rx queues for debugging.
+        """ Monitors traffic on the tx and rx queues. Tx data is only monitored in debug mode, but rx data must be
+            monitored and sent to the appropriate widget group passive setters when data is received.
         """
         while True:
             if self.rx_identifier is not None:

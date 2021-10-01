@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1110</width>
-    <height>1205</height>
+    <width>817</width>
+    <height>662</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -123,7 +123,7 @@
     </widget>
    </item>
    <item row="10" column="0" colspan="2">
-    <widget class="QPushButton" name="button_3">
+    <widget class="QPushButton" name="AbortSeriesButton">
      <property name="text">
       <string>Abort Series</string>
      </property>
@@ -151,7 +151,7 @@
     </widget>
    </item>
    <item row="9" column="0" colspan="2">
-    <widget class="QPushButton" name="button_2">
+    <widget class="QPushButton" name="PauseResumeSeriesButton">
      <property name="text">
       <string>Pause Series</string>
      </property>

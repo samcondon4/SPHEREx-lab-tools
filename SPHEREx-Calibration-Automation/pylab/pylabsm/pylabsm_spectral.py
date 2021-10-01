@@ -4,12 +4,13 @@
 
 """
 
+# external packages ######################################
 import asyncio
 from transitions.extensions.asyncio import AsyncMachine
-# instrument drivers #######################
+# instrument drivers #####################################
 from pylabinst.CS260 import CS260
-from pylabinst.labjacku6 import Labjack
 from pylabinst.ndfwheel import NDF
+from pylabinst.labjacku6 import Labjack
 from pymeasure.instruments.srs.sr510 import SR510
 from pymeasure.instruments.srs.sr830 import SR830
 
@@ -27,14 +28,17 @@ class SpectralCalibrationMachine(AsyncMachine):
         # Instantiate AsyncMachine base class #
         super().__init__(model=self)
 
+        # initialize the communication interface between external code and the states #
+        pylabsm_basestate.SmCustomState.DataQueueRx = data_queue_rx
+        pylabsm_basestate.SmCustomState.DataQueueTx = data_queue_tx
+
         # Action argument attributes #######
-        self.data_queue_tx = data_queue_tx
-        self.data_queue_rx = data_queue_rx
         self.manual_or_auto = [""]
         self.control_args = {}
 
         # Instrument classes ##############
         self.inst_dict = {"SR830": SR830(15), "SR510": SR510(6), "CS260": CS260(), "NDF": NDF(), "LABJACK": Labjack()}
+        self.inst_dict.pop("LABJACK")
         self.inst_dict["SR830"].quick_properties_list = ["time_constant", "sensitivity"]
         self.inst_dict["SR510"].quick_properties_list = ["time_constant", "sensitivity"]
 
@@ -43,8 +47,6 @@ class SpectralCalibrationMachine(AsyncMachine):
                           "SR510": LockinMeasurement(self.inst_dict["SR510"])}
 
         # Initialize action arguments ######################################################
-        pylabsm_basestate.SmCustomState.set_global_args({"Tx Queue": self.data_queue_tx,
-                                                         "Rx Queue": self.data_queue_rx})
         pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": self.manual_or_auto})
         pylabsm_basestate.SmCustomState.set_global_args({"Instruments": self.inst_dict})
         pylabsm_basestate.SmCustomState.set_global_args({"Procedures": self.proc_dict})
@@ -52,17 +54,17 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Configure states and state actions ###########################################################################
         self.init_state = pylabsm_state_initializing.Initializing(self, initial=True)
-        self.init_state.add_action(self.init_state.initialize_instruments, args=["Tx Queue", "Instruments"])
+        self.init_state.add_action(self.init_state.initialize_instruments, args=["Instruments"])
 
         self.wait_state = pylabsm_state_waiting.Waiting(self)
-        self.wait_state.add_action(self.wait_state.waiting_action, args=["Rx Queue", "Manual or Auto", "Control"])
+        self.wait_state.add_action(self.wait_state.waiting_action, args=["Manual or Auto", "Control"])
 
         self.manual_state = pylabsm_state_manual.Manual(self)
-        self.manual_state.add_action(self.manual_state.manual_action, args=["Control", "Tx Queue", "Instruments",
+        self.manual_state.add_action(self.manual_state.manual_action, args=["Control", "Instruments",
                                                                             "Procedures"])
 
         self.auto_state = pylabsm_state_auto.Auto(self)
-        self.auto_state.add_action(self.auto_state.auto_sm_exec, args=["Control", "Tx Queue", "Instruments",
+        self.auto_state.add_action(self.auto_state.auto_sm_exec, args=["Control", "Instruments",
                                                                        "Procedures"])
         ################################################################################################################
 
@@ -74,11 +76,14 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.manual_state.add_transition(self.wait_state)
         self.auto_state.add_transition(self.wait_state)
 
+    # TODO: Re-write this function for standalone debugging of the state machine
+    """
     async def run(self):
         if self.data_queue is None:
             self.data_queue = asyncio.Queue()
             pylabsm_basestate.SmCustomState.set_global_args({"Global Queue": self.data_queue})
         await self.start_machine()
+    """
 
 
 if __name__ == "__main__":

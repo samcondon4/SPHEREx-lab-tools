@@ -18,7 +18,7 @@ class GUI(GuiCompositeWindow):
     def __init__(self, sequence_dir=None, **kwargs):
         super().__init__(child=self, window_type="tab", **kwargs)
         self.auto = AutoTab(sequence_dir=sequence_dir, **kwargs)
-        self.manual = ManualTab(**kwargs)
+        self.manual = ManualTab(debug=True, **kwargs)
         self.add_window(self.auto)
         self.add_window(self.manual)
         if not self.configured:
@@ -32,6 +32,8 @@ if __name__ == "__main__":
     asyncio.set_event_loop(event_loop)
     if len(sys.argv) > 1: 
         seq_dir = sys.argv[1] 
+    else:
+        seq_dir = None
     tx_queue = asyncio.Queue()
     rx_queue = asyncio.Queue()
     window = GUI(seq_dir, data_queue_tx=tx_queue, data_queue_rx=rx_queue)

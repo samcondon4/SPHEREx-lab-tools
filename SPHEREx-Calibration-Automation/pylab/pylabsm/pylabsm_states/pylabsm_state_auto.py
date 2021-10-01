@@ -22,9 +22,8 @@ class Moving(SmCustomState):
 
         instruments = move_dict["Instruments"]
         moving = move_dict["Moving"]
-        moving_key_list = list(moving.keys())
         for key in moving:
-            command_dict = moving[key][self.sm.ser_index][self.sm.seq_index]
+            command_dict = moving[key][self.SM.ser_index][self.SM.seq_index]
             cmd_keys = list(command_dict.keys())
             # Try sending a command dictionary to each instrument. If a movement fails, enter the error state
             try:
@@ -51,7 +50,13 @@ class Moving(SmCustomState):
                 else:
                     raise RuntimeError("Unknown instrument type provided!")
 
-                move_dict["Tx Queue"][key] = inst_dict
+                # place new instrument parameters on the tx queue for external processing
+                if type(self.DataQueueTx) is asyncio.Queue:
+                    self.DataQueueTx.put_nowait({key: inst_dict})
+                elif type(self.DataQueueTx) is dict:
+                    self.DataQueueTx[key] = inst_dict
+
+                # place instrument parameters on the global metadata dict for processing
                 metadata = self.parse_meta({key: inst_dict})
                 for new_key in metadata:
                     if new_key in self.meta_keys:
@@ -88,7 +93,7 @@ class Measuring(SmCustomState):
         for key in measure:
             try:
                 procedure = measuring_dict["Procedures"][key.upper()]
-                measurement_params = measure[key][self.sm.ser_index][self.sm.seq_index]
+                measurement_params = measure[key][self.SM.ser_index][self.SM.seq_index]
                 storage_path = measurement_params["storage_path"] + measurement_params["sequence_name"] + "_" + key + \
                                ".csv"
                 measurement_params["storage_path"] = storage_path
@@ -118,26 +123,26 @@ class Indexing(SmCustomState):
         self.series = None
 
     def indexing_action(self, in_dict):
-        print("## INDEX VALUES: series = {}, sequence = {}".format(self.sm.ser_index, self.sm.seq_index))
+        print("## INDEX VALUES: series = {}, sequence = {}".format(self.SM.ser_index, self.SM.seq_index))
         in_dict["Control Loop Complete"][0] = False
         mdk_list = list(in_dict["Moving"].keys())
 
         # update the current sequence/series if necessary ######################
         if self.sequence is None:
-            self.sequence = in_dict["Moving"][mdk_list[0]][self.sm.ser_index]
+            self.sequence = in_dict["Moving"][mdk_list[0]][self.SM.ser_index]
         if self.series is None:
             self.series = in_dict["Moving"][mdk_list[0]]
 
         # perform indexing using the lengths of the sequences/series ############
-        if self.sm.seq_index < len(self.sequence) - 1:
-            self.sm.seq_index += 1
-        elif self.sm.ser_index < len(self.series) - 1:
+        if self.SM.seq_index < len(self.sequence) - 1:
+            self.SM.seq_index += 1
+        elif self.SM.ser_index < len(self.series) - 1:
             self.sequence = None
-            self.sm.ser_index += 1
-            self.sm.seq_index = 0
+            self.SM.ser_index += 1
+            self.SM.seq_index = 0
         else:
-            self.sm.ser_index = 0
-            self.sm.seq_index = 0
+            self.SM.ser_index = 0
+            self.SM.seq_index = 0
             self.sequence = None
             self.series = None
             in_dict["Control Loop Complete"][0] = True
@@ -172,7 +177,7 @@ class AutoStateMachine(AsyncMachine):
         # Configure states and state actions #####################################################################
         self.moving_state = Moving(self, initial=True)
         self.moving_state.add_action(self.moving_state.moving_action, args=["Moving", "Metadata",
-                                                                            "Instruments", "Tx Queue"])
+                                                                            "Instruments"])
 
         self.measuring_state = Measuring(self)
         self.measuring_state.add_action(self.measuring_state.measuring_action, args=["Measuring", "Instruments",

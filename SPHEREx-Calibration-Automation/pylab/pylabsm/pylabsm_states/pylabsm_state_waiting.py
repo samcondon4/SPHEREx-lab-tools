@@ -3,7 +3,6 @@
     This module provides the waiting state class.
 
 """
-import asyncio
 import json
 import numpy as np
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
@@ -20,9 +19,8 @@ class Waiting(SmCustomState):
     async def waiting_action(self, in_dict):
         ret_code = True
 
-        print("waiting for gui input... {}")
-        data_queue = in_dict["Rx Queue"]
-        gui_data = await data_queue.get()
+        print("waiting for gui input...")
+        gui_data = await self.DataQueueRx.get()
         # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
         # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
         gui_input_type = type(gui_data)

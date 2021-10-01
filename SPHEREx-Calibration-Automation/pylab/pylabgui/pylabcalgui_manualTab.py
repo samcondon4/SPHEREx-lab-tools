@@ -17,7 +17,7 @@ class ManualTab(GuiCompositeWindow):
         super().__init__(child=self, window_type="stacked", **kwargs)
         self.form.setWindowTitle("Manual")
         self.proc_queue = asyncio.Queue()
-        self.cs260_window = CS260Window(rx_identifier="CS260", debug=True, **kwargs)
+        self.cs260_window = CS260Window(rx_identifier="CS260", **kwargs)
         self.lockin_window = LockinWindow(**kwargs)
         self.ndf_window = NDFWindow(rx_identifier="NDF", **kwargs)
         self.labjack_window = LabjackWindow(rx_identifier="LABJACK", **kwargs)

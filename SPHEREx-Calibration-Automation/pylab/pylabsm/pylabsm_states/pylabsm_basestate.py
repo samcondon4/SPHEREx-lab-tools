@@ -1,6 +1,6 @@
 """state:
 
-    This module provides a base class for a finite state machine state.
+    This module provides a base class for a state within a pytransitions Async finite state machine.
 
 """
 
@@ -10,8 +10,11 @@ from transitions.extensions.asyncio import AsyncState
 
 class SmCustomState(AsyncState):
 
-    sm = None
+    SM = None
+    DataQueueRx = asyncio.Queue()
+    DataQueueTx = asyncio.Queue()
     _sm_global_args = {}
+    _coro_tasks = None
 
     @classmethod
     def set_global_args(cls, arg_dict):
@@ -54,9 +57,9 @@ class SmCustomState(AsyncState):
         :param child: Subclass instance.
         :param identifier: String used to identify the state within the state machine class.
         """
-        self.sm = sm
+        self.SM = sm
         if initial:
-            self.sm.add_transition("start_machine", source="initial", dest=identifier)
+            self.SM.add_transition("start_machine", source="initial", dest=identifier)
         self.child = child
         self.identifier = identifier
         kewargs = {}
@@ -73,7 +76,7 @@ class SmCustomState(AsyncState):
         self.hold_complete = hold_on_complete
         self.complete = False
 
-        self.sm.add_transition("error", self.identifier, None, after="error")
+        self.SM.add_transition("error", self.identifier, None, after="error")
         self.add_callback("enter", self.state_exec)
 
     async def state_exec(self):
@@ -84,23 +87,23 @@ class SmCustomState(AsyncState):
         """
         self.error_flag = False
 
-        # Execute all state actions #
+        # Execute all state actions #################################
         print("## START {} ##".format(self.identifier.upper()))
         await asyncio.create_task(self.action_exec())
 
         # Enter error handler if an action raised the error_flag else move to next state #
         transition = None
         if self.error_flag:
-            transition = self.sm.error
+            transition = self.SM.error
         else:
             for key in self.transitions:
                 trans = self.transitions[key]
                 if trans["arg"] is None:
-                    transition = getattr(self.sm, key)
+                    transition = getattr(self.SM, key)
                 else:
                     action_results = SmCustomState.get_global_args(trans["arg"])
                     if action_results == trans["arg_result"]:
-                        transition = getattr(self.sm, key)
+                        transition = getattr(self.SM, key)
 
         print("## END {} ##".format(self.identifier.upper()))
         if transition is not None:
@@ -115,15 +118,15 @@ class SmCustomState(AsyncState):
     async def action_exec(self):
         """Description: Execute the action specified in the actions dictionary with key = action_key.
 
-        :param action_key: (str) key into state actions dictionary
         :return: None
         """
         # Run all coroutines actions ###################################################################################
         coro_args = dict([(key, SmCustomState.get_global_args(self.coro_actions[key]["args"]))
                           for key in self.coro_actions])
-        coro_tasks = [asyncio.create_task(self.coro_actions[key]["func"](coro_args[key])) for key in self.coro_actions]
-        if len(coro_tasks) > 0:
-            await asyncio.wait(coro_tasks)
+        self._coro_tasks = [asyncio.create_task(self.coro_actions[key]["func"](coro_args[key]))
+                            for key in self.coro_actions]
+        if len(self._coro_tasks) > 0:
+            await asyncio.wait(self._coro_tasks)
 
         # Run all function actions ####################################################################################
         func_args = dict([(key, SmCustomState.get_global_args(self.actions[key]["args"])) for key in self.actions])
@@ -149,7 +152,7 @@ class SmCustomState(AsyncState):
                       "arg": arg,
                       "arg_result": arg_result}
 
-        self.sm.add_transition(trans_key, self.identifier, next_state.identifier)
+        self.SM.add_transition(trans_key, self.identifier, next_state.identifier)
         self.transitions[trans_key] = trans_dict
 
     def add_action(self, func, identifier=None, args=None):
