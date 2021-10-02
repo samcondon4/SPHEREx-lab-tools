@@ -56,13 +56,14 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.init_state = pylabsm_state_initializing.Initializing(self, initial=True)
         self.init_state.add_action(self.init_state.initialize_instruments, args=["Instruments"])
 
-        self.wait_state = pylabsm_state_waiting.Waiting(self)
+        self.wait_state = pylabsm_state_waiting.Waiting(self, idle=True)
         self.wait_state.add_action(self.wait_state.waiting_action, args=["Manual or Auto", "Control"])
 
         self.manual_state = pylabsm_state_manual.Manual(self)
         self.manual_state.add_action(self.manual_state.manual_action, args=["Control", "Instruments",
                                                                             "Procedures"])
 
+        # the auto state is its own state machine
         self.auto_state = pylabsm_state_auto.Auto(self)
         self.auto_state.add_action(self.auto_state.auto_sm_exec, args=["Control", "Instruments",
                                                                        "Procedures"])
@@ -75,6 +76,9 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.wait_state.add_transition(self.auto_state, arg="Manual or Auto", arg_result=["auto"])
         self.manual_state.add_transition(self.wait_state)
         self.auto_state.add_transition(self.wait_state)
+
+        # set the waiting state as the idle state
+        #self.wait_state.set_as_idle()
 
     # TODO: Re-write this function for standalone debugging of the state machine
     """

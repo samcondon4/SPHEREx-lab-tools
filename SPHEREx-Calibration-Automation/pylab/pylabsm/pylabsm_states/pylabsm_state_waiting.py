@@ -10,8 +10,8 @@ from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 class Waiting(SmCustomState):
 
-    def __init__(self, sm, identifier="waiting"):
-        super().__init__(sm, self, identifier)
+    def __init__(self, sm, identifier="waiting", **kwargs):
+        super().__init__(sm, self, identifier, **kwargs)
 
         self.seq_waves = None
         self.seq_gen_later = []

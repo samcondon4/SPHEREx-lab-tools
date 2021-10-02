@@ -23,51 +23,21 @@ from transitions.extensions.asyncio import AsyncState
 
 class SmCustomState(AsyncState):
 
-    SM = None
+    #SM = None
     DataQueueRx = asyncio.Queue()
     # DataQueueTx may be replaced by an alternative interface by higher level sw.
     DataQueueTx = asyncio.Queue()
+    # flag to break from a pend_for_message or pend_for_data call
     ControlMsgStrings = ["pause", "resume", "abort"]
+
+    # reference to idle state
+    _idle_id = None
 
     # private class names
     _sm_global_args = {}
-    _coro_tasks = None
+    _running_coros = None
+    _initial_state = None
 
-    @classmethod
-    async def pend_for_message(cls):
-        """ Pend for a control message string to be received on the DataQueueRx name. If control data is seen, then place
-            it back on the queue.
-        """
-        msg_rec = False
-        msg = None
-        while not msg_rec:
-            msg = await cls.DataQueueRx.get()
-            if msg not in cls.ControlMsgStrings:
-                cls.DataQueueRx.put_nowait(msg)
-            else:
-                msg_rec = True
-
-            await asyncio.sleep(0)
-
-        return msg
-
-    @classmethod
-    async def pend_for_data(cls):
-        """ Pend for control data to be received on the DataQueueRx name. If a control message stirng is seen, then
-            place it back on the queue.
-        """
-        data_rec = False
-        data = None
-        while not data_rec:
-            data = await cls.DataQueueRx.get()
-            if data in cls.ControlMsgStrings:
-                cls.DataQueueRx.put_nowait(data)
-            else:
-                data_rec = True
-
-            await asyncio.sleep(0)
-
-        return data
 
     @classmethod
     def set_global_args(cls, arg_dict):
@@ -103,7 +73,7 @@ class SmCustomState(AsyncState):
 
         return ret
 
-    def __init__(self, sm, child, identifier, hold_on_complete=False, initial=False, **kwargs):
+    def __init__(self, sm, child, identifier, hold_on_complete=False, initial=False, idle=False, **kwargs):
         """ Description: initialization for the state base class.
 
         :param sm: State machine instance that the state is a member of.
@@ -113,6 +83,8 @@ class SmCustomState(AsyncState):
         self.SM = sm
         if initial:
             self.SM.add_transition("start_machine", source="initial", dest=identifier)
+        if idle:
+            SmCustomState._idle_id = identifier
         self.child = child
         self.identifier = identifier
         kewargs = {}
@@ -126,15 +98,60 @@ class SmCustomState(AsyncState):
         self.coro_actions = {}
         self.actions = {}
         self.transitions = {}
-        # flag to indicate that actions are currently running
-        self.actions_running = False
         # flags to create a mechanism allowing states to pend at the end of action execution until external software
         # sets the complete flag
         self.hold_complete = hold_on_complete
         self.complete = False
 
+        # boolean to indicate used in conjunction with the pend_for_message and pend_for_data methods
+        self.quit_pend = False
+
         self.SM.add_transition("error", self.identifier, None, after="error")
         self.add_callback("enter", self.state_exec)
+
+    async def pend_for_message(self):
+        """ Pend for a control message string to be received on the DataQueueRx name. If control data is seen, then place
+            it back on the queue.
+        """
+        self.quit_pend = False
+        msg_rec = False
+        msg = None
+        while not msg_rec:
+            if self.quit_pend:
+                msg = None
+                break
+            if not self.DataQueueRx.empty():
+                msg = self.DataQueueRx.get_nowait()
+                if msg not in self.ControlMsgStrings:
+                    self.DataQueueRx.put_nowait(msg)
+                else:
+                    msg_rec = True
+
+            await asyncio.sleep(0)
+
+        return msg
+
+    async def pend_for_data(self):
+        """ Pend for control data to be received on the DataQueueRx name. If a control message string is seen, then
+            place it back on the queue.
+        """
+        self.quit_pend = False
+        data_rec = False
+        data = None
+        while not data_rec:
+            if self.quit_pend:
+                data = None
+                break
+            if not self.DataQueueRx.empty():
+                data = self.DataQueueRx.get_nowait()
+                if data in self.ControlMsgStrings:
+                    self.DataQueueRx.put_nowait(data)
+                else:
+                    data_rec = True
+
+            await asyncio.sleep(0)
+
+        return data
 
     async def state_exec(self):
         """ Description: Execute all actions that have been added to the state. Transition to the error handler if
@@ -146,31 +163,45 @@ class SmCustomState(AsyncState):
 
         # Execute all state actions #################################
         print("## START {} ##".format(self.identifier.upper()))
-        await asyncio.create_task(self.action_exec())
-
+        asyncio.create_task(self.action_exec())
+        # pend for an abort or pause message to be received, or for the actions to complete execution
+        msg = await self.pend_for_message()
+        print("MESSAGE RECEIVED = {}".format(msg))
         # Enter error handler if an action raised the error_flag else move to next state #
-        transition = None
-        if self.error_flag:
-            transition = self.SM.error
-        else:
-            for key in self.transitions:
-                trans = self.transitions[key]
-                if trans["arg"] is None:
-                    transition = getattr(self.SM, key)
-                else:
-                    action_results = SmCustomState.get_global_args(trans["arg"])
-                    if action_results == trans["arg_result"]:
+        if msg is None:
+            transition = None
+            if self.error_flag:
+                transition = self.SM.error
+            else:
+                for key in self.transitions:
+                    trans = self.transitions[key]
+                    if trans["arg"] is None:
                         transition = getattr(self.SM, key)
+                    else:
+                        action_results = SmCustomState.get_global_args(trans["arg"])
+                        if action_results == trans["arg_result"]:
+                            transition = getattr(self.SM, key)
 
-        print("## END {} ##".format(self.identifier.upper()))
-        if transition is not None:
-            await transition()
-        elif self.hold_complete:
-            while not self.complete:
-                await asyncio.sleep(0)
-        else:
-            raise RuntimeError("No valid state transition found. State machine stuck!")
-        #################################################################################
+            print("## END {} ##".format(self.identifier.upper()))
+            if transition is not None:
+                await transition()
+            elif self.hold_complete:
+                while not self.complete:
+                    await asyncio.sleep(0)
+            else:
+                raise RuntimeError("No valid state transition found. State machine stuck!")
+            #################################################################################
+
+        # kill all running coroutines and threads and transition to the idle state
+        # TODO: log and kill all threads
+        elif msg == "abort":
+            print("Abort message received!")
+            try:
+                for coro in self._running_coros:
+                    coro.cancel()
+                await self.SM.enter_idle()
+            except Exception as e:
+                print(e)
 
     async def action_exec(self):
         """Description: Execute the action specified in the actions dictionary with key = action_key.
@@ -180,15 +211,18 @@ class SmCustomState(AsyncState):
         # Run all coroutines actions ###################################################################################
         coro_args = dict([(key, SmCustomState.get_global_args(self.coro_actions[key]["args"]))
                           for key in self.coro_actions])
-        self._coro_tasks = [asyncio.create_task(self.coro_actions[key]["func"](coro_args[key]))
+        self._running_coros = [asyncio.create_task(self.coro_actions[key]["func"](coro_args[key]))
                             for key in self.coro_actions]
-        if len(self._coro_tasks) > 0:
-            await asyncio.wait(self._coro_tasks)
+        if len(self._running_coros) > 0:
+            await asyncio.wait(self._running_coros)
 
         # Run all function actions ####################################################################################
         func_args = dict([(key, SmCustomState.get_global_args(self.actions[key]["args"])) for key in self.actions])
         for key in self.actions:
             self.actions[key]["func"](func_args[key])
+
+        # clear the quit pend flag so that the state_exec message pend will move on
+        self.quit_pend = True
 
     def add_transition(self, next_state, arg=None, arg_result=None, identifier=None):
         """ Description: add a custom state transition to the state machine.
@@ -228,6 +262,11 @@ class SmCustomState(AsyncState):
             self.coro_actions[identifier] = action_dict
         else:
             self.actions[identifier] = action_dict
+
+    def set_as_idle(self):
+        """Set this state instance as the idle state of the state machine.
+        """
+        self.SM.add_transition("enter_idle", "*", self.identifier)
 
     def error(self):
         """ Description: Function that executes either generic error handler, or the handler provided by the child

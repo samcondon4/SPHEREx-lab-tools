@@ -197,6 +197,25 @@ class AutoStateMachine(AsyncMachine):
         self.indexing_state.add_transition(self.done_state, arg="Control Loop Complete", arg_result=[True])
         #########################################################################################################
 
+    def reset_machine(self):
+        """ Reset the state machine action argument attributes back to their original state. This is useful for aborting
+            an auto sequence.
+        """
+        self.moving_dict = {}
+        self.meta_dict = {}
+        self.measuring_dict = {}
+        self.control_loop_complete = [False]
+        self.ser_index = 0
+        self.seq_index = 0
+
+    async def enter_idle(self):
+        """ Overloading method for the enter_idle() transition. Since this state machine is nested in SpectralCalibrati-
+            onMachine, it does not explicitly see the top level idle state. This method implements the logic to end
+            all coroutines within this state machine and hand control back to SpectralCalibrationMachine.
+        """
+        self.reset_machine()
+        await self.to_done()
+
 
 class Auto(SmCustomState):
 
@@ -212,6 +231,7 @@ class Auto(SmCustomState):
         :param action_arg: (list) input control loop
         :return: None
         """
+        self.auto_sm.done_state.hold_complete = True
         try:
             control_loop = action_arg["Control"]["Loop"]
             cl_keys = list(control_loop.keys())

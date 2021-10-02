@@ -34,7 +34,7 @@ class SeriesConstructionWindow(Ui_Form, GuiWindow):
         """ Place an "abort" message on the tx data queue and wait for a response on the rx queue indicating a
             successful or failed abort.
         """
-        pass
+        self.data_queue_tx.put_nowait("abort")
 
     def start_pause_resume_series(self):
         """ start the pause/resume series gui coroutine.

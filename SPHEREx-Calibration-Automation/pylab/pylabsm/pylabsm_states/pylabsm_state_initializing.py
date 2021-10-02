@@ -30,12 +30,12 @@ class Initializing(SmCustomState):
 
                 else:
                     inst_params = None
-
                 # Place initial instrument parameters on the tx queue or dictionary for external processing
                 if type(self.DataQueueTx) is asyncio.Queue:
                     self.DataQueueTx.put_nowait({key: inst_params})
                 elif type(self.DataQueueTx) is dict:
                     self.DataQueueTx[key] = inst_params
+
         except Exception as e:
             print(e)
         print("initialization complete")
