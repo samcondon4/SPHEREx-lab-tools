@@ -81,12 +81,17 @@ class SmCustomState(AsyncState):
         :param identifier: String used to identify the state within the state machine class.
         """
         self.SM = sm
-        if initial:
-            self.SM.add_transition("start_machine", source="initial", dest=identifier)
-        if idle:
-            SmCustomState._idle_id = identifier
         self.child = child
         self.identifier = identifier
+        # create initialization transition
+        if initial:
+            self.SM.add_transition("start_machine", source="initial", dest=self.identifier)
+        # create idle state transition
+        if idle and SmCustomState._idle_id is None:
+            self.SM.add_transition("enter_idle", "*", self.identifier)
+        elif idle and SmCustomState._idle_id is not None:
+            raise RuntimeError("Attempting to set state %s as the idle state, but %s has already been set! Only one"
+                               "idle state is allowed!" % (identifier, SmCustomState._idle_id))
         kewargs = {}
         for key in kwargs:
             kewargs[key] = kwargs[key]
@@ -166,7 +171,6 @@ class SmCustomState(AsyncState):
         asyncio.create_task(self.action_exec())
         # pend for an abort or pause message to be received, or for the actions to complete execution
         msg = await self.pend_for_message()
-        print("MESSAGE RECEIVED = {}".format(msg))
         # Enter error handler if an action raised the error_flag else move to next state #
         if msg is None:
             transition = None
@@ -262,11 +266,6 @@ class SmCustomState(AsyncState):
             self.coro_actions[identifier] = action_dict
         else:
             self.actions[identifier] = action_dict
-
-    def set_as_idle(self):
-        """Set this state instance as the idle state of the state machine.
-        """
-        self.SM.add_transition("enter_idle", "*", self.identifier)
 
     def error(self):
         """ Description: Function that executes either generic error handler, or the handler provided by the child

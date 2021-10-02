@@ -1,6 +1,6 @@
 """pylabsm_state_waiting:
 
-    This module provides the waiting state class.
+    This module implements the waiting state class.
 
 """
 import json
@@ -19,9 +19,15 @@ class Waiting(SmCustomState):
     async def waiting_action(self, in_dict):
         ret_code = True
 
+        # clear out the control dictionary before generating a new one #
+        cl_keys = in_dict["Control"].keys()
+        for key in cl_keys:
+            in_dict["Control"].pop(key)
+        #################################################################
+
         print("waiting for gui input...")
         gui_data = await self.pend_for_data()
-
+        print("GUI DATA RECEIVED = {}".format(gui_data))
         # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
         # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
         gui_input_type = type(gui_data)
@@ -86,7 +92,6 @@ class Waiting(SmCustomState):
         waves = np.arange(float(cs260_params["start wavelength"]), float(cs260_params["end wavelength"]) +
                           float(cs260_params["step size"]),
                           float(cs260_params["step size"]))
-        print(np.unique(waves))
         self.seq_waves = waves
         gratings = np.zeros_like(waves)
         filters = ["" for _ in range(len(waves))]
