@@ -6,13 +6,13 @@
     falls within two categories:
 
         1) control message strings:
-            "pause": when this string is seen on the queue, the running state will pause until "resume" or "abort"
-                    is received.
-            "resume": resume a paused state.
-            "abort": end state execution
+            "abort": State execution halts and the abort flag is SET allowing higher level software to address the
+                     abort message in an implementation specific context.
+            "pause": State execution halts and the abort flag is CLEARED allowing higher level software to address the
+                     pause message in an implementation specific context.
 
         2) control data:
-            Any data placed on the DataQueueRx name which is not one of the control message strings is treated as
+            Any data placed on the DataQueueRx name which is not one of the above control message strings is treated as
             control data. The control data that is expected within various states depends on the specific actions executed
             within them.
 """
@@ -28,7 +28,7 @@ class SmCustomState(AsyncState):
     # DataQueueTx may be replaced by an alternative interface by higher level sw.
     DataQueueTx = asyncio.Queue()
     # flag to break from a pend_for_message or pend_for_data call
-    ControlMsgStrings = ["pause", "resume", "abort"]
+    ControlMsgStrings = ["pause", "abort"]
     abort = False
     paused = False
 
@@ -73,7 +73,7 @@ class SmCustomState(AsyncState):
 
         return ret
 
-    def __init__(self, sm, child, identifier, hold_on_complete=False, initial=False, idle=False, **kwargs):
+    def __init__(self, sm, child, identifier, initial=False, idle=False, **kwargs):
         """ Description: initialization for the state base class.
 
         :param sm: State machine instance that the state is a member of.
@@ -105,10 +105,6 @@ class SmCustomState(AsyncState):
         self.coro_actions = {}
         self.actions = {}
         self.transitions = {}
-        # flags to create a mechanism allowing states to pend at the end of action execution until external software
-        # sets the complete flag
-        self.hold_complete = hold_on_complete
-        self.complete = False
 
         # boolean to indicate used in conjunction with the pend_for_message and pend_for_data methods
         self.quit_pend = False
@@ -171,42 +167,55 @@ class SmCustomState(AsyncState):
         # Execute all state actions #################################
         print("## START {} ##".format(self.identifier.upper()))
         asyncio.create_task(self.action_exec())
-        # pend for an abort or pause message to be received, or for the actions to complete execution
-        msg = await self.pend_for_message()
-        # Enter error handler if an action raised the error_flag else move to next state #
-        if msg is None:
-            transition = None
-            if self.error_flag:
-                transition = self.SM.error
-            else:
-                for key in self.transitions:
-                    trans = self.transitions[key]
-                    if trans["arg"] is None:
-                        transition = getattr(self.SM, key)
-                    else:
-                        action_results = SmCustomState.get_global_args(trans["arg"])
-                        if action_results == trans["arg_result"]:
+        state_complete = False
+        transition = None
+        while not state_complete:
+            # pend for an abort or pause message to be received, or for the actions to complete execution
+            msg = await self.pend_for_message()
+            print("state message {} received".format(msg))
+            # Enter error handler if an action raised the error_flag else move to next state #
+            if msg is None:
+                if self.error_flag:
+                    transition = self.SM.error
+                else:
+                    for key in self.transitions:
+                        trans = self.transitions[key]
+                        if trans["arg"] is None:
                             transition = getattr(self.SM, key)
+                        else:
+                            action_results = SmCustomState.get_global_args(trans["arg"])
+                            if action_results == trans["arg_result"]:
+                                transition = getattr(self.SM, key)
 
-            print("## END {} ##".format(self.identifier.upper()))
-            if transition is not None:
-                await transition()
-            elif self.hold_complete:
-                while not self.complete:
-                    await asyncio.sleep(0)
-            else:
-                raise RuntimeError("No valid state transition found. State machine stuck!")
-            #################################################################################
+                print("## END {} ##".format(self.identifier.upper()))
+                if transition is not None:
+                    state_complete = True
+                else:
+                    raise RuntimeError("No valid state transition found. State machine stuck!")
+                #################################################################################
 
-        # kill all running coroutines and threads and transition to the idle state
-        # TODO: log and kill all procedure threads
-        elif msg == "abort":
-            if self.identifier != SmCustomState._idle_id:
-                print("Abort message received!")
-                for coro in self._running_coros:
-                    coro.cancel()
-                SmCustomState.abort = True
-                await self.SM.enter_idle()
+            # kill all running coroutines and threads and transition to the idle state
+            # TODO: log and kill all procedure threads
+            elif msg == "abort":
+                if self.identifier != SmCustomState._idle_id:
+                    for coro in self._running_coros:
+                        coro.cancel()
+                    SmCustomState.abort = True
+                    state_complete = True
+                    transition = self.SM.enter_idle
+                elif self.paused:
+                    SmCustomState.abort = True
+
+            elif msg == "pause":
+                # same procedure as abort, but do not set the SmCustomState.abort flag
+                if self.identifier != SmCustomState._idle_id:
+                    for coro in self._running_coros:
+                        coro.cancel()
+                    SmCustomState.paused = True
+                    state_complete = True
+                    transition = self.SM.enter_idle
+
+        await transition()
 
     async def action_exec(self):
         """Description: Execute the action specified in the actions dictionary with key = action_key.
@@ -228,6 +237,8 @@ class SmCustomState(AsyncState):
 
         # clear the quit pend flag so that the state_exec message pend will move on
         self.quit_pend = True
+        # clear the running coros list
+        self._running_coros = []
 
     def add_transition(self, next_state, arg=None, arg_result=None, identifier=None):
         """ Description: add a custom state transition to the state machine.

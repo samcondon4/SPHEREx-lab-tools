@@ -65,6 +65,8 @@ class Waiting(SmCustomState):
             in_dict["Sequence Index"][0] = 0
             SmCustomState.abort = False
 
+        SmCustomState.paused = False
+
     def build_control_loop(self, series):
         """Description: construct a control loop from a list of sequence parameters.
 
