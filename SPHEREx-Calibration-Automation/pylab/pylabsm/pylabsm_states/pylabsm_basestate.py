@@ -24,6 +24,7 @@ from transitions.extensions.asyncio import AsyncState
 class SmCustomState(AsyncState):
 
     #SM = None
+    # public class names
     DataQueueRx = asyncio.Queue()
     # DataQueueTx may be replaced by an alternative interface by higher level sw.
     DataQueueTx = asyncio.Queue()
@@ -31,10 +32,12 @@ class SmCustomState(AsyncState):
     ControlMsgStrings = ["pause", "abort"]
     abort = False
     paused = False
+    running_threads = None
 
     # private class names
     _sm_global_args = {}
     _running_coros = None
+    _running_threads = None
     _initial_id = None
     _idle_id = None
 
@@ -195,7 +198,6 @@ class SmCustomState(AsyncState):
                 #################################################################################
 
             # kill all running coroutines and threads and transition to the idle state
-            # TODO: log and kill all procedure threads
             elif msg == "abort":
                 if self.identifier != SmCustomState._idle_id:
                     for coro in self._running_coros:

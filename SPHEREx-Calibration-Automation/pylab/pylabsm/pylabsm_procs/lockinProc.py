@@ -26,6 +26,7 @@ class LockinMeasurement(Procedure):
         self._timestamp_method = lambda: str(datetime.datetime.now())
         self._metadata = {}
         self.running = False
+        self.worker = None
         self.tc_hold = True
         super().__init__()
 
@@ -49,6 +50,10 @@ class LockinMeasurement(Procedure):
                 sleep(6*out_dict["time constant"])
 
             for i in range(samples):
+                # break out of the measurement loop if should_stop is set
+                if self.should_stop():
+                    break
+
                 try:
                     out_dict["Time Stamp"] = self.timestamp
                 except Exception as e:
@@ -139,8 +144,8 @@ class LockinMeasurement(Procedure):
             self.lockin_instance.auto_phase()
 
         results = Results(self, file_name)
-        worker = Worker(results)
-        worker.start()
+        self.worker = Worker(results)
+        self.worker.start()
         self.running = True
         if hold:
             while self.running:

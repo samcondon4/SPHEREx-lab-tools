@@ -20,6 +20,15 @@ class Waiting(SmCustomState):
         ret_code = True
 
         try:
+
+            # kill any workers that may still be running from the measuring state #
+            for proc_key in in_dict["Procedures"]:
+                proc = in_dict["Procedures"][proc_key]
+                if proc.running:
+                    print("Killing worker on procedure {}".format(proc_key))
+                    proc.worker.stop()
+                    proc.running = False
+
             print("waiting for gui input...")
             gui_data = await self.pend_for_data()
 
