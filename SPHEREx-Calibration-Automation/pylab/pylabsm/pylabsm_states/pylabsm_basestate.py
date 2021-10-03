@@ -29,14 +29,14 @@ class SmCustomState(AsyncState):
     DataQueueTx = asyncio.Queue()
     # flag to break from a pend_for_message or pend_for_data call
     ControlMsgStrings = ["pause", "resume", "abort"]
-
-    # reference to idle state
-    _idle_id = None
+    abort = False
+    paused = False
 
     # private class names
     _sm_global_args = {}
     _running_coros = None
-    _initial_state = None
+    _initial_id = None
+    _idle_id = None
 
 
     @classmethod
@@ -86,9 +86,11 @@ class SmCustomState(AsyncState):
         # create initialization transition
         if initial:
             self.SM.add_transition("start_machine", source="initial", dest=self.identifier)
+            SmCustomState._initial_id = self.identifier
         # create idle state transition
         if idle and SmCustomState._idle_id is None:
             self.SM.add_transition("enter_idle", "*", self.identifier)
+            SmCustomState._idle_id = self.identifier
         elif idle and SmCustomState._idle_id is not None:
             raise RuntimeError("Attempting to set state %s as the idle state, but %s has already been set! Only one"
                                "idle state is allowed!" % (identifier, SmCustomState._idle_id))
@@ -197,15 +199,14 @@ class SmCustomState(AsyncState):
             #################################################################################
 
         # kill all running coroutines and threads and transition to the idle state
-        # TODO: log and kill all threads
+        # TODO: log and kill all procedure threads
         elif msg == "abort":
-            print("Abort message received!")
-            try:
+            if self.identifier != SmCustomState._idle_id:
+                print("Abort message received!")
                 for coro in self._running_coros:
                     coro.cancel()
+                SmCustomState.abort = True
                 await self.SM.enter_idle()
-            except Exception as e:
-                print(e)
 
     async def action_exec(self):
         """Description: Execute the action specified in the actions dictionary with key = action_key.

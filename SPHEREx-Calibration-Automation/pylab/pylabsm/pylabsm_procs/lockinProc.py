@@ -125,7 +125,6 @@ class LockinMeasurement(Procedure):
                             settle.
         :return: None, but outputs a .csv file
         """
-        print("running {} measurement".format(self.lockin_instance))
         self.sample_frequency = measure_parameters["sample_rate"]
         self.sample_time = measure_parameters["sample_time"]
         self.tc_hold = hold
@@ -146,4 +145,3 @@ class LockinMeasurement(Procedure):
         if hold:
             while self.running:
                 await asyncio.sleep(0)
-        print("finished {} measurement".format(self.lockin_instance))

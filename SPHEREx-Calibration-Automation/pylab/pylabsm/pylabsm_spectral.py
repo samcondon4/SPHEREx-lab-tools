@@ -96,7 +96,8 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Now create and add the idle state to the state machine #########################################
         self.wait_state = pylabsm_state_waiting.Waiting(self, idle=True)
-        self.wait_state.add_action(self.wait_state.waiting_action, args=["Manual or Auto", "Control"])
+        self.wait_state.add_action(self.wait_state.waiting_action, args=["Manual or Auto", "Control", "Series Index",
+                                                                         "Sequence Index", "Moving", "Measuring"])
 
         self.add_states([self.wait_state])
         ##################################################################################################
