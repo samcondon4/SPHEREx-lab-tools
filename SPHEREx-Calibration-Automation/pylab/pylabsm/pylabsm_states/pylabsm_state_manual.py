@@ -3,8 +3,8 @@
     This module provides the manual state class.
 
 """
+import asyncio
 import pymeasure.instruments.instrument
-
 import pylabinst.pylabinst_instrument_base
 from pylabsm.pylab_inst_sm_data_mappings import SM_INST_MAP
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
@@ -42,12 +42,10 @@ class Manual(SmCustomState):
                 inst_type = type(instruments[inst_key])
                 if issubclass(inst_type, pylabinst.pylabinst_instrument_base.Instrument):
                     cur_params = await instruments[inst_key].get_parameters("All")
-                    print(cur_params)
                     # remove set parameters if the instrument is already in that state
                     for cmd_key in cmd_keys:
                         if cur_params[cmd_key] == SM_INST_MAP[inst_key][cmd_key](command_dict[cmd_key]):
                             command_dict.pop(cmd_key)
-                    print(command_dict)
                     if command_dict != {}:
                         await instruments[inst_key].set_parameters(command_dict)
                     inst_dict = await instruments[inst_key].get_parameters("All")
@@ -58,7 +56,10 @@ class Manual(SmCustomState):
                     inst_dict = None
 
                 # place updated instrument parameter dictionary onto the Tx Queue for external processing
-                action_arg["Tx Queue"][inst_key] = inst_dict
+                if type(self.DataQueueTx) is asyncio.Queue:
+                    self.DataQueueTx.put_nowait({inst_key: inst_dict})
+                elif type(self.DataQueueTx) is dict:
+                    self.DataQueueTx[inst_key] = inst_dict
 
             # run a measurement
             elif state_or_measure == "measurement":

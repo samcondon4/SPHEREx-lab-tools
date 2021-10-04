@@ -1,8 +1,0 @@
-#Procedure: <__main__.LockinProcedure>
-#Parameters:
-#Data:
-Time Stamp,phase,frequency,sensitivity,time constant,LIA Status Byte,ERR Status Byte,X-Channel Voltage (V.),Y-Channel Voltage (V.)
-2021-09-11 09:47:50.565837,118.99,15.451,0.5,1,0,0,0.0,0.0
-2021-09-11 09:47:50.845636,118.99,15.451,0.5,1,0,0,0.0,0.0
-2021-09-11 09:47:51.138267,118.99,15.451,0.5,1,0,0,0.0,0.0
-2021-09-11 09:47:51.420412,118.99,15.451,0.5,1,0,0,0.0,0.0

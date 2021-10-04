@@ -1,9 +1,8 @@
 """pylabsm_state_waiting:
 
-    This module provides the waiting state class.
+    This module implements the waiting state class.
 
 """
-import asyncio
 import json
 import numpy as np
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
@@ -11,8 +10,8 @@ from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 class Waiting(SmCustomState):
 
-    def __init__(self, sm, identifier="waiting"):
-        super().__init__(sm, self, identifier)
+    def __init__(self, sm, identifier="waiting", **kwargs):
+        super().__init__(sm, self, identifier, **kwargs)
 
         self.seq_waves = None
         self.seq_gen_later = []
@@ -20,20 +19,62 @@ class Waiting(SmCustomState):
     async def waiting_action(self, in_dict):
         ret_code = True
 
-        print("waiting for gui input... {}")
-        data_queue = in_dict["Rx Queue"]
-        gui_data = await data_queue.get()
-        # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
-        # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
-        gui_input_type = type(gui_data)
-        if gui_input_type is list:
-            in_dict["Manual or Auto"][0] = "auto"
-            in_dict["Control"]["Loop"] = self.build_control_loop(gui_data)
-        else:
-            in_dict["Manual or Auto"][0] = "manual"
-            in_dict["Control"].update(gui_data)
+        try:
 
-        return ret_code
+            # kill any workers that may still be running from the measuring state #
+            for proc_key in in_dict["Procedures"]:
+                proc = in_dict["Procedures"][proc_key]
+                if proc.running:
+                    print("Killing worker on procedure {}".format(proc_key))
+                    proc.worker.stop()
+                    proc.running = False
+
+            print("waiting for gui input...")
+            gui_data = await self.pend_for_data()
+
+            # reset the control loop before updating it with new data
+            self.reset_control_loop(in_dict)
+
+            # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
+            # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
+            gui_input_type = type(gui_data)
+            if gui_input_type is list:
+                in_dict["Manual or Auto"][0] = "auto"
+                in_dict["Control"]["Loop"] = self.build_control_loop(gui_data)
+            else:
+                in_dict["Manual or Auto"][0] = "manual"
+                in_dict["Control"].update(gui_data)
+
+            return ret_code
+
+        except Exception as e:
+            print(e)
+
+    def reset_control_loop(self, in_dict):
+        """ Method that clears the control argument dictionary and all of the control loop parameters depending on the
+            status of the state machine
+        """
+        # clear out control loop, moving, and measuring dictionaries #
+        cl_keys = list(in_dict["Control"].keys())
+        for key in cl_keys:
+            in_dict["Control"].pop(key)
+
+        move_keys = list(in_dict["Moving"].keys())
+        for key in move_keys:
+            in_dict["Moving"].pop(key)
+
+        measure_keys = list(in_dict["Measuring"].keys())
+        for key in measure_keys:
+            in_dict["Measuring"].pop(key)
+        ###############################################################
+
+        # Reset the series and sequence index if the machine is aborting from a running series
+        if self.abort:
+            in_dict["Series Index"][0] = 0
+            in_dict["Sequence Index"][0] = 0
+            SmCustomState.abort = False
+
+        SmCustomState.paused = False
 
     def build_control_loop(self, series):
         """Description: construct a control loop from a list of sequence parameters.
@@ -87,7 +128,6 @@ class Waiting(SmCustomState):
         waves = np.arange(float(cs260_params["start wavelength"]), float(cs260_params["end wavelength"]) +
                           float(cs260_params["step size"]),
                           float(cs260_params["step size"]))
-        print(np.unique(waves))
         self.seq_waves = waves
         gratings = np.zeros_like(waves)
         filters = ["" for _ in range(len(waves))]

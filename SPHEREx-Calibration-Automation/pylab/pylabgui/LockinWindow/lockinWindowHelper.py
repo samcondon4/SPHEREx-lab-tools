@@ -38,10 +38,20 @@ class Lockin:
     def set_tc(cls, tc):
         if type(tc) is str:
             tc = float(tc)
-        tc_mod = tc % 3
-        tc_value = tc_mod + cls.TC_MOD_MAP[tc_mod]
-        tc_mult, tc_units = cls.TC_MULT_UNIT_MAP[tc/tc_value]
-        return {"time constant value": str(tc_value), "time constant multiplier": tc_mult, "time constant units": tc_units}
+        tc_str = str(tc)
+        if "3" in tc_str:
+            tc_value = 3.0
+        elif "1" in tc_str:
+            tc_value = 1.0
+        else:
+            tc_value = None
+        tc_div = tc/tc_value
+        tc_round = int(np.log10(tc_div))
+        if tc_round < 0:
+            tc_div = round(tc_div, abs(tc_round))
+        tc_mult, tc_units = cls.TC_MULT_UNIT_MAP[tc_div]
+        return {"time constant value": str(int(tc_value)), "time constant multiplier": tc_mult,
+                "time constant units": tc_units}
 
     @classmethod
     def get_sensitivity(cls, sens_dict):
