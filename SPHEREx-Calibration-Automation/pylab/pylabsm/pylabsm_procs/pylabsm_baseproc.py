@@ -5,10 +5,9 @@
 import os
 import asyncio
 import datetime
-import pdb
-
+#from pymeasure.display.plotter import Plotter
 from pymeasure.experiment import Procedure, Worker, Results
-from pymeasure.display import Plotter
+
 
 class SmBaseProc(Procedure):
 
@@ -19,7 +18,7 @@ class SmBaseProc(Procedure):
         self.running = False
         self.worker = None
         self.storage_path = None
-
+        self.hold = False
         super().__init__()
 
     @property
@@ -65,12 +64,9 @@ class SmBaseProc(Procedure):
         :param append_to_existing: (bool) boolean to indicate if data should be saved to an existing file or to create
                                    a new file.
         :param hold: (bool) boolean to indicate if the coroutine should wait to return until the measurement is complete.
-                            Procedure will also sleep for 6 time constants if this kwarg is set to allow the lockin to
-                            settle.
         :return: None, but outputs a .csv file
         """
-
-        #self.tc_hold = hold
+        self.hold = hold
 
         if measurement_parameters is not None:
             for mkey, mval in measurement_parameters.items():
@@ -84,9 +80,11 @@ class SmBaseProc(Procedure):
 
         results = Results(self, file_name)
 
+        """
         if plot:
             plotter = Plotter(results)
             plotter.start()
+        """
 
         self.worker = Worker(results)
         self.worker.start()

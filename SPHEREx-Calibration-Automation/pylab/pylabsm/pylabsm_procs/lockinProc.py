@@ -1,9 +1,10 @@
 import numpy as np
 from time import sleep
+from pymeasure.experiment import FloatParameter
 from pymeasure.instruments.srs.sr510 import SR510
 from pymeasure.instruments.srs.sr830 import SR830
-from pylabsm_baseproc import SmBaseProc
-from pymeasure.experiment import FloatParameter
+from pylabsm.pylabsm_procs.pylabsm_baseproc import SmBaseProc
+
 
 class LockinMeasurement(SmBaseProc):
     sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
@@ -20,15 +21,21 @@ class LockinMeasurement(SmBaseProc):
         else:
             self.DATA_COLUMNS.extend(
                 ["LIA Status Byte", "ERR Status Byte", "X-Channel Voltage (V.)", "Y-Channel Voltage (V.)"])
-        self.tc_hold = True
         super().__init__()
 
     def startup(self):
-        pass
+        """ Method that executes just before execute() to initialize the measurement procedure. In this case, if the
+            hold attribute is true, then wait for 6 time constants. Further, if the lockin_instance is an SR830, then
+            call the auto_phase() function.
+        """
+        if self.lockin_type is SR830 and self.hold:
+            self.lockin_instance.auto_phase()
+        if self.hold:
+            sleep(6*self.lockin_instance.time_constant)
 
     def execute(self):
         """ Description: main method to execute the measurement procedure.
-        :return: Outputs a .sv file with lockin data and external metadata
+        :return: Outputs a .csv file with lockin data and external metadata
         """
         if self.lockin_instance is not None:
             li = self.lockin_instance
@@ -38,12 +45,8 @@ class LockinMeasurement(SmBaseProc):
             out_dict = {"phase": li.phase, "frequency": li.frequency,
                         "sensitivity": li.sensitivity, "time constant": li.time_constant}
 
-            # sleep for 6 time constants to allow lockin to settle before starting measurement #
-            if self.tc_hold:
-                sleep(6*out_dict["time constant"])
-
             for i in range(samples):
-                # break out of the measurement loop if should_stop is set
+                # break out of the measurement loop if should_stop is set, i.e. the measurement was paused or aborted.
                 if self.should_stop():
                     break
 
