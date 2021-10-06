@@ -1,14 +1,12 @@
-import os
-import asyncio
-import datetime
 import numpy as np
 from time import sleep
+from pymeasure.experiment import FloatParameter
 from pymeasure.instruments.srs.sr510 import SR510
 from pymeasure.instruments.srs.sr830 import SR830
-from pymeasure.experiment import Procedure, Worker, Results, FloatParameter
+from pylabsm.pylabsm_procs.pylabsm_baseproc import SmBaseProc
 
 
-class LockinMeasurement(Procedure):
+class LockinMeasurement(SmBaseProc):
     sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
                                       minimum=2 ** -4, maximum=2 ** 9)
     sample_time = FloatParameter("Sample time", units="s.", default=10)
@@ -23,19 +21,21 @@ class LockinMeasurement(Procedure):
         else:
             self.DATA_COLUMNS.extend(
                 ["LIA Status Byte", "ERR Status Byte", "X-Channel Voltage (V.)", "Y-Channel Voltage (V.)"])
-        self._timestamp_method = lambda: str(datetime.datetime.now())
-        self._metadata = {}
-        self.running = False
-        self.worker = None
-        self.tc_hold = True
         super().__init__()
 
     def startup(self):
-        pass
+        """ Method that executes just before execute() to initialize the measurement procedure. In this case, if the
+            hold attribute is true, then wait for 6 time constants. Further, if the lockin_instance is an SR830, then
+            call the auto_phase() function.
+        """
+        if self.lockin_type is SR830 and self.hold:
+            self.lockin_instance.auto_phase()
+        if self.hold:
+            sleep(6*self.lockin_instance.time_constant)
 
     def execute(self):
         """ Description: main method to execute the measurement procedure.
-        :return: Outputs a .sv file with lockin data and external metadata
+        :return: Outputs a .csv file with lockin data and external metadata
         """
         if self.lockin_instance is not None:
             li = self.lockin_instance
@@ -45,12 +45,8 @@ class LockinMeasurement(Procedure):
             out_dict = {"phase": li.phase, "frequency": li.frequency,
                         "sensitivity": li.sensitivity, "time constant": li.time_constant}
 
-            # sleep for 6 time constants to allow lockin to settle before starting measurement #
-            if self.tc_hold:
-                sleep(6*out_dict["time constant"])
-
             for i in range(samples):
-                # break out of the measurement loop if should_stop is set
+                # break out of the measurement loop if should_stop is set, i.e. the measurement was paused or aborted.
                 if self.should_stop():
                     break
 
@@ -80,73 +76,3 @@ class LockinMeasurement(Procedure):
                 sleep(sample_period)
 
         self.running = False
-
-    @property
-    def metadata(self):
-        """Property to hold external metadata to include in the output csv
-        """
-        return self._metadata
-
-    @metadata.setter
-    def metadata(self, meta_dict):
-        """Description: add external metadata to include to the output .csv file
-
-        :param meta_dict: (dict) Dictionary with keys corresponding to .csv column header and values corresponding to
-                          the value to place under the header.
-        :return: None
-        """
-        if meta_dict == {}:
-            self._metadata = {}
-        else:
-            keys_list = list(meta_dict.keys())
-            for key in meta_dict:
-                if key not in self._metadata:
-                    self.DATA_COLUMNS.append(key)
-                self._metadata[key] = meta_dict[key]
-
-    @property
-    def timestamp(self):
-        """Property to return a time stamp from the user set timestamp method
-        """
-        return self._timestamp_method()
-
-    @timestamp.setter
-    def timestamp(self, method):
-        """Set the time stamp method.
-        """
-        self._timestamp_method = method
-
-    async def run(self, measure_parameters, append_to_existing=False, hold=False):
-        """Description: Run a measurement on the sr510/830 lockin.
-
-        :param measure_parameters: (dict) dictionary containing parameters of the measurement. Should be of the form:
-                                          {"sample_rate": <(float) sampling frequency in Hz.>,
-                                           "sample_time": <(float) sample time in s.>,
-                                          "storage_path": <(str) .csv file path>}
-        :param append_to_existing: (bool) boolean to indicate if data should be saved to an existing file or to create
-                                   a new file.
-        :param hold: (bool) boolean to indicate if the coroutine should wait to return until the measurement is complete.
-                            Procedure will also sleep for 6 time constants if this kwarg is set to allow the lockin to
-                            settle.
-        :return: None, but outputs a .csv file
-        """
-        self.sample_frequency = measure_parameters["sample_rate"]
-        self.sample_time = measure_parameters["sample_time"]
-        self.tc_hold = hold
-        file_name = measure_parameters["storage_path"]
-        if not append_to_existing:
-            while os.path.exists(file_name):
-                file_name_split = file_name.split(".")
-                file_name = file_name_split[0] + "_." + file_name_split[1]
-
-        # set phase of sr830 using the auto-phase function
-        if self.lockin_type is SR830:
-            self.lockin_instance.auto_phase()
-
-        results = Results(self, file_name)
-        self.worker = Worker(results)
-        self.worker.start()
-        self.running = True
-        if hold:
-            while self.running:
-                await asyncio.sleep(0)
