@@ -70,6 +70,13 @@ class AutoTab(GuiCompositeWindow):
             if not sr830_tc == {}:
                 sr830_tc = Lockin.get_tc(sr830_tc)
                 internal_sequence_dict["sr830_time_constant"] = sr830_tc
+
+            # set the thorlabs detectors sample rate to the fixed value of 1 Hz.
+            # TODO: MOVE ALL THORLABS DETECTORS TO THEIR OWN WINDOW. THIS IS A HORRIBLE WAY OF DOING THIS...
+            internal_sequence_dict["s401c_sample_rate"] = 1
+            internal_sequence_dict["s122c_sample_rate"] = 1
+            internal_sequence_dict["s120vc_sample_rate"] = 1
+
             output_sequence_dict = self.save_ini(internal_sequence_dict, text)
             output_sequence_dict["from ini"] = {}
         else:
