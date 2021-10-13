@@ -35,12 +35,11 @@ class SmCustomState(AsyncState):
     running_threads = None
 
     # private class names
-    _sm_global_args = {}
-    _running_coros = None
-    _running_threads = None
-    _initial_id = None
-    _idle_id = None
-
+    _sm_global_args = {} # global names that are passed to state actions
+    _running_coros = None # list of running state action coroutines
+    _running_threads = None # list of running state action threads
+    _initial_id = None # id of initial state
+    _idle_id = None # id of idle state
 
     @classmethod
     def set_global_args(cls, arg_dict):

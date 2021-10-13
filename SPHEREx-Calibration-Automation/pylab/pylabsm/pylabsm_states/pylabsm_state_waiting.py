@@ -18,7 +18,8 @@ class Waiting(SmCustomState):
 
     async def waiting_action(self, in_dict):
         ret_code = True
-
+        # set flag so that other states to generate their state specific control loop
+        in_dict["Control Loop Generate"][0] = True
         try:
 
             # kill any workers that may still be running from the measuring state #
@@ -34,10 +35,10 @@ class Waiting(SmCustomState):
 
             # reset the control loop before updating it with new data
             self.reset_control_loop(in_dict)
-
             # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
             # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
             gui_input_type = type(gui_data)
+            print(gui_data)
             if gui_input_type is list:
                 in_dict["Manual or Auto"][0] = "auto"
                 in_dict["Control"]["Loop"] = self.build_control_loop(gui_data)
@@ -159,7 +160,7 @@ class Waiting(SmCustomState):
             i += 1
 
         cs260_seq = [{"wavelength": waves[i], "grating": gratings[i],
-                               "order_sort_filter": filters[i], "shutter": cs260_params["shutter"]}
+                      "order_sort_filter": filters[i], "shutter": cs260_params["shutter"]}
                      for i in range(len(waves))]
 
         return cs260_seq
@@ -237,4 +238,18 @@ class Waiting(SmCustomState):
                 seqi += 1
 
         return lockin_seq
+
+    def s401c_sequence(self, params):
+        """ Generate the control loop for the s401c thermal detector.
+
+        :param params: (dict) dictionary with s401c sequence parameters. Currently this is actually just an empty
+                       dictionary as the only sequence parameters for this detector are the monochromator wavelength.
+        """
+        sample_rate = params["sample rate"]
+        if self.seq_waves is None:
+            s401_seq = "later"
+        else:
+            s401_seq = [{"wavelength": w*1e3, "sample_rate": float(sample_rate)} for w in self.seq_waves]
+
+        return s401_seq
 

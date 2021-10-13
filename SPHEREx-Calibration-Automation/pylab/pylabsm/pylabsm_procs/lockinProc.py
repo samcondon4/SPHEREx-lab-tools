@@ -7,7 +7,7 @@ from pylabsm.pylabsm_procs.pylabsm_baseproc import SmBaseProc
 
 
 class LockinMeasurement(SmBaseProc):
-    sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=4,
+    sample_frequency = FloatParameter("Sample Frequency", units="Hz.", default=1,
                                       minimum=2 ** -4, maximum=2 ** 9)
     sample_time = FloatParameter("Sample time", units="s.", default=10)
     DATA_COLUMNS = []
