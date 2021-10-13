@@ -69,8 +69,9 @@ class SmBaseProc(Procedure):
         self.hold = hold
 
         if measurement_parameters is not None:
+            print("Base procedure received parameters = {}".format(measurement_parameters))
             for mkey, mval in measurement_parameters.items():
-                setattr(self,mkey,mval)
+                setattr(self, mkey, mval)
 
         file_name = self.storage_path
         if not append_to_existing:

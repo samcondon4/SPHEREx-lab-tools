@@ -19,20 +19,24 @@ class Moving(SmCustomState):
     async def moving_action(self, action_arg):
         """ Parse the control loop for arguments specific to the moving state, then execute moving control loop.
         """
-        control_loop = action_arg["Control"]["Loop"]
-        cl_keys = list(control_loop.keys())
-        instruments = action_arg["Instruments"]
-        for key in instruments:
-            key = key.lower()
-            if key in cl_keys:
-                try:
-                    move_list_getter = getattr(self, "{}_move_cl".format(key))
-                except AttributeError:
-                    action_arg["Moving"][key.upper()] = control_loop[key]
-                else:
-                    action_arg["Moving"][key.upper()] = move_list_getter(control_loop[key])
+        if action_arg["Control Loop Generate"]:
+            try:
+                control_loop = action_arg["Control"]["Loop"]
+                cl_keys = list(control_loop.keys())
+                instruments = action_arg["Instruments"]
+                for key in instruments:
+                    key = key.lower()
+                    if key in cl_keys:
+                        try:
+                            move_list_getter = getattr(self, "{}_move_cl".format(key))
+                        except AttributeError:
+                            action_arg["Moving"][key.upper()] = control_loop[key.lower()]
+                        else:
+                            action_arg["Moving"][key.upper()] = move_list_getter(control_loop[key])
 
-        await self.moving_control_loop(action_arg)
+                await self.moving_control_loop(action_arg)
+            except Exception as e:
+                print(e)
 
     async def moving_control_loop(self, cl_dict):
         """ Execute the moving control loop
@@ -82,12 +86,19 @@ class Moving(SmCustomState):
                         cl_dict["Metadata"][new_key] = metadata[new_key]
 
                 except Exception as e:
-                    print(e)
                     self.error_flag = True
                     break
 
         except Exception as e:
             print(e)
+
+    @staticmethod
+    def s401c_move_cl(s401c_cl):
+        s401c_cl_len = len(s401c_cl)
+        out_list = [{} for _ in range(s401c_cl_len)]
+        for i in range(s401c_cl_len):
+            out_list[i] = [{"wavelength": cl["wavelength"]} for cl in s401c_cl[i]]
+        return out_list
 
     def sr510_move_cl(self, lockin_cl):
         return self.lockin_move_cl(lockin_cl)
