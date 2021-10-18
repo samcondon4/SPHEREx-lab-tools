@@ -1,3 +1,6 @@
-[submodule "SPHEREx-Calibration-Automation/pymeasure"]
-	path = SPHEREx-Calibration-Automation/pymeasure
+[submodule "Submodules/pymeasure"]
+	path = Submodules/pymeasure
 	url = https://github.com/samcondon4/pymeasure.git
+[submodule "Submodules/pyqtgraph"]
+	path = Submodules/pyqtgraph
+	url = https://github.com/samcondon4/pyqtgraph.git
