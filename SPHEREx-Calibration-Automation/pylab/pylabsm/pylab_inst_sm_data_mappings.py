@@ -54,13 +54,23 @@ NDF_SM_TO_INST = {
     "error": lambda e: str(e)
 }
 
+S401C_INST_TO_SM = {
+    "wavelength": lambda p: p
+}
+
+S401C_SM_TO_INST = {
+    "wavelength": lambda p: p
+}
+
 INST_SM_MAP = {"CS260": CS260_INST_TO_SM,
                "SR510": SR510_INST_TO_SM,
                "SR830": SR830_INST_TO_SM,
+               "S401C": S401C_INST_TO_SM,
                "NDF": NDF_INST_TO_SM}
 
 SM_INST_MAP = {"CS260": CS260_SM_TO_INST,
                "SR510": SR510_SM_TO_INST,
                "SR830": SR830_SM_TO_INST,
+               "S401C": S401C_SM_TO_INST,
                "NDF": NDF_SM_TO_INST}
 

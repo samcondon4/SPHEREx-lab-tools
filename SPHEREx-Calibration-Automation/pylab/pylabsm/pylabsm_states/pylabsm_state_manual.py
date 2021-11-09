@@ -76,3 +76,4 @@ class Manual(SmCustomState):
         # just did.
         for key in key1_list:
             action_arg["Control"].pop(key)
+

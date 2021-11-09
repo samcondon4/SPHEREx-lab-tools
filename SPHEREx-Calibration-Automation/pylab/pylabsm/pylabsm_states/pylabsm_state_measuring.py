@@ -10,6 +10,9 @@ from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 class Measuring(SmCustomState):
 
+    metadata_strings = ["CS260 WAVELENGTH", "CS260 GRATING", "CS260 ORDER_SORT_FILTER", "CS260 SHUTTER",
+                        "NDF POSITION"]
+
     def __init__(self, sm, identifier="measuring", **kwargs):
         super().__init__(sm, self, identifier, **kwargs)
 
@@ -26,7 +29,7 @@ class Measuring(SmCustomState):
                         try:
                             measure_list_getter = getattr(self, "{}_measure_cl".format(key))
                         except AttributeError:
-                            action_arg["Measuring"][key] = control_loop[key]
+                            action_arg["Measuring"][key] = control_loop[key.lower()]
                         else:
                             action_arg["Measuring"][key] = measure_list_getter(control_loop[key])
             ##########################################################################################
@@ -62,9 +65,14 @@ class Measuring(SmCustomState):
                                ".csv"
                 measurement_params["storage_path"] = storage_path
                 metadata = measuring_dict["Metadata"]
+                meta_keys = list(metadata.keys())
+                for mkey in meta_keys:
+                    if mkey not in self.metadata_strings:
+                        metadata.pop(mkey)
                 procedure.metadata = metadata
                 measure_coros[k] = asyncio.create_task(procedure.run(measurement_params, append_to_existing=True,
                                                                      hold=True))
+
             except Exception as e:
                 print(e)
                 self.error_flag = True
@@ -78,3 +86,23 @@ class Measuring(SmCustomState):
         if exception is None:
             await asyncio.wait(measure_coros)
 
+    @staticmethod
+    def s401c_measure_cl(s401c_cl):
+        s401c_cl_len = len(s401c_cl)
+        out_list = [{} for _ in range(s401c_cl_len)]
+        for i in range(s401c_cl_len):
+            out_list[i] = [{"sample_rate": cl["sample_rate"]} for cl in s401c_cl[i]]
+        return out_list
+
+    def sr510_measure_cl(self, lockin_cl):
+        return self.lockin_measure_cl(lockin_cl)
+
+    def sr830_measure_cl(self, lockin_cl):
+        return self.lockin_measure_cl(lockin_cl)
+
+    @staticmethod
+    def lockin_measure_cl(lockin_cl):
+        out_list = [{} for _ in range(len(lockin_cl))]
+        for i in range(len(lockin_cl)):
+            out_list[i] = [{"sample_rate": lockin_seq["sample_rate"]} for lockin_seq in lockin_cl[i]]
+        return out_list

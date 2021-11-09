@@ -231,9 +231,9 @@
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MeasureS122vc">
+      <widget class="QCheckBox" name="checkbox_list_SavedSequences_passive_MeasureS120vc">
        <property name="text">
-        <string>S122VC</string>
+        <string>S120VC</string>
        </property>
       </widget>
      </item>
