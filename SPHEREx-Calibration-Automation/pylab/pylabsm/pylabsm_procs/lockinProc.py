@@ -28,8 +28,6 @@ class LockinMeasurement(SmBaseProc):
             hold attribute is true, then wait for 6 time constants. Further, if the lockin_instance is an SR830, then
             call the auto_phase() function.
         """
-        if self.lockin_type is SR830 and self.hold:
-            self.lockin_instance.auto_phase()
         if self.hold:
             sleep(6*self.lockin_instance.time_constant)
 
