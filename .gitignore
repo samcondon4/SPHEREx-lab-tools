@@ -132,4 +132,7 @@ dmypy.json
 .ini
 SPHEREx-Calibration-Automation/pylab/config
 
+# pycharm project files #
+.idea
+
 

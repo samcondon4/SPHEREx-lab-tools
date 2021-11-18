@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'PySxLab'
+project = 'PyLabTools'
 copyright = '2021, Sam Condon, Marco Viero'
 author = 'Sam Condon, Marco Viero'
 
