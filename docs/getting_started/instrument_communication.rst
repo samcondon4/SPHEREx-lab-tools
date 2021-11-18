@@ -1,16 +1,16 @@
 Instrument Communication
 ========================
 
-PySxLab implements advanced control over several scientific instruments from various vendors. Before this control can be acheived, the low-level communication interface between each instrument must be established. The following subsections describe how to setup the various communication interfaces for the instruments that PySxLab controls.
+PyLabTools implements advanced control over several scientific instruments from various vendors. Before this control can be acheived, the low-level communication interface between each instrument must be established. The following subsections describe how to setup the various communication interfaces for the instruments that PySxLab controls.
 
 Heidenhain ND287, Linear Encoder Readout
 -----------------------------------------
 
-PySxLab supports the RS-232 communication interface of the Heidenhain ND287. To configure this interface simply use a standard USB to RS-232 cable (ex. amazon_). Now follow the steps below to configure and verify that communication between your PC and the ND287 has been established:
+PyLabTools supports the RS-232 communication interface of the Heidenhain ND287. To configure this interface simply use a standard USB to RS-232 cable (ex. amazon_). Now follow the steps below to configure and verify that communication between your PC and the ND287 has been established:
 
 #. Use the ND287 softkeys to navigate to the *Interface Settings* menu via **SETUP->INSTALL SETUP->INTERFACE SETTINGS** if at any point the device asks for a passcode, use: *95148*
 
-#. Choose RS-232 for the serial port, then configure the serial communication settings to your liking. Note that PySxLab uses a default configuration of:
+#. Choose RS-232 for the serial port, then configure the serial communication settings to your liking. Note that PyLabTools uses a default configuration of:
  
    * baud rate = 115200
    
