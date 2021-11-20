@@ -1,10 +1,11 @@
 ###########################################
-Developer Documentation: Focus Calibration
+SpherexLabTools Module Reference
 ###########################################
 
 
 .. toctree::
         :maxdepth: 2
         
-        motor_control
+        calibration/index
+        analysis
 

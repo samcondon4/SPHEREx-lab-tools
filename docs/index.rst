@@ -3,12 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyLabTools' documentation!
+Welcome to SpherexLabTools' documentation!
 =============================================
 
 .. toctree::
    :maxdepth: 2
         
    getting_started/index
-   focus_calibration_dev/index
+   spherexlabtools/index
 

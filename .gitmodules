@@ -1,6 +1,6 @@
-[submodule "Submodules/pymeasure"]
-	path = Submodules/pymeasure
+[submodule "submodules/pymeasure"]
+	path = submodules/pymeasure
 	url = https://github.com/samcondon4/pymeasure.git
-[submodule "Submodules/pyqtgraph"]
-	path = Submodules/pyqtgraph
+[submodule "submodules/pyqtgraph"]
+	path = submodules/pyqtgraph
 	url = https://github.com/samcondon4/pyqtgraph.git
