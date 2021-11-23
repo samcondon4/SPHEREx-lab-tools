@@ -1,8 +1,8 @@
-############################
-spherexlabtools.calibration
-############################
+********************************
+``spherexlabtools.calibration``
+********************************
 
-This section provides documentation on the classes and methods of the spherexlabtools.calibration module.
+This module currently contains two submodules, one for focus calibration and another for spectral calibration. These submodules are documented at the following links:
 
 .. toctree::
         :maxdepth: 2

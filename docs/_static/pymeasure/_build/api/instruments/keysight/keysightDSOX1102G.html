@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keysight DSOX1102G Oscilloscope &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Keysight N5767A Power Supply" href="keysightN5767A.html" />
+    <link rel="prev" title="Keysight" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Keysight</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Keysight DSOX1102G Oscilloscope</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keysightN5767A.html">Keysight N5767A Power Supply</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Keysight</a> &raquo;</li>
+      <li>Keysight DSOX1102G Oscilloscope</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/keysight/keysightDSOX1102G.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="keysight-dsox1102g-oscilloscope">
+<h1>Keysight DSOX1102G Oscilloscope<a class="headerlink" href="#keysight-dsox1102g-oscilloscope" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.keysight.</code><code class="sig-name descname">KeysightDSOX1102G</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represents the Keysight DSOX1102G Oscilloscope interface for interacting
+with the instrument.</p>
+<p>Refer to the Keysight DSOX1102G Oscilloscope Programmer’s Guide for further details about
+using the lower-level methods to interact directly with the scope.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scope</span> <span class="o">=</span> <span class="n">KeysightDSOX1102G</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+<span class="n">scope</span><span class="o">.</span><span class="n">autoscale</span><span class="p">()</span>
+<span class="n">ch1_data_array</span><span class="p">,</span> <span class="n">ch1_preamble</span> <span class="o">=</span> <span class="n">scope</span><span class="o">.</span><span class="n">download_data</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;channel1&quot;</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="c1"># ...</span>
+<span class="n">scope</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Known issues:</p>
+<ul class="simple">
+<li><p>The digitize command will be completed before the operation is. May lead to
+VI_ERROR_TMO (timeout) occuring when sending commands immediately after digitize.
+Current fix: if deemed necessary, add delay between digitize and follow-up command
+to scope.</p></li>
+</ul>
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.acquisition_mode">
+<em class="property">property </em><code class="sig-name descname">acquisition_mode</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.acquisition_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string parameter that sets the acquisition mode. Can be “realtime” or “segmented”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.acquisition_type">
+<em class="property">property </em><code class="sig-name descname">acquisition_type</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.acquisition_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string parameter that sets the type of data acquisition. Can be “normal”, “average”,
+“hresolution”, or “peak”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.ask">
+<code class="sig-name descname">ask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.ask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the command to the instrument through the adapter
+and returns the read response.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>command</strong> – command string to be sent to the instrument</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.autoscale">
+<code class="sig-name descname">autoscale</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.autoscale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Autoscale displayed channels.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.check_errors">
+<code class="sig-name descname">check_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.check_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read all errors from the instrument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of error entries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the instrument status byte</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.clear_status">
+<code class="sig-name descname">clear_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.clear_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear device status.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.complete">
+<em class="property">property </em><code class="sig-name descname">complete</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>This property allows synchronization between a controller and a device. The Operation Complete
+query places an ASCII character 1 into the device’s Output Queue when all pending
+selected device operations have been finished.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.control">
+<em class="property">static </em><code class="sig-name descname">control</code><span class="sig-paren">(</span><em class="sig-param">get_command</em>, <em class="sig-param">set_command</em>, <em class="sig-param">docs</em>, <em class="sig-param">validator=&lt;function Instrument.&lt;lambda&gt;&gt;</em>, <em class="sig-param">values=()</em>, <em class="sig-param">map_values=False</em>, <em class="sig-param">get_process=&lt;function Instrument.&lt;lambda&gt;&gt;</em>, <em class="sig-param">set_process=&lt;function Instrument.&lt;lambda&gt;&gt;</em>, <em class="sig-param">check_set_errors=False</em>, <em class="sig-param">check_get_errors=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.control" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a property for the class based on the supplied
+commands. This property may be set and read from the
+instrument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>get_command</strong> – A string command that asks for the value</p></li>
+<li><p><strong>set_command</strong> – A string command that writes the value</p></li>
+<li><p><strong>docs</strong> – A docstring that will be included in the documentation</p></li>
+<li><p><strong>validator</strong> – A function that takes both a value and a group of valid values
+and returns a valid value, while it otherwise raises an exception</p></li>
+<li><p><strong>values</strong> – A list, tuple, range, or dictionary of valid values, that can be used
+as to map values if <code class="code docutils literal notranslate"><span class="pre">map_values</span></code> is True.</p></li>
+<li><p><strong>map_values</strong> – A boolean flag that determines if the values should be
+interpreted as a map</p></li>
+<li><p><strong>get_process</strong> – A function that take a value and allows processing
+before value mapping, returning the processed value</p></li>
+<li><p><strong>set_process</strong> – A function that takes a value and allows processing
+before value mapping, returning the processed value</p></li>
+<li><p><strong>check_set_errors</strong> – Toggles checking errors after setting</p></li>
+<li><p><strong>check_get_errors</strong> – Toggles checking errors after getting</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.default_setup">
+<code class="sig-name descname">default_setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.default_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default setup, some user settings (like preferences) remain unchanged.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.digitize">
+<code class="sig-name descname">digitize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.digitize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acquire waveforms according to the settings of the :ACQuire commands. Ensure a delay
+between the digitize operation and further commands, as timeout may be reached before
+digitize has completed.
+:param source: “channel1”, “channel2”, “function”, “math”, “fft”, “abus”, or “ext”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.download_data">
+<code class="sig-name descname">download_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">points</span><span class="o">=</span><span class="default_value">62500</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.download_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get data from specified source of oscilloscope. Returned objects are a np.ndarray of data
+values (no temporal axis) and a dict of the waveform preamble, which can be used to build the
+corresponding time values for all data points.</p>
+<p>Multimeter will be stopped for proper acquisition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – measurement source, can be “channel1”, “channel2”, “function”, “fft”, “wmemory1”,
+“wmemory2”, or “ext”.</p></li>
+<li><p><strong>points</strong> – integer number of points to acquire. Note that oscilloscope may return less points than
+specified, this is not an issue of this library. Can be 100, 250, 500, 1000,
+2000, 5000, 10000, 20000, 50000, or 62500.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return data_ndarray, waveform_preamble_dict</dt>
+<dd class="field-even"><p>see waveform_preamble property for dict format.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.download_image">
+<code class="sig-name descname">download_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">format_</span><span class="o">=</span><span class="default_value">'png'</span></em>, <em class="sig-param"><span class="n">color_palette</span><span class="o">=</span><span class="default_value">'color'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.download_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get image of oscilloscope screen in bytearray of specified file format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>format</strong> – “bmp”, “bmp8bit”, or “png”</p></li>
+<li><p><strong>color_palette</strong> – “color” or “grayscale”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.factory_reset">
+<code class="sig-name descname">factory_reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.factory_reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory default setup, no user settings remain unchanged.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the identification of the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.measurement">
+<em class="property">static </em><code class="sig-name descname">measurement</code><span class="sig-paren">(</span><em class="sig-param">get_command</em>, <em class="sig-param">docs</em>, <em class="sig-param">values=()</em>, <em class="sig-param">map_values=None</em>, <em class="sig-param">get_process=&lt;function Instrument.&lt;lambda&gt;&gt;</em>, <em class="sig-param">command_process=&lt;function Instrument.&lt;lambda&gt;&gt;</em>, <em class="sig-param">check_get_errors=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.measurement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a property for the class based on the supplied
+commands. This is a measurement quantity that may only be
+read from the instrument, not set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>get_command</strong> – A string command that asks for the value</p></li>
+<li><p><strong>docs</strong> – A docstring that will be included in the documentation</p></li>
+<li><p><strong>values</strong> – A list, tuple, range, or dictionary of valid values, that can be used
+as to map values if <code class="code docutils literal notranslate"><span class="pre">map_values</span></code> is True.</p></li>
+<li><p><strong>map_values</strong> – A boolean flag that determines if the values should be
+interpreted as a map</p></li>
+<li><p><strong>get_process</strong> – A function that take a value and allows processing
+before value mapping, returning the processed value</p></li>
+<li><p><strong>command_process</strong> – A function that take a command and allows processing
+before executing the command, for both getting and setting</p></li>
+<li><p><strong>check_get_errors</strong> – Toggles checking errors after getting</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.options">
+<em class="property">property </em><code class="sig-name descname">options</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the device options installed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads from the instrument through the adapter and returns the
+response.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts repetitive acquisitions. This is the same as pressing the Run key on the front panel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.setting">
+<em class="property">static </em><code class="sig-name descname">setting</code><span class="sig-paren">(</span><em class="sig-param">set_command</em>, <em class="sig-param">docs</em>, <em class="sig-param">validator=&lt;function Instrument.&lt;lambda&gt;&gt;</em>, <em class="sig-param">values=()</em>, <em class="sig-param">map_values=False</em>, <em class="sig-param">set_process=&lt;function Instrument.&lt;lambda&gt;&gt;</em>, <em class="sig-param">check_set_errors=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.setting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a property for the class based on the supplied
+commands. This property may be set, but raises an exception
+when being read from the instrument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>set_command</strong> – A string command that writes the value</p></li>
+<li><p><strong>docs</strong> – A docstring that will be included in the documentation</p></li>
+<li><p><strong>validator</strong> – A function that takes both a value and a group of valid values
+and returns a valid value, while it otherwise raises an exception</p></li>
+<li><p><strong>values</strong> – A list, tuple, range, or dictionary of valid values, that can be used
+as to map values if <code class="code docutils literal notranslate"><span class="pre">map_values</span></code> is True.</p></li>
+<li><p><strong>map_values</strong> – A boolean flag that determines if the values should be
+interpreted as a map</p></li>
+<li><p><strong>set_process</strong> – A function that takes a value and allows processing
+before value mapping, returning the processed value</p></li>
+<li><p><strong>check_set_errors</strong> – Toggles checking errors after setting</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Brings the instrument to a safe and stable state</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.single">
+<code class="sig-name descname">single</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.single" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes the instrument to acquire a single trigger of data.
+This is the same as pressing the Single key on the front panel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.status">
+<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the status byte and Master Summary Status bit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the acquisition. This is the same as pressing the Stop key on the front panel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.system_setup">
+<em class="property">property </em><code class="sig-name descname">system_setup</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.system_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string parameter that sets up the oscilloscope. Must be in IEEE 488.2 format.
+It is recommended to only set a string previously obtained from this command.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.timebase">
+<em class="property">property </em><code class="sig-name descname">timebase</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.timebase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read timebase setup as a dict containing the following keys:
+- “REF”: position on screen of timebase reference (str)
+- “MAIN:RANG”: full-scale timebase range (float)
+- “POS”: interval between trigger and reference point (float)
+- “MODE”: mode (str)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_mode">
+<em class="property">property </em><code class="sig-name descname">timebase_mode</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string parameter that sets the current time base. Can be “main”, 
+“window”, “xy”, or “roll”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_offset">
+<em class="property">property </em><code class="sig-name descname">timebase_offset</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>A float parameter that sets the time interval in seconds between the trigger 
+event and the reference position (at center of screen by default).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_range">
+<em class="property">property </em><code class="sig-name descname">timebase_range</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A float parameter that sets the full-scale horizontal time in seconds for the 
+main window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_scale">
+<em class="property">property </em><code class="sig-name descname">timebase_scale</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>A float parameter that sets the horizontal scale (units per division) in seconds 
+for the main window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_setup">
+<code class="sig-name descname">timebase_setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">horizontal_range</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.timebase_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up timebase. Unspecified parameters are not modified. Modifying a single parameter might
+impact other parameters. Refer to oscilloscope documentation and make multiple consecutive calls
+to channel_setup if needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> – Timebase mode, can be “main”, “window”, “xy”, or “roll”.</p></li>
+<li><p><strong>offset</strong> – Offset in seconds between trigger and center of screen.</p></li>
+<li><p><strong>horizontal_range</strong> – Full-scale range in seconds.</p></li>
+<li><p><strong>scale</strong> – Units-per-division in seconds.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.values">
+<code class="sig-name descname">values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a set of values from the instrument through the adapter,
+passing on any key-word arguments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_data">
+<em class="property">property </em><code class="sig-name descname">waveform_data</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the binary block of sampled data points transmitted using the IEEE 488.2 arbitrary
+block data format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_format">
+<em class="property">property </em><code class="sig-name descname">waveform_format</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string parameter that controls how the data is formatted when sent from the 
+oscilloscope. Can be “ascii”, “word” or “byte”. Words are transmitted in big endian by default.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_points">
+<em class="property">property </em><code class="sig-name descname">waveform_points</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer parameter that sets the number of waveform points to be transferred with
+the waveform_data method. Can be any of the following values: 
+100, 250, 500, 1000, 2 000, 5 000, 10 000, 20 000, 50 000, 62 500.</p>
+<p>Note that the oscilloscope may provide less than the specified nb of points.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_points_mode">
+<em class="property">property </em><code class="sig-name descname">waveform_points_mode</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_points_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string parameter that sets the data record to be transferred with the waveform_data
+method. Can be “normal”, “maximum”, or “raw”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_preamble">
+<em class="property">property </em><code class="sig-name descname">waveform_preamble</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_preamble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get preamble information for the selected waveform source as a dict with the following keys:
+- “format”: byte, word, or ascii (str)
+- “type”: normal, peak detect, or average (str)
+- “points”: nb of data points transferred (int)
+- “count”: always 1 (int)
+- “xincrement”: time difference between data points (float)
+- “xorigin”: first data point in memory (float)
+- “xreference”: data point associated with xorigin (int)
+- “yincrement”: voltage difference between data points (float)
+- “yorigin”: voltage at center of screen (float)
+- “yreference”: data point associated with yorigin (int)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_source">
+<em class="property">property </em><code class="sig-name descname">waveform_source</code><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.waveform_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string parameter that selects the analog channel, function, or reference waveform 
+to be used as the source for the waveform methods. Can be “channel1”, “channel2”, “function”, 
+“fft”, “wmemory1”, “wmemory2”, or “ext”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keysight.KeysightDSOX1102G.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keysight.KeysightDSOX1102G.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the command to the instrument through the adapter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>command</strong> – command string to be sent to the instrument</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Keysight" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="keysightN5767A.html" class="btn btn-neutral float-right" title="Keysight N5767A Power Supply" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

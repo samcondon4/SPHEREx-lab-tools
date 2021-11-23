@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSP 7265 Lock-in Amplifier &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Stanford Research Systems" href="../srs/index.html" />
+    <link rel="prev" title="Signal Recovery" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Signal Recovery</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">DSP 7265 Lock-in Amplifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Signal Recovery</a> &raquo;</li>
+      <li>DSP 7265 Lock-in Amplifier</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/signalrecovery/dsp7265.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dsp-7265-lock-in-amplifier">
+<h1>DSP 7265 Lock-in Amplifier<a class="headerlink" href="#dsp-7265-lock-in-amplifier" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.signalrecovery.</code><code class="sig-name descname">DSP7265</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>This is the class for the DSP 7265 lockin amplifier</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.adc1">
+<em class="property">property </em><code class="sig-name descname">adc1</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.adc1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the input value of ADC1 in Volts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.adc2">
+<em class="property">property </em><code class="sig-name descname">adc2</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.adc2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the input value of ADC2 in Volts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.buffer_to_float">
+<code class="sig-name descname">buffer_to_float</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">buffer_data</span></em>, <em class="sig-param"><span class="n">sensitivity</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sensitivity2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">raise_error</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.buffer_to_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that converts the fixed-point buffer data to floating point data.
+The provided data is converted as much as possible, but there are some
+requirements to the data if all provided columns are to be converted; if
+a key in the provided data cannot be converted it will be omitted in the
+returned data or an exception will be raised, depending on the value of
+raise_error.</p>
+<p>The requirements for converting the data are as follows:</p>
+<ul class="simple">
+<li><p>Converting X, Y, magnitude and noise requires sensitivity data, which
+can either be part of the provided data or can be provided via the
+sensitivity argument</p></li>
+<li><p>The same holds for X2, Y2, magnitude2 and noise2 with sensitivity2.</p></li>
+<li><p>Converting the frequency requires both ‘frequency part 1’ and
+‘frequency part 2’.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>buffer_data</strong> (<em>dict</em>) – The data to be converted. Must be in the format as returned by the
+<cite>get_buffer</cite> method: a dict of numpy arrays.</p></li>
+<li><p><strong>sensitivity</strong> – If provided, the sensitivity used to convert X, Y, magnitude and noise.
+Can be provided as a float or as an array that matches the length elements
+in the buffer_data. If both a sensitivity is provided and present in the
+buffer_data, the provided value is used for the conversion, but the
+sensitivity in the buffer_data is stored in the returned dict.</p></li>
+<li><p><strong>sensitivity2</strong> – Same as the first sensitivity argument, but for X2, Y2, magnitude2 and noise2.</p></li>
+<li><p><strong>raise_error</strong> (<em>bool</em>) – Boolean that determines whether an exception is raised in case not all keys
+provided in buffer_data can be converted. If False, the columns that cannot
+be converted are omitted in the returned dict.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.curve_buffer_bits">
+<em class="property">property </em><code class="sig-name descname">curve_buffer_bits</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.curve_buffer_bits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls which data outputs are stored
+in the curve buffer. Valid values are values between 1 and 65,535 (or
+2,097,151 in dual reference mode).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.curve_buffer_interval">
+<em class="property">property </em><code class="sig-name descname">curve_buffer_interval</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.curve_buffer_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls Sets the time interval between
+successive points being acquired in the curve buffer. The time interval
+is specified in ms with a resolution of 5 ms; input values are rounded
+up to a multiple of 5. Valid values are values between 0 and 1,000,000,000
+(corresponding to 12 days).
+The interval may be set to 0, which sets the rate of data storage to the
+curve buffer to 1.25 ms/point (800 Hz). However this only allows storage
+of the X and Y channel outputs. There is no need to issue a CBD 3 command
+to set this up since it happens automatically when acquisition starts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.curve_buffer_length">
+<em class="property">property </em><code class="sig-name descname">curve_buffer_length</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.curve_buffer_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the length of the curve buffer.
+Valid values are values between 1 and 32,768, but the actual maximum
+amount of points is determined by the amount of curves that are stored,
+as set via the curve_buffer_bits property (32,768 / n)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.curve_buffer_status">
+<em class="property">property </em><code class="sig-name descname">curve_buffer_status</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.curve_buffer_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that represents the status of the curve buffer acquisition
+with four values:
+the first value represents the status with 5 possibilities (0: no activity, 
+1: acquisition via TD command running, 2: acquisition bya TDC command running,
+5: acquisition via TD command halted, 6: acquisition bia TDC command halted);
+the second value is the number of sweeps that is acquired;
+the third value is the decimal representation of the status byte (the same
+response as the ST command;
+the fourth value is the number of points acquired in the curve buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.dac1">
+<em class="property">property </em><code class="sig-name descname">dac1</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.dac1" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the output
+value on DAC1 in Volts. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.dac2">
+<em class="property">property </em><code class="sig-name descname">dac2</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.dac2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the output
+value on DAC2 in Volts. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.dac3">
+<em class="property">property </em><code class="sig-name descname">dac3</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.dac3" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the output
+value on DAC3 in Volts. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.dac4">
+<em class="property">property </em><code class="sig-name descname">dac4</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.dac4" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the output
+value on DAC4 in Volts. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.frequency">
+<em class="property">property </em><code class="sig-name descname">frequency</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the lock-in
+frequency in Hz. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.get_buffer">
+<code class="sig-name descname">get_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">quantity</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">convert_to_float</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">wait_for_buffer</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.get_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that retrieves the buffer after it has been filled. The data
+retrieved from the lock-in is in a fixed-point format, which requires
+translation before it can be interpreted as meaningful data. When
+<cite>convert_to_float</cite> is True the conversion is performed (if possible)
+before returning the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantity</strong> (<em>str</em>) – If provided, names the quantity that is to be retrieved from the
+curve buffer; can be any of:
+‘x’, ‘y’, ‘magnitude’, ‘phase’, ‘sensitivity’, ‘adc1’, ‘adc2’,
+‘adc3’, ‘dac1’, ‘dac2’, ‘noise’, ‘ratio’, ‘log ratio’, ‘event’,
+‘frequency part 1’ and ‘frequency part 2’;
+for both dual modes, additional options are:
+‘x2’, ‘y2’, ‘magnitude2’, ‘phase2’, ‘sensitivity2’.
+If no quantity is provided, all available data is retrieved.</p></li>
+<li><p><strong>convert_to_float</strong> (<em>bool</em>) – Bool that determines whether to convert the fixed-point buffer-data to
+meaningful floating point values via the <cite>buffer_to_float</cite> method. If True,
+this method tries to convert all the available data to meaningful values;
+if this is not possible, an exception will be raised. If False, this
+conversion is not performed and the raw buffer-data is returned.</p></li>
+<li><p><strong>wait_for_buffer</strong> (<em>bool</em>) – Bool that determines whether to wait for the data acquisition to finished
+if this method is called before the acquisition is finished. If True, the
+method waits until the buffer is filled before continuing; if False, the
+method raises an exception if the acquisition is not finished when the
+method is called.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.harmonic">
+<em class="property">property </em><code class="sig-name descname">harmonic</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.harmonic" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that represents the reference
+harmonic mode control, taking values from 1 to 65535.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the instrument identification</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.imode">
+<em class="property">property </em><code class="sig-name descname">imode</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.imode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property that controls the voltage/current mode. can be
+‘voltage mode’, ‘current mode’, or ‘low noise current mode’</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.init_curve_buffer">
+<code class="sig-name descname">init_curve_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.init_curve_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes the curve storage memory and status variables. All record
+of previously taken curves is removed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.log_ratio">
+<em class="property">property </em><code class="sig-name descname">log_ratio</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.log_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the log ratio output, defined as log(X/ADC1)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.mag">
+<em class="property">property </em><code class="sig-name descname">mag</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.mag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the magnitude in Volts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.phase">
+<em class="property">property </em><code class="sig-name descname">phase</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the phase in degrees</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.ratio">
+<em class="property">property </em><code class="sig-name descname">ratio</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the ratio output, defined as X/ADC1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.reference">
+<em class="property">property </em><code class="sig-name descname">reference</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Controls the oscillator reference. Can be “internal”,
+“external rear” or “external front”</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.reference_phase">
+<em class="property">property </em><code class="sig-name descname">reference_phase</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.reference_phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the reference
+harmonic phase in degrees. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.sensitivity">
+<em class="property">property </em><code class="sig-name descname">sensitivity</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.sensitivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the sensitivity
+range in Volts (for voltage mode) or Amps (for current modes).
+When in Volts it takes discrete values from 2 nV to 1 V. When in
+Amps it takes discrete values from 2 fA to 1 µA (for normal current
+mode) or up to 10 nA (for low noise current mode).
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.setDifferentialMode">
+<code class="sig-name descname">setDifferentialMode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lineFiltering</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.setDifferentialMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets lockin to differential mode, measuring A-B</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.set_buffer">
+<code class="sig-name descname">set_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">points</span></em>, <em class="sig-param"><span class="n">quantities</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">interval</span><span class="o">=</span><span class="default_value">0.01</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.set_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that prepares the curve buffer for a measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>int</em>) – Number of points to be recorded in the curve buffer</p></li>
+<li><p><strong>quantities</strong> (<em>list</em>) – List containing the quantities (strings) that are to be
+recorded in the curve buffer, can be any of:
+‘x’, ‘y’, ‘magnitude’, ‘phase’, ‘sensitivity’, ‘adc1’,
+‘adc2’, ‘adc3’, ‘dac1’, ‘dac2’, ‘noise’, ‘ratio’, ‘log ratio’,
+‘event’, ‘frequency’ (or ‘frequency part 1’ and ‘frequency part 2’);
+for both dual modes, additional options are:
+‘x2’, ‘y2’, ‘magnitude2’, ‘phase2’, ‘sensitivity2’.
+Default is ‘x’ and ‘y’.</p></li>
+<li><p><strong>interval</strong> (<em>float</em>) – The interval between two subsequent points stored in the
+curve buffer in s. Default is 10 ms.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Brings the instrument to a safe and stable state</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.slope">
+<em class="property">property </em><code class="sig-name descname">slope</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.slope" title="Permalink to this definition">¶</a></dt>
+<dd><p>A integer property that controls the filter slope in
+dB/octave, which can take the values 6, 12, 18, or 24 dB/octave.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.start_buffer">
+<code class="sig-name descname">start_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.start_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates data acquisition. Acquisition starts at the current position
+in the curve buffer and continues at the rate set by the STR command until
+the buffer is full.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.time_constant">
+<em class="property">property </em><code class="sig-name descname">time_constant</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.time_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the time constant
+in seconds, which takes values from 10 microseconds to 50,000
+seconds. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.voltage">
+<em class="property">property </em><code class="sig-name descname">voltage</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the voltage
+in Volts. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.wait_for_buffer">
+<code class="sig-name descname">wait_for_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">0.1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.wait_for_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that waits until the curve buffer is filled</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.x">
+<em class="property">property </em><code class="sig-name descname">x</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the X value in Volts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.xy">
+<em class="property">property </em><code class="sig-name descname">xy</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads both the X and Y values in Volts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.signalrecovery.DSP7265.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#pymeasure.instruments.signalrecovery.DSP7265.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Y value in Volts</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Signal Recovery" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../srs/index.html" class="btn btn-neutral float-right" title="Stanford Research Systems" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

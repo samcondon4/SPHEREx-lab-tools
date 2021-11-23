@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agilent 4155/4156 Semiconductor Parameter Analyzer &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Agilent 33220A Arbitrary Waveform Generator" href="agilent33220A.html" />
+    <link rel="prev" title="HP/Agilent/Keysight 34450A Digital Multimeter" href="agilent34450A.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Agilent</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="agilent8257D.html">Agilent 8257D Signal Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent8722ES.html">Agilent 8722ES Vector Network Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentE4408B.html">Agilent E4408B Spectrum Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentE4980.html">Agilent E4980 LCR Meter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent34410A.html">Agilent 34410A Multimeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent34450A.html">HP/Agilent/Keysight 34450A Digital Multimeter</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Agilent 4155/4156 Semiconductor Parameter Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33220A.html">Agilent 33220A Arbitrary Waveform Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33500.html">Agilent 33500 Function/Arbitrary Waveform Generator Family</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33521A.html">Agilent 33521A Function/Arbitrary Waveform Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentB1500.html">Agilent B1500 Semiconductor Parameter Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anaheimautomation/index.html">Anaheim Automation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Agilent</a> &raquo;</li>
+      <li>Agilent 4155/4156 Semiconductor Parameter Analyzer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/agilent/agilent4156.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pymeasure.instruments.agilent.agilent4156">
+<span id="agilent-4155-4156-semiconductor-parameter-analyzer"></span><h1>Agilent 4155/4156 Semiconductor Parameter Analyzer<a class="headerlink" href="#module-pymeasure.instruments.agilent.agilent4156" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.agilent4156.</code><code class="sig-name descname">Agilent4156</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represents the Agilent 4155/4156 Semiconductor Parameter Analyzer
+and provides a high-level interface for taking current-voltage (I-V) measurements.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymeasure.instruments.agilent</span> <span class="kn">import</span> <span class="n">Agilent4156</span>
+
+<span class="c1"># explicitly define r/w terminations; set sufficiently large timeout or None.</span>
+<span class="n">smu</span> <span class="o">=</span> <span class="n">Agilent4156</span><span class="p">(</span><span class="s2">&quot;GPIB0::25&quot;</span><span class="p">,</span> <span class="n">read_termination</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">write_termination</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># reset the instrument</span>
+<span class="n">smu</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<span class="c1"># define configuration file for instrument and load config</span>
+<span class="n">smu</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s2">&quot;configuration_file.json&quot;</span><span class="p">)</span>
+
+<span class="c1"># save data variables, some or all of which are defined in the json config file.</span>
+<span class="n">smu</span><span class="o">.</span><span class="n">save</span><span class="p">([</span><span class="s1">&#39;VC&#39;</span><span class="p">,</span> <span class="s1">&#39;IC&#39;</span><span class="p">,</span> <span class="s1">&#39;VB&#39;</span><span class="p">,</span> <span class="s1">&#39;IB&#39;</span><span class="p">])</span>
+
+<span class="c1"># take measurements</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">measure</span><span class="p">()</span>
+
+<span class="c1"># measured data is a pandas dataframe and can be exported to csv.</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">smu</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./t1.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The JSON file is an ascii text configuration file that defines the settings of each channel on the instrument. The JSON file is used to configure the instrument using the convenience function <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.configure" title="pymeasure.instruments.agilent.agilent4156.Agilent4156.configure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">configure()</span></code></a> as shown in the example above. For example, the instrument setup for a bipolar transistor measurement is shown below.</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+       <span class="nt">&quot;SMU1&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="nt">&quot;voltage_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;VC&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;current_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;IC&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;channel_function&quot;</span> <span class="p">:</span> <span class="s2">&quot;VAR1&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;channel_mode&quot;</span> <span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;series_resistance&quot;</span> <span class="p">:</span> <span class="s2">&quot;0OHM&quot;</span>
+       <span class="p">},</span>
+
+       <span class="nt">&quot;SMU2&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="nt">&quot;voltage_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;VB&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;current_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;IB&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;channel_function&quot;</span> <span class="p">:</span> <span class="s2">&quot;VAR2&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;channel_mode&quot;</span> <span class="p">:</span> <span class="s2">&quot;I&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;series_resistance&quot;</span> <span class="p">:</span> <span class="s2">&quot;0OHM&quot;</span>
+       <span class="p">},</span>
+
+       <span class="nt">&quot;SMU3&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="nt">&quot;voltage_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;VE&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;current_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;IE&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;channel_function&quot;</span> <span class="p">:</span> <span class="s2">&quot;CONS&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;channel_mode&quot;</span> <span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;constant_value&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+           <span class="nt">&quot;compliance&quot;</span> <span class="p">:</span> <span class="mf">0.1</span>
+       <span class="p">},</span>
+
+        <span class="nt">&quot;SMU4&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="nt">&quot;voltage_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;VS&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;current_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;IS&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;channel_function&quot;</span> <span class="p">:</span> <span class="s2">&quot;CONS&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;channel_mode&quot;</span> <span class="p">:</span> <span class="s2">&quot;V&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;constant_value&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+           <span class="nt">&quot;compliance&quot;</span> <span class="p">:</span> <span class="mf">0.1</span>
+       <span class="p">},</span>
+
+       <span class="nt">&quot;VAR1&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="nt">&quot;start&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+           <span class="nt">&quot;stop&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+           <span class="nt">&quot;step&quot;</span> <span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+           <span class="nt">&quot;spacing&quot;</span> <span class="p">:</span> <span class="s2">&quot;LINEAR&quot;</span><span class="p">,</span>
+           <span class="nt">&quot;compliance&quot;</span> <span class="p">:</span> <span class="mf">0.1</span>
+       <span class="p">},</span>
+
+       <span class="nt">&quot;VAR2&quot;</span><span class="p">:</span> <span class="p">{</span>
+           <span class="nt">&quot;start&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+           <span class="nt">&quot;step&quot;</span> <span class="p">:</span> <span class="mf">10e-6</span><span class="p">,</span>
+           <span class="nt">&quot;points&quot;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+           <span class="nt">&quot;compliance&quot;</span> <span class="p">:</span> <span class="mi">2</span>
+
+       <span class="p">}</span>
+   <span class="p">}</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.analyzer_mode">
+<em class="property">property </em><code class="sig-name descname">analyzer_mode</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.analyzer_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the instrument operating mode.</p>
+<ul class="simple">
+<li><p>Values: <code class="code docutils literal notranslate"><span class="pre">SWEEP</span></code>, <code class="code docutils literal notranslate"><span class="pre">SAMPLING</span></code></p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">smu</span><span class="o">.</span><span class="n">analyzer_mode</span> <span class="o">=</span> <span class="s2">&quot;SWEEP&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.configure">
+<code class="sig-name descname">configure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to configure the channel setup and sweep using a <a class="reference external" href="https://www.json.org/">JSON (JavaScript Object Notation)</a> configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>config_file</strong> – JSON file to configure instrument channels.</p>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="s1">&#39;config.json&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.data_variables">
+<em class="property">property </em><code class="sig-name descname">data_variables</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.data_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a string list of data variables for which measured data
+is available. This looks for all the variables saved by the <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.save" title="pymeasure.instruments.agilent.agilent4156.Agilent4156.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save()</span></code></a> and <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.save_var" title="pymeasure.instruments.agilent.agilent4156.Agilent4156.save_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save_var()</span></code></a> methods and returns it. This is useful for creation of dataframe headers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List</p>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">header</span> <span class="o">=</span> <span class="n">instr</span><span class="o">.</span><span class="n">data_variables</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.delay_time">
+<em class="property">property </em><code class="sig-name descname">delay_time</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.delay_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that measurement delay time in seconds,
+which can take the values from 0 to 65s in 0.1s steps.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">delay_time</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># delay time of 1-sec</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.disable_all">
+<code class="sig-name descname">disable_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.disable_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables all channels in the instrument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">disable_all</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.get_data">
+<code class="sig-name descname">get_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the measurement data from the instrument after completion. If the measurement period is set to <code class="code docutils literal notranslate"><span class="pre">INF</span></code> in the <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.measure" title="pymeasure.instruments.agilent.agilent4156.Agilent4156.measure"><code class="xref py py-meth docutils literal notranslate"><span class="pre">measure()</span></code></a> method, then the measurement must be stopped using <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.stop" title="pymeasure.instruments.agilent.agilent4156.Agilent4156.stop"><code class="xref py py-meth docutils literal notranslate"><span class="pre">stop()</span></code></a> before getting valid data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path</strong> – Path for optional data export to CSV.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Pandas Dataframe</p>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">instr</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;./datafolder/data1.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.hold_time">
+<em class="property">property </em><code class="sig-name descname">hold_time</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.hold_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that measurement hold time in seconds,
+which can take the values from 0 to 655s in 1s steps.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">hold_time</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># hold time of 2-secs.</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.integration_time">
+<em class="property">property </em><code class="sig-name descname">integration_time</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.integration_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the integration time.</p>
+<ul class="simple">
+<li><p>Values: <code class="code docutils literal notranslate"><span class="pre">SHORT</span></code>, <code class="code docutils literal notranslate"><span class="pre">MEDIUM</span></code>, <code class="code docutils literal notranslate"><span class="pre">LONG</span></code></p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">integration_time</span> <span class="o">=</span> <span class="s2">&quot;MEDIUM&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.measure">
+<code class="sig-name descname">measure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">period</span><span class="o">=</span><span class="default_value">'INF'</span></em>, <em class="sig-param"><span class="n">points</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a single measurement and waits for completion in sweep mode.
+In sampling mode, the measurement period and number of points can be specified.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>period</strong> – Period of sampling measurement from 6E-6 to 1E11 seconds. Default setting is <code class="code docutils literal notranslate"><span class="pre">INF</span></code>.</p></li>
+<li><p><strong>points</strong> – Number of samples to be measured, from 1 to 10001. Default setting is <code class="code docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trace_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the voltage or current in the instrument display list</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trace_list</strong> – A list of channel variables whose measured data should be saved. A maximum of 8 variables are allowed. If only one variable is being saved, a string can be specified.</p>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">save</span><span class="p">([</span><span class="s1">&#39;IC&#39;</span><span class="p">,</span> <span class="s1">&#39;IB&#39;</span><span class="p">,</span> <span class="s1">&#39;VC&#39;</span><span class="p">,</span> <span class="s1">&#39;VB&#39;</span><span class="p">])</span> <span class="c1">#for list of variables</span>
+<span class="n">instr</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;IC&#39;</span><span class="p">)</span>    <span class="c1">#for single variable</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.save_var">
+<code class="sig-name descname">save_var</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trace_list</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.save_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the voltage or current in the instrument variable list. This is useful if one or two more variables need to be saved in addition to the 8 variables allowed by <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.save" title="pymeasure.instruments.agilent.agilent4156.Agilent4156.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trace_list</strong> – A list of channel variables whose measured data should be saved. A maximum of 2 variables are allowed. If only one variable is being saved, a string can be specified.</p>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">save_var</span><span class="p">([</span><span class="s1">&#39;VA&#39;</span><span class="p">,</span> <span class="s1">&#39;VB&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.Agilent4156.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.Agilent4156.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the ongoing measurement</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.agilent4156.</code><code class="sig-name descname">SMU</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU.channel_function">
+<em class="property">property </em><code class="sig-name descname">channel_function</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU.channel_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the SMU&lt;n&gt; channel function.</p>
+<ul class="simple">
+<li><p>Values: <code class="code docutils literal notranslate"><span class="pre">VAR1</span></code>, <code class="code docutils literal notranslate"><span class="pre">VAR2</span></code>, <code class="code docutils literal notranslate"><span class="pre">VARD</span></code> or <code class="code docutils literal notranslate"><span class="pre">CONS</span></code>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">smu1</span><span class="o">.</span><span class="n">channel_function</span> <span class="o">=</span> <span class="s2">&quot;VAR1&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU.channel_mode">
+<em class="property">property </em><code class="sig-name descname">channel_mode</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU.channel_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the SMU&lt;n&gt; channel mode.</p>
+<ul class="simple">
+<li><p>Values: <code class="code docutils literal notranslate"><span class="pre">V</span></code>, <code class="code docutils literal notranslate"><span class="pre">I</span></code> or <code class="code docutils literal notranslate"><span class="pre">COMM</span></code></p></li>
+</ul>
+<p>VPULSE AND IPULSE are not yet supported.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">smu1</span><span class="o">.</span><span class="n">channel_mode</span> <span class="o">=</span> <span class="s2">&quot;V&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU.compliance">
+<em class="property">property </em><code class="sig-name descname">compliance</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU.compliance" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command sets the <em>constant</em> compliance value of SMU&lt;n&gt;. If the SMU channel is setup as a variable (VAR1, VAR2, VARD) then compliance limits are set by the variable definition.</p>
+<ul class="simple">
+<li><p>Value: Voltage in (-200V, 200V) and current in (-1A, 1A) based
+on <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.SMU.channel_mode" title="pymeasure.instruments.agilent.agilent4156.SMU.channel_mode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">channel_mode()</span></code></a>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">smu1</span><span class="o">.</span><span class="n">compliance</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU.constant_value">
+<em class="property">property </em><code class="sig-name descname">constant_value</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU.constant_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command sets the constant source value of SMU&lt;n&gt;. You use this command only if <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.SMU.channel_function" title="pymeasure.instruments.agilent.agilent4156.SMU.channel_function"><code class="xref py py-meth docutils literal notranslate"><span class="pre">channel_function()</span></code></a>
+is <code class="code docutils literal notranslate"><span class="pre">CONS</span></code> and also <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.SMU.channel_mode" title="pymeasure.instruments.agilent.agilent4156.SMU.channel_mode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">channel_mode()</span></code></a> should not be <code class="code docutils literal notranslate"><span class="pre">COMM</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>const_value</strong> – Voltage in (-200V, 200V) and current in (-1A, 1A). Voltage or current depends on if <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.SMU.channel_mode" title="pymeasure.instruments.agilent.agilent4156.SMU.channel_mode"><code class="xref py py-meth docutils literal notranslate"><span class="pre">channel_mode()</span></code></a> is set to <code class="code docutils literal notranslate"><span class="pre">V</span></code> or <code class="code docutils literal notranslate"><span class="pre">I</span></code>.</p>
+</dd>
+</dl>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">smu1</span><span class="o">.</span><span class="n">constant_value</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU.current_name">
+<em class="property">property </em><code class="sig-name descname">current_name</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU.current_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the current name of the channel.</p>
+<p>If input is greater than 6 characters long or starts with a number,
+the name is autocorrected and prepended with ‘a’. Event is logged.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">smu1</span><span class="o">.</span><span class="n">current_name</span> <span class="o">=</span> <span class="s2">&quot;Ibase&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU.disable">
+<em class="property">property </em><code class="sig-name descname">disable</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command deletes the settings of SMU&lt;n&gt;.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">smu1</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU.series_resistance">
+<em class="property">property </em><code class="sig-name descname">series_resistance</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU.series_resistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command controls the series resistance of SMU&lt;n&gt;.</p>
+<ul class="simple">
+<li><p>Values: <code class="code docutils literal notranslate"><span class="pre">0OHM</span></code>, <code class="code docutils literal notranslate"><span class="pre">10KOHM</span></code>, <code class="code docutils literal notranslate"><span class="pre">100KOHM</span></code>, or <code class="code docutils literal notranslate"><span class="pre">1MOHM</span></code></p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">smu1</span><span class="o">.</span><span class="n">series_resistance</span> <span class="o">=</span> <span class="s2">&quot;10KOHM&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.SMU.voltage_name">
+<em class="property">property </em><code class="sig-name descname">voltage_name</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.SMU.voltage_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the voltage name of the channel.</p>
+<p>If input is greater than 6 characters long or starts with a number,
+the name is autocorrected and prepended with ‘a’. Event is logged.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">smu1</span><span class="o">.</span><span class="n">voltage_name</span> <span class="o">=</span> <span class="s2">&quot;Vbase&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.agilent4156.VAR1">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.agilent4156.</code><code class="sig-name descname">VAR1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VAR1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.VARX" title="pymeasure.instruments.agilent.agilent4156.VARX"><code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.agilent.agilent4156.VARX</span></code></a></p>
+<p>Class to handle all the specific definitions needed for VAR1.
+Most common methods are inherited from base class.</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VAR1.spacing">
+<em class="property">property </em><code class="sig-name descname">spacing</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VAR1.spacing" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command selects the sweep type of VAR1.</p>
+<ul class="simple">
+<li><p>Values: <code class="code docutils literal notranslate"><span class="pre">LINEAR</span></code>, <code class="code docutils literal notranslate"><span class="pre">LOG10</span></code>, <code class="code docutils literal notranslate"><span class="pre">LOG25</span></code>, <code class="code docutils literal notranslate"><span class="pre">LOG50</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.agilent4156.VAR2">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.agilent4156.</code><code class="sig-name descname">VAR2</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VAR2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pymeasure.instruments.agilent.agilent4156.VARX" title="pymeasure.instruments.agilent.agilent4156.VARX"><code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.agilent.agilent4156.VARX</span></code></a></p>
+<p>Class to handle all the specific definitions needed for VAR2.
+Common methods are imported from base class.</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VAR2.points">
+<em class="property">property </em><code class="sig-name descname">points</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VAR2.points" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command sets the number of sweep steps of VAR2.
+You use this command only if there is an SMU or VSU
+whose function (FCTN) is VAR2.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">var2</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARD">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.agilent4156.</code><code class="sig-name descname">VARD</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Class to handle all the definitions needed for VARD.
+VARD is always defined in relation to VAR1.</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARD.compliance">
+<em class="property">property </em><code class="sig-name descname">compliance</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARD.compliance" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command sets the sweep COMPLIANCE value of VARD.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">vard</span><span class="o">.</span><span class="n">compliance</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARD.offset">
+<em class="property">property </em><code class="sig-name descname">offset</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARD.offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command sets the OFFSET value of VARD.
+For each step of sweep, the output values of VAR1’ are determined by the
+following equation: VARD = VAR1 X RATio + OFFSet
+You use this command only if there is an SMU or VSU whose function is VARD.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">vard</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARD.ratio">
+<em class="property">property </em><code class="sig-name descname">ratio</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARD.ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command sets the RATIO of VAR1’.
+For each step of sweep, the output values of VAR1’ are determined by the
+following equation: VAR1’ = VAR1 * RATio + OFFSet
+You use this command only if there is an SMU or VSU whose function
+(FCTN) is VAR1’.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">vard</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARX">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.agilent4156.</code><code class="sig-name descname">VARX</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="n">var_name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Base class to define sweep variable settings</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARX.compliance">
+<em class="property">property </em><code class="sig-name descname">compliance</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARX.compliance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the sweep COMPLIANCE value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">var1</span><span class="o">.</span><span class="n">compliance</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARX.start">
+<em class="property">property </em><code class="sig-name descname">start</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARX.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the sweep START value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">var1</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARX.step">
+<em class="property">property </em><code class="sig-name descname">step</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARX.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the sweep STEP value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">var1</span><span class="o">.</span><span class="n">step</span> <span class="o">=</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VARX.stop">
+<em class="property">property </em><code class="sig-name descname">stop</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VARX.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the sweep STOP value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">var1</span><span class="o">.</span><span class="n">stop</span> <span class="o">=</span> <span class="mi">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.agilent4156.VMU">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.agilent4156.</code><code class="sig-name descname">VMU</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VMU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VMU.channel_mode">
+<em class="property">property </em><code class="sig-name descname">channel_mode</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VMU.channel_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the VMU&lt;n&gt; channel mode.</p>
+<ul class="simple">
+<li><p>Values: <code class="code docutils literal notranslate"><span class="pre">V</span></code>, <code class="code docutils literal notranslate"><span class="pre">DVOL</span></code></p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VMU.disable">
+<em class="property">property </em><code class="sig-name descname">disable</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VMU.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command disables the settings of VMU&lt;n&gt;.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">vmu1</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VMU.voltage_name">
+<em class="property">property </em><code class="sig-name descname">voltage_name</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VMU.voltage_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the voltage name of the VMU channel.</p>
+<p>If input is greater than 6 characters long or starts with a number,
+the name is autocorrected and prepended with ‘a’. Event is logged.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">vmu1</span><span class="o">.</span><span class="n">voltage_name</span> <span class="o">=</span> <span class="s2">&quot;Vanode&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.agilent4156.VSU">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.agilent4156.</code><code class="sig-name descname">VSU</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VSU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VSU.channel_function">
+<em class="property">property </em><code class="sig-name descname">channel_function</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VSU.channel_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the VSU channel function.</p>
+<ul class="simple">
+<li><p>Value: <code class="code docutils literal notranslate"><span class="pre">VAR1</span></code>, <code class="code docutils literal notranslate"><span class="pre">VAR2</span></code>, <code class="code docutils literal notranslate"><span class="pre">VARD</span></code> or <code class="code docutils literal notranslate"><span class="pre">CONS</span></code>.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VSU.channel_mode">
+<em class="property">property </em><code class="sig-name descname">channel_mode</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VSU.channel_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get channel mode of VSU&lt;n&gt;.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VSU.constant_value">
+<em class="property">property </em><code class="sig-name descname">constant_value</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VSU.constant_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command sets the constant source value of VSU&lt;n&gt;.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">vsu1</span><span class="o">.</span><span class="n">constant_value</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VSU.disable">
+<em class="property">property </em><code class="sig-name descname">disable</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VSU.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>This command deletes the settings of VSU&lt;n&gt;.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">vsu1</span><span class="o">.</span><span class="n">disable</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.agilent4156.VSU.voltage_name">
+<em class="property">property </em><code class="sig-name descname">voltage_name</code><a class="headerlink" href="#pymeasure.instruments.agilent.agilent4156.VSU.voltage_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the voltage name of the VSU channel</p>
+<p>If input is greater than 6 characters long or starts with a number,
+the name is autocorrected and prepended with ‘a’. Event is logged.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instr</span><span class="o">.</span><span class="n">vsu1</span><span class="o">.</span><span class="n">voltage_name</span> <span class="o">=</span> <span class="s2">&quot;Ve&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agilent34450A.html" class="btn btn-neutral float-left" title="HP/Agilent/Keysight 34450A Digital Multimeter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="agilent33220A.html" class="btn btn-neutral float-right" title="Agilent 33220A Arbitrary Waveform Generator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

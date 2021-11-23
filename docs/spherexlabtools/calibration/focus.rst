@@ -1,11 +1,13 @@
-##################################
-spherexlabtools.calibration.focus
-##################################
+**************************************
+``spherexlabtools.calibration.focus``
+**************************************
 
 .. currentmodule:: spherexlabtools.calibration.focus
 
-.. automodule:: spherexlabtools.calibration.focus
+.. autoclass:: spherexlabtools.calibration.focus.InstrumentSuite
         :members:
-        :inherited-members:
+        :undoc-members:     
+        :show-inheritance:
+
 
 
