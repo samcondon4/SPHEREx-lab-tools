@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parameter classes &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Worker class" href="workers.html" />
+    <link rel="prev" title="Procedure class" href="procedure.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">pymeasure.experiment</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="experiment.html">Experiment class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="listeners.html">Listener class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="procedure.html">Procedure class</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Parameter classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workers.html">Worker class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="results.html">Results class</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../instruments/index.html">pymeasure.instruments</a></li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">pymeasure.experiment</a> &raquo;</li>
+      <li>Parameter classes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api/experiment/parameters.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="parameter-classes">
+<h1>Parameter classes<a class="headerlink" href="#parameter-classes" title="Permalink to this headline">¶</a></h1>
+<p>The parameter classes are used to define input variables for a <a class="reference internal" href="procedure.html#pymeasure.experiment.procedure.Procedure" title="pymeasure.experiment.procedure.Procedure"><code class="xref py py-class docutils literal notranslate"><span class="pre">Procedure</span></code></a>. They each inherit from the <a class="reference internal" href="#pymeasure.experiment.parameters.Parameter" title="pymeasure.experiment.parameters.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a> base class.</p>
+<span class="target" id="module-pymeasure.experiment.parameters"></span><dl class="py class">
+<dt id="pymeasure.experiment.parameters.BooleanParameter">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.experiment.parameters.</code><code class="sig-name descname">BooleanParameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ui_class</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">group_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">group_condition</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.BooleanParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pymeasure.experiment.parameters.Parameter" title="pymeasure.experiment.parameters.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a> sub-class that uses the boolean type to
+store the value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>value</strong> – The boolean value of the parameter</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> – The parameter name</p></li>
+<li><p><strong>default</strong> – The default boolean value</p></li>
+<li><p><strong>ui_class</strong> – A Qt class to use for the UI of this parameter</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.experiment.parameters.FloatParameter">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.experiment.parameters.</code><code class="sig-name descname">FloatParameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minimum</span><span class="o">=</span><span class="default_value">- 1000000000.0</span></em>, <em class="sig-param"><span class="n">maximum</span><span class="o">=</span><span class="default_value">1000000000.0</span></em>, <em class="sig-param"><span class="n">decimals</span><span class="o">=</span><span class="default_value">15</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.FloatParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pymeasure.experiment.parameters.Parameter" title="pymeasure.experiment.parameters.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a> sub-class that uses the floating point
+type to store the value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>value</strong> – The floating point value of the parameter</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> – The parameter name</p></li>
+<li><p><strong>units</strong> – The units of measure for the parameter</p></li>
+<li><p><strong>minimum</strong> – The minimum allowed value (default: -1e9)</p></li>
+<li><p><strong>maximum</strong> – The maximum allowed value (default: 1e9)</p></li>
+<li><p><strong>decimals</strong> – The number of decimals considered (default: 15)</p></li>
+<li><p><strong>default</strong> – The default floating point value</p></li>
+<li><p><strong>ui_class</strong> – A Qt class to use for the UI of this parameter</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.experiment.parameters.IntegerParameter">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.experiment.parameters.</code><code class="sig-name descname">IntegerParameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">minimum</span><span class="o">=</span><span class="default_value">- 1000000000.0</span></em>, <em class="sig-param"><span class="n">maximum</span><span class="o">=</span><span class="default_value">1000000000.0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.IntegerParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pymeasure.experiment.parameters.Parameter" title="pymeasure.experiment.parameters.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a> sub-class that uses the integer type to
+store the value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>value</strong> – The integer value of the parameter</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> – The parameter name</p></li>
+<li><p><strong>units</strong> – The units of measure for the parameter</p></li>
+<li><p><strong>minimum</strong> – The minimum allowed value (default: -1e9)</p></li>
+<li><p><strong>maximum</strong> – The maximum allowed value (default: 1e9)</p></li>
+<li><p><strong>default</strong> – The default integer value</p></li>
+<li><p><strong>ui_class</strong> – A Qt class to use for the UI of this parameter</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.experiment.parameters.ListParameter">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.experiment.parameters.</code><code class="sig-name descname">ListParameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">choices</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.ListParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pymeasure.experiment.parameters.Parameter" title="pymeasure.experiment.parameters.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a> sub-class that stores the value as a list.
+String representation of choices must be unique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The parameter name</p></li>
+<li><p><strong>choices</strong> – An explicit list of choices, which is disregarded if None</p></li>
+<li><p><strong>units</strong> – The units of measure for the parameter</p></li>
+<li><p><strong>default</strong> – The default value</p></li>
+<li><p><strong>ui_class</strong> – A Qt class to use for the UI of this parameter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pymeasure.experiment.parameters.ListParameter.choices">
+<em class="property">property </em><code class="sig-name descname">choices</code><a class="headerlink" href="#pymeasure.experiment.parameters.ListParameter.choices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an immutable iterable of choices, or None if not set.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.experiment.parameters.Measurable">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.experiment.parameters.</code><code class="sig-name descname">Measurable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">fget</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">measure</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.Measurable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates the information for a measurable experiment parameter
+with information about the name, fget function and units if supplied.
+The value property is called when the procedure retrieves a datapoint
+and calls the fget function. If no fget function is specified, the value
+property will return the latest set value of the parameter (or default
+if never set).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>value</strong> – The value of the parameter</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> – The parameter name</p></li>
+<li><p><strong>fget</strong> – The parameter fget function (e.g. an instrument parameter)</p></li>
+<li><p><strong>default</strong> – The default value</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.experiment.parameters.Parameter">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.experiment.parameters.</code><code class="sig-name descname">Parameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ui_class</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">group_by</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">group_condition</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.Parameter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encapsulates the information for an experiment parameter
+with information about the name, and units if supplied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>value</strong> – The value of the parameter</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> – The parameter name</p></li>
+<li><p><strong>default</strong> – The default value</p></li>
+<li><p><strong>ui_class</strong> – A Qt class to use for the UI of this parameter</p></li>
+<li><p><strong>group_by</strong> – Defines the Parameter(s) that controls the visibility
+of the associated input; can be a string containting the Parameter
+name, a list of strings with multiple Parameter names, or a dict
+containing {“Parameter name”: condition} pairs.</p></li>
+<li><p><strong>group_condition</strong> – The condition for the group_by Parameter
+that controls the visibility of this parameter, provided as a value
+or a (lambda)function. If the group_by argument is provided as a
+list of strings, this argument can be either a single condition or
+a list of conditions. If the group_by argument is provided as a dict
+this argument is ignored.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pymeasure.experiment.parameters.Parameter.is_set">
+<code class="sig-name descname">is_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.Parameter.is_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the Parameter value is set</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.experiment.parameters.PhysicalParameter">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.experiment.parameters.</code><code class="sig-name descname">PhysicalParameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">uncertaintyType</span><span class="o">=</span><span class="default_value">'absolute'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.PhysicalParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pymeasure.experiment.parameters.VectorParameter" title="pymeasure.experiment.parameters.VectorParameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">VectorParameter</span></code></a> sub-class of 2 dimensions to store a value
+and its uncertainty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>value</strong> – The value of the parameter as a list of 2 floating point numbers</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> – The parameter name</p></li>
+<li><p><strong>uncertainty_type</strong> – Type of uncertainty, ‘absolute’, ‘relative’ or ‘percentage’</p></li>
+<li><p><strong>units</strong> – The units of measure for the parameter</p></li>
+<li><p><strong>default</strong> – The default value</p></li>
+<li><p><strong>ui_class</strong> – A Qt class to use for the UI of this parameter</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.experiment.parameters.VectorParameter">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.experiment.parameters.</code><code class="sig-name descname">VectorParameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">length</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.experiment.parameters.VectorParameter" title="Permalink to this definition">¶</a></dt>
+<dd><p><a class="reference internal" href="#pymeasure.experiment.parameters.Parameter" title="pymeasure.experiment.parameters.Parameter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parameter</span></code></a> sub-class that stores the value in a
+vector format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><p><strong>value</strong> – The value of the parameter as a list of floating point numbers</p>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name</strong> – The parameter name</p></li>
+<li><p><strong>length</strong> – The integer dimensions of the vector</p></li>
+<li><p><strong>units</strong> – The units of measure for the parameter</p></li>
+<li><p><strong>default</strong> – The default value</p></li>
+<li><p><strong>ui_class</strong> – A Qt class to use for the UI of this parameter</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="procedure.html" class="btn btn-neutral float-left" title="Procedure class" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="workers.html" class="btn btn-neutral float-right" title="Worker class" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

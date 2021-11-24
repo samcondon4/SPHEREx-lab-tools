@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Anritsu MS9710C Optical Spectrum Analyzer &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Attocube" href="../attocube/index.html" />
+    <link rel="prev" title="Anritsu MG3692C Signal Generator" href="anritsuMG3692C.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Anritsu</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="anritsuMG3692C.html">Anritsu MG3692C Signal Generator</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Anritsu MS9710C Optical Spectrum Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Anritsu</a> &raquo;</li>
+      <li>Anritsu MS9710C Optical Spectrum Analyzer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/anritsu/anritsuMS9710C.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="anritsu-ms9710c-optical-spectrum-analyzer">
+<h1>Anritsu MS9710C Optical Spectrum Analyzer<a class="headerlink" href="#anritsu-ms9710c-optical-spectrum-analyzer" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.anritsu.</code><code class="sig-name descname">AnritsuMS9710C</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Anritsu MS9710C Optical Spectrum Analyzer.</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.analysis">
+<em class="property">property </em><code class="sig-name descname">analysis</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Analysis Control</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.analysis_result">
+<em class="property">property </em><code class="sig-name descname">analysis_result</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.analysis_result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read back anaysis result from current scan.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.average_point">
+<em class="property">property </em><code class="sig-name descname">average_point</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.average_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of averages to take on each point (2-1000), or OFF</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.average_sweep">
+<em class="property">property </em><code class="sig-name descname">average_sweep</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.average_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of averages to make on a sweep (2-1000) or OFF</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.center_at_peak">
+<code class="sig-name descname">center_at_peak</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.center_at_peak" title="Permalink to this definition">¶</a></dt>
+<dd><p>Center the spectrum at the measured peak.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_a_condition">
+<em class="property">property </em><code class="sig-name descname">data_memory_a_condition</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_a_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the data condition of data memory register A.
+Starting wavelength, and a sampling point (l1, l2, n).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_a_size">
+<em class="property">property </em><code class="sig-name descname">data_memory_a_size</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_a_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of points sampled in data memory register A.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_a_values">
+<em class="property">property </em><code class="sig-name descname">data_memory_a_values</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_a_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the binary data from memory register A.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_b_condition">
+<em class="property">property </em><code class="sig-name descname">data_memory_b_condition</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_b_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the data condition of data memory register B.
+Starting wavelength, and a sampling point (l1, l2, n).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_b_size">
+<em class="property">property </em><code class="sig-name descname">data_memory_b_size</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_b_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of points sampled in data memory register B.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_b_values">
+<em class="property">property </em><code class="sig-name descname">data_memory_b_values</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_b_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the binary data from memory register B.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_select">
+<em class="property">property </em><code class="sig-name descname">data_memory_select</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.data_memory_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Memory Data Select.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.dip_search">
+<em class="property">property </em><code class="sig-name descname">dip_search</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.dip_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dip Search Mode</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.ese2">
+<em class="property">property </em><code class="sig-name descname">ese2</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.ese2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extended Event Status Enable Register 2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.esr2">
+<em class="property">property </em><code class="sig-name descname">esr2</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.esr2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extended Event Status Register 2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.level_lin">
+<em class="property">property </em><code class="sig-name descname">level_lin</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.level_lin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Level Linear Scale (/div)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.level_log">
+<em class="property">property </em><code class="sig-name descname">level_log</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.level_log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Level Log Scale (/div)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.level_opt_attn">
+<em class="property">property </em><code class="sig-name descname">level_opt_attn</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.level_opt_attn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Optical Attenuation Status (ON/OFF)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.level_scale">
+<em class="property">property </em><code class="sig-name descname">level_scale</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.level_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Current Level Scale</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.measure_mode">
+<em class="property">property </em><code class="sig-name descname">measure_mode</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.measure_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current Measure Mode the OSA is in.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.measure_peak">
+<code class="sig-name descname">measure_peak</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.measure_peak" title="Permalink to this definition">¶</a></dt>
+<dd><p>Measure the peak and return the trace marker.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.peak_search">
+<em class="property">property </em><code class="sig-name descname">peak_search</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.peak_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Peak Search Mode</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.read_memory">
+<code class="sig-name descname">read_memory</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">slot</span><span class="o">=</span><span class="default_value">'A'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.read_memory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read the scan saved in a memory slot.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.resolution">
+<em class="property">property </em><code class="sig-name descname">resolution</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolution (nm)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.resolution_actual">
+<em class="property">property </em><code class="sig-name descname">resolution_actual</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.resolution_actual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resolution Actual (ON/OFF)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.resolution_vbw">
+<em class="property">property </em><code class="sig-name descname">resolution_vbw</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.resolution_vbw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Video Bandwidth Resolution</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.sampling_points">
+<em class="property">property </em><code class="sig-name descname">sampling_points</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.sampling_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of sampling points</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.single_sweep">
+<code class="sig-name descname">single_sweep</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.single_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a single sweep and wait for completion.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.trace_marker">
+<em class="property">property </em><code class="sig-name descname">trace_marker</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.trace_marker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the trace marker with a wavelength.  Returns the trace wavelength and power.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.trace_marker_center">
+<em class="property">property </em><code class="sig-name descname">trace_marker_center</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.trace_marker_center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trace Marker at Center. Set to 1 or True to initiate command</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wait">
+<code class="sig-name descname">wait</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query OPC Command and waits for appropriate response.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wait_for_sweep">
+<code class="sig-name descname">wait_for_sweep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wait_for_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for a sweep to stop.</p>
+<p>This is performed by checking bit 1 of the ESR2.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_center">
+<em class="property">property </em><code class="sig-name descname">wavelength_center</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_center" title="Permalink to this definition">¶</a></dt>
+<dd><p>Center Wavelength of Spectrum Scan in nm.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_marker_value">
+<em class="property">property </em><code class="sig-name descname">wavelength_marker_value</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_marker_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wavelength Marker Value (wavelength or freq.?)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_span">
+<em class="property">property </em><code class="sig-name descname">wavelength_span</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_span" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wavelength Span of Spectrum Scan in nm.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_start">
+<em class="property">property </em><code class="sig-name descname">wavelength_start</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wavelength Start of Spectrum Scan in nm.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_stop">
+<em class="property">property </em><code class="sig-name descname">wavelength_stop</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wavelength Stop of Spectrum Scan in nm.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_value_in">
+<em class="property">property </em><code class="sig-name descname">wavelength_value_in</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wavelength_value_in" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wavelength value in Vacuum or Air</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.anritsu.AnritsuMS9710C.wavelengths">
+<em class="property">property </em><code class="sig-name descname">wavelengths</code><a class="headerlink" href="#pymeasure.instruments.anritsu.AnritsuMS9710C.wavelengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a numpy array of the current wavelengths of scans.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="anritsuMG3692C.html" class="btn btn-neutral float-left" title="Anritsu MG3692C Signal Generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../attocube/index.html" class="btn btn-neutral float-right" title="Attocube" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

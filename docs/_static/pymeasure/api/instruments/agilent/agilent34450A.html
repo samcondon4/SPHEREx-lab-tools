@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HP/Agilent/Keysight 34450A Digital Multimeter &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Agilent 4155/4156 Semiconductor Parameter Analyzer" href="agilent4156.html" />
+    <link rel="prev" title="Agilent 34410A Multimeter" href="agilent34410A.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Agilent</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="agilent8257D.html">Agilent 8257D Signal Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent8722ES.html">Agilent 8722ES Vector Network Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentE4408B.html">Agilent E4408B Spectrum Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentE4980.html">Agilent E4980 LCR Meter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent34410A.html">Agilent 34410A Multimeter</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">HP/Agilent/Keysight 34450A Digital Multimeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent4156.html">Agilent 4155/4156 Semiconductor Parameter Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33220A.html">Agilent 33220A Arbitrary Waveform Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33500.html">Agilent 33500 Function/Arbitrary Waveform Generator Family</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33521A.html">Agilent 33521A Function/Arbitrary Waveform Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentB1500.html">Agilent B1500 Semiconductor Parameter Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Agilent</a> &raquo;</li>
+      <li>HP/Agilent/Keysight 34450A Digital Multimeter</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/agilent/agilent34450A.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hp-agilent-keysight-34450a-digital-multimeter">
+<h1>HP/Agilent/Keysight 34450A Digital Multimeter<a class="headerlink" href="#hp-agilent-keysight-34450a-digital-multimeter" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.Agilent34450A">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.</code><code class="sig-name descname">Agilent34450A</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represent the HP/Agilent/Keysight 34450A and related multimeters.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dmm</span> <span class="o">=</span> <span class="n">Agilent34450A</span><span class="p">(</span><span class="s2">&quot;USB0::...&quot;</span><span class="p">)</span>
+<span class="n">dmm</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">dmm</span><span class="o">.</span><span class="n">configure_voltage</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">dmm</span><span class="o">.</span><span class="n">voltage</span><span class="p">)</span>
+<span class="n">dmm</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.beep">
+<code class="sig-name descname">beep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.beep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sounds a system beep.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.capacitance">
+<em class="property">property </em><code class="sig-name descname">capacitance</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.capacitance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a capacitance measurement in Farads, 
+based on the active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.capacitance_auto_range">
+<em class="property">property </em><code class="sig-name descname">capacitance_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.capacitance_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for capacitance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.capacitance_range">
+<em class="property">property </em><code class="sig-name descname">capacitance_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.capacitance_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the capacitance range
+in Farads, which can take values 1E-9, 10E-9, 100E-9, 1E-6, 10E-6, 100E-6, 
+1E-3, 10E-3, as well as “MIN”, “MAX”, or “DEF” (1E-6).
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.configure_capacitance">
+<code class="sig-name descname">configure_capacitance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">capacitance_range</span><span class="o">=</span><span class="default_value">'AUTO'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.configure_capacitance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure capacitance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>capacitance_range</strong> – A capacitance in Farads to set the capacitance range, can be
+1E-9, 10E-9, 100E-9, 1E-6, 10E-6, 100E-6, 1E-3, 10E-3,
+as well as “MIN”, “MAX”, “DEF” (1E-6), or “AUTO”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.configure_continuity">
+<code class="sig-name descname">configure_continuity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.configure_continuity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure continuity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.configure_current">
+<code class="sig-name descname">configure_current</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">current_range</span><span class="o">=</span><span class="default_value">'AUTO'</span></em>, <em class="sig-param"><span class="n">ac</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="o">=</span><span class="default_value">'DEF'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.configure_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure current.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>current_range</strong> – A current in Amps to set the current range.
+DC values can be 100E-6, 1E-3, 10E-3, 100E-3, 1, 10, as well as “MIN”,
+“MAX”, “DEF” (100 mA), or “AUTO”. AC values can be 10E-3, 100E-3, 1, 10,
+as well as “MIN”, “MAX”, “DEF” (100 mA), or “AUTO”.</p></li>
+<li><p><strong>ac</strong> – False for DC current, and True for AC current</p></li>
+<li><p><strong>resolution</strong> – Desired resolution, can be 3.00E-5, 2.00E-5, 1.50E-6 (5 1/2 digits),
+as well as “MIN”, “MAX”, or “DEF” (1.50E-6).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.configure_diode">
+<code class="sig-name descname">configure_diode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.configure_diode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure diode voltage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.configure_frequency">
+<code class="sig-name descname">configure_frequency</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">measured_from</span><span class="o">=</span><span class="default_value">'voltage_ac'</span></em>, <em class="sig-param"><span class="n">measured_from_range</span><span class="o">=</span><span class="default_value">'AUTO'</span></em>, <em class="sig-param"><span class="n">aperture</span><span class="o">=</span><span class="default_value">'DEF'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.configure_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>measured_from</strong> – “voltage_ac” or “current_ac”</p></li>
+<li><p><strong>measured_from_range</strong> – range of measured_from. AC voltage can have ranges 100E-3,
+1, 10, 100, 750, as well as “MIN”, “MAX”, “DEF” (10 V),
+or “AUTO”. AC current can have ranges 10E-3, 100E-3, 1, 10,
+as well as “MIN”, “MAX”, “DEF” (100 mA), or “AUTO”.</p></li>
+<li><p><strong>aperture</strong> – Aperture time in Seconds, can be 100 ms, 1 s, as well as “MIN”, “MAX”,
+or “DEF” (1 s).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.configure_resistance">
+<code class="sig-name descname">configure_resistance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resistance_range</span><span class="o">=</span><span class="default_value">'AUTO'</span></em>, <em class="sig-param"><span class="n">wires</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="o">=</span><span class="default_value">'DEF'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.configure_resistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure resistance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resistance_range</strong> – A resistance in Ohms to set the resistance range, can be 100,
+1E3, 10E3, 100E3, 1E6, 10E6, 100E6, as well as “MIN”, “MAX”, “DEF” (1E3), or “AUTO”.</p></li>
+<li><p><strong>wires</strong> – Number of wires used for measurement, can be 2 or 4.</p></li>
+<li><p><strong>resolution</strong> – Desired resolution, can be 3.00E-5, 2.00E-5, 1.50E-6 (5 1/2 digits),
+as well as “MIN”, “MAX”, or “DEF” (1.50E-6).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.configure_temperature">
+<code class="sig-name descname">configure_temperature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.configure_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure temperature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.configure_voltage">
+<code class="sig-name descname">configure_voltage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">voltage_range</span><span class="o">=</span><span class="default_value">'AUTO'</span></em>, <em class="sig-param"><span class="n">ac</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">resolution</span><span class="o">=</span><span class="default_value">'DEF'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.configure_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure voltage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>voltage_range</strong> – A voltage in Volts to set the voltage range.
+DC values can be 100E-3, 1, 10, 100, 1000, as well as “MIN”, “MAX”,
+“DEF” (10 V), or “AUTO”. AC values can be 100E-3, 1, 10, 100, 750,
+as well as “MIN”, “MAX”, “DEF” (10 V), or “AUTO”.</p></li>
+<li><p><strong>ac</strong> – False for DC voltage, True for AC voltage</p></li>
+<li><p><strong>resolution</strong> – Desired resolution, can be 3.00E-5, 2.00E-5,
+1.50E-6 (5 1/2 digits), as well as “MIN”, “MAX”, or “DEF” (1.50E-6).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.continuity">
+<em class="property">property </em><code class="sig-name descname">continuity</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.continuity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a continuity measurement in Ohms, 
+based on the active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.current">
+<em class="property">property </em><code class="sig-name descname">current</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a DC current measurement in Amps, based on the
+active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.current_ac">
+<em class="property">property </em><code class="sig-name descname">current_ac</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.current_ac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads an AC current measurement in Amps, based on the
+active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.current_ac_auto_range">
+<em class="property">property </em><code class="sig-name descname">current_ac_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.current_ac_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for AC current.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.current_ac_range">
+<em class="property">property </em><code class="sig-name descname">current_ac_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.current_ac_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the AC current range in Amps, which can take 
+values 10E-3, 100E-3, 1, 10, as well as “MIN”, “MAX”, or “DEF” (100 mA).
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.current_ac_resolution">
+<em class="property">property </em><code class="sig-name descname">current_ac_resolution</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.current_ac_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>An property that controls the resolution in the AC current
+readings, which can take values 3.00E-5, 2.00E-5, 1.50E-6 (5 1/2 digits), 
+as well as “MIN”, “MAX”, or “DEF” (1.50E-6).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.current_auto_range">
+<em class="property">property </em><code class="sig-name descname">current_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.current_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for DC current.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.current_range">
+<em class="property">property </em><code class="sig-name descname">current_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.current_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the DC current range in
+Amps, which can take values 100E-6, 1E-3, 10E-3, 100E-3, 1, 10, 
+as well as “MIN”, “MAX”, or “DEF” (100 mA).
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.current_resolution">
+<em class="property">property </em><code class="sig-name descname">current_resolution</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.current_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the resolution in the DC current
+readings, which can take values 3.00E-5, 2.00E-5, 1.50E-6 (5 1/2 digits), 
+as well as “MIN”, “MAX”, and “DEF” (3.00E-5).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.diode">
+<em class="property">property </em><code class="sig-name descname">diode</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.diode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a diode measurement in Volts, based on the 
+active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.frequency">
+<em class="property">property </em><code class="sig-name descname">frequency</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a frequency measurement in Hz, based on the
+active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.frequency_aperture">
+<em class="property">property </em><code class="sig-name descname">frequency_aperture</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.frequency_aperture" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the frequency aperture in seconds,
+which sets the integration period and measurement speed. Takes values
+100 ms, 1 s, as well as “MIN”, “MAX”, or “DEF” (1 s).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.frequency_current_auto_range">
+<em class="property">property </em><code class="sig-name descname">frequency_current_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.frequency_current_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for AC current in frequency measurements.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.frequency_current_range">
+<em class="property">property </em><code class="sig-name descname">frequency_current_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.frequency_current_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the current range in Amps for frequency on AC current
+measurements, which can take values 10E-3, 100E-3, 1, 10, as well as “MIN”, 
+“MAX”, or “DEF” (100 mA).
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.frequency_voltage_auto_range">
+<em class="property">property </em><code class="sig-name descname">frequency_voltage_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.frequency_voltage_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for AC voltage in frequency measurements.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.frequency_voltage_range">
+<em class="property">property </em><code class="sig-name descname">frequency_voltage_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.frequency_voltage_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the voltage range in Volts for frequency on AC voltage 
+measurements, which can take values 100E-3, 1, 10, 100, 750, 
+as well as “MIN”, “MAX”, or “DEF” (10 V).
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.resistance">
+<em class="property">property </em><code class="sig-name descname">resistance</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.resistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a resistance measurement in Ohms for 2-wire 
+configuration, based on the active 
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.resistance_4w">
+<em class="property">property </em><code class="sig-name descname">resistance_4w</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.resistance_4w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a resistance measurement in Ohms for 
+4-wire configuration, based on the active 
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.resistance_4w_auto_range">
+<em class="property">property </em><code class="sig-name descname">resistance_4w_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.resistance_4w_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for 4-wire resistance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.resistance_4w_range">
+<em class="property">property </em><code class="sig-name descname">resistance_4w_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.resistance_4w_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the 4-wire resistance range
+in Ohms, which can take values 100, 1E3, 10E3, 100E3, 1E6, 10E6, 100E6, 
+as well as “MIN”, “MAX”, or “DEF” (1E3).
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.resistance_4w_resolution">
+<em class="property">property </em><code class="sig-name descname">resistance_4w_resolution</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.resistance_4w_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the resolution in the 4-wire
+resistance readings, which can take values 3.00E-5, 2.00E-5, 1.50E-6 (5 1/2 digits), 
+as well as “MIN”, “MAX”, or “DEF” (1.50E-6).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.resistance_auto_range">
+<em class="property">property </em><code class="sig-name descname">resistance_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.resistance_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for 2-wire resistance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.resistance_range">
+<em class="property">property </em><code class="sig-name descname">resistance_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.resistance_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the 2-wire resistance range in Ohms, which can 
+take values 100, 1E3, 10E3, 100E3, 1E6, 10E6, 100E6, as well as “MIN”, “MAX”, 
+or “DEF” (1E3).
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.resistance_resolution">
+<em class="property">property </em><code class="sig-name descname">resistance_resolution</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.resistance_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the resolution in the 2-wire
+resistance readings, which can take values 3.00E-5, 2.00E-5, 1.50E-6 (5 1/2 digits), 
+as well as “MIN”, “MAX”, or “DEF” (1.50E-6).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.temperature">
+<em class="property">property </em><code class="sig-name descname">temperature</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a temperature measurement in Celsius, based on the
+active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.voltage">
+<em class="property">property </em><code class="sig-name descname">voltage</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a DC voltage measurement in Volts, based on the
+active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.voltage_ac">
+<em class="property">property </em><code class="sig-name descname">voltage_ac</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.voltage_ac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads an AC voltage measurement in Volts, based on the
+active <code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.voltage_ac_auto_range">
+<em class="property">property </em><code class="sig-name descname">voltage_ac_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.voltage_ac_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for AC voltage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.voltage_ac_range">
+<em class="property">property </em><code class="sig-name descname">voltage_ac_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.voltage_ac_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the AC voltage range in Volts, which can 
+take values 100E-3, 1, 10, 100, 750, as well as “MIN”, “MAX”, or “DEF” 
+(10 V).
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.voltage_ac_resolution">
+<em class="property">property </em><code class="sig-name descname">voltage_ac_resolution</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.voltage_ac_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the resolution in the AC voltage readings, 
+which can take values 3.00E-5, 2.00E-5, 1.50E-6 (5 1/2 digits), 
+as well as “MIN”, “MAX”, or “DEF” (1.50E-6).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.voltage_auto_range">
+<em class="property">property </em><code class="sig-name descname">voltage_auto_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.voltage_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that toggles auto ranging for DC voltage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.voltage_range">
+<em class="property">property </em><code class="sig-name descname">voltage_range</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.voltage_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the DC voltage range in Volts, which 
+can take values 100E-3, 1, 10, 100, 1000, as well as “MIN”, “MAX”, or 
+“DEF” (10 V). Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent34450A.voltage_resolution">
+<em class="property">property </em><code class="sig-name descname">voltage_resolution</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent34450A.voltage_resolution" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that controls the resolution in the DC voltage
+readings, which can take values 3.00E-5, 2.00E-5, 1.50E-6 (5 1/2 digits), 
+as well as “MIN”, “MAX”, or “DEF” (1.50E-6).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agilent34410A.html" class="btn btn-neutral float-left" title="Agilent 34410A Multimeter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="agilent4156.html" class="btn btn-neutral float-right" title="Agilent 4155/4156 Semiconductor Parameter Analyzer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

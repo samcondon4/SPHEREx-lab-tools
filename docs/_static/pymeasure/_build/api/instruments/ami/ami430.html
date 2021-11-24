@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AMI 430 Power Supply &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Anapico" href="../anapico/index.html" />
+    <link rel="prev" title="AMI" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">AMI</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">AMI 430 Power Supply</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">AMI</a> &raquo;</li>
+      <li>AMI 430 Power Supply</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/ami/ami430.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ami-430-power-supply">
+<h1>AMI 430 Power Supply<a class="headerlink" href="#ami-430-power-supply" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.ami.AMI430">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.ami.</code><code class="sig-name descname">AMI430</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represents the AMI 430 Power supply
+and provides a high-level for interacting with the instrument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">magnet</span> <span class="o">=</span> <span class="n">AMI430</span><span class="p">(</span><span class="s2">&quot;TCPIP::web.address.com::7180::SOCKET&quot;</span><span class="p">)</span>
+
+
+<span class="n">magnet</span><span class="o">.</span><span class="n">coilconst</span> <span class="o">=</span> <span class="mf">1.182</span>                 <span class="c1"># kGauss/A</span>
+<span class="n">magnet</span><span class="o">.</span><span class="n">voltage_limit</span> <span class="o">=</span> <span class="mf">2.2</span>               <span class="c1"># Sets the voltage limit in V</span>
+
+<span class="n">magnet</span><span class="o">.</span><span class="n">target_current</span> <span class="o">=</span> <span class="mi">10</span>               <span class="c1"># Sets the target current to 10 A</span>
+<span class="n">magnet</span><span class="o">.</span><span class="n">target_field</span> <span class="o">=</span> <span class="mi">1</span>                  <span class="c1"># Sets target field to 1 kGauss</span>
+
+<span class="n">magnet</span><span class="o">.</span><span class="n">ramp_rate_current</span> <span class="o">=</span> <span class="mf">0.0357</span>       <span class="c1"># Sets the ramp rate in A/s</span>
+<span class="n">magnet</span><span class="o">.</span><span class="n">ramp_rate_field</span> <span class="o">=</span> <span class="mf">0.0422</span>         <span class="c1"># Sets the ramp rate in kGauss/s</span>
+<span class="n">magnet</span><span class="o">.</span><span class="n">ramp</span>                             <span class="c1"># Initiates the ramping</span>
+<span class="n">magnet</span><span class="o">.</span><span class="n">pause</span>                            <span class="c1"># Pauses the ramping</span>
+<span class="n">magnet</span><span class="o">.</span><span class="n">status</span>                           <span class="c1"># Returns the status of the magnet</span>
+
+<span class="n">magnet</span><span class="o">.</span><span class="n">ramp_to_current</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>             <span class="c1"># Ramps the current to 5 A</span>
+
+<span class="n">magnet</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>                     <span class="c1"># Ramps the current to zero and disables output</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.coilconst">
+<em class="property">property </em><code class="sig-name descname">coilconst</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.coilconst" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the coil contant
+in kGauss/A.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.disable_persistent_switch">
+<code class="sig-name descname">disable_persistent_switch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.disable_persistent_switch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the persistent switch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.enable_persistent_switch">
+<code class="sig-name descname">enable_persistent_switch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.enable_persistent_switch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables the persistent switch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.field">
+<em class="property">property </em><code class="sig-name descname">field</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the field in kGauss of the magnet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.has_persistent_switch_enabled">
+<code class="sig-name descname">has_persistent_switch_enabled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.has_persistent_switch_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a boolean if the persistent switch is enabled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.magnet_current">
+<em class="property">property </em><code class="sig-name descname">magnet_current</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.magnet_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the current in Amps of the magnet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.pause">
+<code class="sig-name descname">pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pauses the ramping of the magnetic field.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.ramp">
+<code class="sig-name descname">ramp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.ramp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates the ramping of the magnetic field to set
+current/field with ramping rate previously set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.ramp_rate_current">
+<em class="property">property </em><code class="sig-name descname">ramp_rate_current</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.ramp_rate_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the current ramping 
+rate in A/s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.ramp_rate_field">
+<em class="property">property </em><code class="sig-name descname">ramp_rate_field</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.ramp_rate_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the field ramping 
+rate in kGauss/s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.ramp_to_current">
+<code class="sig-name descname">ramp_to_current</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">current</span></em>, <em class="sig-param"><span class="n">rate</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.ramp_to_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Heats up the persistent switch and
+ramps the current with set ramp rate.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.ramp_to_field">
+<code class="sig-name descname">ramp_to_field</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">field</span></em>, <em class="sig-param"><span class="n">rate</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.ramp_to_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>Heats up the persistent switch and
+ramps the current with set ramp rate.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ramp_rate</span><span class="o">=</span><span class="default_value">0.0357</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns on the persistent switch,
+ramps down the current to zero, and turns off the persistent switch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.state">
+<em class="property">property </em><code class="sig-name descname">state</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the field in kGauss of the magnet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.supply_current">
+<em class="property">property </em><code class="sig-name descname">supply_current</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.supply_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the current in Amps of the power supply.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.target_current">
+<em class="property">property </em><code class="sig-name descname">target_current</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.target_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the target current
+in A for the magnet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.target_field">
+<em class="property">property </em><code class="sig-name descname">target_field</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.target_field" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the target field
+in kGauss for the magnet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.voltage_limit">
+<em class="property">property </em><code class="sig-name descname">voltage_limit</code><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.voltage_limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the voltage limit
+for charging/discharging the magnet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.wait_for_holding">
+<code class="sig-name descname">wait_for_holding</code><span class="sig-paren">(</span><em class="sig-param">should_stop=&lt;function AMI430.&lt;lambda&gt;&gt;</em>, <em class="sig-param">timeout=800</em>, <em class="sig-param">interval=0.1</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.wait_for_holding" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ami.AMI430.zero">
+<code class="sig-name descname">zero</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ami.AMI430.zero" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates the ramping of the magnetic field to zero
+current/field with ramping rate previously set.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="AMI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../anapico/index.html" class="btn btn-neutral float-right" title="Anapico" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

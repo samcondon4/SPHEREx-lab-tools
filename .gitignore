@@ -128,11 +128,11 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# PySxLab Configuration files
+# Configuration files
 .ini
-SPHEREx-Calibration-Automation/pylab/config
 
 # pycharm project files #
 .idea
+
 
 

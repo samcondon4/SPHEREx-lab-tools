@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keithley 6221 AC and DC Current Source &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Keithley 6517B Electrometer" href="keithley6517b.html" />
+    <link rel="prev" title="Keithley 2700 MultiMeter/Switch System" href="keithley2700.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Keithley</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="keithley2000.html">Keithley 2000 Multimeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2260B.html">Keithley 2260B DC Power Supply</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2400.html">Keithley 2400 SourceMeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2450.html">Keithley 2450 SourceMeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2700.html">Keithley 2700 MultiMeter/Switch System</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Keithley 6221 AC and DC Current Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley6517b.html">Keithley 6517B Electrometer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2750.html">Keithley 2750 Multimeter/Switch System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2600.html">Keithley 2600 SourceMeter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Keithley</a> &raquo;</li>
+      <li>Keithley 6221 AC and DC Current Source</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/keithley/keithley6221.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="keithley-6221-ac-and-dc-current-source">
+<h1>Keithley 6221 AC and DC Current Source<a class="headerlink" href="#keithley-6221-ac-and-dc-current-source" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.keithley.Keithley6221">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.keithley.</code><code class="sig-name descname">Keithley6221</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.keithley.buffer.KeithleyBuffer</span></code></p>
+<p>Represents the Keithely 6221 AC and DC current source and provides a
+high-level interface for interacting with the instrument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">keithley</span> <span class="o">=</span> <span class="n">Keithley6221</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+<span class="c1"># Use the keithley as an AC source</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_function</span> <span class="o">=</span> <span class="s2">&quot;square&quot;</span>   <span class="c1"># Set a square waveform</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_amplitude</span> <span class="o">=</span> <span class="mf">0.05</span>      <span class="c1"># Set the amplitude in Amps</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_offset</span> <span class="o">=</span> <span class="mi">0</span>            <span class="c1"># Set zero offset</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">source_compliance</span> <span class="o">=</span> <span class="mi">10</span>         <span class="c1"># Set compliance (limit) in V</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_dutycycle</span> <span class="o">=</span> <span class="mi">50</span>        <span class="c1"># Set duty cycle of wave in %</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_frequency</span> <span class="o">=</span> <span class="mi">347</span>       <span class="c1"># Set the frequency in Hz</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_ranging</span> <span class="o">=</span> <span class="s2">&quot;best&quot;</span>      <span class="c1"># Set optimal output ranging</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_duration_cycles</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># Set duration of the waveform</span>
+
+<span class="c1"># Link end of waveform to Service Request status bit</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">operation_event_enabled</span> <span class="o">=</span> <span class="mi">128</span>  <span class="c1"># OSB listens to end of wave</span>
+<span class="n">keithley</span><span class="o">.</span><span class="n">srq_event_enabled</span> <span class="o">=</span> <span class="mi">128</span>        <span class="c1"># SRQ listens to OSB</span>
+
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_arm</span><span class="p">()</span>                 <span class="c1"># Arm (load) the waveform</span>
+
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_start</span><span class="p">()</span>               <span class="c1"># Start the waveform</span>
+
+<span class="n">keithley</span><span class="o">.</span><span class="n">adapter</span><span class="o">.</span><span class="n">wait_for_srq</span><span class="p">()</span>         <span class="c1"># Wait for the pulse to finish</span>
+
+<span class="n">keithley</span><span class="o">.</span><span class="n">waveform_abort</span><span class="p">()</span>               <span class="c1"># Disarm (unload) the waveform</span>
+
+<span class="n">keithley</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>                     <span class="c1"># Disables output</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.beep">
+<code class="sig-name descname">beep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency</span></em>, <em class="sig-param"><span class="n">duration</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.beep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sounds a system beep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frequency</strong> – A frequency in Hz between 65 Hz and 2 MHz</p></li>
+<li><p><strong>duration</strong> – A time in seconds between 0 and 7.9 seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.buffer_data">
+<em class="property">property </em><code class="sig-name descname">buffer_data</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.buffer_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a numpy array of values from the buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.buffer_points">
+<em class="property">property </em><code class="sig-name descname">buffer_points</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.buffer_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of buffer points. This
+does not represent actual points in the buffer, but the configuration
+value instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.check_errors">
+<code class="sig-name descname">check_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.check_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs any system errors reported by the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.complete">
+<em class="property">property </em><code class="sig-name descname">complete</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>This property allows synchronization between a controller and a device. The Operation Complete
+query places an ASCII character 1 into the device’s Output Queue when all pending
+selected device operations have been finished.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.config_buffer">
+<code class="sig-name descname">config_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">points</span><span class="o">=</span><span class="default_value">64</span></em>, <em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.config_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the measurement buffer for a number of points, to be
+taken with a specified delay.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> – The number of points in the buffer.</p></li>
+<li><p><strong>delay</strong> – The delay time in seconds.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.define_arbitary_waveform">
+<code class="sig-name descname">define_arbitary_waveform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">datapoints</span></em>, <em class="sig-param"><span class="n">location</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.define_arbitary_waveform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the data points for the arbitrary waveform and copy the
+defined waveform into the given storage location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datapoints</strong> – a list (or numpy array) of the data points; all
+values have to be between -1 and 1; 100 points maximum.</p></li>
+<li><p><strong>location</strong> – integer storage location to store the waveform in.
+Value must be in range 1 to 4.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.disable_buffer">
+<code class="sig-name descname">disable_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.disable_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the connection between measurements and the
+buffer, but does not abort the measurement process.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.disable_output_trigger">
+<code class="sig-name descname">disable_output_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.disable_output_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the output trigger for the Trigger layer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.disable_source">
+<code class="sig-name descname">disable_source</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.disable_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the source of current or voltage depending on the
+configuration of the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.display_enabled">
+<em class="property">property </em><code class="sig-name descname">display_enabled</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.display_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that controls whether or not the display of the
+sourcemeter is enabled. Valid values are True and False.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.enable_source">
+<code class="sig-name descname">enable_source</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.enable_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables the source of current or voltage depending on the
+configuration of the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.error">
+<em class="property">property </em><code class="sig-name descname">error</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of an error code and message from a
+single error.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the identification of the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.is_buffer_full">
+<code class="sig-name descname">is_buffer_full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.is_buffer_full" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the buffer is full of measurements.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.measurement_event_enabled">
+<em class="property">property </em><code class="sig-name descname">measurement_event_enabled</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.measurement_event_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that controls which measurement events are
+registered in the Measurement Summary Bit (MSB) status bit. Refer to
+the Model 6220/6221 Reference Manual for more information about
+programming the status bits.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.measurement_events">
+<em class="property">property </em><code class="sig-name descname">measurement_events</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.measurement_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that reads which measurement events have been
+registered in the Measurement event registers. Refer to the Model
+6220/6221 Reference Manual for more information about programming
+the status bits. Reading this value clears the register.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.operation_event_enabled">
+<em class="property">property </em><code class="sig-name descname">operation_event_enabled</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.operation_event_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that controls which operation events are
+registered in the Operation Summary Bit (OSB) status bit. Refer to
+the Model 6220/6221 Reference Manual for more information about
+programming the status bits.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.operation_events">
+<em class="property">property </em><code class="sig-name descname">operation_events</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.operation_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that reads which operation events have been
+registered in the Operation event registers. Refer to the Model
+6220/6221 Reference Manual for more information about programming
+the status bits. Reading this value clears the register.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.options">
+<em class="property">property </em><code class="sig-name descname">options</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the device options installed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.output_low_grounded">
+<em class="property">property </em><code class="sig-name descname">output_low_grounded</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.output_low_grounded" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that controls whether the low output of the triax
+connection is connected to earth ground (True) or is floating (False).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.output_trigger_on_external">
+<code class="sig-name descname">output_trigger_on_external</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">after</span><span class="o">=</span><span class="default_value">'DEL'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.output_trigger_on_external" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the output trigger on the specified trigger link
+line number, with the option of supplying the part of the
+measurement after which the trigger should be generated
+(default to delay, which is right before the measurement)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> – A trigger line from 1 to 4</p></li>
+<li><p><strong>after</strong> – An event string that determines when to trigger</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.questionable_event_enabled">
+<em class="property">property </em><code class="sig-name descname">questionable_event_enabled</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.questionable_event_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that controls which questionable events are
+registered in the Questionable Summary Bit (QSB) status bit. Refer to
+the Model 6220/6221 Reference Manual for more information about
+programming the status bits.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.questionable_events">
+<em class="property">property </em><code class="sig-name descname">questionable_events</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.questionable_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that reads which questionable events have been
+registered in the Questionable event registers. Refer to the Model
+6220/6221 Reference Manual for more information about programming
+the status bits. Reading this value clears the register.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the instrument and clears the queue.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.reset_buffer">
+<code class="sig-name descname">reset_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.reset_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.set_timed_arm">
+<code class="sig-name descname">set_timed_arm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">interval</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.set_timed_arm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up the measurement to be taken with the internal
+trigger at a variable sampling rate defined by the interval
+in seconds between sampling points</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the output.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.source_auto_range">
+<em class="property">property </em><code class="sig-name descname">source_auto_range</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.source_auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that controls the auto range of the current source.
+Valid values are True or False.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.source_compliance">
+<em class="property">property </em><code class="sig-name descname">source_compliance</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.source_compliance" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the compliance of the current
+source in Volts. valid values are in range 0.1 [V] to 105 [V].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.source_current">
+<em class="property">property </em><code class="sig-name descname">source_current</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.source_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the source current
+in Amps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.source_delay">
+<em class="property">property </em><code class="sig-name descname">source_delay</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.source_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets a manual delay for the source
+after the output is turned on before a measurement is taken. When this
+property is set, the auto delay is turned off. Valid values are
+between 1e-3 [seconds] and 999999.999 [seconds].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.source_enabled">
+<em class="property">property </em><code class="sig-name descname">source_enabled</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.source_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that controls whether the source is enabled, takes
+values True or False. The convenience methods <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley6221.enable_source" title="pymeasure.instruments.keithley.Keithley6221.enable_source"><code class="xref py py-meth docutils literal notranslate"><span class="pre">enable_source()</span></code></a> and
+<a class="reference internal" href="#pymeasure.instruments.keithley.Keithley6221.disable_source" title="pymeasure.instruments.keithley.Keithley6221.disable_source"><code class="xref py py-meth docutils literal notranslate"><span class="pre">disable_source()</span></code></a> can also be used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.source_range">
+<em class="property">property </em><code class="sig-name descname">source_range</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.source_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the source current
+range in Amps, which can take values between -0.105 A and +0.105 A.
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.srq_event_enabled">
+<em class="property">property </em><code class="sig-name descname">srq_event_enabled</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.srq_event_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that controls which event registers trigger the
+Service Request (SRQ) status bit. Refer to the Model 6220/6221
+Reference Manual for more information about programming the status
+bits.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.standard_event_enabled">
+<em class="property">property </em><code class="sig-name descname">standard_event_enabled</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.standard_event_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that controls which standard events are
+registered in the Event Summary Bit (ESB) status bit. Refer to
+the Model 6220/6221 Reference Manual for more information about
+programming the status bits.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.standard_events">
+<em class="property">property </em><code class="sig-name descname">standard_events</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.standard_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer value that reads which standard events have been
+registered in the Standard event registers. Refer to the Model
+6220/6221 Reference Manual for more information about programming
+the status bits. Reading this value clears the register.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.start_buffer">
+<code class="sig-name descname">start_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.start_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.status">
+<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the status byte and Master Summary Status bit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.stop_buffer">
+<code class="sig-name descname">stop_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.stop_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aborts the buffering measurement, by stopping the measurement
+arming and triggering sequence. If possible, a Selected Device 
+Clear (SDC) is used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.triad">
+<code class="sig-name descname">triad</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">base_frequency</span></em>, <em class="sig-param"><span class="n">duration</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.triad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sounds a musical triad using the system beep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_frequency</strong> – A frequency in Hz between 65 Hz and 1.3 MHz</p></li>
+<li><p><strong>duration</strong> – A time in seconds between 0 and 7.9 seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.trigger">
+<code class="sig-name descname">trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a bus trigger, which can be used when
+<a class="reference internal" href="#pymeasure.instruments.keithley.Keithley6221.trigger_on_bus" title="pymeasure.instruments.keithley.Keithley6221.trigger_on_bus"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trigger_on_bus()</span></code></a> is configured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.trigger_immediately">
+<code class="sig-name descname">trigger_immediately</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.trigger_immediately" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures measurements to be taken with the internal
+trigger at the maximum sampling rate.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.trigger_on_bus">
+<code class="sig-name descname">trigger_on_bus</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.trigger_on_bus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the trigger to detect events based on the bus
+trigger, which can be activated by <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley6221.trigger" title="pymeasure.instruments.keithley.Keithley6221.trigger"><code class="xref py py-meth docutils literal notranslate"><span class="pre">trigger()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.trigger_on_external">
+<code class="sig-name descname">trigger_on_external</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.trigger_on_external" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the measurement trigger to be taken from a
+specific line of an external trigger</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>line</strong> – A trigger line from 1 to 4</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.wait_for_buffer">
+<code class="sig-name descname">wait_for_buffer</code><span class="sig-paren">(</span><em class="sig-param">should_stop=&lt;function KeithleyBuffer.&lt;lambda&gt;&gt;</em>, <em class="sig-param">timeout=60</em>, <em class="sig-param">interval=0.1</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.wait_for_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks the program, waiting for a full buffer. This function 
+returns early if the <code class="code docutils literal notranslate"><span class="pre">should_stop</span></code> function returns True or
+the timeout is reached before the buffer is full.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>should_stop</strong> – A function that returns True when this function should return early</p></li>
+<li><p><strong>timeout</strong> – A time in seconds after which this function should return early</p></li>
+<li><p><strong>interval</strong> – A time in seconds for how often to check if the buffer is full</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_abort">
+<code class="sig-name descname">waveform_abort</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_abort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abort the waveform output and disarm the waveform function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_amplitude">
+<em class="property">property </em><code class="sig-name descname">waveform_amplitude</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_amplitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the (peak) amplitude of the
+waveform in Amps. Valid values are in range 2e-12 to 0.105.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_arm">
+<code class="sig-name descname">waveform_arm</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_arm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Arm the current waveform function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_duration_cycles">
+<em class="property">property </em><code class="sig-name descname">waveform_duration_cycles</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_duration_cycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the duration of the
+waveform in cycles. Valid values are in range 1e-3 to 99999999900.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_duration_set_infinity">
+<code class="sig-name descname">waveform_duration_set_infinity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_duration_set_infinity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the waveform duration to infinity.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_duration_time">
+<em class="property">property </em><code class="sig-name descname">waveform_duration_time</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_duration_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the duration of the
+waveform in seconds. Valid values are in range 100e-9 to 999999.999.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_dutycycle">
+<em class="property">property </em><code class="sig-name descname">waveform_dutycycle</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_dutycycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the duty-cycle of the
+waveform in percent for the square and ramp waves. Valid values are in
+range 0 to 100.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_frequency">
+<em class="property">property </em><code class="sig-name descname">waveform_frequency</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the frequency of the
+waveform in Hertz. Valid values are in range 1e-3 to 1e5.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_function">
+<em class="property">property </em><code class="sig-name descname">waveform_function</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the selected wave function. Valid
+values are “sine”, “ramp”, “square”, “arbitrary1”, “arbitrary2”,
+“arbitrary3” and “arbitrary4”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_offset">
+<em class="property">property </em><code class="sig-name descname">waveform_offset</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the offset of the waveform
+in Amps. Valid values are in range -0.105 to 0.105.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_ranging">
+<em class="property">property </em><code class="sig-name descname">waveform_ranging</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_ranging" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the source ranging of the
+waveform. Valid values are “best” and “fixed”.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_start">
+<code class="sig-name descname">waveform_start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the waveform output. Must already be armed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley6221.waveform_use_phasemarker">
+<em class="property">property </em><code class="sig-name descname">waveform_use_phasemarker</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley6221.waveform_use_phasemarker" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that controls whether the phase marker option
+is turned on or of. Valid values True (on) or False (off). Other
+settings for the phase marker have not yet been implemented.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="keithley2700.html" class="btn btn-neutral float-left" title="Keithley 2700 MultiMeter/Switch System" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="keithley6517b.html" class="btn btn-neutral float-right" title="Keithley 6517B Electrometer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

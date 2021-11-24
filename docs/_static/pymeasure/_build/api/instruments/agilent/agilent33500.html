@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agilent 33500 Function/Arbitrary Waveform Generator Family &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Agilent 33521A Function/Arbitrary Waveform Generator" href="agilent33521A.html" />
+    <link rel="prev" title="Agilent 33220A Arbitrary Waveform Generator" href="agilent33220A.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Agilent</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="agilent8257D.html">Agilent 8257D Signal Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent8722ES.html">Agilent 8722ES Vector Network Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentE4408B.html">Agilent E4408B Spectrum Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentE4980.html">Agilent E4980 LCR Meter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent34410A.html">Agilent 34410A Multimeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent34450A.html">HP/Agilent/Keysight 34450A Digital Multimeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent4156.html">Agilent 4155/4156 Semiconductor Parameter Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33220A.html">Agilent 33220A Arbitrary Waveform Generator</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Agilent 33500 Function/Arbitrary Waveform Generator Family</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33521A.html">Agilent 33521A Function/Arbitrary Waveform Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentB1500.html">Agilent B1500 Semiconductor Parameter Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Agilent</a> &raquo;</li>
+      <li>Agilent 33500 Function/Arbitrary Waveform Generator Family</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/agilent/agilent33500.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="agilent-33500-function-arbitrary-waveform-generator-family">
+<h1>Agilent 33500 Function/Arbitrary Waveform Generator Family<a class="headerlink" href="#agilent-33500-function-arbitrary-waveform-generator-family" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.Agilent33500">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.</code><code class="sig-name descname">Agilent33500</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represents the Agilent 33500 Function/Arbitrary Waveform Generator family.
+Individual devices are represented by subclasses.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">generator</span> <span class="o">=</span> <span class="n">Agilent33500</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+
+<span class="n">generator</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="s1">&#39;SIN&#39;</span>                 <span class="c1"># Sets the output signal shape to sine</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="mf">1e3</span>               <span class="c1"># Sets the output frequency to 1 kHz</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">amplitude</span> <span class="o">=</span> <span class="mi">5</span>                 <span class="c1"># Sets the output amplitude to 5 Vpp</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="s1">&#39;on&#39;</span>                 <span class="c1"># Enables the output</span>
+
+<span class="n">generator</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="s1">&#39;ARB&#39;</span>                 <span class="c1"># Set shape to arbitrary</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">arb_srate</span> <span class="o">=</span> <span class="mf">1e6</span>               <span class="c1"># Set sample rate to 1MSa/s</span>
+
+<span class="n">generator</span><span class="o">.</span><span class="n">data_volatile_clear</span><span class="p">()</span>         <span class="c1"># Clear volatile internal memory</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">data_arb</span><span class="p">(</span>                     <span class="c1"># Send data points of arbitrary waveform</span>
+    <span class="s1">&#39;test&#39;</span><span class="p">,</span>
+    <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="o">+</span><span class="mi">20</span><span class="p">),</span>          <span class="c1"># In this case a simple ramp</span>
+    <span class="n">data_format</span><span class="o">=</span><span class="s1">&#39;DAC&#39;</span>                   <span class="c1"># Data format is set to &#39;DAC&#39;</span>
+<span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">arb_file</span> <span class="o">=</span> <span class="s1">&#39;test&#39;</span>             <span class="c1"># Select the transmitted waveform &#39;test&#39;</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.amplitude">
+<em class="property">property </em><code class="sig-name descname">amplitude</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.amplitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the voltage amplitude of the
+output waveform in V, from 10e-3 V to 10 V. Depends on the output
+impedance. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.amplitude_unit">
+<em class="property">property </em><code class="sig-name descname">amplitude_unit</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.amplitude_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the units of the amplitude. Valid
+values are VPP (default), VRMS, and DBM. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.arb_advance">
+<em class="property">property </em><code class="sig-name descname">arb_advance</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.arb_advance" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that selects how the device advances from data point
+to data point. Can be set to ‘TRIG&lt;GER&gt;’ or ‘SRAT&lt;E&gt;’ (default).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.arb_file">
+<em class="property">property </em><code class="sig-name descname">arb_file</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.arb_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that selects the arbitrary signal from the volatile
+memory of the device. String has to match an existing arb signal in volatile
+memore (set by data_arb()). Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.arb_filter">
+<em class="property">property </em><code class="sig-name descname">arb_filter</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.arb_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that selects the filter setting for arbitrary signals. 
+Can be set to ‘NORM&lt;AL&gt;’, ‘STEP’ and ‘OFF’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.arb_srate">
+<em class="property">property </em><code class="sig-name descname">arb_srate</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.arb_srate" title="Permalink to this definition">¶</a></dt>
+<dd><p>An floating point property that sets the sample rate of the currently selected 
+arbitrary signal. Valid values are 1 µSa/s to 250 MSa/s (maximum range, can be lower
+depending on your device). This can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.beep">
+<code class="sig-name descname">beep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.beep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes a system beep.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.burst_mode">
+<em class="property">property </em><code class="sig-name descname">burst_mode</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.burst_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the burst mode. Valid values
+are: TRIG&lt;GERED&gt;, GAT&lt;ED&gt;. This setting can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.burst_ncycles">
+<em class="property">property </em><code class="sig-name descname">burst_ncycles</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.burst_ncycles" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that sets the number of cycles to be output
+when a burst is triggered. Valid values are 1 to 100000. This can be
+set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.burst_period">
+<em class="property">property </em><code class="sig-name descname">burst_period</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.burst_period" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the period of subsequent bursts.
+Has to follow the equation burst_period &gt; (burst_ncycles / frequency) + 1 µs.
+Valid values are 1 µs to 8000 s. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.burst_state">
+<em class="property">property </em><code class="sig-name descname">burst_state</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.burst_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that controls whether the burst mode is on
+(True) or off (False). Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.clear_display">
+<code class="sig-name descname">clear_display</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.clear_display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a text message from the display.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.data_arb">
+<code class="sig-name descname">data_arb</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arb_name</span></em>, <em class="sig-param"><span class="n">data_points</span></em>, <em class="sig-param"><span class="n">data_format</span><span class="o">=</span><span class="default_value">'DAC'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.data_arb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uploads an arbitrary trace into the volatile memory of the device. The data_points can be given
+as comma separated 16 bit DAC values (ranging from -32767 to +32767), as comma separated floating
+point values (ranging from -1.0 to +1.0) or as a binary data stream. Check the manual for more
+information. The storage depends on the device type and ranges from 8 Sa to 16 MSa (maximum).
+TODO: <em>Binary is not yet implemented</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arb_name</strong> – The name of the trace in the volatile memory. This is used to access the
+trace.</p></li>
+<li><p><strong>data_points</strong> – <p>Individual points of the trace. The format depends on the format
+parameter.</p>
+<p>format = ‘DAC’ (default): Accepts list of integer values ranging from
+-32767 to +32767. Minimum of 8 a maximum of 65536 points.</p>
+<p>format = ‘float’: Accepts list of floating point values ranging from
+-1.0 to +1.0. Minimum of 8 a maximum of 65536 points.</p>
+<p>format = ‘binary’: Accepts a binary stream of 8 bit data.</p>
+</p></li>
+<li><p><strong>data_format</strong> – Defines the format of data_points. Can be ‘DAC’ (default), ‘float’ or
+‘binary’. See documentation on parameter data_points above.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.data_volatile_clear">
+<code class="sig-name descname">data_volatile_clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.data_volatile_clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear all arbitrary signals from the volatile memory. This should be done if the same name
+is used continuously to load different arbitrary signals into the memory, since an error
+will occur if a trace is loaded which already exists in the memory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.display">
+<em class="property">property </em><code class="sig-name descname">display</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property which is displayed on the front panel of
+the device. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.ext_trig_out">
+<em class="property">property </em><code class="sig-name descname">ext_trig_out</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.ext_trig_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that controls whether the trigger out signal is
+active (True) or not (False). This signal is output from the Ext Trig
+connector on the rear panel in Burst and Wobbel mode. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.frequency">
+<em class="property">property </em><code class="sig-name descname">frequency</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the frequency of the output
+waveform in Hz, from 1 uHz to 120 MHz (maximum range, can be lower depending
+on your device), depending on the specified function. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the instrument identification</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.offset">
+<em class="property">property </em><code class="sig-name descname">offset</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the voltage offset of the
+output waveform in V, from 0 V to 4.995 V, depending on the set
+voltage amplitude (maximum offset = (Vmax - voltage) / 2). Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.output">
+<em class="property">property </em><code class="sig-name descname">output</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that turns on (True, ‘on’) or off (False, ‘off’) 
+the output of the function generator. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.output_load">
+<em class="property">property </em><code class="sig-name descname">output_load</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.output_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the expected load resistance (should be the load impedance connected
+to the output. The output impedance is always 50 Ohm, this setting can be used
+to correct the displayed voltage for loads unmatched to 50 Ohm.
+Valid values are between 1 and 10 kOhm or INF for high impedance.
+No validator is used since both numeric and string inputs are accepted,
+thus a value outside the range will not return an error.
+Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.phase">
+<em class="property">property </em><code class="sig-name descname">phase</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the phase of the output
+waveform in degrees, from -360 degrees to 360 degrees. Not available
+for arbitrary waveforms or noise. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.pulse_dutycycle">
+<em class="property">property </em><code class="sig-name descname">pulse_dutycycle</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.pulse_dutycycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the duty cycle of a pulse
+waveform function in percent, from 0% to 100%. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.pulse_hold">
+<em class="property">property </em><code class="sig-name descname">pulse_hold</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.pulse_hold" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls if either the pulse width or the
+duty cycle is retained when changing the period or frequency of the
+waveform. Can be set to: WIDT&lt;H&gt; or DCYC&lt;LE&gt;.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.pulse_period">
+<em class="property">property </em><code class="sig-name descname">pulse_period</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.pulse_period" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the period of a pulse
+waveform function in seconds, ranging from 33 ns to 1e6 s. Can be set
+and overwrites the frequency for <em>all</em> waveforms. If the period is
+shorter than the pulse width + the edge time, the edge time and pulse
+width will be adjusted accordingly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.pulse_transition">
+<em class="property">property </em><code class="sig-name descname">pulse_transition</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.pulse_transition" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the edge time in
+seconds for both the rising and falling edges. It is defined as the
+time between the 10% and 90% thresholds of the edge.
+Valid values are between 8.4 ns to 1 µs. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.pulse_width">
+<em class="property">property </em><code class="sig-name descname">pulse_width</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.pulse_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the width of a pulse
+waveform function in seconds, ranging from 16 ns to 1e6 s, within a
+set of restrictions depending on the period. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.ramp_symmetry">
+<em class="property">property </em><code class="sig-name descname">ramp_symmetry</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.ramp_symmetry" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the symmetry percentage
+for the ramp waveform, from 0.0% to 100.0% Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.shape">
+<em class="property">property </em><code class="sig-name descname">shape</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the output waveform. Can be set to:
+SIN&lt;USOID&gt;, SQU&lt;ARE&gt;, TRI&lt;ANGLE&gt;, RAMP, PULS&lt;E&gt;, PRBS,  NOIS&lt;E&gt;, ARB, DC.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.square_dutycycle">
+<em class="property">property </em><code class="sig-name descname">square_dutycycle</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.square_dutycycle" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the duty cycle of a square
+waveform function in percent, from 0.01% to 99.98%.
+The duty cycle is limited by the frequency and the minimal pulse width of
+16 ns. See manual for more details. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.trigger">
+<code class="sig-name descname">trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a trigger signal to the function generator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.trigger_source">
+<em class="property">property </em><code class="sig-name descname">trigger_source</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.trigger_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the trigger source. Valid values
+are: IMM&lt;EDIATE&gt; (internal), EXT&lt;ERNAL&gt; (rear input), BUS (via trigger
+command). This setting can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.voltage_high">
+<em class="property">property </em><code class="sig-name descname">voltage_high</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.voltage_high" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the upper voltage of the
+output waveform in V, from -4.990 V to 5 V (must be higher than low
+voltage by at least 1 mV). Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.voltage_low">
+<em class="property">property </em><code class="sig-name descname">voltage_low</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.voltage_low" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the lower voltage of the
+output waveform in V, from -5 V to 4.990 V (must be lower than high
+voltage by at least 1 mV). Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent33500.wait_for_trigger">
+<code class="sig-name descname">wait_for_trigger</code><span class="sig-paren">(</span><em class="sig-param">timeout=3600</em>, <em class="sig-param">should_stop=&lt;function Agilent33500.&lt;lambda&gt;&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent33500.wait_for_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait until the triggering has finished or timeout is reached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeout</strong> – The maximum time the waiting is allowed to take. If
+timeout is exceeded, a TimeoutError is raised. If
+timeout is set to zero, no timeout will be used.</p></li>
+<li><p><strong>should_stop</strong> – Optional function (returning a bool) to allow the
+waiting to be stopped before its end.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="agilent33220A.html" class="btn btn-neutral float-left" title="Agilent 33220A Arbitrary Waveform Generator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="agilent33521A.html" class="btn btn-neutral float-right" title="Agilent 33521A Function/Arbitrary Waveform Generator" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

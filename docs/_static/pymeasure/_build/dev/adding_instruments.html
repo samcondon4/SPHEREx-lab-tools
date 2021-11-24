@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adding instruments &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coding Standards" href="coding_standards.html" />
+    <link rel="prev" title="Reporting an error" href="reporting_errors.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/instruments/index.html">pymeasure.instruments</a></li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Adding instruments</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#file-structure">File structure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#updating-the-init-file">Updating the init file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-documentation">Adding documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#instrument-file">Instrument file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-properties">Writing properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-properties">Advanced properties</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#in-a-restricted-range">In a restricted range</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#in-a-discrete-set">In a discrete set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-maps">Using maps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-of-set-values">Processing of set values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#processing-of-return-values">Processing of return values</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Adding instruments</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/dev/adding_instruments.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="adding-instruments">
+<h1>Adding instruments<a class="headerlink" href="#adding-instruments" title="Permalink to this headline">¶</a></h1>
+<p>You can make a significant contribution to PyMeasure by adding a new instrument to the <code class="code docutils literal notranslate"><span class="pre">pymeasure.instruments</span></code> package. Even adding an instrument with a few features can help get the ball rolling, since its likely that others are interested in the same instrument.</p>
+<p>Before getting started, become familiar with the <a class="reference internal" href="contribute.html"><span class="doc">contributing work-flow</span></a> for PyMeasure, which steps through the process of adding a new feature (like an instrument) to the development version of the source code. This section will describe how to lay out your instrument code.</p>
+<section id="file-structure">
+<h2>File structure<a class="headerlink" href="#file-structure" title="Permalink to this headline">¶</a></h2>
+<p>Your new instrument should be placed in the directory corresponding to the manufacturer of the instrument. For example, if you are going to add an “Extreme 5000” instrument you should add the following files assuming “Extreme” is the manufacturer. Use lowercase for all filenames to distinguish packages from CamelCase Python classes.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pymeasure/pymeasure/instruments/extreme/
+    |--&gt; __init__.py
+    |--&gt; extreme5000.py
+</pre></div>
+</div>
+<section id="updating-the-init-file">
+<h3>Updating the init file<a class="headerlink" href="#updating-the-init-file" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="code docutils literal notranslate"><span class="pre">__init__.py</span></code> file in the manufacturer directory should import all of the instruments that correspond to the manufacturer, to allow the files to be easily imported. For a new manufacturer, the manufacturer should also be added to <code class="code docutils literal notranslate"><span class="pre">pymeasure/pymeasure/instruments/__init__.py</span></code>.</p>
+</section>
+<section id="adding-documentation">
+<h3>Adding documentation<a class="headerlink" href="#adding-documentation" title="Permalink to this headline">¶</a></h3>
+<p>Documentation for each instrument is required, and helps others understand the features you have implemented. Add a new reStructuredText file to the documentation.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pymeasure/docs/api/instruments/extreme/
+    |--&gt; index.rst
+    |--&gt; extreme5000.rst
+</pre></div>
+</div>
+<p>Copy an existing instrument documentation file, which will automatically generate the documentation for the instrument. The <code class="code docutils literal notranslate"><span class="pre">index.rst</span></code> file should link to the <code class="code docutils literal notranslate"><span class="pre">extreme5000</span></code> file. For a new manufacturer, the manufacturer should be also linked in <code class="code docutils literal notranslate"><span class="pre">pymeasure/docs/api/instruments/index.rst</span></code>.</p>
+</section>
+</section>
+<section id="instrument-file">
+<h2>Instrument file<a class="headerlink" href="#instrument-file" title="Permalink to this headline">¶</a></h2>
+<p>All standard instruments should be child class of <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument" title="pymeasure.instruments.Instrument"><code class="xref py py-class docutils literal notranslate"><span class="pre">Instrument</span></code></a>. This provides the basic functionality for working with <a class="reference internal" href="../api/adapters.html#pymeasure.adapters.Adapter" title="pymeasure.adapters.Adapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adapters</span></code></a>, which perform the actual communication.</p>
+<p>The most basic instrument, for our “Extreme 5000” example starts like this:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#</span>
+<span class="c1"># This file is part of the PyMeasure package.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2013-2021 PyMeasure Developers</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN</span>
+<span class="c1"># THE SOFTWARE.</span>
+<span class="c1">#</span>
+
+<span class="c1"># from pymeasure.instruments import Instrument</span>
+</pre></div>
+</div>
+<p>This is a minimal instrument definition:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Extreme5000</span><span class="p">(</span><span class="n">Instrument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Represents the imaginary Extreme 5000 instrument.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resourceName</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">resourceName</span><span class="p">,</span>
+            <span class="s2">&quot;Extreme 5000&quot;</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>Make sure to include the PyMeasure license to each file, and add yourself as an author to the <code class="code docutils literal notranslate"><span class="pre">AUTHORS.txt</span></code> file.</p>
+<p>In principle you are free to write any functions that are necessary for interacting with the instrument. When doing so, make sure to use the <code class="code docutils literal notranslate"><span class="pre">self.ask(command)</span></code>, <code class="code docutils literal notranslate"><span class="pre">self.write(command)</span></code>, and <code class="code docutils literal notranslate"><span class="pre">self.read()</span></code> methods to issue command instead of calling the adapter directly.</p>
+<p>In practice, we have developed a number of convenience functions for making instruments easy to write and maintain. The following sections detail these conveniences and are highly encouraged.</p>
+</section>
+<section id="writing-properties">
+<h2>Writing properties<a class="headerlink" href="#writing-properties" title="Permalink to this headline">¶</a></h2>
+<p>In PyMeasure, <a class="reference external" href="https://docs.python.org/3/howto/descriptor.html#properties">Python properties</a> are the preferred method for dealing with variables that are read or set.
+PyMeasure comes with two convenience functions for making properties for classes.
+The <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.measurement" title="pymeasure.instruments.Instrument.measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.measurement</span></code></a> function returns a property that issues a GPIB/SCPI requests when the value is used.
+For example, if our “Extreme 5000” has the <code class="code docutils literal notranslate"><span class="pre">*IDN?</span></code> command we can write the following property to be added above the <code class="code docutils literal notranslate"><span class="pre">def</span> <span class="pre">__init__</span></code> line in our above example class, or added to the class after the fact as in the code here:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">measurement</span><span class="p">(</span>
+   <span class="s2">&quot;*IDN?&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot; Reads the instrument identification &quot;&quot;&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You will notice that a documentation string is required, and should be descriptive and specific.</p>
+<p>When we use this property we will get the identification information.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">id</span>           <span class="c1"># Reads &quot;*IDN?&quot;</span>
+<span class="go">&#39;Extreme 5000 identification from instrument&#39;</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> function extends this behavior by creating a property that you can read and set. For example, if our “Extreme 5000” has the <code class="code docutils literal notranslate"><span class="pre">:VOLT?</span></code> and <code class="code docutils literal notranslate"><span class="pre">:VOLT</span> <span class="pre">&lt;float&gt;</span></code> commands that are in Volts, we can write the following property.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:VOLT?&quot;</span><span class="p">,</span> <span class="s2">&quot;:VOLT </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property that controls the voltage</span>
+<span class="sd">    in Volts. This property can be set.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>You will notice that we use the <a class="reference external" href="https://docs.python.org/3/library/string.html#format-specification-mini-language">Python string format</a> <code class="code docutils literal notranslate"><span class="pre">%g</span></code> to pass through the floating point.</p>
+<p>We can use this property to set the voltage to 100 mV, which will execute the command and then request the current voltage.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mf">0.1</span>        <span class="c1"># Executes &quot;:VOLT 0.1&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span>              <span class="c1"># Reads &quot;:VOLT?&quot;</span>
+<span class="go">0.1</span>
+</pre></div>
+</div>
+<p>Using <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> and <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.measurement" title="pymeasure.instruments.Instrument.measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.measurement</span></code></a> functions, you can create a number of properties for basic measurements and controls.</p>
+<p>The <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> function can be used with multiple values at once, passed as a tuple. Say, we may set voltages and frequencies in our “Extreme 5000”, and the the commands for this are <code class="code docutils literal notranslate"><span class="pre">:VOLTFREQ?</span></code> and <code class="code docutils literal notranslate"><span class="pre">:VOLTFREQ</span> <span class="pre">&lt;float&gt;,&lt;float&gt;</span></code>, we could use the following property:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">combination</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:VOLTFREQ?&quot;</span><span class="p">,</span> <span class="s2">&quot;:VOLTFREQ </span><span class="si">%g</span><span class="s2">,</span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property that simultaneously controls the voltage</span>
+<span class="sd">    in Volts and the frequency in Hertz. This property can be set by a tuple.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>In use, we could set the voltage to 200 mV, and the Frequency to 931 Hz, and read both values immediately afterwards.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">combination</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">931</span><span class="p">)</span>        <span class="c1"># Executes &quot;:VOLTFREQ 0.2,931&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">combination</span>                     <span class="c1"># Reads &quot;:VOLTFREQ?&quot;</span>
+<span class="go">[0.2, 931.0]</span>
+</pre></div>
+</div>
+<p>The next section details additional features of <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> that allow you to write properties that cover specific ranges, or have to map between a real value to one used in the command. Furthermore it is shown how to perform more complex processing of return values from your device.</p>
+</section>
+<section id="advanced-properties">
+<span id="id1"></span><h2>Advanced properties<a class="headerlink" href="#advanced-properties" title="Permalink to this headline">¶</a></h2>
+<p>Many GPIB/SCPI commands are more restrictive than our basic examples above. The <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> function has the ability to encode these restrictions using <a class="reference internal" href="../api/instruments/validators.html#module-pymeasure.instruments.validators" title="pymeasure.instruments.validators"><code class="xref py py-mod docutils literal notranslate"><span class="pre">validators</span></code></a>. A validator is a function that takes a value and a set of values, and returns a valid value or raises an exception. There are a number of pre-defined validators in <a class="reference internal" href="../api/instruments/validators.html#module-pymeasure.instruments.validators" title="pymeasure.instruments.validators"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pymeasure.instruments.validators</span></code></a> that should cover most situations. We will cover the four basic types here.</p>
+<p>In the examples below we assume you have imported the validators.</p>
+<p>In many situations you will also need to process the return string in order to extract the wanted quantity or process a value before sending it to the device. The <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a>, <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.measurement" title="pymeasure.instruments.Instrument.measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.measurement</span></code></a> and <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.setting" title="pymeasure.instruments.Instrument.setting"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.setting</span></code></a> function also provide means to achieve this.</p>
+<section id="in-a-restricted-range">
+<h3>In a restricted range<a class="headerlink" href="#in-a-restricted-range" title="Permalink to this headline">¶</a></h3>
+<p>If you have a property with a restricted range, you can use the <code class="xref py py-func docutils literal notranslate"><span class="pre">strict_range</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">truncated_range</span></code> functions.</p>
+<p>For example, if our “Extreme 5000” can only support voltages from -1 V to 1 V, we can modify our previous example to use a strict validator over this range.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:VOLT?&quot;</span><span class="p">,</span> <span class="s2">&quot;:VOLT </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property that controls the voltage</span>
+<span class="sd">    in Volts, from -1 to 1 V. This property can be set. &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">strict_range</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now our voltage will raise a ValueError if the value is out of the range.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="c">...</span>
+<span class="gr">ValueError</span>: <span class="n">Value of 100 is not in range [-1,1]</span>
+</pre></div>
+</div>
+<p>This is useful if you want to alert the programmer that they are using an invalid value. However, sometimes it can be nicer to truncate the value to be within the range.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:VOLT?&quot;</span><span class="p">,</span> <span class="s2">&quot;:VOLT </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property that controls the voltage</span>
+<span class="sd">    in Volts, from -1 to 1 V. Invalid voltages are truncated.</span>
+<span class="sd">    This property can be set. &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">truncated_range</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now our voltage will not raise an error, and will truncate the value to the range bounds.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mi">100</span>        <span class="c1"># Executes &quot;:VOLT 1&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span>
+<span class="go">1.0</span>
+</pre></div>
+</div>
+</section>
+<section id="in-a-discrete-set">
+<h3>In a discrete set<a class="headerlink" href="#in-a-discrete-set" title="Permalink to this headline">¶</a></h3>
+<p>Often a control property should only take a few discrete values. You can use the <code class="xref py py-func docutils literal notranslate"><span class="pre">strict_discrete_set</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">truncated_discrete_set</span></code> functions to handle these situations. The strict version raises an error if the value is not in the set, as in the range examples above.</p>
+<p>For example, if our “Extreme 5000” has a <code class="code docutils literal notranslate"><span class="pre">:RANG</span> <span class="pre">&lt;float&gt;</span></code> command that sets the voltage range that can take values of 10 mV, 100 mV, and 1 V in Volts, then we can write a control as follows.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:RANG?&quot;</span><span class="p">,</span> <span class="s2">&quot;:RANG </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property that controls the voltage</span>
+<span class="sd">    range in Volts. This property can be set.</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">truncated_discrete_set</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mf">10e-3</span><span class="p">,</span> <span class="mf">100e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now we can set the voltage range, which will automatically truncate to an appropriate value.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mf">0.08</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span>
+<span class="go">0.1</span>
+</pre></div>
+</div>
+</section>
+<section id="using-maps">
+<h3>Using maps<a class="headerlink" href="#using-maps" title="Permalink to this headline">¶</a></h3>
+<p>Now that you are familiar with the validators, you can additionally use maps to satisfy instruments which require non-physical values. The <code class="code docutils literal notranslate"><span class="pre">map_values</span></code> argument of <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> enables this feature.</p>
+<p>If your set of values is a list, then the command will use the index of the list. For example, if our “Extreme 5000” instead has a <code class="code docutils literal notranslate"><span class="pre">:RANG</span> <span class="pre">&lt;integer&gt;</span></code>, where 0, 1, and 2 correspond to 10 mV, 100 mV, and 1 V, then we can use the following control.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:RANG?&quot;</span><span class="p">,</span> <span class="s2">&quot;:RANG </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property that controls the voltage</span>
+<span class="sd">    range in Volts, which takes values of 10 mV, 100 mV and 1 V.</span>
+<span class="sd">    This property can be set. &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">truncated_discrete_set</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mf">10e-3</span><span class="p">,</span> <span class="mf">100e-3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="n">map_values</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now the actual GPIB/SCIP command is “:RANG 1” for a value of 100 mV, since the index of 100 mV in the values list is 1.</p>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mf">100e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="go">&#39;1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+<p>Dictionaries provide a more flexible method for mapping between real-values and those required by the instrument. If instead the <code class="code docutils literal notranslate"><span class="pre">:RANG</span> <span class="pre">&lt;integer&gt;</span></code> took 1, 2, and 3 to correspond to 10 mV, 100 mV, and 1 V, then we can replace our previous control with the following.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:RANG?&quot;</span><span class="p">,</span> <span class="s2">&quot;:RANG </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property that controls the voltage</span>
+<span class="sd">    range in Volts, which takes values of 10 mV, 100 mV and 1 V.</span>
+<span class="sd">    This property can be set. &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">truncated_discrete_set</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">{</span><span class="mf">10e-3</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="mf">100e-3</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span>
+    <span class="n">map_values</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mf">10e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="go">&#39;1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mf">100e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">voltage</span>
+<span class="go">0.1</span>
+</pre></div>
+</div>
+<p>The dictionary now maps the keys to specific values. The values and keys can be any type, so this can support properties that use strings:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:CHAN?&quot;</span><span class="p">,</span> <span class="s2">&quot;:CHAN </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A string property that controls the measurement channel,</span>
+<span class="sd">    which can take the values X, Y, or Z.</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">strict_discrete_set</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span>
+    <span class="n">map_values</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="s1">&#39;X&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="go">&#39;1&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="s1">&#39;Y&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">channel</span>
+<span class="go">&#39;Y&#39;</span>
+</pre></div>
+</div>
+<p>As you have seen, the <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> function can be significantly extended by using validators and maps.</p>
+</section>
+<section id="processing-of-set-values">
+<h3>Processing of set values<a class="headerlink" href="#processing-of-set-values" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a>, and <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.setting" title="pymeasure.instruments.Instrument.setting"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.setting</span></code></a> allow a keyword argument <cite>set_process</cite> which must be a function that takes a value after validation and performs processing before value mapping. This function must return the processed value. This can be typically used for unit conversions as in the following example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">setting</span><span class="p">(</span>
+    <span class="s2">&quot;:CURR </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property that takes the measurement current in A</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">strict_range</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+    <span class="n">set_process</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="mf">1e3</span><span class="o">*</span><span class="n">v</span><span class="p">,</span>  <span class="c1"># convert current to mA</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># set current to 1000 mA</span>
+</pre></div>
+</div>
+</section>
+<section id="processing-of-return-values">
+<h3>Processing of return values<a class="headerlink" href="#processing-of-return-values" title="Permalink to this headline">¶</a></h3>
+<p>Similar to <cite>set_process</cite> the <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a>, and <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.measurement" title="pymeasure.instruments.Instrument.measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.measurement</span></code></a> functions allow a <cite>get_process</cite> argument which if specified must be a function that takes a value and performs processing before value mapping. The function must return the processed value. In analogy to the example above this can be used for example for unit conversion:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:CURR?&quot;</span><span class="p">,</span> <span class="s2">&quot;:CURR </span><span class="si">%g</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A floating point property representing the measurement current in A</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">strict_range</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+    <span class="n">set_process</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="mf">1e3</span><span class="o">*</span><span class="n">v</span><span class="p">,</span>  <span class="c1"># convert to mA</span>
+    <span class="n">get_process</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="mf">1e-3</span><span class="o">*</span><span class="n">v</span><span class="p">,</span>  <span class="c1"># convert to A</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span> <span class="o">=</span> <span class="n">Extreme5000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="mf">3.1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">extreme</span><span class="o">.</span><span class="n">current</span>
+<span class="go">3.1</span>
+</pre></div>
+</div>
+<p><cite>get_process</cite> can also be used to perform string processing. Let’s say your instrument returns a value with its unit which has to be removed. This could be achieved by the following code:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">measurement</span><span class="p">(</span>
+    <span class="s2">&quot;:CAP?&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A measurement returning a capacity in nF in the format &#39;&lt;cap&gt; nF&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">get_process</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;nF&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The same can be also achieved by the <cite>preprocess_reply</cite> keyword argument to <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> or <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.measurement" title="pymeasure.instruments.Instrument.measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.measurement</span></code></a>. This function is forwarded to <code class="xref py py-func docutils literal notranslate"><span class="pre">Adapter.values</span></code> and runs directly after receiving the reply from the device. One can therefore take advantage of the built in casting abilities and simplify the code accordingly:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5000</span><span class="o">.</span><span class="n">capacity</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">measurement</span><span class="p">(</span>
+    <span class="s2">&quot;:CAP?&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A measurement returning a capacity in nF in the format &#39;&lt;cap&gt; nF&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">preprocess_reply</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;nF&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="c1"># notice how we don&#39;t need to cast to float anymore</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The real purpose of <cite>preprocess_reply</cite> is, however, for instruments where many/all properties need similar reply processing. <cite>preprocess_reply</cite> can be applied to all <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.control" title="pymeasure.instruments.Instrument.control"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.control</span></code></a> or <a class="reference internal" href="../api/instruments/instruments.html#pymeasure.instruments.Instrument.measurement" title="pymeasure.instruments.Instrument.measurement"><code class="xref py py-func docutils literal notranslate"><span class="pre">Instrument.measurement</span></code></a> properties, for example if all quantities are returned with a unit as in the example above. To avoid running into troubles for other properties this <cite>preprocess_reply</cite> should be clever enough to skip the processing in case it is not appropriate, for example if some identification string is returned. Typically this can be achieved by regular expression matching. In case of no match the reply is returned unchanged:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="n">_reg_value</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([-+]?[0-9]*\.?[0-9]+)\s+\w+&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">extract_value</span><span class="p">(</span><span class="n">reply</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; extract numerical value from reply. If none can be found the reply</span>
+<span class="sd">    is returned unchanged.</span>
+
+<span class="sd">    :param reply: reply string</span>
+<span class="sd">    :returns: string with only the numerical value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_reg_value</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">reply</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">r</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">reply</span>
+
+<span class="k">class</span> <span class="nc">Extreme5001</span><span class="p">(</span><span class="n">Instrument</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Represents the imaginary Extreme 5001 instrument. This instrument</span>
+<span class="sd">    sends numerical values including their units in an format &quot;&lt;value&gt;</span>
+<span class="sd">    &lt;unit&gt;&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">capacity</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">measurement</span><span class="p">(</span>
+        <span class="s2">&quot;:CAP?&quot;</span><span class="p">,</span>
+        <span class="sd">&quot;&quot;&quot; A measurement returning a capacity in nF in the format &#39;&lt;cap&gt; nF&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">voltage</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">measurement</span><span class="p">(</span>
+        <span class="s2">&quot;:VOLT?&quot;</span><span class="p">,</span>
+        <span class="sd">&quot;&quot;&quot; A measurement returning a voltage in V in the format &#39;&lt;volt&gt; V&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">measurement</span><span class="p">(</span>
+        <span class="s2">&quot;*idn?&quot;</span><span class="p">,</span>
+        <span class="sd">&quot;&quot;&quot; The identification of the instrument.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resourceName</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">resourceName</span><span class="p">,</span>
+            <span class="s2">&quot;Extreme 5000&quot;</span><span class="p">,</span>
+            <span class="n">preprocess_reply</span><span class="o">=</span><span class="n">extract_value</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>In cases where the general <cite>preprocess_reply</cite> function should not run it can be also overwritten in the property definition:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">Extreme5001</span><span class="o">.</span><span class="n">channel</span> <span class="o">=</span> <span class="n">Instrument</span><span class="o">.</span><span class="n">control</span><span class="p">(</span>
+    <span class="s2">&quot;:CHAN?&quot;</span><span class="p">,</span> <span class="s2">&quot;:CHAN </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="sd">&quot;&quot;&quot; A string property that controls the measurement channel,</span>
+<span class="sd">    which can take the values X, Y, or Z.</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">validator</span><span class="o">=</span><span class="n">strict_discrete_set</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+    <span class="n">preprocess_reply</span><span class="o">=</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Using a combination of the decribed abilities also complex communication schemes can be achieved.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="reporting_errors.html" class="btn btn-neutral float-left" title="Reporting an error" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="coding_standards.html" class="btn btn-neutral float-right" title="Coding Standards" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
