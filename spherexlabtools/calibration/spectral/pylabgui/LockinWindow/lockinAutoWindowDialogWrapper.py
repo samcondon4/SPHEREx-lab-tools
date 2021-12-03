@@ -19,7 +19,6 @@ def lockin_sens_transition_listitem_proc(sens_transition):
     :param sens_transition:
     :return:
     """
-
     get_sens_dict = {"value": None, "multiplier": None, "units": None}
     for key in sens_transition:
         if "value" in key:

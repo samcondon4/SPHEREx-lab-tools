@@ -79,6 +79,7 @@ class WidgetGroup:
                 raise RuntimeError("Only text or data can be returned from a QListWidgetItem")
         else:
             ret_item = False
+
         return ret_item
 
     @classmethod
@@ -283,6 +284,7 @@ class WidgetGroup:
                 try:
                     self.set_methods[key](setter_dict[key])
                 except Exception as e:
+                    #print("pylabgui_widget_group.WidgetGroup.set_passive() exception occure on %s" % key)
                     print(e)
 
         return setters_found

@@ -18,6 +18,29 @@ class CS260AutoWindow(Ui_Form, GuiWindow):
         self.setupUi(self.form)
         if not self.configured:
             self.configure()
+        print(self.WidgetGroups)
+        self.WidgetGroups["cs260_grating_transitions"].set_list_setter_proc(self.grating_transition_listitem_proc)
+        self.WidgetGroups["cs260_osf_transitions"].set_list_setter_proc(self.osf_transition_listitem_proc)
+
+    @staticmethod
+    def grating_transition_listitem_proc(grating_transition):
+        """ Grating transition processing for updating the list from the saved_sequences group.
+        """
+        wavelength = float(grating_transition["wavelength"])
+        grating = int(grating_transition["grating"])
+        text = "wavelength = %f, grating = %i" % (wavelength, grating)
+        data = {"wavelength": wavelength, "grating": grating}
+        return text, data
+
+    @staticmethod
+    def osf_transition_listitem_proc(osf_transition):
+        """ Order sort filter transition processing for updating the list from the saved_sequences group.
+        """
+        wavelength = float(osf_transition["wavelength"])
+        osf = int(osf_transition["osf"])
+        text = "wavelength = %f, osf = %i" % (wavelength, osf)
+        data = {"wavelength": wavelength, "osf": osf}
+        return text, data
 
 
 if __name__ == "__main__":

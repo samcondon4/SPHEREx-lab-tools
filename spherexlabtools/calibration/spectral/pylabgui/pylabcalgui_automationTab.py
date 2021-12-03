@@ -6,17 +6,17 @@ Sam Condon, 08/16/2021
 """
 
 
-import asyncio
 import os
-from configparser import ConfigParser
+import json
+import asyncio
 from qasync import QEventLoop
-from PyQt5 import QtWidgets
-from .pylabgui_window_base import GuiCompositeWindow
-from .CS260Window.cs260AutoDialogWrapper import CS260AutoWindow
-from .LockinWindow.lockinAutoWindowDialogWrapper import *
-from .LockinWindow.lockinWindowHelper import Lockin
-from .NDFWheelWindow.ndfAutoWindowDialogWrapper import NDFAutoWindow
+from configparser import ConfigParser
 from .NDFWheelWindow.ndfWindowHelper import NDF
+from .LockinWindow.lockinWindowHelper import Lockin
+from .pylabgui_window_base import GuiCompositeWindow
+from .LockinWindow.lockinAutoWindowDialogWrapper import *
+from .CS260Window.cs260AutoDialogWrapper import CS260AutoWindow
+from .NDFWheelWindow.ndfAutoWindowDialogWrapper import NDFAutoWindow
 from .SeriesConstruction.seriesconstructionWindowDialogWrapper import SeriesConstructionWindow
 
 
@@ -85,7 +85,6 @@ class AutoTab(GuiCompositeWindow):
 
         return text, output_sequence_dict
 
-
     def save_ini(self, seq_dict, seq_name):
         ini_seq_dict = {}
         for key in seq_dict:
@@ -121,6 +120,29 @@ class AutoTab(GuiCompositeWindow):
             proc_dict["ndf"] = NDF.ndf_ini_dict_proc(proc_dict["ndf"])
         #########################################################################
 
+        # Process cs260 grating and osf transitions list ########################
+        if "cs260" in proc_dict_keys:
+            cs260 = proc_dict["cs260"]
+            grat = cs260["grating transitions"].replace("'", '"')
+            grat = json.loads(grat)
+            filt = cs260["osf transitions"].replace("'", '"')
+            filt = json.loads(filt)
+            new_grat = [0 for _ in grat]
+            for i in range(len(grat)):
+                trans = grat[i]
+                new_trans = {"data": trans, "text": "wavelength = %f, grating = %i" % (trans["wavelength"],
+                                                                                       trans["grating"])}
+                new_grat[i] = new_trans
+            new_filt = [0 for _ in filt]
+            for i in range(len(grat)):
+                trans = filt[i]
+                new_trans = {"data": trans, "text": "wavelength = %f, osf = %i" % (trans["wavelength"],
+                                                                                   trans["osf"])}
+                new_filt[i] = new_trans
+            proc_dict["cs260"]["grating transitions"] = new_grat
+            proc_dict["cs260"]["osf transitions"] = new_filt
+        #########################################################################
+
         proc_dict.pop("from ini")
         text = proc_dict["sequence info"]["sequence name"]
         proc_dict.pop("sequence info")
@@ -130,6 +152,7 @@ class AutoTab(GuiCompositeWindow):
                 new_key = key1 + " " + key2
                 output_dict[new_key.replace(" ", "_")] = proc_dict[key1][key2]
 
+        print("output_dict={}".format(output_dict))
         return output_dict
 
     @staticmethod
