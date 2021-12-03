@@ -48,6 +48,7 @@ class Moving(SmCustomState):
             seq_index = cl_dict["Sequence Index"][0]
             for key in moving:
                 command_dict = moving[key][ser_index][seq_index]
+                print(("moving key %s: {}" % key).format(command_dict))
                 cmd_keys = list(command_dict.keys())
                 # Try sending a command dictionary to each instrument. If a movement fails, enter the error state
                 try:

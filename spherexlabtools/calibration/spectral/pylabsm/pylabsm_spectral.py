@@ -115,13 +115,13 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Add states and transitions to the state machine ########################################################
         self.init_state.add_transition(self.wait_state)
-        #self.wait_state.add_transition(self.moving_state, arg="Manual or Auto", arg_result=["auto"])
-        #self.wait_state.add_transition(self.manual_state, arg="Manual or Auto", arg_result=["manual"])
-        #self.manual_state.add_transition(self.wait_state)
-        #self.moving_state.add_transition(self.measuring_state)
-        #self.measuring_state.add_transition(self.indexing_state)
-        #self.indexing_state.add_transition(self.wait_state, arg="Control Loop Complete", arg_result=[True])
-        #self.indexing_state.add_transition(self.moving_state, arg="Control Loop Complete", arg_result=[False])
+        self.wait_state.add_transition(self.moving_state, arg="Manual or Auto", arg_result=["auto"])
+        self.wait_state.add_transition(self.manual_state, arg="Manual or Auto", arg_result=["manual"])
+        self.manual_state.add_transition(self.wait_state)
+        self.moving_state.add_transition(self.measuring_state)
+        self.measuring_state.add_transition(self.indexing_state)
+        self.indexing_state.add_transition(self.wait_state, arg="Control Loop Complete", arg_result=[True])
+        self.indexing_state.add_transition(self.moving_state, arg="Control Loop Complete", arg_result=[False])
         ###########################################################################################################
 
     # TODO: Re-write this function for standalone debugging of the state machine

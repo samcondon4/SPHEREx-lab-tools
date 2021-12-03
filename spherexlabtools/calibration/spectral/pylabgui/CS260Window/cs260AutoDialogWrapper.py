@@ -18,7 +18,6 @@ class CS260AutoWindow(Ui_Form, GuiWindow):
         self.setupUi(self.form)
         if not self.configured:
             self.configure()
-        print(self.WidgetGroups)
         self.WidgetGroups["cs260_grating_transitions"].set_list_setter_proc(self.grating_transition_listitem_proc)
         self.WidgetGroups["cs260_osf_transitions"].set_list_setter_proc(self.osf_transition_listitem_proc)
 
