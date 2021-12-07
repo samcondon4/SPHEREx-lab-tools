@@ -38,7 +38,6 @@ class Waiting(SmCustomState):
             # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
             # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
             gui_input_type = type(gui_data)
-            print(gui_data)
             if gui_input_type is list:
                 in_dict["Manual or Auto"][0] = "auto"
                 in_dict["Control"]["Loop"] = self.build_control_loop(gui_data)
@@ -144,21 +143,15 @@ class Waiting(SmCustomState):
         filt = 1
         for w in waves:
             # get the appropriate grating #
-            if w > float(grating_transitions[gtransi]["wavelength"]):
+            while gtransi < grating_total and w > float(grating_transitions[gtransi]["wavelength"]):
                 grat = int(grating_transitions[gtransi]["grating"])
-                if not gtransi == grating_total - 1:
-                    gtransi += 1
-                gratings[seqi] = grat
-            else:
-                gratings[seqi] = grat
+                gtransi += 1
+            gratings[seqi] = grat
             # get the appropriate order sort filter #
-            if w > float(filter_transitions[ftransi]["wavelength"]):
+            while ftransi < filter_total and w > float(filter_transitions[ftransi]["wavelength"]):
                 filt = int(filter_transitions[ftransi]["osf"])
-                if not ftransi == filter_total - 1:
-                    ftransi += 1
-                filters[seqi] = "OSF%i" % filt
-            else:
-                filters[seqi] = "OSF%i" % filt
+                ftransi += 1
+            filters[seqi] = "OSF%i" % filt
             seqi += 1
 
         cs260_seq = [{"wavelength": waves[i], "grating": gratings[i],

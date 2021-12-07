@@ -228,7 +228,7 @@ class WidgetGroup:
                 get_method = lambda in_widget=widget, textordata="data": \
                     WidgetGroup.get_all_items_from_list(in_widget, textordata=textordata)
                 set_method = lambda item_dict_list, in_widget=widget: \
-                                    WidgetGroup.set_items_to_list(in_widget, item_dict_list=item_dict_list)
+                    WidgetGroup.set_items_to_list(in_widget, item_dict_list=item_dict_list)
 
             else:
                 get_method = None
@@ -284,7 +284,6 @@ class WidgetGroup:
                 try:
                     self.set_methods[key](setter_dict[key])
                 except Exception as e:
-                    #print("pylabgui_widget_group.WidgetGroup.set_passive() exception occure on %s" % key)
                     print(e)
 
         return setters_found

@@ -42,10 +42,12 @@ class Manual(SmCustomState):
                 inst_type = type(instruments[inst_key])
                 if issubclass(inst_type, pylabinst.pylabinst_instrument_base.Instrument):
                     cur_params = await instruments[inst_key].get_parameters("All")
+                    print(command_dict)
                     # remove set parameters if the instrument is already in that state
                     for cmd_key in cmd_keys:
                         if cur_params[cmd_key] == SM_INST_MAP[inst_key][cmd_key](command_dict[cmd_key]):
                             command_dict.pop(cmd_key)
+                    print(command_dict)
                     if command_dict != {}:
                         await instruments[inst_key].set_parameters(command_dict)
                     inst_dict = await instruments[inst_key].get_parameters("All")

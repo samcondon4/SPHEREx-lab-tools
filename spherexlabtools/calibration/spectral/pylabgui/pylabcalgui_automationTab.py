@@ -130,30 +130,30 @@ class AutoTab(GuiCompositeWindow):
             new_grat = [0 for _ in grat]
             for i in range(len(grat)):
                 trans = grat[i]
-                new_trans = {"data": trans, "text": "wavelength = %f, grating = %i" % (trans["wavelength"],
+                new_trans = {"data": trans, "text": "wavelength = %s, grating = %s" % (trans["wavelength"],
                                                                                        trans["grating"])}
                 new_grat[i] = new_trans
             new_filt = [0 for _ in filt]
-            for i in range(len(grat)):
+            for i in range(len(filt)):
                 trans = filt[i]
-                new_trans = {"data": trans, "text": "wavelength = %f, osf = %i" % (trans["wavelength"],
+                new_trans = {"data": trans, "text": "wavelength = %s, osf = %s" % (trans["wavelength"],
                                                                                    trans["osf"])}
                 new_filt[i] = new_trans
             proc_dict["cs260"]["grating transitions"] = new_grat
             proc_dict["cs260"]["osf transitions"] = new_filt
         #########################################################################
 
-        proc_dict.pop("from ini")
-        text = proc_dict["sequence info"]["sequence name"]
-        proc_dict.pop("sequence info")
-        output_dict = {"sequence_name": text}
-        for key1 in proc_dict:
-            for key2 in proc_dict[key1]:
-                new_key = key1 + " " + key2
-                output_dict[new_key.replace(" ", "_")] = proc_dict[key1][key2]
+            proc_dict.pop("from ini")
+            text = proc_dict["sequence info"]["sequence name"]
+            proc_dict.pop("sequence info")
+            output_dict = {"sequence_name": text}
+            for key1 in proc_dict:
+                for key2 in proc_dict[key1]:
+                    new_key = key1 + " " + key2
+                    output_dict[new_key.replace(" ", "_")] = proc_dict[key1][key2]
 
-        print("output_dict={}".format(output_dict))
-        return output_dict
+            return output_dict
+
 
     @staticmethod
     def passive_series_setter_proc(ini_dict):
