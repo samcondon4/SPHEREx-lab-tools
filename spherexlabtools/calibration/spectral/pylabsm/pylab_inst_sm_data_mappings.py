@@ -5,20 +5,18 @@
 """
 
 # monochromator mapping #########################################################
-cs260_inst_to_sm_osf_map = {"1": "OSF1", "2": "OSF2", "3": "OSF3", "4": "No OSF"}
-cs260_sm_to_inst_osf_map = {"OSF1": "1", "OSF2": "2", "OSF3": "3", "No OSF": "4", "Auto": "Auto"}
 cs260_inst_to_sm_grating_map = {"1": "G1", "2": "G2", "3": "G3"}
 cs260_sm_to_inst_grating_map = {"G1": "1", "G2": "2", "G3": 3, "Auto": "Auto"}
 
 CS260_INST_TO_SM = {"wavelength": lambda w: float(w),
                     "grating": lambda g: float(g),
-                    "order_sort_filter": lambda osf: cs260_inst_to_sm_osf_map[osf],
+                    "order_sort_filter": lambda osf: osf,
                     "shutter": lambda s: "Open" if s == "O" else "Close",
                     "units": lambda u: u}
 
 CS260_SM_TO_INST = {"wavelength": lambda w: w,
                     "grating": lambda g: cs260_sm_to_inst_grating_map[g],
-                    "order_sort_filter": lambda osf: cs260_sm_to_inst_osf_map[osf],
+                    "order_sort_filter": lambda osf: osf,
                     "shutter": lambda s: "O" if s == "Open" else "Close",
                     "units": lambda u: u}
 

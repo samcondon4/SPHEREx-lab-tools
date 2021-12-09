@@ -15,15 +15,18 @@ class CS260(Instrument):
     G2_UPPER = 2.5
     G3_LOWER = G2_UPPER
 
-    NO_OSF_UPPER = 1.3
+    NO_OSF_UPPER = 0.7
     OSF1_LOWER = NO_OSF_UPPER
-    OSF1_UPPER = 1.65
+    OSF1_UPPER = 1.4
     OSF2_LOWER = OSF1_UPPER
-    OSF2_UPPER = 2.4
+    OSF2_UPPER = 1.75
     OSF3_LOWER = OSF2_UPPER
+    OSF3_UPPER = 2.5
+    OSF4_LOWER = OSF3_UPPER
+    OSF4_UPPER = 3.7
+    OSF5_LOWER = OSF4_UPPER
 
     GRATING_MAP = {"G1": "1", "G2": "2", "G3": "3"}
-    OSF_MAP = {"OSF1": "1", "OSF2": "2", "OSF3": "3", "No OSF": "4"}
     SHUTTER_MAP = {"Open": "O", "Close": "C"}
 
     @classmethod
@@ -51,15 +54,21 @@ class CS260(Instrument):
         :param wavelength: (float) wavelength value
         :return: (int) osf number
         """
+        print("auto osf %f" % wavelength)
         osf = None
         if wavelength <= cls.NO_OSF_UPPER:
-            osf = 4
+            osf = 6
         elif cls.OSF1_LOWER < wavelength <= cls.OSF2_LOWER:
             osf = 1
         elif cls.OSF2_LOWER < wavelength <= cls.OSF3_LOWER:
             osf = 2
-        elif cls.OSF3_LOWER < wavelength:
+        elif cls.OSF3_LOWER < wavelength <= cls.OSF4_LOWER:
             osf = 3
+        elif cls.OSF4_LOWER < wavelength <= cls.OSF5_LOWER:
+            osf = 4
+        elif cls.OSF5_LOWER < wavelength:
+            osf = 5
+
         return osf
 
     def __init__(self, exe_path="pylabinst\\CS260_DLLs\\C++EXE.exe"):
@@ -107,8 +116,6 @@ class CS260(Instrument):
             osf = setter_dict["order_sort_filter"]
             if osf == "Auto":
                 osf = CS260.auto_osf(wavelength)
-            elif osf == "No OSF":
-                osf = 4
             coro_args["osf"] = osf
 
         if "shutter" in setter_dict_keys:

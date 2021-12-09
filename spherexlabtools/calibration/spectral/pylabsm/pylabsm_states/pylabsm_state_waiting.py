@@ -38,7 +38,6 @@ class Waiting(SmCustomState):
             # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
             # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
             gui_input_type = type(gui_data)
-            print(gui_data)
             if gui_input_type is list:
                 in_dict["Manual or Auto"][0] = "auto"
                 in_dict["Control"]["Loop"] = self.build_control_loop(gui_data)
@@ -131,33 +130,29 @@ class Waiting(SmCustomState):
                           float(cs260_params["step size"]))
         self.seq_waves = waves
         gratings = np.zeros_like(waves)
+        grating_transitions = json.loads(cs260_params["grating transitions"].replace("'", '"'))
+        grating_total = len(grating_transitions)
         filters = ["" for _ in range(len(waves))]
+        filter_transitions = json.loads(cs260_params["osf transitions"].replace("'", '"'))
+        filter_total = len(filter_transitions)
         # generate monochromator scan gratings
-        i = 0
+        gtransi = 0
+        ftransi = 0
+        seqi = 0
+        grat = 1
+        filt = 1
         for w in waves:
-            if w <= float(cs260_params["g1 to g2 transition wavelength"]):
-                gratings[i] = 1
-            elif float(cs260_params["g1 to g2 transition wavelength"]) < w <= \
-                 float(cs260_params["g2 to g3 transition wavelength"]):
-                gratings[i] = 2
-            elif float(cs260_params["g2 to g3 transition wavelength"]) < w:
-                gratings[i] = 3
-            i += 1
-
-        # generate monochromator scan filters
-        i = 0
-        for w in waves:
-            if w <= float(cs260_params["no osf to osf1 transition wavelength"]):
-                filters[i] = "No OSF"
-            elif float(cs260_params["no osf to osf1 transition wavelength"]) < w <= \
-                 float(cs260_params["osf1 to osf2 transition wavelength"]):
-                filters[i] = "OSF1"
-            elif float(cs260_params["osf1 to osf2 transition wavelength"]) < w <= \
-                    float(cs260_params["osf2 to osf3 transition wavelength"]):
-                filters[i] = "OSF2"
-            elif float(cs260_params["osf2 to osf3 transition wavelength"]) < w:
-                filters[i] = "OSF3"
-            i += 1
+            # get the appropriate grating #
+            while gtransi < grating_total and w > float(grating_transitions[gtransi]["wavelength"]):
+                grat = int(grating_transitions[gtransi]["grating"])
+                gtransi += 1
+            gratings[seqi] = grat
+            # get the appropriate order sort filter #
+            while ftransi < filter_total and w > float(filter_transitions[ftransi]["wavelength"]):
+                filt = int(filter_transitions[ftransi]["osf"])
+                ftransi += 1
+            filters[seqi] = "OSF%i" % filt
+            seqi += 1
 
         cs260_seq = [{"wavelength": waves[i], "grating": gratings[i],
                       "order_sort_filter": filters[i], "shutter": cs260_params["shutter"]}

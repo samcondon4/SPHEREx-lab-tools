@@ -79,6 +79,7 @@ class WidgetGroup:
                 raise RuntimeError("Only text or data can be returned from a QListWidgetItem")
         else:
             ret_item = False
+
         return ret_item
 
     @classmethod
@@ -227,7 +228,7 @@ class WidgetGroup:
                 get_method = lambda in_widget=widget, textordata="data": \
                     WidgetGroup.get_all_items_from_list(in_widget, textordata=textordata)
                 set_method = lambda item_dict_list, in_widget=widget: \
-                                    WidgetGroup.set_items_to_list(in_widget, item_dict_list=item_dict_list)
+                    WidgetGroup.set_items_to_list(in_widget, item_dict_list=item_dict_list)
 
             else:
                 get_method = None

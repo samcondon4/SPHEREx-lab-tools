@@ -14,7 +14,6 @@ from pylabgui.pylabgui_window_base import GuiWindow
 class CS260Window(Ui_Form, GuiWindow):
 
     GRATING_MAP = {"1": "G1", "2": "G2", "3": "G3"}
-    OSF_MAP = {"1": "OSF1", "2": "OSF2", "3": "OSF3", "4": "No OSF"}
     SHUTTER_MAP = {"O": "Open", "C": "Close"}
 
     def __init__(self, **kwargs):
@@ -29,8 +28,6 @@ class CS260Window(Ui_Form, GuiWindow):
         for key in setter_dict:
             if key == "grating":
                 setter_dict[key] = CS260Window.GRATING_MAP[setter_dict[key]]
-            elif key == "order_sort_filter":
-                setter_dict[key] = CS260Window.OSF_MAP[setter_dict[key]]
             elif key == "shutter":
                 setter_dict[key] = CS260Window.SHUTTER_MAP[setter_dict[key]]
 
