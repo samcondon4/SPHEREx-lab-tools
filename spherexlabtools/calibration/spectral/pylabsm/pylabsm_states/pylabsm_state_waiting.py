@@ -41,14 +41,50 @@ class Waiting(SmCustomState):
             if gui_input_type is list:
                 in_dict["Manual or Auto"][0] = "auto"
                 in_dict["Control"]["Loop"] = self.build_control_loop(gui_data)
+                # Add exposure ids to dicts
+                in_dict["Archiving"] = self.assign_exposure_ids(in_dict["Control"]["Loop"])
             else:
                 in_dict["Manual or Auto"][0] = "manual"
                 in_dict["Control"].update(gui_data)
+                # Add exposure ids to dicts
+                in_dict["Archiving"] = self.assign_exposure_ids(in_dict["Control"])
 
             return ret_code
 
         except Exception as e:
             print(e)
+
+    def assign_exposure_ids(self, control_loop):
+        timestamp_prefix = "_".join((SmCustomState.get_prefix_datestamp(), SmCustomState.get_prefix_timestamp()))
+        archive_dict = {} # Contains subset of control_dict, with the exposure_id.
+        # E.g.;
+        # archive_dict = {"cs260": [{"exp_id": "20211215_1031_0", "wavelength": 500, "bandwidth": 10, "grating": 2, ...},
+        #                           {"exp_id": "20211215_1031_1", "wavelength": 510, "bandwidth": 10, "grating": 2, ...},
+        #                           ...],
+        #                 "sr510: [{"exp_id": "20211215_1031_0", "sample_rate": 1, "time_constant": 1, "sensitivity":10},
+        #                          {"exp_id": "20211215_1031_1", "sample_rate": 1, "time_constant": 1, "sensitivity":10},
+        #                           ...],
+        #                 ...}
+        for key in control_loop:
+            if key in self.tables_dict:
+                sequence = control_loop[key]  # A list of dicts []
+                i = 0
+                for exposure_settings_dict in sequence:
+                    archive_settings_dict = {}  # To store settings for archiving
+                    for isetting in exposure_settings_dict:
+                        if isetting in self.tables_dict[key]:
+                            if "exp_id" not in archive_settings_dict:
+                                i += 1
+                                archive_settings_dict["exp_id"] = "_".join(timestamp_prefix, str(i))
+
+                            archive_settings_dict[isetting] = exposure_settings_dict[isetting]
+                    # Add dict to list
+                    if key not in archive_dict:
+                        archive_dict[key] = [archive_settings_dict]
+                    else:
+                        archive_dict[key].extend([archive_settings_dict])
+
+        return archive_dict
 
     def reset_control_loop(self, in_dict):
         """ Method that clears the control argument dictionary and all of the control loop parameters depending on the

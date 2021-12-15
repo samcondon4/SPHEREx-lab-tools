@@ -21,7 +21,8 @@ from pylabsm.pylabsm_procs.pm100usbProc import PhotoDiodeMeasurement
 
 # state classes ####################################################################################################
 from pylabsm.pylabsm_states.pylabsm_statesimport import pylabsm_state_initializing, pylabsm_state_waiting, \
-    pylabsm_state_manual, pylabsm_state_moving, pylabsm_state_measuring, pylabsm_state_indexing, pylabsm_basestate
+    pylabsm_state_manual, pylabsm_state_moving, pylabsm_state_measuring, pylabsm_state_archiving, \
+    pylabsm_state_indexing, pylabsm_basestate
 
 
 class SpectralCalibrationMachine(AsyncMachine):
@@ -41,6 +42,7 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.moving_dict = {}
         self.control_args = {}
         self.measuring_dict = {}
+        self.archiving_dict = {}
         self.manual_or_auto = [""]
         self.control_loop_generate = [True]
         self.control_loop_complete = [False]
@@ -66,6 +68,7 @@ class SpectralCalibrationMachine(AsyncMachine):
         pylabsm_basestate.SmCustomState.set_global_args({"Instruments": self.inst_dict})
         pylabsm_basestate.SmCustomState.set_global_args({"Series Index": self.ser_index})
         pylabsm_basestate.SmCustomState.set_global_args({"Measuring": self.measuring_dict})
+        pylabsm_basestate.SmCustomState.set_global_args({"Archiving": self.archiving_dict})
         pylabsm_basestate.SmCustomState.set_global_args({"Sequence Index": self.seq_index})
         pylabsm_basestate.SmCustomState.set_global_args({"Manual or Auto": self.manual_or_auto})
         pylabsm_basestate.SmCustomState.set_global_args({"Control Loop Generate": self.control_loop_generate})
@@ -88,8 +91,11 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.measuring_state.add_action(self.measuring_state.measuring_action, args=["Measuring", "Instruments",
                                                                                      "Procedures", "Metadata",
                                                                                      "Series Index", "Sequence Index",
-                                                                                     "Control", "Control Loop Generate"
-                                                                                     ])
+                                                                                     "Control", "Control Loop Generate",
+                                                                                     "Archiving"])
+
+        self.archiving_state = pylabsm_state_archiving.Archiving(self)
+        self.archiving_state.add_action(self.archiving_state.archiving_action, args=["Archiving"])
 
         self.indexing_state = pylabsm_state_indexing.Indexing(self)
         self.indexing_state.add_action(self.indexing_state.indexing_action, args=["Control Loop Complete", "Moving",
@@ -98,7 +104,7 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Add all states besides the idle state #################################################
         states = [self.init_state, self.manual_state, self.moving_state, self.measuring_state,
-                  self.indexing_state]
+                  self.archiving_state, self.indexing_state]
         self.add_states(states)
         ##########################################################################################
 
@@ -106,7 +112,8 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.wait_state = pylabsm_state_waiting.Waiting(self, idle=True)
         self.wait_state.add_action(self.wait_state.waiting_action, args=["Manual or Auto", "Control", "Series Index",
                                                                          "Sequence Index", "Moving", "Measuring",
-                                                                         "Procedures", "Control Loop Generate"])
+                                                                         "Procedures", "Control Loop Generate",
+                                                                         "Archiving"])
 
         self.add_states([self.wait_state])
         ##################################################################################################
@@ -119,7 +126,8 @@ class SpectralCalibrationMachine(AsyncMachine):
         self.wait_state.add_transition(self.manual_state, arg="Manual or Auto", arg_result=["manual"])
         self.manual_state.add_transition(self.wait_state)
         self.moving_state.add_transition(self.measuring_state)
-        self.measuring_state.add_transition(self.indexing_state)
+        self.measuring_state.add_transition(self.archiving_state)
+        self.archiving_state.add_transition(self.indexing_state)
         self.indexing_state.add_transition(self.wait_state, arg="Control Loop Complete", arg_result=[True])
         self.indexing_state.add_transition(self.moving_state, arg="Control Loop Complete", arg_result=[False])
         ###########################################################################################################
