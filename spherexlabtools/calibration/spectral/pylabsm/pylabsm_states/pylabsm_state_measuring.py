@@ -53,7 +53,7 @@ class Measuring(SmCustomState):
 
     async def measuring_control_loop(self, measuring_dict):
         measure = measuring_dict["Measuring"]
-        archive = measuring_dict["Archiving"]
+        #archive = measuring_dict["Archiving"]
         measure_coros = [None for _ in range(len(measure))]
         ser_index = measuring_dict["Series Index"][0]
         seq_index = measuring_dict["Sequence Index"][0]
@@ -72,7 +72,7 @@ class Measuring(SmCustomState):
                     if mkey not in self.metadata_strings:
                         metadata.pop(mkey)
                 procedure.metadata = metadata
-                archive[key][k]["start_time"] = str(datetime.datetime.now())
+                #archive[key][k]["start_time"] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 measure_coros[k] = asyncio.create_task(procedure.run(measurement_params, append_to_existing=True,
                                                                      hold=True))
 

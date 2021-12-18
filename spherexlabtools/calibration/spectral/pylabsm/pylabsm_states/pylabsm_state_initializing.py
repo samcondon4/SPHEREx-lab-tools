@@ -4,6 +4,8 @@
 
 """
 import asyncio
+import os
+import pdb
 
 import pymeasure.instruments.instrument
 
@@ -13,8 +15,15 @@ from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 class Initializing(SmCustomState):
 
+    #TABLES_PATH = os.path.join('C:\\Users\\viero\\Repositories\\SPHEREx-lab-tools-12132021\\spherexlabtools\\calibration\\spectral\\pylablib\\sql_tables.ini')
+    TABLES_PATH = os.path.join('pylablib\\sql_tables.ini')
+
     def __init__(self, sm, identifier="initializing", **kwargs):
         super().__init__(sm, self, identifier, **kwargs)
+
+    def initialize_sql_server(self, action_arg):
+
+        action_arg["Tables"] = self.define_sql_tables_and_rows_from_ini(action_arg["Tables"], self.TABLES_PATH)
 
     async def initialize_instruments(self, action_arg):
         try:

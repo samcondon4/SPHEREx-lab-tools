@@ -1,8 +1,8 @@
 """ Idea for streamlining sql stuff.
 """
 import os
-import pandas as pd
-import datetime
+import pdb
+
 import pymysql
 from configparser import ConfigParser
 #from pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD, TABLES_PATH
@@ -11,7 +11,7 @@ class PylabSQLTools:
     """ This class provides a mechanism for interacting with and storing data on a specified sql server.
     """
 
-    connection = None
+    db = None
 
     def connect_mysql_server(self, SCHEMA_USER, SCHEMA_PSWD, SCHEMA_NAME):
         """ This method opens a connection with the sql server specified at ip.
@@ -20,16 +20,16 @@ class PylabSQLTools:
         :return: None
         """
 
-        self.connection = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD, database=SCHEMA_NAME)
+        self.db = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD, database=SCHEMA_NAME)
 
     def close_mysql_server(self):
         """ This method closes the connection with the open sql server.
         :return: None
         """
 
-        self.connection.close() #or whatever function closes the sql server.
+        self.db.close()
 
-    def write_to_mysql_server(self, table_name, columns_dict):
+    def write_to_mysql_server(self, SCHEMA_USER, SCHEMA_PSWD, SCHEMA_NAME, archiving_dict):
         """ This method implements a write to the sql server.
 
         :param: table: sql table to write to.
@@ -38,31 +38,36 @@ class PylabSQLTools:
         :return: None
         """
 
-        cursor = self.connection.cursor()
-        sql = self.convert_dict_to_sql_command(table_name, **columns_dict)
         try:
-            cursor.execute(sql)
-            self.connection.commit()
+            self.connect_mysql_server(SCHEMA_USER, SCHEMA_PSWD, SCHEMA_NAME)
         except pymysql.InternalError as e:
-            print(sql)
             print('Got error {!r}, errno is {}'.format(e, e.args[0]))
-            # Rollback in case there is any error
-            self.connection.rollback()
-            print('Rolling Back')
+            pdb.set_trace()
 
-    def get_data(self, query):
-        """ This method sends an SQL query to the server and returns the associated data.
+        cursor = self.db.cursor()
+        for table_name, exposures_list in archiving_dict.items():
+            print("writing to "+table_name)
+            for columns_dict in exposures_list:
+                sql = self.convert_dict_to_sql_command(table_name, **columns_dict)
+                #print(sql)
+                try:
+                    cursor.execute(sql)
+                    self.db.commit()
+                    print('success!')
+                except pymysql.InternalError as e:
+                    print(sql)
+                    print('Got error {!r}, errno is {}'.format(e, e.args[0]))
+                    # Rollback in case there is any error
+                    self.db.rollback()
+                    print('Rolling Back')
 
-        :param: query: SQL query string.
-        :return: data object
-        """
+        self.close_mysql_server()
 
-    def define_sql_tables_and_rows_from_ini(self, tables_path):
+    def define_sql_tables_and_rows_from_ini(self, dict_out, tables_path):
 
         config = ConfigParser()
         config.read(tables_path)
 
-        dict_out = {}
         for section in config.sections():
             dict_sect = {}
             for (each_key, each_val) in config.items(section):
