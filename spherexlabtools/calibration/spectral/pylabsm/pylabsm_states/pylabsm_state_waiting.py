@@ -86,7 +86,7 @@ class Waiting(SmCustomState):
                                                  'sequence': control_loop['sequence info'][j]['sequence name']}
                             control_loop_list.extend([control_loop_dict])
                         series.extend([control_loop_list])
-                        pdb.set_trace()
+                        #pdb.set_trace()
 
                 for ilist, sequence_list in enumerate(series):
                     for exposure_settings_dict in sequence_list:

@@ -6,6 +6,8 @@
 
 import asyncio
 import datetime
+import pdb
+
 from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 
@@ -53,7 +55,8 @@ class Measuring(SmCustomState):
 
     async def measuring_control_loop(self, measuring_dict):
         measure = measuring_dict["Measuring"]
-        #archive = measuring_dict["Archiving"]
+        archive = measuring_dict["Archiving"]
+        #pdb.set_trace()
         measure_coros = [None for _ in range(len(measure))]
         ser_index = measuring_dict["Series Index"][0]
         seq_index = measuring_dict["Sequence Index"][0]
@@ -61,6 +64,7 @@ class Measuring(SmCustomState):
         exception = None
         for key in measure:
             try:
+                now = datetime.datetime.now()
                 procedure = measuring_dict["Procedures"][key.upper()]
                 measurement_params = measure[key][ser_index][seq_index]
                 storage_path = measurement_params["storage_path"] + measurement_params["sequence_name"] + "_" + key + \
@@ -72,7 +76,11 @@ class Measuring(SmCustomState):
                     if mkey not in self.metadata_strings:
                         metadata.pop(mkey)
                 procedure.metadata = metadata
-                #archive[key][k]["start_time"] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                i = ser_index * len(archive[key]) + seq_index
+                archive[key][i]["start_time"] = now.strftime('%Y-%m-%d %H:%M:%S')
+                archive[key][i]["storage_path"] = storage_path.replace("C:", "/c").replace("\\", "/")
+                #print(archive[key][i])
+                #pdb.set_trace()
                 measure_coros[k] = asyncio.create_task(procedure.run(measurement_params, append_to_existing=True,
                                                                      hold=True))
 
