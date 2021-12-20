@@ -69,7 +69,7 @@ class Waiting(SmCustomState):
         #                          {"exp_id": "20211215_1031_1", "sample_rate": 1, "time_constant": 1, "sensitivity":10},
         #                           ...],
         #                 ...}
-        key0 = list(control_loop.keys())[0]
+        key0 = list(control_loop.keys())[0]  # Used only to get lengths of sequences
         control_loop['control_software'] = []  # Add empty control_software list which gets populated below
         for key in control_loop:
             i = 0

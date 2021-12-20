@@ -61,6 +61,7 @@ class PylabSQLTools:
                     self.db.rollback()
                     print('Rolling Back')
 
+        cursor.close()
         self.close_mysql_server()
 
     def define_sql_tables_and_rows_from_ini(self, dict_out, tables_path):
