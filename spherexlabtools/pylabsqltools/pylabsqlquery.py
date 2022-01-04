@@ -45,6 +45,16 @@ class PylabSQLQuery:
         return dataframe_out
 
     def build_sql_query(self, tables_in, nicknames=None, conditions=None):
+        """
+
+        :param nicknames: (list) an (optional) short-form prefix for row naming, e.g.;
+                nicknames = ["cs", "mono", "ndf", "sr510", "sr830"]
+
+        :param conditions: (dict) an (optional) dictionary of conditions, e.g.,
+                conditions = {"where": {"cs": {"timestamp": ">= CURDATE()"}}}
+
+        """
+        
         self.sql_query = ''''''
         if type(tables_in) == list:
             tables_dict = {}
