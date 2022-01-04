@@ -15,7 +15,6 @@ from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
 
 class Initializing(SmCustomState):
 
-    #TABLES_PATH = os.path.join('C:\\Users\\viero\\Repositories\\SPHEREx-lab-tools-12132021\\spherexlabtools\\calibration\\spectral\\pylablib\\sql_tables.ini')
     TABLES_PATH = os.path.join('pylablib\\sql_tables.ini')
 
     def __init__(self, sm, identifier="initializing", **kwargs):

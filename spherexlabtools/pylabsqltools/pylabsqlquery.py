@@ -1,33 +1,41 @@
-''' Generalized SQL command-building code for use by GUI's
-tables_in format is list of dicts, e.g.,
-    pylab = {'control_software':['timestamp','date','sequence']}
-    ndf = {'ndf':['position']}
-    cs260 = {'cs260':['wavelength','grating','order_sort_filter','shutter']}
-    sr510 = {'sr510':['start_time','sample_rate','time_constant','sensitivity','storage_path']}
-    sr830 = {'sr830':['start_time','sample_rate','time_constant','sensitivity','storage_path']}
+""" This module implements generalized SQL command-building code for querying mySQL database.
 
-    tables_in = [pylab, cs260, ndf, sr510, sr830]
-
-nicknames is a (optional) short-form prefix for row naming, e.g.;
-    nicknames = ["cs", "mono", "ndf", "sr510", "sr830"]
-
-conditions is a (optional) dict of conditions, e.g.,
-    conditions = {"where": {"cs": {"timestamp": ">= CURDATE()"}}}
-
-'''
+        :class:`.PylabSQLQuery`: Top-level container class with code to build and execute SQL queries
+"""
 
 import os
 import pdb
 import pandas as pd
 import pymysql
+from ..calibration.spectral.pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD
 
 class PylabSQLQuery:
+    """ This module implements generalized SQL command-building code for querying mySQL database.
+
+    """
 
     def __init__(self):
         self.sql_query = ''''''
 
     def query_database(self, tables_in, nicknames=None, conditions=None):
-        db = pymysql.connect(user='root', password='$PHEREx_B111', database='spectral_cal')
+        """
+        :param tables_in: (list) list of dicts containing desired tables:columns to query, e.g.,
+                tables_in = [pylab, cs260, ndf, sr510, sr830]
+                where:
+                pylab = {'control_software':['timestamp','date','sequence']}
+                ndf = {'ndf':['position']}
+                cs260 = {'cs260':['wavelength','grating','order_sort_filter','shutter']}
+                sr510 = {'sr510':['start_time','sample_rate','time_constant','sensitivity','storage_path']}
+                sr830 = {'sr830':['start_time','sample_rate','time_constant','sensitivity','storage_path']}
+
+        :param nicknames: (list) an (optional) short-form prefix for row naming, e.g.;
+                nicknames = ["cs", "mono", "ndf", "sr510", "sr830"]
+
+        :param conditions: (dict) an (optional) dictionary of conditions, e.g.,
+                conditions = {"where": {"cs": {"timestamp": ">= CURDATE()"}}}
+
+        """
+        db = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD, database=SCHEMA_NAME)
 
         self.build_sql_query(tables_in, nicknames, conditions)
 

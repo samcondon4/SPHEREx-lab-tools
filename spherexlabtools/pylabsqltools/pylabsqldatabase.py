@@ -1,3 +1,7 @@
+""" This module implements generalized SQL command-building code for querying mySQL database.
+
+        :class:`.PylabSQLDabase`: Top-level container class with code to build and execute SQL queries
+"""
 
 import os
 import pdb
@@ -5,12 +9,8 @@ import pandas as pd
 import pymysql
 from configparser import ConfigParser
 
-class PylabSQLQuery:
-    vint = ['status_byte', 'position']
-    vchar6 = ['order_sort_filter', 'shutter', 'series']
-    vchar50 = ['exp_id', 'sequence', 'series']
-    vbool = ['cs260', 'warm_1', 'warm_2', 'cold_1']
-    vdatetime = ['start_time', 'timestamp']
+class PylabSQLDabase:
+
     def __init__(self):
         self.TABLES = {}
 
@@ -30,31 +30,13 @@ class PylabSQLQuery:
         return dict_out
 
     def build_sql_command(self, ini_dict):
+
         for itable, ilist in ini_dict.items():
             sql_command = 'CREATE TABLE ' + itable + ' ('
 
             for icol in ilist:
-                if any(ele in icol for ele in vchar6):
-                    sql_command += icol + ' varchar(6), '
-
-                elif any(ele in icol for ele in vchar50):
-                    sql_command += icol + ' varchar(50), '
-
-                elif any(ele in icol for ele in vbool):
-                    sql_command += icol + ' bool, '
-
-                elif any(ele in icol for ele in vdatetime):
-                    sql_command += icol + ' datetime, '
-
-                elif any(ele in icol for ele in vint):
-                    sql_command += icol + ' int, '
-
-                elif 'path' in icol:
-                    sql_command += icol + ' varchar(120), '
-
-                else:
-                    sql_command += icol + ' float, '
+                sql_command += icol + " " + ilist[icol] + ", "
 
             sql_command += 'PRIMARY KEY (exp_id)) ENGINE=InnoDB'
 
-            TABLES[itable] = sql_command
+            self.TABLES[itable] = sql_command

@@ -5,7 +5,7 @@ import pdb
 
 import pymysql
 from configparser import ConfigParser
-#from pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD, TABLES_PATH
+from ..calibration.spectral.pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD
 
 class PylabSQLTools:
     """ This class provides a mechanism for interacting with and storing data on a specified sql server.
@@ -13,7 +13,7 @@ class PylabSQLTools:
 
     db = None
 
-    def connect_mysql_server(self, SCHEMA_USER, SCHEMA_PSWD, SCHEMA_NAME):
+    def connect_mysql_server(self, SCHEMA_USER=SCHEMA_USER, SCHEMA_PSWD=SCHEMA_PSWD, SCHEMA_NAME=SCHEMA_NAME):
         """ This method opens a connection with the sql server specified at ip.
 
         :param: ip: ip address of sql server? Don't know if this is the right type of argument to start a connection, but you get the idea.
