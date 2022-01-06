@@ -12,8 +12,8 @@ import sys
 import asyncio
 from qasync import QEventLoop
 from PyQt5 import QtCore, QtWidgets
-from pylabgui.pylabcalgui_main import GUI
-from pylabsm.pylabsm_spectral import SpectralCalibrationMachine
+from .pylabgui.pylabcalgui_main import GUI
+from .pylabsm.pylabsm_spectral import SpectralCalibrationMachine
 #############################################################################
 
 # Global data objects ###################################
@@ -25,7 +25,7 @@ async def main():
     try:
         gui_to_sm_data_queue = asyncio.Queue()
         sm_to_gui_data_queue = {}
-        seq_dir = ".\\config\\sequence\\"
+        seq_dir = ".\\calibration\\spectral\\config"
         SM = SpectralCalibrationMachine(data_queue_rx=gui_to_sm_data_queue, data_queue_tx=sm_to_gui_data_queue)
         gui = GUI(sequence_dir=seq_dir, data_queue_rx=sm_to_gui_data_queue, data_queue_tx=gui_to_sm_data_queue)
         sm_task = asyncio.create_task(SM.start_machine())
@@ -36,7 +36,8 @@ async def main():
     except Exception as e:
         print("Exception {} occured".format(e))
 
-if __name__ == "__main__":
+
+def run():
     app = QtWidgets.QApplication(sys.argv)
     EventLoop = QEventLoop()
     asyncio.set_event_loop(EventLoop)
@@ -45,3 +46,8 @@ if __name__ == "__main__":
         EventLoop.run_forever()
         EventLoop.close()
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    run()
+    

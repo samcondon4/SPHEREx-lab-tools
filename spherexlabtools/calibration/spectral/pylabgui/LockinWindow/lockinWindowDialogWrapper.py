@@ -9,10 +9,10 @@ Sam Condon, 08/14/2021
 import asyncio
 from qasync import QEventLoop
 from PyQt5 import QtWidgets
-from pylabgui.LockinWindow.sr510Dialog import Ui_Sr510Dialog
-from pylabgui.LockinWindow.sr830Dialog import Ui_Sr830Dialog
-from pylabgui.LockinWindow.lockinWindowHelper import Lockin
-from pylabgui.pylabgui_window_base import GuiWindow, GuiCompositeWindow
+from .sr510Dialog import Ui_Sr510Dialog
+from .sr830Dialog import Ui_Sr830Dialog
+from .lockinWindowHelper import Lockin
+from ..pylabgui_window_base import GuiWindow, GuiCompositeWindow
 
 
 def lockin_getter_proc(lockin_input):

@@ -3,7 +3,7 @@ from time import sleep
 from pymeasure.experiment import FloatParameter
 from pymeasure.instruments.srs.sr510 import SR510
 from pymeasure.instruments.srs.sr830 import SR830
-from pylabsm.pylabsm_procs.pylabsm_baseproc import SmBaseProc
+from .pylabsm_baseproc import SmBaseProc
 
 
 class LockinMeasurement(SmBaseProc):

@@ -3,11 +3,13 @@
     This module provides the manual state class.
 
 """
+import os
+import sys
 import asyncio
+from ..pylab_inst_sm_data_mappings import SM_INST_MAP
+from .pylabsm_basestate import SmCustomState
 import pymeasure.instruments.instrument
-import pylabinst.pylabinst_instrument_base
-from pylabsm.pylab_inst_sm_data_mappings import SM_INST_MAP
-from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
+import calibration.spectral.pylabinst.pylabinst_instrument_base as pylabinst_instrument_base
 
 
 class Manual(SmCustomState):
@@ -40,7 +42,7 @@ class Manual(SmCustomState):
                 cmd_keys = list(command_dict.keys())
                 # get the type of the instrument and call the appropriate parameter getter/setter for that type
                 inst_type = type(instruments[inst_key])
-                if issubclass(inst_type, pylabinst.pylabinst_instrument_base.Instrument):
+                if issubclass(inst_type, pylabinst_instrument_base.Instrument):
                     cur_params = await instruments[inst_key].get_parameters("All")
                     print(command_dict)
                     # remove set parameters if the instrument is already in that state

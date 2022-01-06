@@ -16,12 +16,16 @@
             control data. The control data that is expected within various states depends on the specific actions executed
             within them.
 """
-
+import os
+import sys
 import asyncio
+import datetime
 from transitions.extensions.asyncio import AsyncState
+#sys.path.append('C:\\Users\\viero\\Repositories\\SPHEREx-lab-tools-12132021\\spherexlabtools\\pylabsqltools')
+sys.path.append('%s\\pylabsqltools\\' % os.getcwd())
+from pylabsqltools.pylabsqltools import PylabSQLTools
 
-
-class SmCustomState(AsyncState):
+class SmCustomState(AsyncState, PylabSQLTools):
 
     #SM = None
     # public class names
@@ -74,6 +78,18 @@ class SmCustomState(AsyncState):
             raise RuntimeError("state global args can only be retrieved at the class level!")
 
         return ret
+
+    @classmethod
+    def get_prefix_datestamp(cls):
+        """Description: Get datestamp in format YYYYMMDD
+        """
+        return datetime.datetime.now().strftime('%Y%m%d')
+
+    @classmethod
+    def get_prefix_timestamp(cls):
+        """Description: Get timestamp in format HHMM
+        """
+        return datetime.datetime.now().strftime('%H%M')
 
     def __init__(self, sm, child, identifier, initial=False, idle=False, **kwargs):
         """ Description: initialization for the state base class.
