@@ -163,13 +163,16 @@ class PylabSyncSQL:
                         alter_statement_columns[column_name] = alter_statement
 
             elif 'change_column' in mod_type and bool(len(mod_dict)):
+                # ALTER TABLE `spectral_cal`.`sr510`
+                # CHANGE COLUMN `storage_path` `storage_path` VARCHAR(120) NULL DEFAULT NULL ;
+                #
                 print(mod_type)
                 for table_name in mod_dict:
                     alter_statement_columns = {}
                     for column_name in mod_dict[table_name]:
                         alter_statement = """
                         ALTER TABLE {0} 
-                        MODIFY COLUMN {1} {2};
+                        MODIFY COLUMN {1} {1} {2} NULL DEFAULT NULL;
                         """.format(table_name, column_name, mod_dict[table_name][column_name])
 
                         alter_statement_columns[column_name] = alter_statement
