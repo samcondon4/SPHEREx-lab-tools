@@ -8,7 +8,7 @@ import asyncio
 import datetime
 import pdb
 
-from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
+from .pylabsm_basestate import SmCustomState
 
 
 class Measuring(SmCustomState):

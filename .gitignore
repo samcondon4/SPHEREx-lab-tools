@@ -135,7 +135,8 @@ spherexlabtools/calibration/spectral/config
 # pycharm project files #
 .idea
 
-
+#pycache #
+__pycache__
 
 
 

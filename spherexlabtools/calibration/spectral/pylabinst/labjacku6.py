@@ -8,7 +8,7 @@ Sam Condon, 07/05/2021
 
 import u6
 import numpy as np
-from pylabinst.pylabinst_instrument_base import Instrument
+from .pylabinst_instrument_base import Instrument
 
 
 class Labjack(Instrument):

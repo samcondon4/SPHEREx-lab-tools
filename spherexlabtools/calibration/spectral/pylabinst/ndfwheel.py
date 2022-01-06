@@ -5,11 +5,10 @@
 Sam Condon, 07/02/2021
 """
 import asyncio
-from pylabinst.pylabinst_instrument_base import Instrument
+from .pylabinst_instrument_base import Instrument
 import clr
 import sys
-sys.path.append("pylabinst\\NDFWheel_DLLs\\")
-sys.path.append(".\\NDFWheel_DLLs\\")
+sys.path.append(".\\calibration\\spectral\\pylabinst\\NDFWheel_DLLs\\")
 clr.AddReference("OptecHID_FilterWheelAPI")
 from OptecHID_FilterWheelAPI import FilterWheels
 from OptecHID_FilterWheelAPI import FilterWheel

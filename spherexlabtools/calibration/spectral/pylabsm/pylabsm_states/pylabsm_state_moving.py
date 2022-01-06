@@ -3,12 +3,13 @@
     This module implements the moving state class.
 
 """
-
+import os
+import sys
 import asyncio
-import pylabinst.pylabinst_instrument_base as pylabinst
+from .pylabsm_basestate import SmCustomState
+from ..pylab_inst_sm_data_mappings import INST_SM_MAP
 import pymeasure.instruments.instrument as pymeasureinst
-from pylabsm.pylab_inst_sm_data_mappings import INST_SM_MAP
-from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
+import calibration.spectral.pylabinst.pylabinst_instrument_base as pylabinst
 
 
 class Moving(SmCustomState):

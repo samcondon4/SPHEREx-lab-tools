@@ -2,9 +2,9 @@ import os
 
 ##### pyhkd settings #####
 
-VERSION_STR = 'v1.0'
-DATA_LOG_FOLDER = os.environ['PYLAB_DATA']
-APP_LOG_BASE_FOLDER = os.path.join(os.environ['PYLAB_DATA'], 'log')
+VERSION_STR = 'v0.5'
+DATA_LOG_FOLDER = os.environ['SLT_DATA']
+APP_LOG_BASE_FOLDER = os.path.join(os.environ['SLT_DATA'], 'log')
 APP_LOG_FILENAME = 'pylab.log'
 APP_LOG_FORMAT = '[%(asctime)s] %(levelname)s: %(message)s'
 RECV_PORT = 7945

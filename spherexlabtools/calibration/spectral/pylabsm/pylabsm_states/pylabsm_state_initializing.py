@@ -5,17 +5,14 @@
 """
 import asyncio
 import os
-import pdb
-
 import pymeasure.instruments.instrument
-
-import pylabinst.pylabinst_instrument_base
-from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
+import calibration.spectral.pylabinst.pylabinst_instrument_base as pylabinst_instrument_base
+from .pylabsm_basestate import SmCustomState
 
 
 class Initializing(SmCustomState):
 
-    TABLES_PATH = os.path.join('pylablib\\sql_tables.ini')
+    TABLES_PATH = os.path.join('calibration\\spectral\\pylablib\\sql_tables.ini')
 
     def __init__(self, sm, identifier="initializing", **kwargs):
         super().__init__(sm, self, identifier, **kwargs)
@@ -29,7 +26,7 @@ class Initializing(SmCustomState):
             print("initializing instruments...")
             instruments = action_arg["Instruments"]
             for key in instruments:
-                if issubclass(type(instruments[key]), pylabinst.pylabinst_instrument_base.Instrument):
+                if issubclass(type(instruments[key]), pylabinst_instrument_base.Instrument):
                     await instruments[key].open()
                     inst_params = await instruments[key].get_parameters("All")
 

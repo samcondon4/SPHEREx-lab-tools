@@ -1,11 +1,14 @@
 """ Idea for streamlining sql stuff.
 """
 import os
+import sys
 import pdb
 
 import pymysql
 from configparser import ConfigParser
-from ..calibration.spectral.pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD
+sys.path.append("%s\\calibration\\" % os.getcwd())
+from calibration.spectral.pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD
+
 
 class PylabSQLTools:
     """ This class provides a mechanism for interacting with and storing data on a specified sql server.

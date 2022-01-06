@@ -1,7 +1,7 @@
 import numpy as np
 from time import sleep
 from pymeasure.experiment import FloatParameter
-from pylabsm.pylabsm_procs.pylabsm_baseproc import SmBaseProc
+from .pylabsm_baseproc import SmBaseProc
 from pymeasure.instruments.thorlabs.thorlabspm100usb import ThorlabsPM100USB
 
 
