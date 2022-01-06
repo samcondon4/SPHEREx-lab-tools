@@ -7,8 +7,9 @@
 import sys
 import os
 import pdb
-import pandas as pd
 import pymysql
+import logging
+import pandas as pd
 from configparser import ConfigParser
 #from calibration.spectral.pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD
 # ImportError: attempted relative import with no known parent package
@@ -37,7 +38,6 @@ class PylabSyncSQL:
         updates_dict = self.diff_existing_and_required()
         queries_dict = self.get_alter_queries(updates_dict)
         self.execute_sql_statements(queries_dict)
-        pdb.set_trace()
 
     def connect_mysql(self):
         db = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD, database=SCHEMA_NAME)
@@ -196,7 +196,6 @@ class PylabSyncSQL:
                     # Execute the SQL ALTER statement
                     print(statement_text)
                     cursorObject.execute(statement_text)
-                    pdb.set_trace()
 
                 except Exception as e:
 

@@ -7,8 +7,8 @@ Sam Condon, 08/14/2021
 """
 
 from PyQt5 import QtWidgets, QtCore
-from pylabgui.LabJackWindow.labjackWindowDialog import Ui_Form
-from pylabgui.pylabgui_window_base import GuiWindow
+from .labjackWindowDialog import Ui_Form
+from ..pylabgui_window_base import GuiWindow
 
 
 DIO_STATE_CHECK_MAP = {0: QtCore.Qt.Unchecked, 1: QtCore.Qt.Checked}

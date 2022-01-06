@@ -4,10 +4,12 @@
 
 """
 
-import pdb
 import os
-from pylabsm.pylabsm_states.pylabsm_basestate import SmCustomState
-from pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD
+import sys
+from .pylabsm_basestate import SmCustomState
+sys.path.append("%s\\calibration\\spectral\\pylablib" % os.getcwd())
+from calibration.spectral.pylablib.settings import SCHEMA_USER, SCHEMA_NAME, SCHEMA_PSWD
+
 
 class Archiving(SmCustomState):
     '''SQL Database Tables are connected by the exp_id. '''

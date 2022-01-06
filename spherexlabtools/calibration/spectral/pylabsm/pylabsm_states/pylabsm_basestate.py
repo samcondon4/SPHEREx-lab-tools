@@ -16,13 +16,14 @@
             control data. The control data that is expected within various states depends on the specific actions executed
             within them.
 """
+import os
 import sys
 import asyncio
 import datetime
 from transitions.extensions.asyncio import AsyncState
 #sys.path.append('C:\\Users\\viero\\Repositories\\SPHEREx-lab-tools-12132021\\spherexlabtools\\pylabsqltools')
-sys.path.append('..\\..\\pylabsqltools')
-from pylabsqltools import PylabSQLTools
+sys.path.append('%s\\pylabsqltools\\' % os.getcwd())
+from pylabsqltools.pylabsqltools import PylabSQLTools
 
 class SmCustomState(AsyncState, PylabSQLTools):
 

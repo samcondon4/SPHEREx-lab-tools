@@ -7,10 +7,10 @@ Sam Condon, 08/14/2021
 """
 
 from PyQt5 import QtWidgets
-from pylabgui.LockinWindow.sr510AutoDialog import Ui_Sr510
-from pylabgui.LockinWindow.sr830AutoDialog import Ui_Sr830
-from pylabgui.LockinWindow.lockinWindowHelper import Lockin
-from pylabgui.pylabgui_window_base import GuiWindow, GuiCompositeWindow
+from .sr510AutoDialog import Ui_Sr510
+from .sr830AutoDialog import Ui_Sr830
+from .lockinWindowHelper import Lockin
+from ..pylabgui_window_base import GuiWindow, GuiCompositeWindow
 
 
 def lockin_sens_transition_listitem_proc(sens_transition):

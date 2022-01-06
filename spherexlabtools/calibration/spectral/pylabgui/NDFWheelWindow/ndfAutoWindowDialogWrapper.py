@@ -7,8 +7,8 @@ Sam Condon, 08/14/2021
 """
 
 from PyQt5 import QtWidgets
-from pylabgui.NDFWheelWindow.ndfAutoWindowDialog import Ui_Form
-from pylabgui.pylabgui_window_base import GuiWindow
+from .ndfAutoWindowDialog import Ui_Form
+from ..pylabgui_window_base import GuiWindow
 
 
 class NDFAutoWindow(Ui_Form, GuiWindow):

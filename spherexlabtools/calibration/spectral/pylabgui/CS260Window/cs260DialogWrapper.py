@@ -7,8 +7,8 @@ Sam Condon, 08/12/2021
 """
 
 from PyQt5 import QtWidgets
-from pylabgui.CS260Window.cs260Dialog import Ui_Form
-from pylabgui.pylabgui_window_base import GuiWindow
+from .cs260Dialog import Ui_Form
+from ..pylabgui_window_base import GuiWindow
 
 
 class CS260Window(Ui_Form, GuiWindow):

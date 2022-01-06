@@ -5,7 +5,7 @@ Sam Condon 07/01/2021
 import asyncio
 import subprocess as sp
 from subprocess import *
-from pylabinst.pylabinst_instrument_base import Instrument
+from .pylabinst_instrument_base import Instrument
 
 
 class CS260(Instrument):
@@ -71,7 +71,7 @@ class CS260(Instrument):
 
         return osf
 
-    def __init__(self, exe_path="pylabinst\\CS260_DLLs\\C++EXE.exe"):
+    def __init__(self, exe_path="calibration\\spectral\\pylabinst\\CS260_DLLs\\C++EXE.exe"):
         super().__init__("CS260")
         self.exe_path = exe_path
 

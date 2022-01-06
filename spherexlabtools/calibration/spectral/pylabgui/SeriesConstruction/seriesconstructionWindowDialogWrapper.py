@@ -7,8 +7,8 @@ Sam Condon, 08/14/2021
 """
 
 from PyQt5 import QtWidgets
-from pylabgui.pylabgui_window_base import GuiWindow
-from pylabgui.SeriesConstruction.seriesconstructionWindowDialog import Ui_Form
+from ..pylabgui_window_base import GuiWindow
+from .seriesconstructionWindowDialog import Ui_Form
 
 
 class SeriesConstructionWindow(Ui_Form, GuiWindow):
