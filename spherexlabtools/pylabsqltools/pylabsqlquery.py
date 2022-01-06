@@ -68,7 +68,6 @@ class PylabSQLQuery:
             tables_dict = tables_in
         else:
             print("ERROR!  NEED LIST OR DICT")
-            break
 
         self.sql_query += self.select_tables_string(tables_dict, nickname=nicknames)
 
@@ -77,6 +76,8 @@ class PylabSQLQuery:
 
         if conditions:
             self.sql_query += self.add_query_conditions(conditions)
+
+        return self.sql_query
 
     def select_tables_string(self, tables, select_all=False, nickname=None, include_exp_id=True):
         if select_all == True:
@@ -113,8 +114,8 @@ class PylabSQLQuery:
             str_out += '''{} '''.format(key)
             for table, tval in value.items():
                 for cname, cval in tval.items():
-                    str_out += '''{}.{} {}'''.format(table, cname, cval)
-        return str_out
+                    str_out += '''{}.{} {} AND '''.format(table, cname, cval)
+        return str_out[:-4]
 
     def get_server_tables_list(self, remove_tables_list=['h2rg', 'shutters', 'sr830', 'sr510']):
         """ Get existing tables/columns in mySQL database.
