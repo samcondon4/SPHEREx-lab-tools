@@ -12,7 +12,7 @@ from spherexlabtools.instruments import Instrument
 
 class Initializing(SmCustomState):
 
-    TABLES_PATH = os.path.join('calibration\\spectral\\pylablib\\sql_tables.ini')
+    TABLES_PATH = os.path.join(os.getcwd(), "applications", "spectral_cal", "config", "sql_tables.ini")
 
     def __init__(self, sm, identifier="initializing", **kwargs):
         super().__init__(sm, self, identifier, **kwargs)

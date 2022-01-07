@@ -9,7 +9,7 @@ Sam Condon, 08/12/2021
 import asyncio
 import numpy as np
 from PyQt5 import QtCore, QtWidgets
-from .pylabgui_widget_group import WidgetGroup, ListWidgetGroup
+from .widget_groups import WidgetGroup, ListWidgetGroup
 
 
 # Miscellaneous helper functions ################################################################

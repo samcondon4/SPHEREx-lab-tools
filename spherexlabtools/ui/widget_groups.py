@@ -19,7 +19,7 @@ Sam Condon, 08/12/2021
 
 import asyncio
 from PyQt5 import QtCore, QtWidgets
-from .pylabgui_QListWigetSubclass import QListWidgetItemCustom
+from .widgets import QListWidgetItemCustom
 
 
 class WidgetGroup:

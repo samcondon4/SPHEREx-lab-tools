@@ -2,10 +2,11 @@
 
 Sam Condon 07/01/2021
 """
+import os
 import asyncio
 import subprocess as sp
 from subprocess import *
-from .pylabinst_instrument_base import Instrument
+from .instrument import Instrument
 
 
 class CS260(Instrument):
@@ -71,9 +72,12 @@ class CS260(Instrument):
 
         return osf
 
-    def __init__(self, exe_path="calibration\\spectral\\pylabinst\\CS260_DLLs\\C++EXE.exe"):
+    def __init__(self, exe_path=None):
         super().__init__("CS260")
-        self.exe_path = exe_path
+        if exe_path is None:
+            self.exe_path = os.path.join(os.getcwd(), "spherexlabtools", "instruments", "CS260_DLLs", "C++EXE.exe")
+        else:
+            self.exe_path = exe_path
 
         # Configure open method###################
         self.set_open_method(self.cs260_open)

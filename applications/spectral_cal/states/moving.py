@@ -6,7 +6,7 @@
 import os
 import sys
 import asyncio
-from sm_data_mappings import INST_SM_MAP
+from .sm_data_mappings import INST_SM_MAP
 from spherexlabtools.state import SmCustomState
 from spherexlabtools.instruments import Instrument
 import pymeasure.instruments.instrument as pymeasureinst

@@ -56,7 +56,7 @@ class SpectralCalibrationMachine(AsyncMachine):
 
         # Procedure classes ################
         self.proc_dict = {"SR830": LockinMeasurement(self.inst_dict["SR830"]),
-                          "SR510": LockinMeasurement(self.inst_dict["SR510"]),}
+                          "SR510": LockinMeasurement(self.inst_dict["SR510"])}
         #"S401C": PhotoDiodeMeasurement(self.inst_dict["S401C"])}
 
         # Initialize action arguments ##########################################################################

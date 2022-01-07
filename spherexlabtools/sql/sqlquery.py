@@ -143,7 +143,7 @@ class SQLQuery:
                                   'wavelength', 'storage_path']}
 
         """
-        db = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD, database=SCHEMA_NAME)
+        db = pymysql.connect(user=self.user, password=self.password, database=self.database)
         cursor = db.cursor()
         cursor.execute("SHOW TABLES")
         tables = cursor.fetchall()
@@ -186,7 +186,7 @@ class SQLQuery:
             sql_query_string += '''
             LIMIT {}'''.format(row_limit)
 
-        db = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD, database=SCHEMA_NAME)
+        db = pymysql.connect(user=self.user, password=self.password, database=self.database)
         df_sql = pd.read_sql(sql_query_string, db)
         db.close()
 
