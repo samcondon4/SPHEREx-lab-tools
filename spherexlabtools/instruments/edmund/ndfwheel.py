@@ -7,14 +7,14 @@ Sam Condon, 07/02/2021
 import os
 import clr
 import sys
-from .instrument import Instrument
-sys.path.append("%s\\spherexlabtools\\instruments\\NDFWheel_DLLs\\" % os.getcwd())
+from spherexlabtools.instruments.instrument import PylabInstrument
+sys.path.append(os.path.join(os.getcwd(), "spherexlabtools", "instruments", "edmund", "NDFWheel_DLLs"))
 clr.AddReference("OptecHID_FilterWheelAPI")
 from OptecHID_FilterWheelAPI import FilterWheels
 from OptecHID_FilterWheelAPI import FilterWheel
 
 
-class NDF(Instrument):
+class NDF(PylabInstrument):
 
     def __init__(self):
         super().__init__("NDF")

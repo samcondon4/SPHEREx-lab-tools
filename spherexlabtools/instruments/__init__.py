@@ -1,5 +1,5 @@
 # spherexlabtools.instruments #
-from .instrument import Instrument
-from .CS260 import CS260
-from .labjacku6 import Labjack
-from .ndfwheel import NDF
+from .instrument import PylabInstrument, CompoundInstrument
+from spherexlabtools.instruments.newport.CS260 import CS260
+from spherexlabtools.instruments.labjack.labjacku6 import Labjack
+from spherexlabtools.instruments.edmund.ndfwheel import NDF

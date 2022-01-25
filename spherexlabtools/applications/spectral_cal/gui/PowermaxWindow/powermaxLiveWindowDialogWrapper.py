@@ -15,7 +15,7 @@ matplotlib.use("Qt5Agg")
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg, NavigationToolbar2QT
 from matplotlib.figure import Figure
 
-sys.path.append(r"..\\..\\..\\")
+sys.path.append(r"../../..\\")
 from pylablib.pylablib_gui_tab import GuiTab
 
 

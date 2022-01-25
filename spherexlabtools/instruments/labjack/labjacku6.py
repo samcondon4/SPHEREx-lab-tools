@@ -8,10 +8,10 @@ Sam Condon, 07/05/2021
 
 import u6
 import numpy as np
-from .instrument import Instrument
+from spherexlabtools.instruments.instrument import PylabInstrument
 
 
-class Labjack(Instrument):
+class Labjack(PylabInstrument):
 
     def __init__(self):
         super().__init__("Labjack")

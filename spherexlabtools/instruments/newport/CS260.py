@@ -6,10 +6,10 @@ import os
 import asyncio
 import subprocess as sp
 from subprocess import *
-from .instrument import Instrument
+from spherexlabtools.instruments.instrument import PylabInstrument
 
 
-class CS260(Instrument):
+class CS260(PylabInstrument):
 
     G1_UPPER = 1.4
     G2_LOWER = G1_UPPER
