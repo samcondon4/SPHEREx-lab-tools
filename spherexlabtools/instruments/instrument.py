@@ -11,6 +11,42 @@ import importlib
 from pymeasure.instruments import Instrument
 
 
+class PymeasureInstrumentSub(Instrument):
+    """ Basic Pymeasure Instrument subclass to add the quick_properties attributes.
+    """
+    def __init__(self, adapter, name, includeSCPI=True, **kwargs):
+        super().__init__(adapter, name, includeSCPI, **kwargs)
+
+    @property
+    def quick_properties_list(self):
+        return self.quick_props_list
+
+    @quick_properties_list.setter
+    def quick_properties_list(self, prop_list):
+        if type(prop_list) is str:
+            self.quick_props_list = [prop_list]
+        elif type(prop_list) is list:
+            self.quick_props_list = prop_list
+        else:
+            raise TypeError("Expected input of type str or list")
+
+    @property
+    def quick_properties(self):
+        prop_dict = {}
+        for prop_name in self.quick_props_list:
+            prop_dict[prop_name] = getattr(self, prop_name)
+
+        return prop_dict
+
+    @quick_properties.setter
+    def quick_properties(self, setter_dict):
+        for key in setter_dict:
+            if key in self.quick_props_list:
+                setattr(self, key, setter_dict[key])
+            else:
+                raise RuntimeError("Property {} has not been placed in the quick properties list!".format(key))
+
+
 class PylabInstrument:
 
     def __init__(self, identifier=None):
