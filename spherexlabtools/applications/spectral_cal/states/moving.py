@@ -8,8 +8,7 @@ import sys
 import asyncio
 from .sm_data_mappings import INST_SM_MAP
 from spherexlabtools.state import SmCustomState
-from spherexlabtools.instruments import Instrument
-import pymeasure.instruments.instrument as pymeasureinst
+from spherexlabtools.instruments import PylabInstrument, PymeasureInstrumentSub
 
 
 class Moving(SmCustomState):
@@ -52,7 +51,7 @@ class Moving(SmCustomState):
                 cmd_keys = list(command_dict.keys())
                 # Try sending a command dictionary to each instrument. If a movement fails, enter the error state
                 try:
-                    if issubclass(type(instruments[key]), Instrument):
+                    if issubclass(type(instruments[key]), PylabInstrument):
                         cur_params = await instruments[key].get_parameters("All")
                         # remove set parameters if the instrument is already in that state
                         for cmd_key in cmd_keys:
@@ -63,7 +62,7 @@ class Moving(SmCustomState):
                             await instruments[key].set_parameters(command_dict)
                         inst_dict = await instruments[key].get_parameters("All")
 
-                    elif issubclass(type(instruments[key]), pymeasureinst.Instrument):
+                    elif issubclass(type(instruments[key]), PymeasureInstrumentSub):
                         cur_params = instruments[key].quick_properties
                         # remove set parameters if the instrument is already in that state
                         for cmd_key in cmd_keys:
@@ -126,5 +125,3 @@ class Moving(SmCustomState):
             meta_dict[nk] = inst_dict[inst_key][inst_param]
 
         return meta_dict
-
-

@@ -5,14 +5,17 @@
 """
 import asyncio
 import os
-import pymeasure.instruments.instrument
+import sys
+
 from spherexlabtools.state import SmCustomState
-from spherexlabtools.instruments import Instrument
+from spherexlabtools.instruments import PylabInstrument
+from spherexlabtools.instruments import PymeasureInstrumentSub
 
 
 class Initializing(SmCustomState):
 
-    TABLES_PATH = os.path.join(os.getcwd(), "applications", "spectral_cal", "config", "sql_tables.ini")
+    TABLES_PATH = os.path.join(os.getcwd(), "spherexlabtools", "applications", "spectral_cal", "config",
+                               "sql_tables.ini")
 
     def __init__(self, sm, identifier="initializing", **kwargs):
         super().__init__(sm, self, identifier, **kwargs)
@@ -22,15 +25,16 @@ class Initializing(SmCustomState):
         action_arg["Tables"] = self.define_sql_tables_and_rows_from_ini(action_arg["Tables"], self.TABLES_PATH)
 
     async def initialize_instruments(self, action_arg):
-        try:
-            print("initializing instruments...")
-            instruments = action_arg["Instruments"]
-            for key in instruments:
-                if issubclass(type(instruments[key]), Instrument):
+        print("initializing instruments...")
+        instruments = action_arg["Instruments"]
+        for key in instruments:
+            print(key)
+            try:
+                if issubclass(type(instruments[key]), PylabInstrument):
                     await instruments[key].open()
                     inst_params = await instruments[key].get_parameters("All")
 
-                elif issubclass(type(instruments[key]), pymeasure.instruments.instrument.Instrument):
+                elif issubclass(type(instruments[key]), PymeasureInstrumentSub):
                     inst_params = instruments[key].quick_properties
 
                 else:
@@ -40,7 +44,7 @@ class Initializing(SmCustomState):
                     self.DataQueueTx.put_nowait({key: inst_params})
                 elif type(self.DataQueueTx) is dict:
                     self.DataQueueTx[key] = inst_params
-
-        except Exception as e:
-            print(e)
+            except Exception as e:
+                print(e)
+                sys.exit()
         print("initialization complete")

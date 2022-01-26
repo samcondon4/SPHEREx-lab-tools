@@ -6,10 +6,9 @@
 import os
 import sys
 import asyncio
-import pymeasure.instruments.instrument
 from .sm_data_mappings import SM_INST_MAP
 from spherexlabtools.state import SmCustomState
-from spherexlabtools.instruments import Instrument
+from spherexlabtools.instruments import PylabInstrument, PymeasureInstrumentSub
 
 
 class Manual(SmCustomState):
@@ -42,7 +41,7 @@ class Manual(SmCustomState):
                 cmd_keys = list(command_dict.keys())
                 # get the type of the instrument and call the appropriate parameter getter/setter for that type
                 inst_type = type(instruments[inst_key])
-                if issubclass(inst_type, Instrument):
+                if issubclass(inst_type, PylabInstrument):
                     cur_params = await instruments[inst_key].get_parameters("All")
                     print(command_dict)
                     # remove set parameters if the instrument is already in that state
@@ -53,7 +52,7 @@ class Manual(SmCustomState):
                     if command_dict != {}:
                         await instruments[inst_key].set_parameters(command_dict)
                     inst_dict = await instruments[inst_key].get_parameters("All")
-                elif issubclass(inst_type, pymeasure.instruments.instrument.Instrument):
+                elif issubclass(inst_type, PymeasureInstrumentSub):
                     instruments[inst_key].quick_properties = command_dict
                     inst_dict = instruments[inst_key].quick_properties
                 else:

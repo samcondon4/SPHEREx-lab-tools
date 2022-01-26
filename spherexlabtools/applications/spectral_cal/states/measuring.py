@@ -71,18 +71,15 @@ class Measuring(SmCustomState):
                 measurement_params["storage_path"] = storage_path
                 metadata = measuring_dict["Metadata"]
                 meta_keys = list(metadata.keys())
-                print("good")
                 for mkey in meta_keys:
                     if mkey not in self.metadata_strings:
                         metadata.pop(mkey)
-                print("good")
                 procedure.metadata = metadata
                 i = ser_index * len(archive[key]) + seq_index
                 archive[key][i]["start_time"] = now.strftime('%Y-%m-%d %H:%M:%S')
                 archive[key][i]["storage_path"] = storage_path.replace("C:", "/c").replace("\\", "/")
                 #print(archive[key][i])
                 #pdb.set_trace()
-                print("good")
                 measure_coros[k] = asyncio.create_task(procedure.run(measurement_params, append_to_existing=True,
                                                                      hold=True))
 

@@ -1,8 +1,7 @@
 import numpy as np
 from time import sleep
 from pymeasure.experiment import FloatParameter
-from pymeasure.instruments.srs.sr510 import SR510
-from pymeasure.instruments.srs.sr830 import SR830
+from spherexlabtools.instruments.srs import SR510, SR830
 from .baseproc import SmBaseProc
 
 

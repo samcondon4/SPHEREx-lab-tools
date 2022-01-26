@@ -8,12 +8,10 @@
 import asyncio
 from transitions.extensions.asyncio import AsyncMachine
 # instrument drivers #####################################
-from spherexlabtools.instruments import CS260
-from spherexlabtools.instruments import NDF
-from spherexlabtools.instruments import Labjack
-from pymeasure.instruments.srs.sr510 import SR510
-from pymeasure.instruments.srs.sr830 import SR830
-from pymeasure.instruments.thorlabs.thorlabspm100usb import ThorlabsPM100USB
+from spherexlabtools.instruments.edmund import NDF
+from spherexlabtools.instruments.newport import CS260
+from spherexlabtools.instruments.labjack import Labjack
+from spherexlabtools.instruments.srs import SR510, SR830
 
 # measurement procedures #####################################
 from .procedures import LockinMeasurement, PhotoDiodeMeasurement

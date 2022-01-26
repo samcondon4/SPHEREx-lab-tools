@@ -21,39 +21,34 @@ class Waiting(SmCustomState):
         ret_code = True
         # set flag so that other states to generate their state specific control loop
         in_dict["Control Loop Generate"][0] = True
-        try:
+        # kill any workers that may still be running from the measuring state #
+        for proc_key in in_dict["Procedures"]:
+            proc = in_dict["Procedures"][proc_key]
+            if proc.running:
+                print("Killing worker on procedure {}".format(proc_key))
+                proc.worker.stop()
+                proc.running = False
 
-            # kill any workers that may still be running from the measuring state #
-            for proc_key in in_dict["Procedures"]:
-                proc = in_dict["Procedures"][proc_key]
-                if proc.running:
-                    print("Killing worker on procedure {}".format(proc_key))
-                    proc.worker.stop()
-                    proc.running = False
+        print("waiting for gui input...")
+        gui_data = await self.pend_for_data()
 
-            print("waiting for gui input...")
-            gui_data = await self.pend_for_data()
+        # reset the control loop before updating it with new data
+        self.reset_control_loop(in_dict)
+        # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
+        # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
+        gui_input_type = type(gui_data)
+        if gui_input_type is list:
+            in_dict["Manual or Auto"][0] = "auto"
+            in_dict["Control"]["Loop"] = self.build_control_loop(gui_data)
+            # Add exposure ids to dicts
+            in_dict["Archiving"] = self.assign_exposure_ids(in_dict["Archiving"], in_dict["Control"]["Loop"], in_dict["Tables"])
+        else:
+            in_dict["Manual or Auto"][0] = "manual"
+            in_dict["Control"].update(gui_data)
+            # Add exposure ids to dicts
+            in_dict["Archiving"] = self.assign_exposure_ids(in_dict["Archiving"], [[in_dict["Control"]]], in_dict["Tables"])
 
-            # reset the control loop before updating it with new data
-            self.reset_control_loop(in_dict)
-            # Check the type of the gui input data. If the type is a list, then we know that a list of sequence parameters
-            # has been sent and that a series should be run in the Auto state. Otherwise, enter the manual state.
-            gui_input_type = type(gui_data)
-            if gui_input_type is list:
-                in_dict["Manual or Auto"][0] = "auto"
-                in_dict["Control"]["Loop"] = self.build_control_loop(gui_data)
-                # Add exposure ids to dicts
-                in_dict["Archiving"] = self.assign_exposure_ids(in_dict["Archiving"], in_dict["Control"]["Loop"], in_dict["Tables"])
-            else:
-                in_dict["Manual or Auto"][0] = "manual"
-                in_dict["Control"].update(gui_data)
-                # Add exposure ids to dicts
-                in_dict["Archiving"] = self.assign_exposure_ids(in_dict["Archiving"], [[in_dict["Control"]]], in_dict["Tables"])
-
-            return ret_code
-
-        except Exception as e:
-            print(e)
+        return ret_code
 
     def assign_exposure_ids(self, archive_dict, control_loop, tables_dict):
         timestamp_prefix = "_".join((SmCustomState.get_prefix_datestamp(), SmCustomState.get_prefix_timestamp()))

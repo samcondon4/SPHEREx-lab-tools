@@ -75,7 +75,8 @@ class CS260(PylabInstrument):
     def __init__(self, exe_path=None):
         super().__init__("CS260")
         if exe_path is None:
-            self.exe_path = os.path.join(os.getcwd(), "spherexlabtools", "instruments", "CS260_DLLs", "C++EXE.exe")
+            self.exe_path = os.path.join(os.getcwd(), "spherexlabtools", "instruments",
+                                         "newport", "CS260_DLLs", "C++EXE.exe")
         else:
             self.exe_path = exe_path
 

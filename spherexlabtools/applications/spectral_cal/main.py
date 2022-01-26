@@ -26,7 +26,8 @@ async def main():
     try:
         gui_to_sm_data_queue = asyncio.Queue()
         sm_to_gui_data_queue = {}
-        seq_dir = os.path.join(os.getcwd(), "applications", "spectral_cal", "config", "sequence", "")
+        seq_dir = os.path.join(os.getcwd(), "spherexlabtools", "applications", "spectral_cal",
+                               "config", "sequence", "")
         SM = SpectralCalibrationMachine(data_queue_rx=gui_to_sm_data_queue, data_queue_tx=sm_to_gui_data_queue)
         gui = GUI(sequence_dir=seq_dir, data_queue_rx=sm_to_gui_data_queue, data_queue_tx=gui_to_sm_data_queue)
         sm_task = asyncio.create_task(SM.start_machine())
