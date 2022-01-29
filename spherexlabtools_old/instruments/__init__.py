@@ -1,6 +1,5 @@
 # spherexlabtools.instruments #
-from .instrument import PylabInstrument, PymeasureInstrumentSub, CompoundInstrument, InstrumentSuite, \
-    create_instrument_suite
+from .instrument import PylabInstrument, PymeasureInstrumentSub, CompoundInstrument
 from . import edmund
 from . import flir
 from . import labjack

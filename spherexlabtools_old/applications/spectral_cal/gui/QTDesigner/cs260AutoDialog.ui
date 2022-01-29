@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1026</width>
+    <height>1129</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Monochromator</string>
+  </property>
+  <layout class="QGridLayout" name="main_layout">
+   <item row="9" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Grating:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_Cs260StartWavelength"/>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="sequence_monochromator_shutter_label">
+     <property name="text">
+      <string>Shutter</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="sequence_monochromator_stepsize_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Step Size (um.): </string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QComboBox" name="combobox_list_Cs260GratingTransitions_ItemDisplay_grating">
+     <item>
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>3</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="sequence_monochromator_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Monochromator Sequence Control:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="sequence_monochromator_startwave_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Start Wavelength (um.):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_Cs260EndWavelength"/>
+   </item>
+   <item row="5" column="1">
+    <widget class="QComboBox" name="combobox_list_SavedSequences_passive_Cs260Shutter">
+     <item>
+      <property name="text">
+       <string>Open</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Closed</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="sequence_monochromator_endwave_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>End Wavelength (um.): </string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLineEdit" name="lineedit_list_SavedSequences_passive_Cs260StepSize"/>
+   </item>
+   <item row="17" column="0" colspan="2">
+    <widget class="QPushButton" name="button_list_Cs260OsfTransitions_setter_AddCs260OsfTransition">
+     <property name="text">
+      <string>Add Osf Transition</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="2">
+    <widget class="QListWidget" name="list_listXlist_Cs260GratingTransitionsXSavedSequences_listXPassiveListAll_Cs260GratingTransitions"/>
+   </item>
+   <item row="6" column="0">
+    <widget class="QLabel" name="sequence_monochromator_gratingtransition_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Grating Transitions:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0">
+    <widget class="QLabel" name="sequence_monochromator_osf2osf3_label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string>Order Sort Filter Wheel Transitions:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="18" column="0" colspan="2">
+    <widget class="QPushButton" name="button_list_Cs260OsfTransitions_remover_RemoveCs260OsfTransition">
+     <property name="text">
+      <string>Remove Osf Transition</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0" colspan="2">
+    <widget class="QPushButton" name="button_list_Cs260GratingTransitions_remover_RemoveCs260GratingTransition">
+     <property name="text">
+      <string>Remove Grating Transition</string>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="0" colspan="2">
+    <widget class="QListWidget" name="list_listXlist_Cs260OsfTransitionsXSavedSequences_listXPassiveListAll_Cs260OsfTransitions"/>
+   </item>
+   <item row="8" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Wavelength (um.):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLineEdit" name="lineedit_list_Cs260GratingTransitions_ItemDisplay_wavelength"/>
+   </item>
+   <item row="12" column="0" colspan="2">
+    <widget class="QPushButton" name="button_list_Cs260GratingTransitions_RemoverOfAll_RemoveAllCs260Transitions">
+     <property name="text">
+      <string>Remove All Grating Transitions</string>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Wavelength (um.):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0" colspan="2">
+    <widget class="QPushButton" name="button_list_Cs260GratingTransitions_setter_AddCs260GratingTransition">
+     <property name="text">
+      <string>Add Grating Transition</string>
+     </property>
+    </widget>
+   </item>
+   <item row="19" column="0" colspan="2">
+    <widget class="QPushButton" name="button_list_Cs260OsfTransitions_RemoverOfAll_RemoveAllCs260Transitions">
+     <property name="text">
+      <string>Remove All Osf Transitions</string>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="0">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Osf Wheel Position</string>
+     </property>
+    </widget>
+   </item>
+   <item row="15" column="1">
+    <widget class="QLineEdit" name="lineedit_list_Cs260OsfTransitions_ItemDisplay_wavelength"/>
+   </item>
+   <item row="16" column="1">
+    <widget class="QComboBox" name="combobox_list_Cs260OsfTransitions_ItemDisplay_osf">
+     <item>
+      <property name="text">
+       <string>1</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>5</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>6</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
