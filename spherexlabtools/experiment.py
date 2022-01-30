@@ -4,6 +4,7 @@ Sam Condon, 01/27/2022
 """
 
 import logging
+import queue
 import threading
 import importlib
 import pyqtgraph as pg
@@ -15,38 +16,12 @@ from spherexlabtools.instruments import create_instrument_suite
 app = pg.mkQApp("Experiment")
 
 
-class InstrumentControlThread(threading.Thread):
-
-    def __init__(self, hw, controller, wait_timeout, **kwargs):
-        """ Constructor for a new instrument control thread.
-
-        :param: hw: Instrument object.
-        :param: controller: InstrumentController object.
-        :param: wait_timeout: Timeout between set_event pends.
-        """
-        super().__init__(**kwargs)
-        self.hw = hw
-        self.controller = controller
-        self.wait_timeout = wait_timeout
-        self.should_stop = False
-        self.set_event = threading.Event()
-
-        # configure thread synchronization #
-        self.controller.set_event = self.set_event
-
-    def run(self):
-        """
-        """
-        while not self.should_stop:
-            self.set_event.wait(self.wait_timeout)
-            if self.controller.set_data != {}:
-                for p in self.controller.set_data:
-                    setattr(self.hw, p, self.controller.set_data[p])
-            self.controller.clear_set_data()
-
-
 class Experiment:
-    """ This class defines the top-level experiment control object.
+    """ The core class of the spherexlabtools package. The basic operating principle of spherexlabtools
+        is implemented by this class. Namely, that every action that is performed in an experiment, be
+        that the recording of data, or setting instrument parameters via a gui, is executed in its own thread.
+        This class handles the scheduling of all threads and ensures that each thread has the resources that
+        it needs to operate.
     """
 
     thread = None
@@ -67,20 +42,17 @@ class Experiment:
         # self.recorders = create_recorders(recorders)
         # self.viewers = create_viewers(viewers)
         self.hw = create_instrument_suite(exp_pkg.INSTRUMENT_SUITE)
-        self.controllers = create_controllers(exp_pkg.CONTROLLERS)
-        for c in self.controllers.keys():
-            self.start_controller(c)
+        self.controllers = create_controllers(exp_pkg.CONTROLLERS, self.hw)
 
     def start_controller(self, cntrl_key):
-        """ Start a controller thread and interface.
+        """ Start a controller.
         """
-        hw = getattr(self.hw, cntrl_key)
-        controller = self.controllers[cntrl_key]
-        controller.show()
-        if "InstrumentController" in str(type(controller)):
-            self.thread = InstrumentControlThread(hw, controller, 0.5)
-            self.thread.setDaemon(True)
-            self.thread.start()
+        self.controllers[cntrl_key].start()
+
+    def kill_controller(self, cntrl_key):
+        """ Kill a controller.
+        """
+        self.controllers[cntrl_key].kill()
 
 
 def create_experiment(exp_pkg):
