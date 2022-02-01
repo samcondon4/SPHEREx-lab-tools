@@ -1,5 +1,7 @@
 MScope_Controller = {
-    "type": "instrument::mscope",
+    "instance_name": "Microscope Control",
+    "type": "InstrumentController",
+    "hw": "Microscope",
     "control_parameters": [
         {"name": "focuser_step_position", "type": "int"},
         {"name": "cam_gain_auto", "type": "list", "values": ["Off", "Once", "Continuous"]}
@@ -11,4 +13,14 @@ MScope_Controller = {
     "status_refresh": 0.5
 }
 
-CONTROLLERS = [MScope_Controller]
+LogProc_Controller = {
+    "instance_name": "CameraView Procedure Control",
+    "type": "ProcedureController",
+    "procedure": "CameraView",
+}
+
+CollimatorFocus_Controller = {
+    "type": "procedure::CollimatorFocusCurve",
+}
+
+CONTROLLERS = [MScope_Controller, LogProc_Controller]

@@ -4,12 +4,11 @@ Sam Condon, 01/27/2022
 """
 
 import logging
-import queue
-import threading
-import importlib
 import pyqtgraph as pg
+
 from spherexlabtools.viewers import create_viewers
 from spherexlabtools.recorders import create_recorders
+from spherexlabtools.procedures import create_procedures
 from spherexlabtools.controllers import create_controllers
 from spherexlabtools.instruments import create_instrument_suite
 
@@ -24,8 +23,6 @@ class Experiment:
         it needs to operate.
     """
 
-    thread = None
-
     def __init__(self, exp_pkg):
         """ Initialize an experiment. This init function performs the following tasks:
                 - imports the hw.py module and instantiates an :class:`.InstrumentSuite`
@@ -39,19 +36,30 @@ class Experiment:
 
         :param: exp_pkg: Python package containing the experiment configuration modules.
         """
+        log = {
+            "level": exp_pkg.LOG_LEVEL,
+            "handler": exp_pkg.FILE_HANDLER
+        }
+        self.exp_pkg = exp_pkg
+        self.exp_pkg.LOGGER.info("Experiment initialization started.")
         # self.recorders = create_recorders(recorders)
-        # self.viewers = create_viewers(viewers)
+        self.viewers = create_viewers(exp_pkg.VIEWERS)
         self.hw = create_instrument_suite(exp_pkg.INSTRUMENT_SUITE)
-        self.controllers = create_controllers(exp_pkg.CONTROLLERS, self.hw)
+        self.procedures = create_procedures(exp_pkg.PROCEDURES, self.hw)
+        self.controllers = create_controllers(exp_pkg.CONTROLLERS, self.hw, procedures=self.procedures,
+                                              log=log)
+        self.exp_pkg.LOGGER.info("Experiment initialization complete.")
 
     def start_controller(self, cntrl_key):
         """ Start a controller.
         """
+        self.exp_pkg.LOGGER.info("Starting controller: %s" % cntrl_key)
         self.controllers[cntrl_key].start()
 
     def kill_controller(self, cntrl_key):
         """ Kill a controller.
         """
+        self.exp_pkg.LOGGER.info("Killing controller: %s" % cntrl_key)
         self.controllers[cntrl_key].kill()
 
 

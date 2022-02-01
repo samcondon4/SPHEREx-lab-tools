@@ -45,7 +45,7 @@ FocuserCfg = {
 }
 
 MscopeCfg = {
-    "instance_name": "mscope",
+    "instance_name": "Microscope",
     "subinstruments": [CamCfg, GaugeCfg, FocuserCfg]
 }
 

@@ -1,2 +1,2 @@
 
-from .controller import create_controllers
+from .controllers import create_controllers

@@ -172,17 +172,15 @@ class Flea3:
     def stream_active(self, val):
         self._stream_active = bool(val)
 
-    def stream_to_object(self, obj):
-        """ This method starts continuous frame streaming to an object.
-        :param: obj: Any object with a "data" attribute. Image data will be written to this
-                     attribute.
+    @property
+    def latest_frame(self):
+        """ Property representing the latest frame retrieved from the camera while it is
+            in streaming mode.
         """
-        self.stream_active = True
-        self.start_stream()
-        while self.stream_active:
-            im = self.get_stream_frame()
-            obj.data = im
-        self.stop_stream()
+        latest_frame = None
+        if self.stream_active:
+            latest_frame = self.get_stream_frame()
+        return latest_frame
 
     def start_stream(self):
         """ This method starts continous frame streaming.
@@ -190,12 +188,14 @@ class Flea3:
         # set acquisition mode #
         self.acquisition_mode = "Continuous"
         self.cam.BeginAcquisition()
+        self.stream_active = True
 
     def stop_stream(self):
         """ This method stops continuous frame streaming.
         """
         self.cam.EndAcquisition()
         self.acquisition_mode = "SingleFrame"
+        self.stream_active = False
 
     def get_stream_frame(self):
         """ This method retrieves the latest frame and returns it as a numpy array when
