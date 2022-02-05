@@ -24,8 +24,13 @@ class QueueThread(StoppableThread):
         """ Method that executes when thread is started.
         """
         while not self.should_stop():
-            self.data = self.queue.get(self.timeout)
-            self.handle()
+            self.queue_process()
+
+    def queue_process(self):
+        """ Pend for and process a value set on the queue.
+        """
+        self.data = self.queue.get()
+        self.handle()
 
     def handle(self):
         """ Method called after data is received in the queue.

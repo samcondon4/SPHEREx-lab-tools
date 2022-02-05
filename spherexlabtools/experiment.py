@@ -3,14 +3,17 @@
 Sam Condon, 01/27/2022
 """
 
+import queue
 import logging
 import pyqtgraph as pg
 
+from spherexlabtools.workers import FlexibleWorker
 from spherexlabtools.viewers import create_viewers
 from spherexlabtools.recorders import create_recorders
 from spherexlabtools.procedures import create_procedures
 from spherexlabtools.controllers import create_controllers
 from spherexlabtools.instruments import create_instrument_suite
+
 
 app = pg.mkQApp("Experiment")
 
@@ -42,22 +45,63 @@ class Experiment:
         }
         self.exp_pkg = exp_pkg
         self.exp_pkg.LOGGER.info("Experiment initialization started.")
-        # self.recorders = create_recorders(recorders)
         self.viewers = create_viewers(exp_pkg.VIEWERS)
+        self.recorders = create_recorders(exp_pkg.RECORDERS)
         self.hw = create_instrument_suite(exp_pkg.INSTRUMENT_SUITE)
-        self.procedures = create_procedures(exp_pkg.PROCEDURES, self.hw)
-        self.controllers = create_controllers(exp_pkg.CONTROLLERS, self.hw, procedures=self.procedures,
-                                              log=log)
+        self.procedures = create_procedures(exp_pkg.PROCEDURES, self.hw, viewers=self.viewers, recorders=self.recorders)
+        self.controllers = create_controllers(exp_pkg.CONTROLLERS, hw=self.hw, procedures=self.procedures, log=log)
         self.exp_pkg.LOGGER.info("Experiment initialization complete.")
 
+    def start_viewer(self, viewer_key):
+        """ Start a viewer thread.
+        """
+        self.exp_pkg.LOGGER.info("Starting viewer: %s" % viewer_key)
+        self.viewers[viewer_key].start()
+
+    def kill_viewer(self, viewer_key):
+        """ Kill a viewer thread.
+        """
+        self.exp_pkg.LOGGER.info("Killing viewer: %s" % viewer_key)
+        self.viewers[viewer_key].kill()
+
+    def open_viewer(self, viewer_key):
+        """ Open the gui for the given viewer without starting its thread.
+        """
+        self.viewers[viewer_key].open()
+
+    def close_viewer(self, viewer_key):
+        """ Close the gui for the given viewer without killing its thread.
+        """
+        self.viewers[viewer_key].close()
+
+    def start_recorder(self, rec_key):
+        """ Start a recorder thread.
+        """
+        pass
+
+    def kill_recorder(self, rec_key):
+        """ Kill a recorder thread.
+        """
+        pass
+
+    def start_procedure(self, proc_key, **kwargs):
+        """ Start a procedure thread.
+        """
+        pass
+
+    def kill_procedure(self, proc_key):
+        """ Kill a procedure thread.
+        """
+        pass
+
     def start_controller(self, cntrl_key):
-        """ Start a controller.
+        """ Start a controller thread.
         """
         self.exp_pkg.LOGGER.info("Starting controller: %s" % cntrl_key)
         self.controllers[cntrl_key].start()
 
     def kill_controller(self, cntrl_key):
-        """ Kill a controller.
+        """ Kill a controller thread.
         """
         self.exp_pkg.LOGGER.info("Killing controller: %s" % cntrl_key)
         self.controllers[cntrl_key].kill()

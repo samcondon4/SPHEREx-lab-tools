@@ -6,35 +6,52 @@
 Sam Condon, 01/31/2022
 """
 
-import threading
+import time
+import inspect
+from copy import deepcopy
+
 from pymeasure.experiment import Procedure
-from pymeasure.experiment import FloatParameter
+from pymeasure.experiment import Parameter, FloatParameter
+from pymeasure.thread import StoppableThread
+
 from ..log import Logger
 
 
 class BaseProcedure(Procedure):
-    """ Subclass of the pymeasure procedure.
+    """ Thread to execute a measurement. Based on the pymeasure procedure.
     """
 
-    def __init__(self, hw, viewer=None, recorder=None, log=None):
+    DATA_COLUMNS = []
+    MEASURE = {}
+    FINISHED, FAILED, ABORTED, QUEUED, RUNNING = 0, 1, 2, 3, 4
+    STATUS_STRINGS = {
+        FINISHED: 'Finished', FAILED: 'Failed',
+        ABORTED: 'Aborted', QUEUED: 'Queued',
+        RUNNING: 'Running'
+    }
+
+    _parameters = {}
+
+    def __init__(self, hw, records=None, log=None, **kwargs):
         """ Initialize a bare procedure instance.
 
         :param: hw: Every procedure in the spherexlabtools framework needs an instrument object. This argument
                     is that object.
-        :param: viewer: Viewer object for procedure data to be sent to.
-        :param: recorder: Recorder object for procedure data to be sent to.
+        :param: records: Dictionary containing lists of queues to which data should be posted on
+                         calls to emit().
         :param: log: Logger object.
         """
-        super().__init__()
+        super().__init__(**kwargs)
         self.hw = hw
-        self.topics = []
-        if viewer is not None:
-            self.topics.append("view")
-        if recorder is not None:
-            self.topics.append("record")
-        self.viewer = viewer
-        self.recorder = recorder
+        self.records = records
         self.logger = Logger(log)
+        self.running = False
+
+    def emit(self, record_name, record_data):
+        """ Post a record to the appropriate queues.
+        """
+        for q in self.records[record_name]:
+            q.put(record_data)
 
 
 class LogProc(BaseProcedure):
@@ -44,32 +61,31 @@ class LogProc(BaseProcedure):
         all procedure classes upon execution.
     """
 
-    refresh_rate = FloatParameter("Refresh Rate", units="Hz.")
-    DATA_COLUMNS = []
+    refresh_rate = FloatParameter("Log Rate", units="Hz.", default=1)
 
-    def __init__(self, hw, props, **kwargs):
+    def __init__(self, hw, **kwargs):
         """ Initialize a basic procedure that will record data from the prop argument.
 
         :param: hw: Instrument object
         :param: props String or list of strings of instrument property or properties to get data from.
         """
         super().__init__(hw, **kwargs)
-        self.DATA_COLUMNS = props if len(props) > 1 else [props]
+        self.DATA_COLUMNS = list(self.records.keys())
 
     def execute(self):
-        """ Procedure execution method. Calls get_properties() at a fixed interval.
+        """ Procedure execution method. Calls get_properties() to start recording props at a fixed interval.
         """
-        while not self.should_stop():
-            threading.Timer(1/self.refresh_rate, self.get_properties).start()
+        print(self.refresh_rate)
+        while self.running:
+            self.get_properties()
+            time.sleep(1/self.refresh_rate)
 
     def get_properties(self):
         """ Retrieve all properties given in the DATA_COLUMNS list and emit results.
         """
-        data = {}
         for p in self.DATA_COLUMNS:
-            data[p] = getattr(self.hw, p)
-        self.logger.log("Emitting values from: {}".format(self.DATA_COLUMNS))
-        self.emit(self.topics, data)
+            data = getattr(self.hw, p)
+            self.emit(p, data)
 
 
 def create_procedures(cfgs, hw, viewers=None, recorders=None, log=None):
@@ -82,10 +98,18 @@ def create_procedures(cfgs, hw, viewers=None, recorders=None, log=None):
     """
     procedures = {}
     for cfg in cfgs:
+        # get hardware object #
         hw_obj = getattr(hw, cfg["hw"])
-        viewer = None if "viewer" not in cfg.keys() else viewers[cfg["viewer"]]
-        recorder = None if "recorder" not in cfg.keys() else recorders[cfg["recorder"]]
+
+        # get recorder and viewer queues to pass to the procedure base #
+        records = cfg["records"]
+        qdict = {}
+        for key, val in records.items():
+            qdict_val = [{"viewer": viewers, "recorder": recorders}[k][v].queue for k, v in val.items()]
+            qdict[key] = qdict_val
+
+        # instantiate the procedure, placing it in the returned dictionary #
         if cfg["type"] == "LogProc":
-            procedures["instance_name"] = LogProc(hw_obj, cfg["props"], viewer=viewer, recorder=recorder, log=log)
+            procedures[cfg["instance_name"]] = LogProc(hw_obj, records=qdict, log=log)
 
     return procedures

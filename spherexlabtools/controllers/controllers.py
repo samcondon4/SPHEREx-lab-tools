@@ -2,16 +2,13 @@
 
 Sam Condon, 01/27/2022
 """
-import queue
 import threading
 from PyQt5 import QtWidgets
-import pyqtgraph as pg
-import pyqtgraph.parametertree.parameterTypes as PTypes
+from pymeasure.thread import StoppableThread
 from pymeasure.experiment.parameters import *
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
 from ..log import Logger
-from ..procedures import LogProc
 from ..workers import FlexibleWorker
 
 
@@ -41,6 +38,18 @@ class Controller(QtWidgets.QWidget):
         self.parameters.addChildren(params)
         self.tree.setParameters(self.parameters, **kwargs)
         self.layout.addWidget(self.tree)
+
+    def start(self):
+        """ Start the controller.
+        """
+        self.alive = True
+        self.show()
+
+    def kill(self):
+        """ Stop the controller.
+        """
+        self.alive = False
+        self.close()
 
 
 class InstrumentController(Controller):
@@ -139,63 +148,72 @@ class ProcedureController(Controller):
         BooleanParameter: "bool",
     }
 
-    def __init__(self, proc, log=None, **kwargs):
-        super().__init__(log=log, **kwargs)
+    def __init__(self, name, proc, log=None, **kwargs):
+        super().__init__(name, log=log)
         self.procedure = proc
-        self.proc_params = proc.parameter_objects()
-        self.proc_params_tree = [{} for _ in range(len(self.proc_params.keys()))]
+        self.proc_param_objs = proc.parameter_objects()
+        self.proc_params_tree = [{} for _ in range(len(self.proc_param_objs.keys()))]
         j = 0
         # create parameter dictionaries for the procedure parameters #
-        for p in self.proc_params.values():
-            self.proc_params_tree[j] = {"name": p.name, "type": self.parameter_map[type(p)]}
+        self.param_name_map = {}
+        for key, val in self.proc_param_objs.items():
+            self.param_name_map[val.name] = key
+            self.proc_params_tree[j] = {"name": val.name, "type": self.parameter_map[type(val)], "value": val.value}
+        self.proc_params = Parameter.create(name="Procedure Parameters", type="group", children=self.proc_params_tree)
 
         self.log_config = log
 
         # list of parameters implemented in subclasses #
-        self.sub_params = None
+        self.sub_params_tree = None
 
-        self.worker = None
+        # reference to the procedure thread. #
+        self.proc_thread = None
 
-    def start(self):
-        """ Start the controller.
+    def start_procedure(self):
+        """ Start a thread to run the procedure.
         """
-        self.alive = True
-        self.show()
-        self.worker = FlexibleWorker(self.procedure, self.log_config)
-        self.worker.start()
+        # set the procedure parameters #
+        for c in self.proc_params.children():
+            setattr(self.procedure, self.param_name_map[c.name()], c.value())
+        # start the procedure #
+        self.proc_thread = threading.Thread(target=self.procedure.execute)
+        self.procedure.running = True
+        self.proc_thread.start()
 
-    def stop(self):
-        """ Stop the controller.
+    def stop_procedure(self, timeout=1):
+        """ Stop the running procedure thread.
         """
-        self.alive = False
-        self.close()
-        self.worker.join(0)
+        # stop the procedure #
+        self.procedure.running = False
+        self.proc_thread.join()
 
 
 class LogProcController(ProcedureController):
     """ Controller class to implement control over a procedure through a GUI.
     """
 
-    def __init__(self, proc, **kwargs):
-        super().__init__(proc, **kwargs)
-        self.create_controller_map[type(proc)]()
-        self.set_parameters([self.sub_params, self.proc_params], showTop=True)
+    def __init__(self, name, proc, **kwargs):
+        super().__init__(name, proc, **kwargs)
 
-    def _create_log(self):
-        """ Create the parameter tree gui elements for a basic procedure.
-        """
+        # configure parameter tree #
         proc_dcols = self.procedure.DATA_COLUMNS
         log_params = [{} for _ in range(len(proc_dcols))]
         for i in range(len(log_params)):
             log_params[i] = {"name": proc_dcols[i], "type": "bool", "value": False}
-        dcol_param_group = {"name": "Log Parameters:", "type": "group", "children": log_params}
-        start_log = {"name": "Start Logging", "type": "action"}
-        stop_log = {"name": "Stop Logging", "type": "action"}
-        self.sub_params = [dcol_param_group, start_log, stop_log]
+        self.dcol_param_group = {"name": "Log Parameters:", "type": "group", "children": log_params}
+        self.start_log = Parameter.create(name="Start Logging", type="action")
+        self.stop_log = Parameter.create(name="Stop Logging", type="action")
+        self.sub_params_tree = [self.dcol_param_group, self.start_log, self.stop_log]
 
-    create_controller_map = {
-        LogProc: _create_log
-    }
+        # build widget #
+        params = []
+        params.extend(self.sub_params_tree)
+        params.append(self.proc_params)
+        self.set_parameters(params, showTop=True)
+
+        # connect buttons to methods #
+        self.stop_log.sigStateChanged.connect(self.stop_procedure)
+        self.start_log.sigStateChanged.connect(self.start_procedure)
 
 
 def create_controllers(cntrl_cfg, hw=None, procedures=None, log=None):
@@ -211,13 +229,14 @@ def create_controllers(cntrl_cfg, hw=None, procedures=None, log=None):
         name = cntrl["instance_name"]
         typ = cntrl["type"]
         if typ == "InstrumentController":
-            hw_str = cntrl["hw"]
+            hw = getattr(hw, cntrl["hw"])
             control_params = None if "control_parameters" not in cntrl.keys() else cntrl["control_parameters"]
             status_params = None if "status_parameters" not in cntrl.keys() else cntrl["status_parameters"]
             refresh = None if "status_refresh" not in cntrl.keys() else cntrl["status_refresh"]
-            controllers[name] = InstrumentController(name, getattr(hw, hw_str), control_params=control_params,
+            controllers[name] = InstrumentController(name, hw, control_params=control_params,
                                                      status_params=status_params, status_refresh=refresh, log=log)
-        elif typ == "ProcedureController":
-            pass
+        elif typ == "LogProcController":
+            proc = procedures[cntrl["procedure"]]
+            controllers[name] = LogProcController(name, proc, log=log)
 
     return controllers

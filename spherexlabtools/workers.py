@@ -25,13 +25,9 @@ class FlexibleWorker(StoppableThread):
         self.procedure.check_parameters()
         self.procedure.status = BaseProcedure.QUEUED
 
-        self.recorder_queue = Queue()
-        self.recorder = procedure.recorder
-        self.recorder.queue = self.recorder_queue
-
-        self.viewer_queue = Queue()
-        self.viewer = procedure.viewer
-        self.viewer.queue = self.viewer_queue
+        # set up the proper queues for procedure records #
+        for record in self.procedure.records:
+            pass
 
         self.logger = Logger(log)
 
@@ -47,7 +43,7 @@ class FlexibleWorker(StoppableThread):
         """ Emits data of some topic, placing it on the proper queue to be recorded in a results
             file and/or displayed in a viewer.
         """
-        topics = topics if len(topics) > 1 else [topics]
+        topics = topics if type(topics) is list else [topics]
         for topic in topics:
             if topic == "record":
                 self.recorder_queue.put(record)
@@ -70,21 +66,22 @@ class FlexibleWorker(StoppableThread):
 
     def shutdown(self):
         self.procedure.shutdown()
+        if self.viewer is not None:
+            self.viewer.stop()
+        if self.recorder is not None:
+            self.recorder.stop()
 
+        self.stop()
         if self.should_stop() and self.procedure.status == BaseProcedure.RUNNING:
             self.update_status(BaseProcedure.ABORTED)
         elif self.procedure.status == BaseProcedure.RUNNING:
             self.update_status(BaseProcedure.FINISHED)
             self.emit('progress', 100.)
 
-        self.recorder.stop()
-
     def run(self):
         self.logger.log("Worker thread started")
 
-        # start the viewer and recorder #
-        self.viewer.start()
-        self.recorder.start()
+        # set up procedure record queues #
 
         # route Procedure methods & log
         self.procedure.should_stop = self.should_stop

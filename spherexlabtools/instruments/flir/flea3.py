@@ -174,12 +174,13 @@ class Flea3:
 
     @property
     def latest_frame(self):
-        """ Property representing the latest frame retrieved from the camera while it is
-            in streaming mode.
+        """ Property representing the frame retrieved from the camera. If the camera is not in streaming
+        mode, then get_frames() is called to return a frame.
         """
-        latest_frame = None
         if self.stream_active:
             latest_frame = self.get_stream_frame()
+        else:
+            latest_frame = self.get_frames()
         return latest_frame
 
     def start_stream(self):

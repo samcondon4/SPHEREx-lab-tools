@@ -2,11 +2,32 @@ import pyqtgraph as pg
 from ..thread import QueueThread
 
 
-class ImageViewer(pg.GraphicsLayoutWidget, QueueThread):
+class Viewer(pg.GraphicsLayoutWidget, QueueThread):
+    """ Base QueueThread viewer class.
+    """
+
+    def __init__(self):
+        super(Viewer, self).__init__()
+
+    def run(self):
+        """ Open the gui and start queue processing.
+        """
+        self.show()
+        while not self.should_stop():
+            self.queue_process()
+
+    def kill(self):
+        """ Close the gui and stop queue processing.
+        """
+        self.close()
+        self.stop()
+
+
+class ImageViewer(Viewer):
     """ Basic image viewer based on the pyqtgraph GraphicsLayoutWidget.
     """
 
-    def __init__(self, q=None, **kwargs):
+    def __init__(self, **kwargs):
         """ Initialize the image viewer.
         """
         super(ImageViewer, self).__init__()
@@ -27,5 +48,5 @@ def create_viewers(viewer_cfg):
     viewers = {}
     for cfg in viewer_cfg:
         if cfg["type"] == "ImageViewer":
-            viewers[cfg["instance_name"]] = ImageViewer(cfg)
+            viewers[cfg["instance_name"]] = ImageViewer()
     return viewers
