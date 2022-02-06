@@ -1,6 +1,5 @@
 """ spherexlabtools
 """
-import logging
 
 __version__ = "0.6"
 

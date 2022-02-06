@@ -4,12 +4,10 @@ Sam Condon, 01/27/2022
 """
 import threading
 from PyQt5 import QtWidgets
-from pymeasure.thread import StoppableThread
 from pymeasure.experiment.parameters import *
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
 from ..log import Logger
-from ..workers import FlexibleWorker
 
 
 class Controller(QtWidgets.QWidget):
@@ -45,7 +43,7 @@ class Controller(QtWidgets.QWidget):
         self.alive = True
         self.show()
 
-    def kill(self):
+    def stop(self):
         """ Stop the controller.
         """
         self.alive = False
@@ -129,7 +127,7 @@ class InstrumentController(Controller):
             self.get_inst_params()
         self.logger.log("started")
 
-    def kill(self):
+    def stop(self):
         """ Kill the controller.
         """
         self.alive = False
@@ -166,26 +164,19 @@ class ProcedureController(Controller):
         # list of parameters implemented in subclasses #
         self.sub_params_tree = None
 
-        # reference to the procedure thread. #
-        self.proc_thread = None
-
     def start_procedure(self):
-        """ Start a thread to run the procedure.
+        """ Start the procedure thread.
         """
         # set the procedure parameters #
         for c in self.proc_params.children():
             setattr(self.procedure, self.param_name_map[c.name()], c.value())
         # start the procedure #
-        self.proc_thread = threading.Thread(target=self.procedure.execute)
-        self.procedure.running = True
-        self.proc_thread.start()
+        self.procedure.start()
 
     def stop_procedure(self, timeout=1):
         """ Stop the running procedure thread.
         """
-        # stop the procedure #
-        self.procedure.running = False
-        self.proc_thread.join()
+        self.procedure.stop()
 
 
 class LogProcController(ProcedureController):
@@ -216,14 +207,15 @@ class LogProcController(ProcedureController):
         self.start_log.sigStateChanged.connect(self.start_procedure)
 
 
-def create_controllers(cntrl_cfg, hw=None, procedures=None, log=None):
+def create_controllers(exp_pkg, hw=None, procedures=None, log=None):
     """ Create a set of controller objects from a list of configuration dictionaries, an InstrumentSuite object,
         a set of procedures, viewers, and recorders.
 
-    :param: cntrl_cfg: List of controller configuration dictionaries.
+    :param: exp_pkg: User experiment configuration package.
     :param: hw: InstrumentSuite object.
     :param: procedures: Dictionary of instantiated procedures.
     """
+    cntrl_cfg = exp_pkg.CONTROLLERS
     controllers = {}
     for cntrl in cntrl_cfg:
         name = cntrl["instance_name"]

@@ -16,7 +16,7 @@ MScope_Controller = {
 LogProc_Controller = {
     "instance_name": "CamViewProcCntrl",
     "type": "LogProcController",
-    "procedure": "CamViewProc",
+    "procedure": "CamProc",
 }
 
 CollimatorFocus_Controller = {

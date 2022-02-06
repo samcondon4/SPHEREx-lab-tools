@@ -2,6 +2,9 @@ import pyqtgraph as pg
 from ..thread import QueueThread
 
 
+pg.setConfigOption("imageAxisOrder", "row-major")
+
+
 class Viewer(pg.GraphicsLayoutWidget, QueueThread):
     """ Base QueueThread viewer class.
     """
@@ -9,18 +12,15 @@ class Viewer(pg.GraphicsLayoutWidget, QueueThread):
     def __init__(self):
         super(Viewer, self).__init__()
 
-    def run(self):
-        """ Open the gui and start queue processing.
+    def startup(self):
+        """ Open the gui.
         """
-        self.show()
-        while not self.should_stop():
-            self.queue_process()
+        self.setVisible(True)
 
-    def kill(self):
-        """ Close the gui and stop queue processing.
+    def shutdown(self):
+        """ Close the gui.
         """
-        self.close()
-        self.stop()
+        self.setVisible(False)
 
 
 class ImageViewer(Viewer):
@@ -39,12 +39,16 @@ class ImageViewer(Viewer):
     def handle(self):
         """ Write image data to the view.
         """
-        self.img.setImage(self.data)
+        if not self.should_stop():
+            self.img.setImage(self.data)
 
 
-def create_viewers(viewer_cfg):
+def create_viewers(exp_pkg):
     """ Return a set of viewers based on the configuration argument.
+
+    :param: exp_pkg: User experiment configuration package.
     """
+    viewer_cfg = exp_pkg.VIEWERS
     viewers = {}
     for cfg in viewer_cfg:
         if cfg["type"] == "ImageViewer":

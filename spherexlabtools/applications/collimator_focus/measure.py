@@ -18,8 +18,8 @@ VIEWERS = [Camera_Viewer]
 
 # Procedure configs ##############################
 CameraView_Proc = {
-    "instance_name": "CamViewProc",
-    "type": "LogProc",
+    "instance_name": "CamProc",
+    "type": "CamViewProc",
     "hw": "Microscope",
     "records": {
         "cam_latest_frame": {"viewer": "CamView"}

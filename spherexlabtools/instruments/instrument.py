@@ -405,8 +405,11 @@ class InstrumentSuite:
                 self.__dict__[inst["instance_name"]] = CompoundInstrument(inst)
 
 
-def create_instrument_suite(inst_cfg):
+def create_instrument_suite(exp_pkg):
+    """ Instantiate and InstrumentSuite object.
+
+    :param: exp_pkg: User experiment configuration package.
     """
-    """
+    inst_cfg = exp_pkg.INSTRUMENT_SUITE
     return InstrumentSuite(inst_cfg)
 

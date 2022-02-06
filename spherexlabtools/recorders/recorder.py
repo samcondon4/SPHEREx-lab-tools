@@ -13,7 +13,7 @@ class Recorder:
         self.recorder_queue = q if q is not None else queue.Queue()
 
 
-def create_recorders(recorder_cfg):
+def create_recorders(exp_pkg):
     """ Create and return a recorder object given the configuration dictionary.
     """
     return None

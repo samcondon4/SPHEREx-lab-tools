@@ -45,11 +45,11 @@ class Experiment:
         }
         self.exp_pkg = exp_pkg
         self.exp_pkg.LOGGER.info("Experiment initialization started.")
-        self.viewers = create_viewers(exp_pkg.VIEWERS)
-        self.recorders = create_recorders(exp_pkg.RECORDERS)
-        self.hw = create_instrument_suite(exp_pkg.INSTRUMENT_SUITE)
-        self.procedures = create_procedures(exp_pkg.PROCEDURES, self.hw, viewers=self.viewers, recorders=self.recorders)
-        self.controllers = create_controllers(exp_pkg.CONTROLLERS, hw=self.hw, procedures=self.procedures, log=log)
+        self.viewers = create_viewers(exp_pkg)
+        self.recorders = create_recorders(exp_pkg)
+        self.hw = create_instrument_suite(exp_pkg)
+        self.procedures = create_procedures(exp_pkg, self.hw, viewers=self.viewers, recorders=self.recorders)
+        self.controllers = create_controllers(exp_pkg, hw=self.hw, procedures=self.procedures, log=log)
         self.exp_pkg.LOGGER.info("Experiment initialization complete.")
 
     def start_viewer(self, viewer_key):
@@ -58,28 +58,18 @@ class Experiment:
         self.exp_pkg.LOGGER.info("Starting viewer: %s" % viewer_key)
         self.viewers[viewer_key].start()
 
-    def kill_viewer(self, viewer_key):
-        """ Kill a viewer thread.
+    def stop_viewer(self, viewer_key):
+        """ Stop a viewer thread.
         """
         self.exp_pkg.LOGGER.info("Killing viewer: %s" % viewer_key)
-        self.viewers[viewer_key].kill()
-
-    def open_viewer(self, viewer_key):
-        """ Open the gui for the given viewer without starting its thread.
-        """
-        self.viewers[viewer_key].open()
-
-    def close_viewer(self, viewer_key):
-        """ Close the gui for the given viewer without killing its thread.
-        """
-        self.viewers[viewer_key].close()
+        self.viewers[viewer_key].stop()
 
     def start_recorder(self, rec_key):
         """ Start a recorder thread.
         """
         pass
 
-    def kill_recorder(self, rec_key):
+    def stop_recorder(self, rec_key):
         """ Kill a recorder thread.
         """
         pass
@@ -89,7 +79,7 @@ class Experiment:
         """
         pass
 
-    def kill_procedure(self, proc_key):
+    def stop_procedure(self, proc_key):
         """ Kill a procedure thread.
         """
         pass
@@ -100,11 +90,11 @@ class Experiment:
         self.exp_pkg.LOGGER.info("Starting controller: %s" % cntrl_key)
         self.controllers[cntrl_key].start()
 
-    def kill_controller(self, cntrl_key):
+    def stop_controller(self, cntrl_key):
         """ Kill a controller thread.
         """
         self.exp_pkg.LOGGER.info("Killing controller: %s" % cntrl_key)
-        self.controllers[cntrl_key].kill()
+        self.controllers[cntrl_key].stop()
 
 
 def create_experiment(exp_pkg):
