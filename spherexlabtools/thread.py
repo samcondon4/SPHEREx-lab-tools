@@ -86,7 +86,6 @@ class StoppableReusableThread:
         """
         self.thread.stop()
         self.shutdown()
-        #self.thread.join()
 
     def should_stop(self):
         """

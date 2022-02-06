@@ -3,18 +3,20 @@
 Sam Condon, 01/27/2022
 """
 import threading
+import importlib
 from PyQt5 import QtWidgets
 from pymeasure.experiment.parameters import *
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
 from ..log import Logger
+from ..widgets import Sequencer
 
 
 class Controller(QtWidgets.QWidget):
     """ Base-class for the controller objects.
     """
 
-    def __init__(self, name, log=None):
+    def __init__(self, name, hw=None, proc=None, log=None):
         super().__init__()
         # logging setup #
         self.name = name
@@ -54,7 +56,7 @@ class InstrumentController(Controller):
     """ Controller class to implement manual control over an individual instrument within a GUI.
     """
 
-    def __init__(self, name, hw, control_params=None, status_params=None, status_refresh=None, **kwargs):
+    def __init__(self, name, cfg, hw, **kwargs):
         """ Initialize the InstrumentController Widget as a pyqtgraph parameter tree.
 
         :param: name: Name of the controller.
@@ -68,16 +70,20 @@ class InstrumentController(Controller):
         super().__init__(name, **kwargs)
         self.hw = hw
         params = []
+
         # configure control parameters if they are present. #
+        control_params = cfg["control_parameters"]
         self.control_group = None
-        if control_params is not None:
+        if len(control_params) > 0:
             self.set_params = Parameter.create(name="Set Parameters", type="action")
             control_params.append(self.set_params)
             self.control_group = Parameter.create(name="Control", type="group", children=control_params)
             params.append(self.control_group)
+
         # configure status parameters if they are present #
+        status_params = cfg["status_parameters"]
         self.status_group = None
-        if status_params is not None:
+        if len(status_params) > 0:
             for p in status_params:
                 p["enabled"] = False
             self.status_group = Parameter.create(name="Status", type="group", children=status_params)
@@ -89,7 +95,7 @@ class InstrumentController(Controller):
 
         # Threading setup #
         self.get_timer = None
-        self.status_refresh = status_refresh
+        self.status_refresh = 0 if "status_refresh" not in cfg.keys() else cfg["status_refresh"]
         self.set_params.sigStateChanged.connect(self.set_inst_params)
 
     def set_inst_params(self):
@@ -146,23 +152,47 @@ class ProcedureController(Controller):
         BooleanParameter: "bool",
     }
 
-    def __init__(self, name, proc, log=None, **kwargs):
-        super().__init__(name, log=log)
+    def __init__(self, name, cfg, proc, place_params=True, sequencer=True, **kwargs):
+        """ Initialize the procedure controller gui interface.
+
+        :param: name: String name of the controller.
+        :param: proc: Procedure object to control.
+        :param: place_params: Boolean to indicate if the default parameter layout should be set.
+        :param: sequencer: Boolean indicating if a sequencer interface should be generated.
+        :param: log: Logging config dictionary.
+        """
+        super().__init__(name, **kwargs)
+        if "place_params" in cfg.keys():
+            place_params = cfg["place_params"]
+        if "sequencer" in cfg.keys():
+            sequencer = cfg["sequencer"]
         self.procedure = proc
         self.proc_param_objs = proc.parameter_objects()
-        self.proc_params_tree = [{} for _ in range(len(self.proc_param_objs.keys()))]
-        j = 0
+
         # create parameter dictionaries for the procedure parameters #
+        j = 0
+        self.proc_params_tree = [{} for _ in range(len(self.proc_param_objs.keys()))]
         self.param_name_map = {}
         for key, val in self.proc_param_objs.items():
             self.param_name_map[val.name] = key
             self.proc_params_tree[j] = {"name": val.name, "type": self.parameter_map[type(val)], "value": val.value}
-        self.proc_params = Parameter.create(name="Procedure Parameters", type="group", children=self.proc_params_tree)
+            j += 1
+        self.proc_params = Parameter.create(name="Single Procedure", type="group", children=self.proc_params_tree)
 
-        self.log_config = log
+        # create start and stop procedure buttons #
+        self.start_proc = Parameter.create(name="Start Procedure", type="action")
+        self.stop_proc = Parameter.create(name="Stop Procedure", type="action")
 
-        # list of parameters implemented in subclasses #
-        self.sub_params_tree = None
+        # create the sequencer parameter group if the sequencer boolean is true #
+        self.seq_params = None
+        if sequencer:
+            self.seq_params = Sequencer(self.proc_params_tree)
+
+        # place parameters if flag is set #
+        if place_params:
+            self.proc_params.addChildren([self.start_proc, self.stop_proc])
+            params = [self.proc_params, self.seq_params] if self.seq_params is not None else [self.proc_params]
+            self.set_parameters(params)
 
     def start_procedure(self):
         """ Start the procedure thread.
@@ -183,8 +213,8 @@ class LogProcController(ProcedureController):
     """ Controller class to implement control over a procedure through a GUI.
     """
 
-    def __init__(self, name, proc, **kwargs):
-        super().__init__(name, proc, **kwargs)
+    def __init__(self, name, cfg, proc, **kwargs):
+        super().__init__(name, cfg, proc, place_params=False, sequencer=False, **kwargs)
 
         # configure parameter tree #
         proc_dcols = self.procedure.DATA_COLUMNS
@@ -192,9 +222,9 @@ class LogProcController(ProcedureController):
         for i in range(len(log_params)):
             log_params[i] = {"name": proc_dcols[i], "type": "bool", "value": False}
         self.dcol_param_group = {"name": "Log Parameters:", "type": "group", "children": log_params}
-        self.start_log = Parameter.create(name="Start Logging", type="action")
-        self.stop_log = Parameter.create(name="Stop Logging", type="action")
-        self.sub_params_tree = [self.dcol_param_group, self.start_log, self.stop_log]
+        self.start_proc = Parameter.create(name="Start Logging", type="action")
+        self.stop_proc = Parameter.create(name="Stop Logging", type="action")
+        self.sub_params_tree = [self.dcol_param_group, self.start_proc, self.stop_proc]
 
         # build widget #
         params = []
@@ -203,8 +233,8 @@ class LogProcController(ProcedureController):
         self.set_parameters(params, showTop=True)
 
         # connect buttons to methods #
-        self.stop_log.sigStateChanged.connect(self.stop_procedure)
-        self.start_log.sigStateChanged.connect(self.start_procedure)
+        self.stop_proc.sigStateChanged.connect(self.stop_procedure)
+        self.start_proc.sigStateChanged.connect(self.start_procedure)
 
 
 def create_controllers(exp_pkg, hw=None, procedures=None, log=None):
@@ -217,18 +247,31 @@ def create_controllers(exp_pkg, hw=None, procedures=None, log=None):
     """
     cntrl_cfg = exp_pkg.CONTROLLERS
     controllers = {}
-    for cntrl in cntrl_cfg:
-        name = cntrl["instance_name"]
-        typ = cntrl["type"]
-        if typ == "InstrumentController":
-            hw = getattr(hw, cntrl["hw"])
-            control_params = None if "control_parameters" not in cntrl.keys() else cntrl["control_parameters"]
-            status_params = None if "status_parameters" not in cntrl.keys() else cntrl["status_parameters"]
-            refresh = None if "status_refresh" not in cntrl.keys() else cntrl["status_refresh"]
-            controllers[name] = InstrumentController(name, hw, control_params=control_params,
-                                                     status_params=status_params, status_refresh=refresh, log=log)
-        elif typ == "LogProcController":
-            proc = procedures[cntrl["procedure"]]
-            controllers[name] = LogProcController(name, proc, log=log)
+    for cfg in cntrl_cfg:
+        name = cfg["instance_name"]
+
+        # instantiate the controller object. Search order for a controller class is:
+        # 1) User defined controllers in the provided experiment package.
+        # 2) spherexlabtools core controllers
+        try:
+            cntrl_class = getattr(exp_pkg.controllers, cfg["type"])
+        except (AttributeError, ModuleNotFoundError):
+            cntrl_mod = importlib.import_module(__name__)
+            cntrl_class = getattr(cntrl_mod, cfg["type"])
+
+        # get hardware #
+        try:
+            hw = getattr(hw, cfg["hw"])
+        except (AttributeError, KeyError):
+            hw = None
+
+        # get procedure #
+        try:
+            proc = procedures[cfg["procedure"]]
+        except KeyError:
+            proc = None
+
+        # instantiate controller and place it in the returned dictionary #
+        controllers[name] = cntrl_class(name, cfg, hw=hw, proc=proc, log=log)
 
     return controllers

@@ -16,11 +16,13 @@ MScope_Controller = {
 LogProc_Controller = {
     "instance_name": "CamViewProcCntrl",
     "type": "LogProcController",
-    "procedure": "CamProc",
+    "procedure": "CamViewProc",
 }
 
 CollimatorFocus_Controller = {
-    "type": "procedure::CollimatorFocusCurve",
+    "instance_name": "CollimatorFocusProcCntrl",
+    "type": "ProcedureController",
+    "procedure": "CollimatorFocusProc"
 }
 
-CONTROLLERS = [MScope_Controller, LogProc_Controller]
+CONTROLLERS = [MScope_Controller, LogProc_Controller, CollimatorFocus_Controller]

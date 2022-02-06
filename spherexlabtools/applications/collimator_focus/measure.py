@@ -18,7 +18,7 @@ VIEWERS = [Camera_Viewer]
 
 # Procedure configs ##############################
 CameraView_Proc = {
-    "instance_name": "CamProc",
+    "instance_name": "CamViewProc",
     "type": "CamViewProc",
     "hw": "Microscope",
     "records": {
@@ -26,4 +26,13 @@ CameraView_Proc = {
     }
 }
 
-PROCEDURES = [CameraView_Proc]
+CollimatorFocus_Proc = {
+    "instance_name": "CollimatorFocusProc",
+    "type": "CollimatorFocusProc",
+    "hw": "Microscope",
+    "records": {
+        "frame": {"viewer": "CamView"}
+    }
+}
+
+PROCEDURES = [CameraView_Proc, CollimatorFocus_Proc]
