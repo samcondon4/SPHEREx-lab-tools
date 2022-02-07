@@ -7,28 +7,21 @@ import pyqtgraph.parametertree.parameterTypes as pTypes
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
 
-class Sequencer(pTypes.GroupParameter):
-    """ GroupParameter type implementing a tree for sequencing through a set of procedure parameters.
+class SequenceGroup(pTypes.GroupParameter):
+    """ Expandable GroupParameter implementing the sequence tree.
     """
-
     def __init__(self, params, **opts):
-        """ Initialize the sequencer.
-
-        :param: params: Parameters to sequence through.
-        """
-        opts["name"] = "Procedure Sequence"
+        opts["name"] = "Sequence"
         opts["type"] = "group"
         opts["addText"] = "Add"
         opts["addList"] = [p["name"] for p in params]
-        self.start_sequence = Parameter.create(name="Start Procedure Sequence", type="action")
-        self.pause_sequence = Parameter.create(name="Pause Procedure Sequence", type="action")
-        self.stop_sequence = Parameter.create(name="Abort Procedure Sequence", type="action")
         self.level = Parameter.create(name="Level", type="str", value="x")
         self.remove = Parameter.create(name="Remove", type="action")
-        self.base_children = [self.start_sequence, self.pause_sequence, self.stop_sequence, self.level, self.remove]
+        self.base_children = [self.level, self.remove]
         opts["children"] = self.base_children
         pTypes.GroupParameter.__init__(self, **opts)
 
+        # connect buttons to methods #
         self.remove.sigStateChanged.connect(self.remove_child)
 
     def addNew(self, typ=None):
@@ -64,7 +57,8 @@ class Sequencer(pTypes.GroupParameter):
         parent = child.parent()
 
         # remove specified child #
-        parent.removeChild(child)
+        if child not in self.base_children:
+            parent.removeChild(child)
 
         # rename children #
         children = parent.children()
@@ -74,3 +68,30 @@ class Sequencer(pTypes.GroupParameter):
                 name = child.name().split(":")[-1].strip()
                 child.setName(str(i) + ": " + name)
 
+
+class Sequencer(pTypes.GroupParameter):
+    """ GroupParameter type wrapping the :class:`.SequenceGroup`
+    """
+
+    def __init__(self, params, **opts):
+        """ Initialize the sequencer.
+
+        :param: params: Parameters to sequence through.
+        """
+        opts["name"] = "Procedure Sequencer"
+        opts["type"] = "group"
+        self.sequence_group = SequenceGroup(params)
+        self.start_sequence = Parameter.create(name="Start Procedure Sequence", type="action")
+        self.pause_sequence = Parameter.create(name="Pause Procedure Sequence", type="action")
+        self.stop_sequence = Parameter.create(name="Abort Procedure Sequence", type="action")
+        self.base_children = [self.sequence_group, self.start_sequence, self.pause_sequence, self.stop_sequence]
+        opts["children"] = self.base_children
+        pTypes.GroupParameter.__init__(self, **opts)
+
+        # connect buttons to methods #
+        self.start_sequence.sigStateChanged.connect(self.get_sequence)
+
+    def get_sequence(self):
+        """ Method to retrieve all of the sequence parameters.
+        """
+        print(self.sequence_group.getValues())

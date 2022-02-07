@@ -80,6 +80,7 @@ class StoppableReusableThread:
         """
         self.startup()
         self.execute()
+        self.shutdown()
 
     def stop(self):
         """ Stop a running thread.

@@ -139,4 +139,8 @@ spherexlabtools/calibration/spectral/config
 __pycache__
 
 
+# debug files #
+test.py
+output.txt
+
 

@@ -13,7 +13,12 @@ Camera_Viewer = {
     "type": "ImageViewer"
 }
 
-VIEWERS = [Camera_Viewer]
+CameraAvg_Viewer = {
+    "instance_name": "CamViewAvg",
+    "type": "ImageViewer"
+}
+
+VIEWERS = [Camera_Viewer, CameraAvg_Viewer]
 
 
 # Procedure configs ##############################
@@ -31,7 +36,8 @@ CollimatorFocus_Proc = {
     "type": "CollimatorFocusProc",
     "hw": "Microscope",
     "records": {
-        "frame": {"viewer": "CamView"}
+        "frame": {"viewer": "CamView"},
+        "frame_avg": {"viewer": "CamViewAvg"}
     }
 }
 

@@ -4,7 +4,7 @@
 
 Sam Condon, 02/05/2022
 """
-
+import numpy as np
 from spherexlabtools.procedures import BaseProcedure, LogProc
 from pymeasure.experiment import FloatParameter, IntegerParameter
 
@@ -51,6 +51,22 @@ class CollimatorFocusProc(CamProc):
         """
         super().__init__(hw, **kwargs)
 
+    def execute(self):
+        # move the focuser and wait for its motion to complete #
+        self.hw.focuser_step_position = self.focus_position
+        self.hw.focuser_wait_for_completion()
 
+        frame_width = self.hw.cam_exposure_width
+        frame_height = self.hw.cam_exposure_height
 
+        # take a set of images averaged over several frames #
+        for i in range(int(self.images)):
+            image = np.zeros([frame_height, frame_width], dtype=np.uint64)
+            for e in range(int(self.frames_per_image)):
+                exp = self.hw.cam_latest_frame
+                image = image + (exp / self.frames_per_image)
+                # write out to viewers #
+                self.emit("frame", exp)
+                self.emit("frame_avg", image)
 
+            # write out to recorder #

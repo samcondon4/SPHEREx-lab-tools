@@ -182,24 +182,30 @@ class ProcedureController(Controller):
         # create start and stop procedure buttons #
         self.start_proc = Parameter.create(name="Start Procedure", type="action")
         self.stop_proc = Parameter.create(name="Abort Procedure", type="action")
+        self.proc_actions = [self.start_proc, self.stop_proc]
 
         # create the sequencer parameter group if the sequencer boolean is true #
-        self.seq_params = None
+        self.sequencer = None
         if sequencer:
-            self.seq_params = Sequencer(self.proc_params_tree)
+            self.sequencer = Sequencer(self.proc_params_tree)
 
         # place parameters if flag is set #
         if place_params:
-            self.proc_params.addChildren([self.start_proc, self.stop_proc])
-            params = [self.proc_params, self.seq_params] if self.seq_params is not None else [self.proc_params]
+            self.proc_params.addChildren(self.proc_actions)
+            params = [self.proc_params, self.sequencer] if self.sequencer is not None else [self.proc_params]
             self.set_parameters(params)
+
+        # connect buttons to methods #
+        self.start_proc.sigStateChanged.connect(self.start_procedure)
+        self.stop_proc.sigStateChanged.connect(self.stop_procedure)
 
     def start_procedure(self):
         """ Start the procedure thread.
         """
         # set the procedure parameters #
         for c in self.proc_params.children():
-            setattr(self.procedure, self.param_name_map[c.name()], c.value())
+            if c not in self.proc_actions:
+                setattr(self.procedure, self.param_name_map[c.name()], c.value())
         # start the procedure #
         self.procedure.start()
 
