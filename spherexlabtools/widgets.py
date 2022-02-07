@@ -20,9 +20,12 @@ class Sequencer(pTypes.GroupParameter):
         opts["type"] = "group"
         opts["addText"] = "Add"
         opts["addList"] = [p["name"] for p in params]
+        self.start_sequence = Parameter.create(name="Start Procedure Sequence", type="action")
+        self.pause_sequence = Parameter.create(name="Pause Procedure Sequence", type="action")
+        self.stop_sequence = Parameter.create(name="Abort Procedure Sequence", type="action")
         self.level = Parameter.create(name="Level", type="str", value="x")
         self.remove = Parameter.create(name="Remove", type="action")
-        self.base_children = [self.level, self.remove]
+        self.base_children = [self.start_sequence, self.pause_sequence, self.stop_sequence, self.level, self.remove]
         opts["children"] = self.base_children
         pTypes.GroupParameter.__init__(self, **opts)
 
@@ -49,6 +52,7 @@ class Sequencer(pTypes.GroupParameter):
     def remove_child(self):
         """ Remove a child at the specified level from the sequence tree.
         """
+
         level = self.level.value().split(".")
         children = self.children()
         child = self
@@ -56,11 +60,17 @@ class Sequencer(pTypes.GroupParameter):
             child = children[int(lvl)]
             children = child.children()
 
+        # get the current child parent #
+        parent = child.parent()
+
         # remove specified child #
-        child.parent().removeChild(child)
+        parent.removeChild(child)
 
         # rename children #
+        children = parent.children()
         for i in range(len(children)):
             child = children[i]
-            name = child.name().split(":")[-1].strip()
-            child.setName(str(i) + ": " + name)
+            if child not in self.base_children:
+                name = child.name().split(":")[-1].strip()
+                child.setName(str(i) + ": " + name)
+

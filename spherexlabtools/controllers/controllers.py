@@ -181,7 +181,7 @@ class ProcedureController(Controller):
 
         # create start and stop procedure buttons #
         self.start_proc = Parameter.create(name="Start Procedure", type="action")
-        self.stop_proc = Parameter.create(name="Stop Procedure", type="action")
+        self.stop_proc = Parameter.create(name="Abort Procedure", type="action")
 
         # create the sequencer parameter group if the sequencer boolean is true #
         self.seq_params = None
