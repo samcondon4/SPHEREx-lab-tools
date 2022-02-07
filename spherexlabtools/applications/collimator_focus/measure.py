@@ -37,7 +37,7 @@ CollimatorFocus_Proc = {
     "hw": "Microscope",
     "records": {
         "frame": {"viewer": "CamView"},
-        "frame_avg": {"viewer": "CamViewAvg"}
+        "frame_avg": {"viewer": "CamViewAvg"},
     }
 }
 

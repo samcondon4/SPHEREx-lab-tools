@@ -18,6 +18,7 @@ class SequenceGroup(pTypes.GroupParameter):
         self.level = Parameter.create(name="Level", type="str", value="x")
         self.remove = Parameter.create(name="Remove", type="action")
         self.base_children = [self.level, self.remove]
+        self.base_children_len = len(self.base_children)
         opts["children"] = self.base_children
         pTypes.GroupParameter.__init__(self, **opts)
 
@@ -94,4 +95,20 @@ class Sequencer(pTypes.GroupParameter):
     def get_sequence(self):
         """ Method to retrieve all of the sequence parameters.
         """
-        print(self.sequence_group.getValues())
+        sequence = {}
+        # get the sequence group children and remove the buttons #
+        children = self.sequence_group.children()[:-1*self.sequence_group.base_children_len]
+        print(children)
+        for child in children:
+            self.write_dict(sequence, child)
+        print(sequence)
+
+    def write_dict(self, dct, child):
+        """
+        """
+        children = child.children()
+        if len(children) > 0:
+            for c in children:
+                self.write_dict(dct, c)
+        dct[child.name()] = child.value()
+

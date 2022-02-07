@@ -69,4 +69,5 @@ class CollimatorFocusProc(CamProc):
                 self.emit("frame", exp)
                 self.emit("frame_avg", image)
 
+            self.emit("image", image)
             # write out to recorder #
