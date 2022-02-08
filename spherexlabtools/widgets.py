@@ -3,13 +3,22 @@
 Sam Condon, 02/06/2022
 """
 
+import copy
+from collections.abc import Iterable
 import pyqtgraph.parametertree.parameterTypes as pTypes
 from pyqtgraph.parametertree import Parameter, ParameterTree
+
+
+class DuplicateParameterError(Exception):
+    pass
 
 
 class SequenceGroup(pTypes.GroupParameter):
     """ Expandable GroupParameter implementing the sequence tree.
     """
+
+    level_identifier = ": "
+
     def __init__(self, params, **opts):
         opts["name"] = "Sequence"
         opts["type"] = "group"
@@ -35,8 +44,8 @@ class SequenceGroup(pTypes.GroupParameter):
         insert_level = len(children) - len(self.base_children)
         for lvl in level:
             if lvl == "x":
-                child.insertChild(insert_pos, dict(name=str(insert_level) + ": " + typ, type="str", value="",
-                                                   removeable=True))
+                child.insertChild(insert_pos, dict(name=str(insert_level) + SequenceGroup.level_identifier + typ,
+                                                   type="str", value="", removeable=True))
             else:
                 child = children[int(lvl)]
                 children = child.children()
@@ -67,7 +76,7 @@ class SequenceGroup(pTypes.GroupParameter):
             child = children[i]
             if child not in self.base_children:
                 name = child.name().split(":")[-1].strip()
-                child.setName(str(i) + ": " + name)
+                child.setName(str(i) + SequenceGroup.level_identifier + name)
 
 
 class Sequencer(pTypes.GroupParameter):
@@ -95,13 +104,78 @@ class Sequencer(pTypes.GroupParameter):
     def get_sequence(self):
         """ Method to retrieve all of the sequence parameters.
         """
-        sequence = {}
-        # get the sequence group children and remove the buttons #
-        children = self.sequence_group.children()[:-1*self.sequence_group.base_children_len]
-        print(children)
-        for child in children:
-            self.write_dict(sequence, child)
-        print(sequence)
+        sequence = []
+
+        # get the sequence group children values and remove the buttons #
+        seq_dict = self.sequence_group.getValues()
+        seq_dict.pop("Level")
+        seq_dict.pop("Remove")
+
+        # loop over top level procedure parameters #
+        for item in seq_dict.items():
+            proc = {}
+            self.build_sequence(proc, item, sequence)
+
+        # strip off level identifiers from the sequence dictionaries #
+        new_sequence = [{} for _ in sequence]
+        for k in range(len(sequence)):
+            sequence[k] = {key.strip(): value for key, value in sequence[k].items()}
+            for key, value in sequence[k].items():
+                new_key = key.split(SequenceGroup.level_identifier)[-1].strip()
+                new_sequence[k][new_key] = sequence[k][key]
+
+        for s in new_sequence:
+            print(s)
+
+    def build_sequence(self, proc, item, sequence):
+        """ Recursive method to build the procedure sequence.
+        """
+        # if the current item value is an iterable, expand into a list of items #
+        val = self.typecast(item[1][0])
+        if issubclass(type(val), Iterable) and type(val) is not str:
+            procs = [copy.deepcopy(proc) for _ in val]
+            items = [(item[0], (v, item[1][1])) for v in val]
+        else:
+            procs = [proc]
+            items = [item]
+
+        # build procedure for each item generated above #
+        for i in range(len(items)):
+            proc = procs[i]
+            item = items[i]
+
+            # if the parameter has not already been specified, place it in the proc dict.
+            if item[0] not in proc.keys():
+                proc[item[0]] = item[1][0]
+            # otherwise raise an exception
+            else:
+                raise DuplicateParameterError("Procedure parameter %s specified multiple times!"
+                                              % item[0])
+
+            sub_items = item[1][1].items()
+            if len(sub_items) > 0:
+                for it in sub_items:
+                    self.build_sequence(proc, it, sequence)
+
+            if proc not in sequence:
+                sequence.append(proc)
+
+    def typecast(self, val):
+        """ Method to typecast an item value from its original string type to an iterable, or numeric
+            type.
+
+        :param: val: Original string to cast.
+        """
+        typecast = val
+        if val.isdigit():
+            typecast = float(val)
+        elif val.startswith("[") and val.endswith("]"):
+            val_list = val[1:-1].split(",")
+            for i in range(len(val_list)):
+                val_list[i] = self.typecast(val_list[i].strip())
+            typecast = val_list
+
+        return typecast
 
     def write_dict(self, dct, child):
         """
