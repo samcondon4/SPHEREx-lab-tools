@@ -99,9 +99,55 @@ class Sequencer(pTypes.GroupParameter):
         pTypes.GroupParameter.__init__(self, **opts)
 
         # connect buttons to methods #
-        self.start_sequence.sigStateChanged.connect(self.get_sequence)
+        self.start_sequence.sigStateChanged.connect(self.build_sequence)
 
-    def get_sequence(self):
+    def build_sequence(self):
+        """ Build a procedure sequence from the sequencer parameters.
+        """
+        sequence = []
+        # get the sequence group children values and remove the buttons #
+        seq_dict = self.sequence_group.getValues()
+        seq_dict.pop("Level")
+        seq_dict.pop("Remove")
+
+        for node in seq_dict.items():
+            procs = [{}]
+            procs = self.build_node_sequence(node, sequence, procs)
+            sequence.extend(procs)
+
+        print(sequence)
+
+    def build_node_sequence(self, node, sequence, procs):
+        """ Build procedure sequence for a single parameter tree node.
+        """
+        top_key = node[0]
+        top_val = self.typecast(node[1][0])
+        procs = self.update_procs_list(procs, top_key, top_val)
+        children = node[1][1].items()
+        for c in children:
+            procs = self.build_node_sequence(c, sequence, procs)
+
+        return procs
+
+    @staticmethod
+    def update_procs_list(procs, key, val):
+        """ Update list of procedures based on data values of the given node.
+        """
+        if issubclass(type(val), Iterable) and type(val) is not str:
+            new_procs = []
+            for proc in procs:
+                proc_list = [{key: v} for v in val]
+                for d in proc_list:
+                    d.update(proc)
+                new_procs.extend(proc_list)
+        else:
+            for p in procs:
+                p.update({key: val})
+            new_procs = procs
+
+        return new_procs
+
+    def get_sequence_old(self):
         """ Method to retrieve all of the sequence parameters.
         """
         sequence = []
@@ -127,9 +173,10 @@ class Sequencer(pTypes.GroupParameter):
         for s in new_sequence:
             print(s)
 
-    def build_sequence(self, proc, item, sequence):
+    def build_sequence_old(self, proc, item, sequence):
         """ Recursive method to build the procedure sequence.
         """
+        print(item)
         # if the current item value is an iterable, expand into a list of items #
         val = self.typecast(item[1][0])
         if issubclass(type(val), Iterable) and type(val) is not str:
