@@ -119,22 +119,26 @@ class QueueThread(StoppableReusableThread):
         :param: timeout: queue get timeout.
         """
         super().__init__()
-        self.queue = q if q is not None else queue.Queue(maxsize=1)
+        self.queue = q if q is not None else queue.Queue()
         self.timeout = timeout
-        self.data = None
 
     def execute(self):
         """ Override base execute() method to get and handle queue data.
         """
-        # when the thread is set to none, it has been stopped.
         while not self.thread.should_stop():
             try:
-                self.data = self.queue.get(timeout=self.timeout)
-                self.handle()
+                data = self.queue.get(timeout=self.timeout)
+                # create keyword arguments for handle #
+                if type(data) is dict and "handle_kwargs" in data:
+                    kwargs = data["handle_kwargs"]
+                    data = data["data"]
+                else:
+                    kwargs = {}
+                self.handle(data, **kwargs)
             except queue.Empty:
                 pass
 
-    def handle(self):
+    def handle(self, data, *args, **kwargs):
         """ Method called to process data in the queue. Must be overridden in subclasses.
         """
         raise NotImplementedError("handle() must be implemented in subclasses!")

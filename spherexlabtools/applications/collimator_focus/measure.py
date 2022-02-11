@@ -1,7 +1,8 @@
 # Recorder configs ###############################
 CollimatorFocus_Recorder = {
     "instance_name": "CollimatorFocusRecorder",
-    "type": "hdf5"
+    "type": "HDF5Recorder",
+    "filename": "test.h5"
 }
 
 RECORDERS = [CollimatorFocus_Recorder]
@@ -38,6 +39,7 @@ CollimatorFocus_Proc = {
     "records": {
         "frame": {"viewer": "CamView"},
         "frame_avg": {"viewer": "CamViewAvg"},
+        "image": {"recorder": "CollimatorFocusRecorder"}
     }
 }
 

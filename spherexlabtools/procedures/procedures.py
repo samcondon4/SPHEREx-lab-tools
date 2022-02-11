@@ -55,9 +55,11 @@ class BaseProcedure(StoppableReusableThread):
         """
         self.check_parameters()
 
-    def emit(self, record_name, record_data):
+    def emit(self, record_name, record_data, **kwargs):
         """ Post a record to the appropriate queues.
         """
+        if len(kwargs) > 0:
+            record_data = {"data": record_data, "handle_kwargs": kwargs}
         for q in self.records[record_name]:
             q.put(record_data)
 

@@ -59,6 +59,8 @@ class CollimatorFocusProc(CamProc):
         frame_width = self.hw.cam_exposure_width
         frame_height = self.hw.cam_exposure_height
 
+        print(self.images)
+
         # take a set of images averaged over several frames #
         for i in range(int(self.images)):
             image = np.zeros([frame_height, frame_width], dtype=np.uint64)
@@ -69,5 +71,5 @@ class CollimatorFocusProc(CamProc):
                 self.emit("frame", exp)
                 self.emit("frame_avg", image)
 
-            self.emit("image", image)
+            self.emit("image", image, group="data")
             # write out to recorder #

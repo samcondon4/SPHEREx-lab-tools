@@ -67,12 +67,14 @@ class Experiment:
     def start_recorder(self, rec_key):
         """ Start a recorder thread.
         """
-        pass
+        self.exp_pkg.LOGGER.info("Starting recorder: %s" % rec_key)
+        self.recorders[rec_key].start()
 
     def stop_recorder(self, rec_key):
         """ Kill a recorder thread.
         """
-        pass
+        self.exp_pkg.LOGGER.info("Killing recorder: %s" % rec_key)
+        self.recorders[rec_key].stop()
 
     def start_procedure(self, proc_key, **kwargs):
         """ Start a procedure thread.

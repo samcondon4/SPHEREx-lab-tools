@@ -9,8 +9,8 @@ class Viewer(pg.GraphicsLayoutWidget, QueueThread):
     """ Base QueueThread viewer class.
     """
 
-    def __init__(self):
-        super(Viewer, self).__init__()
+    def __init__(self, **kwargs):
+        super(Viewer, self).__init__(**kwargs)
 
     def startup(self):
         """ Open the gui.
@@ -36,11 +36,11 @@ class ImageViewer(Viewer):
         self.img = pg.ImageItem(border="w")
         self.view.addItem(self.img)
 
-    def handle(self):
+    def handle(self, data, **kwargs):
         """ Write image data to the view.
         """
         if not self.should_stop():
-            self.img.setImage(self.data)
+            self.img.setImage(data)
 
 
 def create_viewers(exp_pkg):
