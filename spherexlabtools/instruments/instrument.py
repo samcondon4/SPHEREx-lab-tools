@@ -406,9 +406,9 @@ class InstrumentSuite:
 
 
 def create_instrument_suite(exp_pkg):
-    """ Instantiate and InstrumentSuite object.
+    """ Instantiate an InstrumentSuite object.
 
-    :param: exp_pkg: User experiment configuration package.
+    :param exp_pkg: User experiment configuration package.
     """
     inst_cfg = exp_pkg.INSTRUMENT_SUITE
     return InstrumentSuite(inst_cfg)

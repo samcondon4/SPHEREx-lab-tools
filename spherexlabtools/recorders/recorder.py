@@ -1,6 +1,10 @@
+import logging
 import importlib
 import pandas as pd
 from ..thread import QueueThread
+
+
+logger = logging.getLogger(__name__)
 
 
 class HDF5Recorder(QueueThread):
@@ -40,6 +44,7 @@ def create_recorders(exp_pkg):
             rec_mod = importlib.import_module(__name__)
             rec_class = getattr(rec_mod, cfg["type"])
 
+        logger.info("Initializing %s as %s" % (cfg["instance_name"], rec_class))
         recorders[name] = rec_class(cfg)
 
     return recorders

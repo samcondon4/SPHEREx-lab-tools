@@ -2,27 +2,28 @@
 
 Sam Condon, 01/27/2022
 """
+import logging
 import threading
 import importlib
 from PyQt5 import QtWidgets
 from pymeasure.experiment.parameters import *
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
-from ..log import Logger
 from ..widgets import Sequencer
+
+
+logger = logging.getLogger(__name__)
 
 
 class Controller(QtWidgets.QWidget):
     """ Base-class for the controller objects.
     """
 
-    def __init__(self, name, hw=None, proc=None, log=None):
+    def __init__(self, cfg, hw=None, procs=None):
         super().__init__()
-        # logging setup #
-        self.name = name
+        self.name = cfg["instance_name"]
         self.alive = False
-        self.logger = Logger(__name__ + ": %s" % name, log)
-        self.parameters = Parameter.create(name=name, type="group")
+        self.parameters = Parameter.create(name=self.name, type="group")
         self.tree = ParameterTree()
         self.layout = QtWidgets.QGridLayout()
         self.setLayout(self.layout)
@@ -56,7 +57,7 @@ class InstrumentController(Controller):
     """ Controller class to implement manual control over an individual instrument within a GUI.
     """
 
-    def __init__(self, name, cfg, hw, **kwargs):
+    def __init__(self, cfg, hw, **kwargs):
         """ Initialize the InstrumentController Widget as a pyqtgraph parameter tree.
 
         :param: name: Name of the controller.
@@ -64,11 +65,9 @@ class InstrumentController(Controller):
         :param: control_params: list of parameter configuration dictionaries.
         :param: status_params: list of status configuration dictionaries.
         :param: status_refresh: seconds between updates to the status parameters.
-        :param: log: Dictionary of the form {"level": log level,
-                                             "handler": logging file handler}
         """
-        super().__init__(name, **kwargs)
-        self.hw = hw
+        super().__init__(cfg, **kwargs)
+        self.hw = getattr(hw, cfg["hw"])
         params = []
 
         # configure control parameters if they are present. #
@@ -106,7 +105,6 @@ class InstrumentController(Controller):
                 param = c.name()
                 val = c.value()
                 if param != "Set Parameters":
-                    self.logger.log("Setting control parameter %s to %s" % (param, str(val)))
                     setattr(self.hw, param, val)
 
     def get_inst_params(self):
@@ -119,7 +117,6 @@ class InstrumentController(Controller):
                 val = getattr(self.hw, param)
                 if val != self.status_values[param]:
                     self.status_values[param] = val
-                    self.logger.log("Updating status parameter %s to %s" % (param, val))
                     c.setValue(val)
             self.get_timer = threading.Timer(self.status_refresh, self.get_inst_params)
             self.get_timer.start()
@@ -131,7 +128,6 @@ class InstrumentController(Controller):
         self.show()
         if self.status_refresh is not None:
             self.get_inst_params()
-        self.logger.log("started")
 
     def stop(self):
         """ Kill the controller.
@@ -152,22 +148,21 @@ class ProcedureController(Controller):
         BooleanParameter: "bool",
     }
 
-    def __init__(self, name, cfg, proc, place_params=True, sequencer=True, **kwargs):
+    def __init__(self, cfg, procs, place_params=True, sequencer=True, **kwargs):
         """ Initialize the procedure controller gui interface.
 
         :param: name: String name of the controller.
-        :param: proc: Procedure object to control.
+        :param: procs: Procedure object to control.
         :param: place_params: Boolean to indicate if the default parameter layout should be set.
         :param: sequencer: Boolean indicating if a sequencer interface should be generated.
-        :param: log: Logging config dictionary.
         """
-        super().__init__(name, **kwargs)
+        super().__init__(cfg, **kwargs)
         if "place_params" in cfg.keys():
             place_params = cfg["place_params"]
         if "sequencer" in cfg.keys():
             sequencer = cfg["sequencer"]
-        self.procedure = proc
-        self.proc_param_objs = proc.parameter_objects()
+        self.procedure = procs[cfg["procedure"]]
+        self.proc_param_objs = self.procedure.parameter_objects()
 
         # create parameter dictionaries for the procedure parameters #
         j = 0
@@ -207,6 +202,7 @@ class ProcedureController(Controller):
             if c not in self.proc_actions:
                 setattr(self.procedure, self.param_name_map[c.name()], c.value())
         # start the procedure #
+        logger.info("%s starting procedure: %s" % (self.name, self.procedure))
         self.procedure.start()
 
     def stop_procedure(self, timeout=1):
@@ -219,8 +215,8 @@ class LogProcController(ProcedureController):
     """ Controller class to implement control over a procedure through a GUI.
     """
 
-    def __init__(self, name, cfg, proc, **kwargs):
-        super().__init__(name, cfg, proc, place_params=False, sequencer=False, **kwargs)
+    def __init__(self, cfg, procs, **kwargs):
+        super().__init__(cfg, procs, place_params=False, sequencer=False, **kwargs)
 
         # configure parameter tree #
         proc_dcols = self.procedure.DATA_COLUMNS
@@ -243,7 +239,7 @@ class LogProcController(ProcedureController):
         self.start_proc.sigStateChanged.connect(self.start_procedure)
 
 
-def create_controllers(exp_pkg, hw=None, procedures=None, log=None):
+def create_controllers(exp_pkg, hw=None, procedures=None):
     """ Create a set of controller objects from a list of configuration dictionaries, an InstrumentSuite object,
         a set of procedures, viewers, and recorders.
 
@@ -278,6 +274,6 @@ def create_controllers(exp_pkg, hw=None, procedures=None, log=None):
             proc = None
 
         # instantiate controller and place it in the returned dictionary #
-        controllers[name] = cntrl_class(name, cfg, hw=hw, proc=proc, log=log)
+        controllers[name] = cntrl_class(name, cfg, hw=hw, proc=proc)
 
     return controllers

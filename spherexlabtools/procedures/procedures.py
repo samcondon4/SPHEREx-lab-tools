@@ -5,15 +5,17 @@
 
 Sam Condon, 01/31/2022
 """
-
 import time
+import logging
 import inspect
 import importlib
 from copy import deepcopy
 from pymeasure.experiment import Parameter, FloatParameter
 
-from ..log import Logger
 from ..thread import StoppableReusableThread
+
+
+logger = logging.getLogger(__name__)
 
 
 class BaseProcedure(StoppableReusableThread):
@@ -31,19 +33,23 @@ class BaseProcedure(StoppableReusableThread):
 
     _parameters = {}
 
-    def __init__(self, hw, records=None, log=None, **kwargs):
+    def __init__(self, cfg, hw=None, viewers=None, recorders=None, **kwargs):
         """ Initialize a bare procedure instance.
 
-        :param: hw: Every procedure in the spherexlabtools framework needs an instrument object. This argument
-                    is that object.
-        :param: records: Dictionary containing lists of queues to which data should be posted on
+        :param hw: :class:`..instruments.InstrumentSuite` object.
+        :param records: Dictionary containing lists of queues to which data should be posted on
                          calls to emit().
-        :param: log: Logger object.
+        :param viewers: Dictionary of Viewer objects.
+        :param recorders: Dictionary of recorder objects.
+        :param kwargs: Key-word arguments to set the procedure parameters.
         """
-        super().__init__(**kwargs)
-        self.hw = hw
-        self.records = records
-        self.logger = Logger(log)
+        super().__init__()
+        self.hw = getattr(hw, cfg["hw"])
+        qdict = {}
+        for key, val in cfg["records"].items():
+            qdict_val = [{"viewer": viewers, "recorder": recorders}[k][v].queue for k, v in val.items()]
+            qdict[key] = qdict_val
+        self.records = qdict
         self.status = BaseProcedure.QUEUED
         self._update_parameters()
         for key in kwargs:
@@ -151,19 +157,18 @@ class BaseProcedure(StoppableReusableThread):
 class LogProc(BaseProcedure):
     """ Basic procedure that continuously records a parameter at a defined refresh rate and
         sends it to a :class:`..recorders.Recorder`, a :class:`..viewers.Viewer`, or both
-        with calls to :meth:`..workers.FlexibleWorker.emit` which is monkey patched into
-        all procedure classes upon execution.
+        with calls to :meth:`BaseProcedure.emit()`.
     """
 
     refresh_rate = FloatParameter("Log Rate", units="Hz.", default=1)
 
-    def __init__(self, hw, **kwargs):
+    def __init__(self, cfg, **kwargs):
         """ Initialize a basic procedure that will record data from the prop argument.
 
-        :param: hw: Instrument object
-        :param: props String or list of strings of instrument property or properties to get data from.
+        :param cfg: List of procedure configurations.
+        :param kwargs: Key-word arguments for :class:`.BaseProcedure`
         """
-        super().__init__(hw, **kwargs)
+        super().__init__(cfg, **kwargs)
         self.DATA_COLUMNS = list(self.records.keys())
 
     def execute(self):
@@ -181,7 +186,7 @@ class LogProc(BaseProcedure):
             self.emit(p, data)
 
 
-def create_procedures(exp_pkg, hw, viewers=None, recorders=None, log=None):
+def create_procedures(exp_pkg, hw, viewers=None, recorders=None):
     """ Create a set of procedures.
 
     :param: exp_pkg: User experiment configuration package.
@@ -212,6 +217,6 @@ def create_procedures(exp_pkg, hw, viewers=None, recorders=None, log=None):
             proc_class = getattr(proc_mod, cfg["type"])
 
         # place instantiated procedure in the returned dictionary
-        procedures[cfg["instance_name"]] = proc_class(hw_obj, records=qdict, log=log)
+        procedures[cfg["instance_name"]] = proc_class(hw_obj, records=qdict)
 
     return procedures

@@ -3,6 +3,6 @@ from .instrument import PylabInstrument, PymeasureInstrumentSub, CompoundInstrum
     create_instrument_suite
 #from . import edmund
 from . import flir
-from . import labjack
+#from . import labjack
 from . import newport
 from . import srs

@@ -4,9 +4,13 @@
 
 Sam Condon, 02/05/2022
 """
+import logging
 import numpy as np
 from spherexlabtools.procedures import BaseProcedure, LogProc
 from pymeasure.experiment import FloatParameter, IntegerParameter
+
+
+logger = logging.getLogger(__name__)
 
 
 class CamProc(BaseProcedure):
@@ -15,8 +19,8 @@ class CamProc(BaseProcedure):
 
     refresh_rate = FloatParameter("Frame Rate", units="Hz.", default=8, minimum=1, maximum=8)
 
-    def __init__(self, hw, **kwargs):
-        super().__init__(hw, **kwargs)
+    def __init__(self, cfg, **kwargs):
+        super().__init__(cfg, **kwargs)
 
     def startup(self):
         self.hw.cam_acquisition_frame_rate_auto = "Off"
@@ -33,9 +37,9 @@ class CamViewProc(CamProc, LogProc):
         a faster frame rate.
     """
 
-    def __init__(self, hw, **kwargs):
-        CamProc.__init__(self, hw, **kwargs)
-        LogProc.__init__(self, hw, **kwargs)
+    def __init__(self, cfg, **kwargs):
+        CamProc.__init__(self, cfg, **kwargs)
+        LogProc.__init__(self, cfg, **kwargs)
 
 
 class CollimatorFocusProc(CamProc):
@@ -46,10 +50,10 @@ class CollimatorFocusProc(CamProc):
     frames_per_image = IntegerParameter("Frames Per Image", default=10)
     images = IntegerParameter("Images", default=1)
 
-    def __init__(self, hw, **kwargs):
+    def __init__(self, cfg, **kwargs):
         """
         """
-        super().__init__(hw, **kwargs)
+        super().__init__(cfg, **kwargs)
 
     def execute(self):
         # move the focuser and wait for its motion to complete #
@@ -59,8 +63,6 @@ class CollimatorFocusProc(CamProc):
         frame_width = self.hw.cam_exposure_width
         frame_height = self.hw.cam_exposure_height
 
-        print(self.images)
-
         # take a set of images averaged over several frames #
         for i in range(int(self.images)):
             image = np.zeros([frame_height, frame_width], dtype=np.uint64)
@@ -68,6 +70,7 @@ class CollimatorFocusProc(CamProc):
                 exp = self.hw.cam_latest_frame
                 image = image + (exp / self.frames_per_image)
                 # write out to viewers #
+                logger.debug("CollimatorFocusProc emitting data")
                 self.emit("frame", exp)
                 self.emit("frame_avg", image)
 

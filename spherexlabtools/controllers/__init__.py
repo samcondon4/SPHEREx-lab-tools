@@ -1,2 +1,1 @@
-
-from .controllers import create_controllers
+from .controllers import Controller, InstrumentController, ProcedureController, LogProcController

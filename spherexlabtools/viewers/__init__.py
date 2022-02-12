@@ -1,1 +1,1 @@
-from .viewers import create_viewers
+from .viewers import Viewer, ImageViewer

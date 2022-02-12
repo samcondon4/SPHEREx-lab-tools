@@ -2,20 +2,19 @@
 
 Sam Condon, 01/27/2022
 """
-
-import queue
 import logging
 import pyqtgraph as pg
+from .loader import load_objects_from_cfg_list
+import spherexlabtools.viewers as slt_view
+import spherexlabtools.procedures as slt_proc
+import spherexlabtools.instruments as slt_inst
+import spherexlabtools.recorders as slt_record
+import spherexlabtools.controllers as slt_control
+from spherexlabtools.instruments import InstrumentSuite
 
-from spherexlabtools.workers import FlexibleWorker
-from spherexlabtools.viewers import create_viewers
-from spherexlabtools.recorders import create_recorders
-from spherexlabtools.procedures import create_procedures
-from spherexlabtools.controllers import create_controllers
-from spherexlabtools.instruments import create_instrument_suite
 
-
-app = pg.mkQApp("Experiment")
+app = None
+logger = logging.getLogger(__name__)
 
 
 class Experiment:
@@ -39,41 +38,72 @@ class Experiment:
 
         :param: exp_pkg: Python package containing the experiment configuration modules.
         """
-        log = {
-            "level": exp_pkg.LOG_LEVEL,
-            "handler": exp_pkg.FILE_HANDLER
-        }
+        global app
+        app = pg.mkQApp(exp_pkg.__name__)
         self.exp_pkg = exp_pkg
-        self.exp_pkg.LOGGER.info("Experiment initialization started.")
-        self.viewers = create_viewers(exp_pkg)
-        self.recorders = create_recorders(exp_pkg)
-        self.hw = create_instrument_suite(exp_pkg)
-        self.procedures = create_procedures(exp_pkg, self.hw, viewers=self.viewers, recorders=self.recorders)
-        self.controllers = create_controllers(exp_pkg, hw=self.hw, procedures=self.procedures, log=log)
-        self.exp_pkg.LOGGER.info("Experiment initialization complete.")
+        logger.info("Initializing experiment: %s" % exp_pkg.__name__)
+
+        # initialize instrument-suite #############################################
+        self.hw = InstrumentSuite(exp_pkg.INSTRUMENT_SUITE)
+
+        # initialize viewers ######################################################
+        viewer_cfgs = exp_pkg.VIEWERS
+        try:
+            search_order = [exp_pkg.viewers, slt_view]
+        except AttributeError:
+            search_order = [slt_view]
+        self.viewers = load_objects_from_cfg_list(search_order, viewer_cfgs)
+
+        # initialize recorders ####################################################
+        rec_cfgs = exp_pkg.RECORDERS
+        try:
+            search_order = [exp_pkg.recorders, slt_record]
+        except AttributeError:
+            search_order = [slt_record]
+        self.recorders = load_objects_from_cfg_list(search_order, rec_cfgs)
+
+        # initialize procedures ###################################################
+        proc_cfgs = exp_pkg.PROCEDURES
+        try:
+            search_order = [exp_pkg.procedures, slt_proc]
+        except AttributeError:
+            search_order = [slt_proc]
+        self.procedures = load_objects_from_cfg_list(search_order, proc_cfgs, hw=self.hw,
+                                                     viewers=self.viewers, recorders=self.recorders)
+
+        # initialize controllers ##################################################
+        control_cfgs = exp_pkg.CONTROLLERS
+        try:
+            search_order = [exp_pkg.controllers, slt_control]
+        except AttributeError:
+            search_order = [slt_control]
+        self.controllers = load_objects_from_cfg_list(search_order, control_cfgs, hw=self.hw,
+                                                      procs=self.procedures)
+
+        logger.info("Experiment initialization complete.")
 
     def start_viewer(self, viewer_key):
         """ Start a viewer thread.
         """
-        self.exp_pkg.LOGGER.info("Starting viewer: %s" % viewer_key)
+        logger.info("Starting viewer: %s" % viewer_key)
         self.viewers[viewer_key].start()
 
     def stop_viewer(self, viewer_key):
         """ Stop a viewer thread.
         """
-        self.exp_pkg.LOGGER.info("Killing viewer: %s" % viewer_key)
+        logger.info("Killing viewer: %s" % viewer_key)
         self.viewers[viewer_key].stop()
 
     def start_recorder(self, rec_key):
         """ Start a recorder thread.
         """
-        self.exp_pkg.LOGGER.info("Starting recorder: %s" % rec_key)
+        logger.info("Starting recorder: %s" % rec_key)
         self.recorders[rec_key].start()
 
     def stop_recorder(self, rec_key):
         """ Kill a recorder thread.
         """
-        self.exp_pkg.LOGGER.info("Killing recorder: %s" % rec_key)
+        logger.info("Killing recorder: %s" % rec_key)
         self.recorders[rec_key].stop()
 
     def start_procedure(self, proc_key, **kwargs):
@@ -89,13 +119,13 @@ class Experiment:
     def start_controller(self, cntrl_key):
         """ Start a controller thread.
         """
-        self.exp_pkg.LOGGER.info("Starting controller: %s" % cntrl_key)
+        logger.info("Starting controller: %s" % cntrl_key)
         self.controllers[cntrl_key].start()
 
     def stop_controller(self, cntrl_key):
         """ Kill a controller thread.
         """
-        self.exp_pkg.LOGGER.info("Killing controller: %s" % cntrl_key)
+        logger.info("Killing controller: %s" % cntrl_key)
         self.controllers[cntrl_key].stop()
 
 

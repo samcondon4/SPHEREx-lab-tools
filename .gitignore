@@ -141,6 +141,7 @@ __pycache__
 
 # debug files #
 test.py
+test.h5
 output.txt
 
 

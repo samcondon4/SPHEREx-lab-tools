@@ -3,8 +3,12 @@
 Sam Condon, 02/05/2022
 """
 import queue
+import logging
 from time import time
 from threading import Thread, Event
+
+
+logger = logging.getLogger(__name__)
 
 
 # CLASSES WITHIN THIS BLOCK COPIED FROM PYMEASURE W/ MINOR CHANGES #########################################
@@ -134,6 +138,7 @@ class QueueThread(StoppableReusableThread):
                     data = data["data"]
                 else:
                     kwargs = {}
+                logger.debug("QueueThread handling data.")
                 self.handle(data, **kwargs)
             except queue.Empty:
                 pass
