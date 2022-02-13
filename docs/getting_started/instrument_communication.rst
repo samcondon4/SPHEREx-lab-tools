@@ -1,3 +1,4 @@
+.. _getting-started_instrument-communication:
 Instrument Communication
 ========================
 

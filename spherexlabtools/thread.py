@@ -131,20 +131,14 @@ class QueueThread(StoppableReusableThread):
         """
         while not self.thread.should_stop():
             try:
-                data = self.queue.get(timeout=self.timeout)
-                # create keyword arguments for handle #
-                if type(data) is dict and "handle_kwargs" in data:
-                    kwargs = data["handle_kwargs"]
-                    data = data["data"]
-                else:
-                    kwargs = {}
+                record = self.queue.get(timeout=self.timeout)
                 logger.debug("QueueThread handling data.")
-                self.handle(data, **kwargs)
+                self.handle(record)
             except queue.Empty:
                 pass
 
-    def handle(self, data, *args, **kwargs):
-        """ Method called to process data in the queue. Must be overridden in subclasses.
+    def handle(self, record):
+        """ Method called to process a record in the queue. Must be overridden in subclasses.
         """
         raise NotImplementedError("handle() must be implemented in subclasses!")
 

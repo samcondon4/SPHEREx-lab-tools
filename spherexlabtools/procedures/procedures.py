@@ -8,14 +8,61 @@ Sam Condon, 01/31/2022
 import time
 import logging
 import inspect
+import threading
 import importlib
 from copy import deepcopy
 from pymeasure.experiment import Parameter, FloatParameter
 
-from ..thread import StoppableReusableThread
+from ..thread import StoppableReusableThread, QueueThread
 
 
 logger = logging.getLogger(__name__)
+
+
+class Record:
+    """ Basic class implementing thread-safe attribute access. This allows a procedure to write data
+        out to multiple queues on separate threads without worrying about collisions.
+    """
+
+    lock = None
+    lock_initialized = False
+
+    def __init__(self, data, params=None, handle=None):
+        """ Initialize a record with specified data, parameters, and handle key-words.
+
+        :params data: Data of any type.
+        :param params: Parameters specifying the conditions under which the data was taken.
+        :param handle: Dictionary of key-words specifying data handling arguments.
+        """
+        self.lock = threading.Lock()
+        self.lock_initialized = True
+        self.data = data
+        self.params = params
+        self.handle = handle
+
+    def __getattribute__(self, name):
+        """ Attribute access override for thread safety.
+        """
+        if not name == "lock" and object.__getattribute__(self, "lock_initialized"):
+            with object.__getattribute__(self, "lock"):
+                ret = object.__getattribute__(self, name)
+        else:
+            ret = object.__getattribute__(self, name)
+
+        return ret
+
+    def __setattr__(self, name, value):
+        """ Override attribute access for thread safety.
+        """
+        if not name == "lock" and object.__getattribute__(self, "lock_initialized"):
+            with object.__getattribute__(self, "lock"):
+                object.__setattr__(self, name, value)
+
+        elif name == "lock" and object.__getattribute__(self, "lock_initialized"):
+            raise ValueError("Record lock cannot be modified!")
+
+        else:
+            object.__setattr__(self, name, value)
 
 
 class BaseProcedure(StoppableReusableThread):
@@ -61,13 +108,23 @@ class BaseProcedure(StoppableReusableThread):
         """
         self.check_parameters()
 
-    def emit(self, record_name, record_data, **kwargs):
+    def emit(self, record_name, record_data, record_params=True, **kwargs):
         """ Post a record to the appropriate queues.
+
+        :param record_name: String name of the record to post data to.
+        :param record_data: Data to be posted to the record queue.
+        :param record_params: Boolean to indicate if the procedure parameters should be included in the
+                              dictionary placed on the recorder queue. Optional argument with default
+                              value of True.
+        :param kwargs: Key-word arguments that are passed to the handle method of the corresponding
+                       :class:`.QueueThread`.
         """
-        if len(kwargs) > 0:
-            record_data = {"data": record_data, "handle_kwargs": kwargs}
+        params = None
+        if record_params:
+            params = self.parameter_values()
+        record = Record(record_data, params=params, handle=kwargs)
         for q in self.records[record_name]:
-            q.put(record_data)
+            q.put(record)
 
     def _update_parameters(self):
         """ Collects all the Parameter objects for the procedure and stores

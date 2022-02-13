@@ -12,17 +12,6 @@ SpherexLabTools
    :maxdepth: 2
         
    getting_started/index
-   configuration/index 
-   spherexlabtools/index
+   tutorials/index 
 
-
-PyMeasure
-------------
-Here we host a forked version of the **PyMeasure** documentation that includes all of our additions that fall out of scope of the official **PyMeasure** project: 
-`forked pymeasure <_static/pymeasure/index.html>`_
-
-The official **PyMeasure** documentation can be found here: pymeasure_.
-
-
-.. _pymeasure: https://pymeasure.readthedocs.io/en/latest/
 

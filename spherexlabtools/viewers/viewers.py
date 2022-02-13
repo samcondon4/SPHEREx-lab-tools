@@ -57,18 +57,19 @@ class ImageViewer(Viewer):
         self.view.addItem(self.img)
         self.update_signal.connect(self.update_image_item)
 
-    def update_image_item(self, data, **kwargs):
+    def update_image_item(self, data):
         """ Slot for the update signal. This is executed in the main thread, and
             updates the currently displayed image data in the viewer.
         """
         logger.debug("ImageViewer updating image data")
+        # if received data is a dictionary, grab the data key/value pair #
         self.img.setImage(data)
 
-    def handle(self, data, **kwargs):
+    def handle(self, record):
         """ Write image data to the view.
         """
         if not self.should_stop():
-            self.update_signal.emit(data)
+            self.update_signal.emit(record.data)
 
 
 def create_viewers(exp_pkg):

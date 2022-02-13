@@ -2,7 +2,7 @@
 CollimatorFocus_Recorder = {
     "instance_name": "CollimatorFocusRecorder",
     "type": "HDF5Recorder",
-    "filename": "test.h5"
+    "filename": "test.h5",
 }
 
 RECORDERS = [CollimatorFocus_Recorder]

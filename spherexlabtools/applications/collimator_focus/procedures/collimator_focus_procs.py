@@ -74,5 +74,6 @@ class CollimatorFocusProc(CamProc):
                 self.emit("frame", exp)
                 self.emit("frame_avg", image)
 
-            self.emit("image", image, group="data")
-            # write out to recorder #
+            # pass data_columns and group as argument to HDF5Recorder handle() method #
+            self.emit("image", image, group="Data", group_records=self.images)
+
