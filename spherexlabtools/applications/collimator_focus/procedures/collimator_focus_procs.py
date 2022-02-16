@@ -23,6 +23,7 @@ class CamProc(BaseProcedure):
         super().__init__(cfg, **kwargs)
 
     def startup(self):
+        BaseProcedure.startup(self)
         self.hw.cam_acquisition_frame_rate_auto = "Off"
         self.hw.cam_acquisition_frame_rate_en = True
         self.hw.cam_acquisition_frame_rate = self.refresh_rate
@@ -30,6 +31,7 @@ class CamProc(BaseProcedure):
 
     def shutdown(self):
         self.hw.cam_stop_stream()
+        BaseProcedure.shutdown(self)
 
 
 class CamViewProc(CamProc, LogProc):
@@ -38,8 +40,8 @@ class CamViewProc(CamProc, LogProc):
     """
 
     def __init__(self, cfg, **kwargs):
-        CamProc.__init__(self, cfg, **kwargs)
         LogProc.__init__(self, cfg, **kwargs)
+        CamProc.__init__(self, cfg, **kwargs)
 
 
 class CollimatorFocusProc(CamProc):

@@ -10,6 +10,7 @@ import logging
 import inspect
 import threading
 import importlib
+from PyQt5 import QtCore
 from copy import deepcopy
 from pymeasure.experiment import Parameter, FloatParameter
 
@@ -77,7 +78,6 @@ class BaseProcedure(StoppableReusableThread):
         ABORTED: 'Aborted', QUEUED: 'Queued',
         RUNNING: 'Running'
     }
-
     _parameters = {}
 
     def __init__(self, cfg, hw=None, viewers=None, recorders=None, **kwargs):
@@ -106,6 +106,7 @@ class BaseProcedure(StoppableReusableThread):
     def startup(self):
         """ Check that all procedure parameters have been set.
         """
+        self.status = BaseProcedure.RUNNING
         self.check_parameters()
 
     def emit(self, record_name, record_data, record_params=True, **kwargs):
@@ -125,6 +126,11 @@ class BaseProcedure(StoppableReusableThread):
         record = Record(record_data, params=params, handle=kwargs)
         for q in self.records[record_name]:
             q.put(record)
+
+    def shutdown(self):
+        """ Set the procedure finished value.
+        """
+        self.status = BaseProcedure.FINISHED
 
     def _update_parameters(self):
         """ Collects all the Parameter objects for the procedure and stores
@@ -239,41 +245,7 @@ class LogProc(BaseProcedure):
         """ Retrieve all properties given in the DATA_COLUMNS list and emit results.
         """
         for p in self.DATA_COLUMNS:
+            logger.debug("LogProc getting %s" % p)
             data = getattr(self.hw, p)
             self.emit(p, data)
 
-
-def create_procedures(exp_pkg, hw, viewers=None, recorders=None):
-    """ Create a set of procedures.
-
-    :param: exp_pkg: User experiment configuration package.
-    :param: hw: InstrumentSuite object.
-    :param: viewers: Dictionary of instantiated viewers.
-    :param: recorders: Dictionary of instantiated recorders.
-    """
-    proc_cfgs = exp_pkg.PROCEDURES
-    procedures = {}
-    for cfg in proc_cfgs:
-        # get hardware object #
-        hw_obj = getattr(hw, cfg["hw"])
-
-        # get recorder and viewer queues to pass to the procedure base #
-        records = cfg["records"]
-        qdict = {}
-        for key, val in records.items():
-            qdict_val = [{"viewer": viewers, "recorder": recorders}[k][v].queue for k, v in val.items()]
-            qdict[key] = qdict_val
-
-        # instantiate the procedure object. Search order for a procedure class definition is:
-        # 1) User defined procedures in the experiment package.
-        # 2) spherexlabtools core procedures.
-        try:
-            proc_class = getattr(exp_pkg.procedures, cfg["type"])
-        except (AttributeError, ModuleNotFoundError):
-            proc_mod = importlib.import_module(__name__)
-            proc_class = getattr(proc_mod, cfg["type"])
-
-        # place instantiated procedure in the returned dictionary
-        procedures[cfg["instance_name"]] = proc_class(hw_obj, records=qdict)
-
-    return procedures

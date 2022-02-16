@@ -4,6 +4,7 @@ Sam Condon, 02/06/2022
 """
 
 import copy
+from PyQt5 import QtCore
 from collections.abc import Iterable
 import pyqtgraph.parametertree.parameterTypes as pTypes
 from pyqtgraph.parametertree import Parameter, ParameterTree
@@ -83,6 +84,8 @@ class Sequencer(pTypes.GroupParameter):
     """ GroupParameter type wrapping the :class:`.SequenceGroup`
     """
 
+    new_sequence = QtCore.pyqtSignal(object)
+
     def __init__(self, params, **opts):
         """ Initialize the sequencer.
 
@@ -110,12 +113,19 @@ class Sequencer(pTypes.GroupParameter):
         seq_dict.pop("Level")
         seq_dict.pop("Remove")
 
+        # build sequence parameters #
         for node in seq_dict.items():
             procs = [{}]
             procs = self.build_node_sequence(node, sequence, procs)
             sequence.extend(procs)
 
-        print(sequence)
+        # strip levels from each procedure dictionary key #
+        for i in range(len(sequence)):
+            proc_dict = sequence[i]
+            new_dict = {key.split(SequenceGroup.level_identifier)[-1]: val for key, val in proc_dict.items()}
+            sequence[i] = new_dict
+
+        self.new_sequence.emit(sequence)
 
     def build_node_sequence(self, node, sequence, procs):
         """ Build procedure sequence for a single parameter tree node.
@@ -147,66 +157,6 @@ class Sequencer(pTypes.GroupParameter):
 
         return new_procs
 
-    def get_sequence_old(self):
-        """ Method to retrieve all of the sequence parameters.
-        """
-        sequence = []
-
-        # get the sequence group children values and remove the buttons #
-        seq_dict = self.sequence_group.getValues()
-        seq_dict.pop("Level")
-        seq_dict.pop("Remove")
-
-        # loop over top level procedure parameters #
-        for item in seq_dict.items():
-            proc = {}
-            self.build_sequence(proc, item, sequence)
-
-        # strip off level identifiers from the sequence dictionaries #
-        new_sequence = [{} for _ in sequence]
-        for k in range(len(sequence)):
-            sequence[k] = {key.strip(): value for key, value in sequence[k].items()}
-            for key, value in sequence[k].items():
-                new_key = key.split(SequenceGroup.level_identifier)[-1].strip()
-                new_sequence[k][new_key] = sequence[k][key]
-
-        for s in new_sequence:
-            print(s)
-
-    def build_sequence_old(self, proc, item, sequence):
-        """ Recursive method to build the procedure sequence.
-        """
-        print(item)
-        # if the current item value is an iterable, expand into a list of items #
-        val = self.typecast(item[1][0])
-        if issubclass(type(val), Iterable) and type(val) is not str:
-            procs = [copy.deepcopy(proc) for _ in val]
-            items = [(item[0], (v, item[1][1])) for v in val]
-        else:
-            procs = [proc]
-            items = [item]
-
-        # build procedure for each item generated above #
-        for i in range(len(items)):
-            proc = procs[i]
-            item = items[i]
-
-            # if the parameter has not already been specified, place it in the proc dict.
-            if item[0] not in proc.keys():
-                proc[item[0]] = item[1][0]
-            # otherwise raise an exception
-            else:
-                raise DuplicateParameterError("Procedure parameter %s specified multiple times!"
-                                              % item[0])
-
-            sub_items = item[1][1].items()
-            if len(sub_items) > 0:
-                for it in sub_items:
-                    self.build_sequence(proc, it, sequence)
-
-            if proc not in sequence:
-                sequence.append(proc)
-
     def typecast(self, val):
         """ Method to typecast an item value from its original string type to an iterable, or numeric
             type.
@@ -214,8 +164,12 @@ class Sequencer(pTypes.GroupParameter):
         :param: val: Original string to cast.
         """
         typecast = val
+        sign = 1
+        if val.startswith("-"):
+            val = val[1:]
+            sign = -1
         if val.isdigit():
-            typecast = float(val)
+            typecast = sign*float(val)
         elif val.startswith("[") and val.endswith("]"):
             val_list = val[1:-1].split(",")
             for i in range(len(val_list)):

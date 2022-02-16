@@ -5,6 +5,7 @@ Sam Condon, 02/05/2022
 import queue
 import logging
 from time import time
+from PyQt5 import QtCore
 from threading import Thread, Event
 
 
@@ -90,7 +91,7 @@ class StoppableReusableThread:
         """ Stop a running thread.
         """
         self.thread.stop()
-        self.shutdown()
+        #self.shutdown()
 
     def should_stop(self):
         """

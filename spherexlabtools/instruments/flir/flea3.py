@@ -1,6 +1,9 @@
 import PySpin
+import logging
 from pymeasure.instruments import Instrument
 from pymeasure.instruments.validators import strict_discrete_set
+
+logger = logging.getLogger(__name__)
 
 
 class FlirInstrument:
@@ -184,8 +187,9 @@ class Flea3:
         return latest_frame
 
     def start_stream(self):
-        """ This method starts continous frame streaming.
+        """ This method starts continuous frame streaming.
         """
+        logger.debug("Starting camera stream!")
         # set acquisition mode #
         self.acquisition_mode = "Continuous"
         self.cam.BeginAcquisition()
@@ -194,6 +198,7 @@ class Flea3:
     def stop_stream(self):
         """ This method stops continuous frame streaming.
         """
+        logger.debug("Stopping camera stream!")
         self.cam.EndAcquisition()
         self.acquisition_mode = "SingleFrame"
         self.stream_active = False

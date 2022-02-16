@@ -10,7 +10,7 @@ __version__ = "0.6"
 # configure logging #
 LOG_LOCATION = os.path.join(os.getcwd(), "spherexlabtools", "slt.log")
 LOG_FORMAT = "%(levelname)s:%(asctime)s::%(name)s:%(message)s"
-LOG_LEVEL = logging.INFO
+LOG_LEVEL = logging.DEBUG
 logging.basicConfig(filename="slt.log", format=LOG_FORMAT, level=LOG_LEVEL)
 logging.info("SPHERExLABTOOLS VERSION %s" % __version__)
 

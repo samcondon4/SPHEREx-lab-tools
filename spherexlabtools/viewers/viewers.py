@@ -71,15 +71,3 @@ class ImageViewer(Viewer):
         if not self.should_stop():
             self.update_signal.emit(record.data)
 
-
-def create_viewers(exp_pkg):
-    """ Return a set of viewers based on the configuration argument.
-
-    :param: exp_pkg: User experiment configuration package.
-    """
-    viewer_cfg = exp_pkg.VIEWERS
-    viewers = {}
-    for cfg in viewer_cfg:
-        if cfg["type"] == "ImageViewer":
-            viewers[cfg["instance_name"]] = ImageViewer()
-    return viewers
