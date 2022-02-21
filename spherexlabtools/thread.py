@@ -85,13 +85,14 @@ class StoppableReusableThread:
         """
         self.startup()
         self.execute()
-        self.shutdown()
+        if not self.should_stop():
+            self.stop()
 
     def stop(self):
         """ Stop a running thread.
         """
         self.thread.stop()
-        #self.shutdown()
+        self.shutdown()
 
     def should_stop(self):
         """

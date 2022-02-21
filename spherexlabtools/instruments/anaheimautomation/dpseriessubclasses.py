@@ -28,18 +28,17 @@ class LinearStageController(DPSeriesMotorController):
     # unit conversion constants #
     turns_per_step = None
     units_per_turn = None
+    units_per_step = None
     units = None
 
-    def __init__(self, resource_name, log_id, homedir, **kwargs):
+    def __init__(self, resource_name, homedir, **kwargs):
         """ Instantiate a stage controller.
         :param resource_name: string resource name to pass to pymeasure driver.
-        :param log_id: string with the name of the stage for log files.
         :param homedir: string with value "CW" or "CCW" corresponding to the direction the motor is spun during a
                         homing operation.
         :param kwargs: pymeasure driver kwargs
         """
         super().__init__(resourceName=resource_name, **kwargs)
-        self.log_id = log_id
         self.homedir = homedir
 
         # So that initial properties can be set by keyword arguments #
@@ -51,14 +50,14 @@ class LinearStageController(DPSeriesMotorController):
         :param pos: absolute position in units defined by the absolute_units property.
         :return:
         """
-        return pos*(1/self.units_per_turn)*(1/self.turns_per_step)
+        return pos*(1/self.units_per_step)
 
     def steps_to_absolute(self, steps):
         """ Convert from steps to an absolute position on a linear stage.
         :param steps:
         :return:
         """
-        return steps*self.turns_per_step*self.units_per_turn
+        return steps*self.units_per_step
 
     def home(self, home_mode=None, block_interval=0.5):
         """ Override of the home method to home using a slew to hard limit.

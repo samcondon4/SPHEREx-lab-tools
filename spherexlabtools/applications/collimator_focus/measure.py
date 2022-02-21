@@ -5,6 +5,12 @@ CollimatorFocus_Recorder = {
     "filename": "test.h5",
 }
 
+SingleFrame_Recorder = {
+    "instance_name": "SingleFrameRecorder",
+    "type": "JpgRecorder",
+    "directory": "path"
+}
+
 RECORDERS = [CollimatorFocus_Recorder]
 
 
@@ -28,7 +34,11 @@ CameraView_Proc = {
     "type": "CamViewProc",
     "hw": "Microscope",
     "records": {
-        "cam_latest_frame": {"viewer": "CamView"}
+        "cam_latest_frame": {"viewer": "CamView"},
+        "cam_avg": {"viewer": "CamViewAvg"},
+    },
+    "params": {
+        "frames_per_image": 100
     }
 }
 
@@ -43,4 +53,4 @@ CollimatorFocus_Proc = {
     }
 }
 
-PROCEDURES = [CameraView_Proc, CollimatorFocus_Proc]
+PROCEDURES = []

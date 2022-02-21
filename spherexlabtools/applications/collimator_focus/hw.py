@@ -1,5 +1,7 @@
 from spherexlabtools.instruments.flir import Flea3 as _Fl3
 
+# MICROSCOPE ##############################################################
+"""
 CamCfg = {
     "instance_name": "cam",
     "resource_name": _Fl3.cam_list[0],
@@ -19,9 +21,10 @@ CamCfg = {
     }
 }
 
+
 GaugeCfg = {
     "instance_name": "gauge",
-    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
     "manufacturer": "heidenhain",
     "instrument": "ND287",
     "params": {
@@ -34,11 +37,10 @@ GaugeCfg = {
 
 FocuserCfg = {
     "instance_name": "focuser",
-    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
-        "log_id": "mscope_focus",
         "homedir": "CCW",
         "address": 3,
     }
@@ -46,7 +48,42 @@ FocuserCfg = {
 
 MscopeCfg = {
     "instance_name": "Microscope",
-    "subinstruments": [CamCfg, GaugeCfg, FocuserCfg]
+    "subinstruments": [CamCfg, GaugeCfg, FocuserCfg],
+}
+"""
+##################################################################
+
+# RELAY ##########################################################
+# relay gimbal0 x config
+relay_gimbal0_az = {
+    "instance_name": "gimbal0_az",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
+    "manufacturer": "anaheimautomation",
+    "instrument": "LinearStageController",
+    "kwargs": {
+        "address": 1,
+        "homedir": "CW"
+    }
 }
 
-INSTRUMENT_SUITE = [MscopeCfg]
+relay_gimbal0_zth = {
+    "instance_name": "gimbal0_zth",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
+    "manufacturer": "anaheimautomation",
+    "instrument": "LinearStageController",
+    "kwargs": {
+        "address": 0,
+        "homedir": "CW"
+    }
+}
+
+Gimbal0 = {
+    "instance_name": "Gimbal0",
+    "subinstruments": [relay_gimbal0_az, relay_gimbal0_zth]
+}
+##################################################################
+
+# Instrument suite list for the experiment object ################
+INSTRUMENT_SUITE = [Gimbal0]
+
+
