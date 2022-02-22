@@ -6,10 +6,14 @@
 
 Sam Condon, 06/30/2021
 """
+import logging
 import asyncio
 import importlib
 from pymeasure.instruments import Instrument
 from pymeasure.instruments.instrument import DynamicProperty
+
+
+logger = logging.getLogger(__name__)
 
 
 class PymeasureInstrumentSub(Instrument):
@@ -261,6 +265,8 @@ def instantiate_instrument(inst_dict):
             inst_mod = importlib.import_module(name="spherexlabtools.instruments%s" % manufacturer_string)
             inst_class = getattr(inst_mod, inst_dict["instrument"])
         except (AttributeError, ModuleNotFoundError):
+            err_msg = "No instrument driver found for %s.%s" % (manufacturer_string, inst_dict["instrument"])
+            logger.error(err_msg)
             raise AttributeError("No instrument driver found for %s.%s" % (manufacturer_string,
                                                                            inst_dict["instrument"]))
 
@@ -269,7 +275,12 @@ def instantiate_instrument(inst_dict):
         kwargs = inst_dict["kwargs"]
     else:
         kwargs = {}
-    inst = inst_class(inst_dict["resource_name"], **kwargs)
+    try:
+        inst = inst_class(inst_dict["resource_name"], **kwargs)
+    except Exception as e:
+        logger.error("Error while instantiating {}.{}: \n {}".format(manufacturer_string, inst_dict["instrument"],
+                                                                     e))
+        raise e
 
     # set initial instrument parameters if any are given #
     if "params" in inst_dict:

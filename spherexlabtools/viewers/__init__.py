@@ -1,1 +1,1 @@
-from .viewers import Viewer, ImageViewer
+from .viewers import Viewer, LineViewer, ImageViewer

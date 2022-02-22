@@ -21,12 +21,15 @@ def load_objects_from_cfg_list(search_order, cfg_list, **kwargs):
     :param search_order: List of module objects to search for class definitions.
     :param cfg_list: List of instance configuration dictionaries. These dictionaries must have at least
                      an 'instance_name' and 'type' key-value pair.
-    :param kwargs: Key-word arguments passed to the class instantiation.
     """
     objects = {}
+    og_kwargs = kwargs
     for cfg in cfg_list:
         name = cfg["instance_name"]
         typ = cfg["type"]
+        passed_kwargs = og_kwargs.copy()
+        if "kwargs" in cfg.keys():
+            passed_kwargs.update(cfg["kwargs"])
         inst_class = None
         for mod in search_order:
             try:
@@ -35,7 +38,11 @@ def load_objects_from_cfg_list(search_order, cfg_list, **kwargs):
                 pass
             else:
                 logger.info("Initializing %s as %s" % (cfg["instance_name"], inst_class))
-                objects[name] = inst_class(cfg, **kwargs)
+                try:
+                    objects[name] = inst_class(cfg, **passed_kwargs)
+                except Exception as e:
+                    logger.error("Error while initializing {} of type {}! {}({})".format(name, typ, type(e), e))
+                    raise e
 
         # if all modules searched and class def not found, raise and log error.
         if inst_class is None:

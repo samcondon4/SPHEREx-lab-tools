@@ -41,10 +41,6 @@ class LinearStageController(DPSeriesMotorController):
         super().__init__(resourceName=resource_name, **kwargs)
         self.homedir = homedir
 
-        # So that initial properties can be set by keyword arguments #
-        for key in kwargs:
-            setattr(self, key, kwargs[key])
-
     def absolute_to_steps(self, pos):
         """ Convert from absolute position on a linear stage to steps.
         :param pos: absolute position in units defined by the absolute_units property.

@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 import pyqtgraph as pg
 from PyQt5 import QtCore
 from ..thread import QueueThread
@@ -17,6 +18,7 @@ class Viewer(QueueThread, pg.GraphicsLayoutWidget):
     shutdown_signal = QtCore.pyqtSignal()
 
     def __init__(self, cfg, **kwargs):
+        self.name = cfg["instance_name"]
         QueueThread.__init__(self, **kwargs)
         pg.GraphicsLayoutWidget.__init__(self)
         self.startup_signal.connect(self.show_view)
@@ -41,6 +43,51 @@ class Viewer(QueueThread, pg.GraphicsLayoutWidget):
         """ Close the gui.
         """
         self.shutdown_signal.emit()
+
+
+class LineViewer(Viewer):
+    """ Basic line viewer.
+    """
+
+    # this viewer operates on buffered data, so override update_signal to take no arguments on emit() #
+    update_signal = QtCore.pyqtSignal()
+
+    def __init__(self, cfg, buf_size=10, **kwargs):
+        """ Basic line viewer initialization.
+
+        :param cfg: Configuration dictionary.
+        :param buf_size: Size of the curve buffer.
+        """
+        if buf_size == 0:
+            err_msg = "Error in initialization of viewer: %s: LineViewer cannot operate without a buffer!" \
+                      % self.name
+            logger.error(err_msg)
+            raise BufferError(err_msg)
+        # remove buf_size from kwargs so that two values aren't received #
+        if "buf_size" in kwargs:
+            kwargs.pop("buf_size")
+        super().__init__(cfg, buf_size=buf_size, **kwargs)
+
+        # create plot item #
+        pkwargs = {} if "params" not in cfg.keys() else cfg["params"]
+        self.plot_item = self.addPlot(row=0, col=0, **pkwargs)
+        self.plot = self.plot_item.plot(self.buffer)
+
+        self.update_signal.connect(self.update_line)
+
+    def update_line(self):
+        """ Slot for the update signal. This is executed in the main thread and updates
+            the data displayed in the plot item.
+        """
+        logger.debug("LineViewer updating plot data.")
+        self.plot.setData(np.array(self.buffer))
+        # print(self.buffer)
+
+    def handle(self, record):
+        """ Update the plot.
+        """
+        if not self.should_stop():
+            self.update_signal.emit()
 
 
 class ImageViewer(Viewer):
