@@ -4,8 +4,15 @@ xstage_cfg = {
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
+        "encoder_enabled": True,
         "homedir": "CCW",
         "address": 1
+    },
+    "params": {
+        "units_per_turn": 1,
+        "turns_per_step": 1/1600,
+        "encoder_autocorrect": True,
+        "encoder_retries": 5,
     }
 }
 
@@ -15,8 +22,16 @@ ystage_cfg = {
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
+        "encoder_enabled": True,
         "homedir": "CCW",
-        "address": 0
+        "address": 3
+    },
+    "params": {
+        "units": "mm.",
+        "units_per_turn": 1,
+        "turns_per_step": 1 / 1600,
+        "encoder_autocorrect": True,
+        "encoder_retries": 5,
     }
 }
 

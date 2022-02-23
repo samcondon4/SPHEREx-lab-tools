@@ -28,7 +28,6 @@ class LinearStageController(DPSeriesMotorController):
     # unit conversion constants #
     turns_per_step = None
     units_per_turn = None
-    units_per_step = None
     units = None
 
     def __init__(self, resource_name, homedir, **kwargs):
@@ -46,14 +45,14 @@ class LinearStageController(DPSeriesMotorController):
         :param pos: absolute position in units defined by the absolute_units property.
         :return:
         """
-        return pos*(1/self.units_per_step)
+        return pos*(1/self.units_per_turn)*(1/self.turns_per_step)
 
     def steps_to_absolute(self, steps):
         """ Convert from steps to an absolute position on a linear stage.
         :param steps:
         :return:
         """
-        return steps*self.units_per_step
+        return steps*self.turns_per_step*self.units_per_turn
 
     def home(self, home_mode=None, block_interval=0.5):
         """ Override of the home method to home using a slew to hard limit.

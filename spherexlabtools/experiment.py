@@ -4,6 +4,7 @@ Sam Condon, 01/27/2022
 """
 import logging
 import pyqtgraph as pg
+from PyQt5 import QtWidgets
 from .loader import load_objects_from_cfg_list
 import spherexlabtools.viewers as slt_view
 import spherexlabtools.procedures as slt_proc
@@ -22,7 +23,7 @@ class Experiment:
         is implemented by this class. Namely, that every action that is performed in an experiment, be
         that the recording of data, or setting instrument parameters via a gui, is executed in its own thread.
         This class handles the scheduling of all threads and ensures that each thread has the resources that
-        it needs to operate.
+        it needs to operate. All gui windows are run in the main thread.
     """
 
     def __init__(self, exp_pkg):
@@ -42,6 +43,8 @@ class Experiment:
         app = pg.mkQApp(exp_pkg.__name__)
         self.exp_pkg = exp_pkg
         logger.info("Initializing experiment: %s" % exp_pkg.__name__)
+
+        self.layout = QtWidgets.QGridLayout()
 
         # initialize instrument-suite #############################################
         self.hw = InstrumentSuite(exp_pkg.INSTRUMENT_SUITE)
@@ -86,7 +89,8 @@ class Experiment:
         """ Start a viewer thread.
         """
         logger.info("Starting viewer: %s" % viewer_key)
-        self.viewers[viewer_key].start()
+        viewer = self.viewers[viewer_key]
+        viewer.start()
 
     def stop_viewer(self, viewer_key):
         """ Stop a viewer thread.

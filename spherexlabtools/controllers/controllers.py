@@ -74,9 +74,13 @@ class InstrumentController(Controller):
 
         # configure control parameters if they are present. #
         control_params = cfg["control_parameters"]
+        self.set_buttons = [Parameter.create(name="Set", type="action") for p in control_params]
         self.control_group = None
         if len(control_params) > 0:
-            self.set_params = Parameter.create(name="Set Parameters", type="action")
+            # create set buttons #
+            for i in range(len(control_params)):
+                control_params[i].update({"children": [self.set_buttons[i]], "expanded": False})
+            self.set_params = Parameter.create(name="Set All Parameters", type="action")
             control_params.append(self.set_params)
             self.control_group = Parameter.create(name="Control", type="group", children=control_params)
             params.append(self.control_group)
@@ -97,17 +101,31 @@ class InstrumentController(Controller):
         # Threading setup #
         self.get_timer = None
         self.status_refresh = 0 if "status_refresh" not in cfg.keys() else cfg["status_refresh"]
-        self.set_params.sigStateChanged.connect(self.set_inst_params)
 
-    def set_inst_params(self):
+        # connect buttons to methods #
+        self.set_params.sigActivated.connect(lambda _, children=self.control_group.children():
+                                             self.set_inst_params([c.name() for c in children]))
+        if self.control_group is not None:
+            for c in self.control_group.children():
+                if c is not self.set_params:
+                    name = c.name()
+                    logger.debug("Connecting set method for {}".format(name))
+                    button = c.child("Set")
+                    button.sigActivated.connect(lambda _, child=name: self.set_inst_params([child]))
+
+    def set_inst_params(self, children):
         """ Write instrument control parameters to the hardware.
+
+        :param children: List of gui children names to set instrument values from.
         """
         if self.alive:
-            for c in self.control_group.children():
-                param = c.name()
-                val = c.value()
-                if param != "Set Parameters":
-                    setattr(self.hw, param, val)
+            for c in children:
+                child = self.control_group.child(c)
+                if child is not self.set_params:
+                    name = child.name()
+                    value = child.value()
+                    logger.debug("Setting instrument parameter {} with value {}".format(name, value))
+                    setattr(self.hw, name, value)
 
     def get_inst_params(self):
         """ Get instrument parameters and write them to GUI elements. Start timer threads that periodically
