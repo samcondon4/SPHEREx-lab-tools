@@ -13,6 +13,7 @@ xstage_cfg = {
         "turns_per_step": 1/1600,
         "encoder_autocorrect": True,
         "encoder_retries": 5,
+        "homespeed": 1500
     }
 }
 
@@ -32,6 +33,7 @@ ystage_cfg = {
         "turns_per_step": 1 / 1600,
         "encoder_autocorrect": True,
         "encoder_retries": 5,
+        "homespeed": 1500
     }
 }
 

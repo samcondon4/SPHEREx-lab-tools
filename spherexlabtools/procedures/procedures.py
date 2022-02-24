@@ -91,7 +91,12 @@ class BaseProcedure(StoppableReusableThread):
         :param kwargs: Key-word arguments to set the procedure parameters.
         """
         super().__init__()
-        self.hw = getattr(hw, cfg["hw"])
+        if type(cfg["hw"]) is list:
+            self.hw = type("proc_hw", (object,), {})()
+            for inst in cfg["hw"]:
+                self.hw.__dict__[inst] = getattr(hw, inst)
+        else:
+            self.hw = getattr(hw, cfg["hw"])
         qdict = {}
         for key, val in cfg["records"].items():
             qdict_val = [{"viewer": viewers, "recorder": recorders}[k][v].queue for k, v in val.items()]

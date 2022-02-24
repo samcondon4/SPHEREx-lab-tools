@@ -4,6 +4,7 @@ Sam Condon, 11/17/2021
 """
 
 import logging
+import threading
 from pymeasure.instruments.anaheimautomation import DPSeriesMotorController
 
 
@@ -30,6 +31,9 @@ class LinearStageController(DPSeriesMotorController):
     units_per_turn = None
     units = None
 
+    # dictionary of locks for thread-safety #
+    locks = {}
+
     def __init__(self, resource_name, homedir, **kwargs):
         """ Instantiate a stage controller.
         :param resource_name: string resource name to pass to pymeasure driver.
@@ -37,6 +41,9 @@ class LinearStageController(DPSeriesMotorController):
                         homing operation.
         :param kwargs: pymeasure driver kwargs
         """
+        self.resource_name = resource_name
+        if resource_name not in LinearStageController.locks.keys():
+            LinearStageController.locks[resource_name] = threading.Lock()
         super().__init__(resourceName=resource_name, **kwargs)
         self.homedir = homedir
 
@@ -54,7 +61,7 @@ class LinearStageController(DPSeriesMotorController):
         """
         return steps*self.turns_per_step*self.units_per_turn
 
-    def home(self, home_mode=None, block_interval=0.5):
+    def home(self, home_mode=None, block_interval=3):
         """ Override of the home method to home using a slew to hard limit.
         :param home_mode: In this overridden version, this name is irrelevant.
         :param block_interval: Seconds between "busy" queries. Same argument as interval in wait_for_completion.
@@ -62,7 +69,36 @@ class LinearStageController(DPSeriesMotorController):
         """
         prev_maxspeed = self.maxspeed
         self.maxspeed = self.homespeed
-        self.slew(self.homedir)
+        self.move(self.homedir)
         self.wait_for_completion(interval=block_interval)
         self.reset_position()
         self.maxspeed = prev_maxspeed
+
+    def write(self, command):
+        """Override the instrument base write method to add the motor controller's address to the
+        command string.
+
+        :param command: command string to be sent to the motor controller.
+        """
+        with LinearStageController.locks[self.resource_name]:
+            super().write(command)
+
+    def values(self, command, **kwargs):
+        """ Override the instrument base values method to add the motor controller's address to the
+        command string.
+
+        :param command: command string to be sent to the motor controller.
+        """
+        with LinearStageController.locks[self.resource_name]:
+            vals = super().values(command, **kwargs)
+            return vals
+
+    def ask(self, command):
+        """ Override the instrument base ask method to add the motor controller's address to the
+        command string.
+
+        :param command: command string to be sent to the instrument
+        """
+        with LinearStageController.locks[self.resource_name]:
+            val = super().ask(command)
+            return val

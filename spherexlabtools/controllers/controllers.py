@@ -13,7 +13,6 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 
 from ..widgets import Sequencer
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -73,7 +72,7 @@ class InstrumentController(Controller):
         params = []
 
         # configure control parameters if they are present. #
-        control_params = cfg["control_parameters"]
+        control_params = cfg.get("control_parameters", [])
         self.set_buttons = [Parameter.create(name="Set", type="action") for p in control_params]
         self.control_group = None
         if len(control_params) > 0:
@@ -86,7 +85,7 @@ class InstrumentController(Controller):
             params.append(self.control_group)
 
         # configure status parameters if they are present #
-        status_params = cfg["status_parameters"]
+        status_params = cfg.get("status_parameters", [])
         self.status_group = None
         if len(status_params) > 0:
             for p in status_params:
@@ -94,6 +93,14 @@ class InstrumentController(Controller):
             self.status_group = Parameter.create(name="Status", type="group", children=status_params)
             self.status_values = {c.name(): c.value() for c in self.status_group.children()}
             params.append(self.status_group)
+
+        # create action buttons if present in the configuration ###############
+        actions = cfg.get("actions", [])
+        self.actions_group = None
+        if len(actions) > 0:
+            self.actions_group = Parameter.create(name="Actions", type="group",
+                                                  children=[Parameter.create(type="action", name=a) for a in actions])
+            params.append(self.actions_group)
 
         # parameter tree #
         self.set_parameters(params, showTop=True)
@@ -112,6 +119,11 @@ class InstrumentController(Controller):
                     logger.debug("Connecting set method for {}".format(name))
                     button = c.child("Set")
                     button.sigActivated.connect(lambda _, child=name: self.set_inst_params([child]))
+        if self.actions_group is not None:
+            for c in self.actions_group.children():
+                name = c.name()
+                logger.debug("Connecting action method for {}".format(name))
+                c.sigActivated.connect(lambda _, act=name: self.run_instrument_action(act))
 
     def set_inst_params(self, children):
         """ Write instrument control parameters to the hardware.
@@ -140,6 +152,16 @@ class InstrumentController(Controller):
                     c.setValue(val)
             self.get_timer = threading.Timer(self.status_refresh, self.get_inst_params)
             self.get_timer.start()
+
+    def run_instrument_action(self, action):
+        """ Run an instrument method from a new thread.
+
+        :param action: String name of the method to run.
+        """
+        logger.debug("Running action %s on instrument %s" % (action, str(self.hw)))
+        act = getattr(self.hw, action)
+        thread = threading.Thread(target=act)
+        thread.start()
 
     def start(self):
         """ Start the controller.

@@ -334,6 +334,7 @@ class CompoundInstrument:
                 self.__dict__.pop(fget)
                 self.__dict__.pop(fset)
                 self.property_map[prop_name] = {"fget": fget.split("_")[0], "fset": fset.split("_")[0]}
+
         # apply the attribute configuration, if one is present
         if "attr_config" in cfg.keys():
             for attr_cnfg in cfg["attr_config"]:
@@ -347,7 +348,7 @@ class CompoundInstrument:
             :param: subinst: Instrument object to get properties from.
             :param: name: String identifying the subinstrument.
             :param: recursive: Recursively merge all subinstrument properties including those within baseclasses
-                               until the base :class:`Instrument` class is reached.
+                               until the base :class:`.Instrument` class is reached.
         """
         attr_access = lambda sinst: sinst.__class__ if type(sinst) is not type else sinst
         if "pymeasure.instruments.instrument.Instrument" not in str(subinst) and subinst.__module__ != "builtins":
@@ -356,7 +357,10 @@ class CompoundInstrument:
                 attr = merge_cls.__dict__[cls_attr]
                 if not cls_attr.startswith("_"):
                     prop_name = "%s_%s" % (name, cls_attr)
-                    self.__dict__[prop_name] = attr
+                    # place class attribute in instance namespace if it is not already there. #
+                    # This check preserves subclass attribute overrides #
+                    if prop_name not in self.__dict__.keys():
+                        self.__dict__[prop_name] = attr
                     # write attribute into the appropriate mapping based on its type #
                     attr_typ = type(attr)
                     if (attr_typ is property) or (attr_typ is DynamicProperty):

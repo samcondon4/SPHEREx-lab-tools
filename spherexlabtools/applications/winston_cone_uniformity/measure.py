@@ -23,7 +23,16 @@ powerview_proc = {
     }
 }
 
+wcu_proc = {
+    "instance_name": "WcuProc",
+    "type": "WcuProc",
+    "hw": ["detector", "stage"],
+    "records": {
+        "power": {"viewer": "PowerView"}
+    }
+}
+
 VIEWERS = [detector_viewer]
 RECORDERS = []
-PROCEDURES = [powerview_proc]
+PROCEDURES = [powerview_proc, wcu_proc]
 

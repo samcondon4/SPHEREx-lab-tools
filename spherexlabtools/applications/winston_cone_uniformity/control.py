@@ -5,20 +5,18 @@ detector_stage_cntrl = {
     "control_parameters": [
         {"name": "x_maxspeed", "type": "int"},
         {"name": "y_maxspeed", "type": "int"},
-        {"name": "x_step_position", "type": "int"},
-        {"name": "y_step_position", "type": "int"},
         {"name": "x_absolute_position", "type": "int"},
         {"name": "y_absolute_position", "type": "int"},
     ],
     "status_parameters": [
         {"name": "x_maxspeed", "type": "int"},
         {"name": "y_maxspeed", "type": "int"},
-        {"name": "x_step_position", "type": "int"},
-        {"name": "y_step_position", "type": "int"},
         {"name": "x_absolute_position", "type": "int"},
         {"name": "y_absolute_position", "type": "int"},
     ],
-    "status_refresh": 1
+    "status_refresh": 3,
+    "actions": ["x_home", "y_home", "x_stop", "y_stop", "x_reset_position", "y_reset_position", "x_check_errors",
+                "y_check_errors"]
 }
 
 logproc_controller = {
@@ -27,4 +25,10 @@ logproc_controller = {
     "procedure": "PowerViewProc",
 }
 
-CONTROLLERS = [detector_stage_cntrl, logproc_controller]
+wcuproc_controller = {
+    "instance_name": "WcuProcCntrl",
+    "type": "ProcedureController",
+    "procedure": "WcuProc"
+}
+
+CONTROLLERS = [detector_stage_cntrl, logproc_controller, wcuproc_controller]
