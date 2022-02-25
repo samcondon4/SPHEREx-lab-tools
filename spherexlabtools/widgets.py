@@ -85,6 +85,8 @@ class Sequencer(pTypes.GroupParameter):
     """
 
     new_sequence = QtCore.pyqtSignal(object)
+    pause_proc_sequence = QtCore.pyqtSignal()
+    abort_proc_sequence = QtCore.pyqtSignal()
 
     def __init__(self, params, **opts):
         """ Initialize the sequencer.
@@ -103,6 +105,8 @@ class Sequencer(pTypes.GroupParameter):
 
         # connect buttons to methods #
         self.start_sequence.sigStateChanged.connect(self.build_sequence)
+        self.pause_sequence.sigActivated.connect(self.pause_proc_sequence.emit)
+        self.stop_sequence.sigActivated.connect(self.abort_proc_sequence.emit)
 
     def build_sequence(self):
         """ Build a procedure sequence from the sequencer parameters.

@@ -13,6 +13,13 @@ detector_viewer = {
     }
 }
 
+# Recorder configs ####################
+power_recorder = {
+    "instance_name": "PowerMeanStdRecorder",
+    "type": "HDF5Recorder",
+    "filename": "winston_cone_uniformity.h5"
+}
+
 # Proc configs ########################
 powerview_proc = {
     "instance_name": "PowerViewProc",
@@ -28,11 +35,12 @@ wcu_proc = {
     "type": "WcuProc",
     "hw": ["detector", "stage"],
     "records": {
-        "power": {"viewer": "PowerView"}
+        "power": {"viewer": "PowerView"},
+        "power_mean_std": {"recorder": "PowerMeanStdRecorder"}
     }
 }
 
 VIEWERS = [detector_viewer]
-RECORDERS = []
+RECORDERS = [power_recorder]
 PROCEDURES = [powerview_proc, wcu_proc]
 

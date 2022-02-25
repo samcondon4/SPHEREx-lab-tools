@@ -23,10 +23,7 @@ class WcuProc(BaseProcedure):
     y_position = FloatParameter("Y-Position", units="mm.", default=0)
     power_samples = IntegerParameter("Samples", default=10)
     power_sample_rate = FloatParameter("Sample Rate", units="Hz.", default=1)
-    home_init = BooleanParameter("Home", default=True)
-
-    # flag to indicate if stage has been homed #
-    homed = False
+    home_init = BooleanParameter("Home", default=False)
 
     def __init__(self, cfg, **kwargs):
         super().__init__(cfg, **kwargs)
@@ -49,8 +46,27 @@ class WcuProc(BaseProcedure):
     def startup(self):
         """ Home the stage if this has not been done yet.
         """
+        BaseProcedure.startup(self)
         if self.home_init:
             self.home_stage()
 
     def execute(self):
-        pass
+        self.stage.x_absolute_position = self.x_position
+        self.stage.y_absolute_position = self.y_position
+        self.stage.x_wait_for_completion()
+        self.stage.y_wait_for_completion()
+        samples = np.zeros(int(self.power_samples))
+        for i in range(int(self.power_samples)):
+            power = self.detector.power
+            samples[i] = self.detector.power
+            self.emit("power", power)
+            time.sleep(1/self.power_sample_rate)
+        mean = samples.mean()
+        std = samples.std()
+        median = np.median(samples)
+        x_pos = self.stage.x_absolute_position
+        y_pos = self.stage.y_absolute_position
+        df = {"Mean Power (W.)": mean, "Power 1-Sigma (W.)": std, "X-Position (mm.)": x_pos,
+              "Median Power (W.)": median, "Y-Position (mm.)": y_pos}
+        self.emit("power_mean_std", df, group="Data")
+        BaseProcedure.shutdown(self)

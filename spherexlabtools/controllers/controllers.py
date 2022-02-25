@@ -12,6 +12,9 @@ from pymeasure.experiment.parameters import *
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
 from ..widgets import Sequencer
+from ..procedures import BaseProcedure
+from ..thread import StoppableReusableThread
+
 
 logger = logging.getLogger(__name__)
 
@@ -227,10 +230,10 @@ class ProcedureController(Controller):
         # create the sequencer parameter group if the sequencer boolean is true #
         self.sequencer = None
         self.proc_seq = None
-        self.proc_seq_ind = None
+        self.proc_seq_ind = 0
+        self.procedure_sequence_thread = StoppableReusableThread()
         if sequencer:
             self.sequencer = Sequencer(self.proc_params_tree)
-            self.sequencer.new_sequence.connect(lambda seq: self.run_procedure_sequence(seq))
 
         # place parameters if flag is set #
         if place_params:
@@ -242,82 +245,93 @@ class ProcedureController(Controller):
         if connect:
             self._connect_buttons()
 
-    def start_procedure(self, params=None, monitor=False):
+    def start_procedure(self, params=None, log_msg=None):
         """ Start the procedure thread.
 
         :param params: Optional dictionary of parameter to run the procedure with. If not provided,
                        parameters from the single procedure execution tree will be used.
-        :param monitor: Optional boolean to indicate a monitor thread should be run to emit a QSignal
-                        when the procedure completes execution.
+        :param log_msg: String specifying a log message to write at the INFO level.
         """
         if params is None:
-            log_msg = "%s starting single procedure: %s" % (self.name, self.procedure)
             for c in self.proc_params.children():
                 name = c.name()
                 if name in self.param_name_map.keys():
                     setattr(self.procedure, self.param_name_map[c.name()], c.value())
         else:
-            log_msg = "%s starting sequence index %s procedure: %s" % \
-                      (self.name, self.proc_seq_ind, self.procedure)
             for key, value in params.items():
                 setattr(self.procedure, self.param_name_map[key], value)
 
         # start the procedure #
-        logger.info(log_msg)
+        if log_msg is not None:
+            logger.info(log_msg)
         self.procedure.start()
-        if monitor:
-            threading.Thread(target=self.proc_monitor).start()
-
-    def proc_monitor(self, sleep=0.5):
-        """ Monitor a running procedure and emit the complete signal when it is finished.
-
-        :param sleep: Interval between checks on if procedure is complete.
-        """
-        logger.debug("proc_monitor started!")
-        while not self.procedure.status == self.procedure.FINISHED:
-            time.sleep(sleep)
-        logger.debug("proc_monitor emitting procedure complete!")
-        self.proc_complete.emit()
 
     def stop_procedure(self, timeout=1):
         """ Stop the running procedure thread.
         """
-        logger.info("%s stopping procedure: %s" % (self.name, self.procedure))
+        logger.info("%s stopping procedure" % self.name)
         self.procedure.stop()
 
-    def run_procedure_sequence(self, seq=None):
+    def start_procedure_sequence(self, seq, sleep=2):
         """ Start a sequence of procedures with parameters built by the sequencer widget.
 
         :param seq: List of procedure parameters.
+        :param sleep: Time in seconds to sleep between checking if the procedure sequence is complete.
         """
-        # set up execution of a procedure sequence #
-        if seq is not None and self.proc_seq is None:
-            logger.info("%s: Starting procedure sequence of length %i" % (self.name, len(seq)))
-            self.proc_seq = seq
-            self.proc_seq_ind = 0
-            self.proc_complete.connect(lambda: self.run_procedure_sequence(seq=None))
-        else:
-            logger.debug("Incrementing procedure sequence index.")
-            self.proc_seq_ind += 1
-
-        # start the next procedure in the sequence if the sequence is not yet complete #
-        if self.proc_seq_ind < len(self.proc_seq):
-            params = self.proc_seq[self.proc_seq_ind]
-            self.start_procedure(params=params, monitor=True)
-        else:
-            logger.info("%s: Starting procedure sequence of length %i" % (self.name, len(seq)))
-            self.proc_complete.disconnect()
+        logger.info("%s: Starting procedure sequence of length %i" % (self.name, len(seq)))
+        if self.proc_seq_ind != 0:
+            seq = None
+        self.procedure_sequence_thread.execute = lambda s=seq, sl=sleep: self._proc_seq_thread_target(seq=seq,
+                                                                                                      sleep=sl)
+        self.procedure_sequence_thread.start()
 
     def stop_procedure_sequence(self):
         """ Stop a currently running procedure sequence.
         """
-        pass
+        if self.procedure.status == BaseProcedure.RUNNING:
+            self.procedure.stop()
+        self.proc_seq_ind = 0
+
+    def pause_procedure_sequence(self):
+        """ Stop a currently running procedure sequence without resetting the sequence index.
+        """
+        if self.procedure.status == BaseProcedure.RUNNING:
+            self.procedure.stop()
+
+    def _proc_seq_thread_target(self, seq=None, sleep=2):
+        """ Method that is the target of the procedure_sequence_thread.
+
+        :param seq: List of procedure parameters.
+        :param ind: Index into a procedure sequence for when a sequence has been paused.
+        :param sleep: Time in seconds to sleep between checking if an individual procedure is complete.
+        """
+        if seq is not None:
+            self.proc_seq = seq
+            self.proc_seq_ind = 0
+        while self.proc_seq_ind < len(self.proc_seq):
+            proc = self.proc_seq[self.proc_seq_ind]
+            log_msg = "%s: Starting procedure at sequence index %s" % (self.name, str(self.proc_seq_ind))
+            self.proc_seq_ind += 1
+            self.start_procedure(proc, log_msg=log_msg)
+            while not self.procedure.status == self.procedure.FINISHED:
+                time.sleep(sleep)
+                if self.procedure_sequence_thread.should_stop():
+                    self.stop_procedure()
+                    break
+        if self.proc_seq_ind >= len(self.proc_seq):
+            self.proc_seq_ind = 0
 
     def _connect_buttons(self):
         """ Connect the start/stop buttons to the appropriate methods.
         """
-        self.start_proc.sigStateChanged.connect(lambda a: self.start_procedure(params=None, monitor=False))
+        self.start_proc.sigActivated.connect(lambda a: self.start_procedure(params=None, log_msg="%s: Starting single"
+                                                                                                 "procedure" %
+                                                                                                 self.name))
         self.stop_proc.sigStateChanged.connect(lambda a: self.stop_procedure())
+
+        if self.sequencer is not None:
+            self.sequencer.new_sequence.connect(lambda seq: self.start_procedure_sequence(seq))
+            self.sequencer.abort_proc_sequence.connect(self.stop_procedure_sequence)
 
 
 class LogProcController(ProcedureController):

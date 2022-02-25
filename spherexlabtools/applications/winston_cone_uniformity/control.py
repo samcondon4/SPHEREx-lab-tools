@@ -5,14 +5,12 @@ detector_stage_cntrl = {
     "control_parameters": [
         {"name": "x_maxspeed", "type": "int"},
         {"name": "y_maxspeed", "type": "int"},
-        {"name": "x_absolute_position", "type": "int"},
-        {"name": "y_absolute_position", "type": "int"},
+        {"name": "x_absolute_position", "type": "float"},
+        {"name": "y_absolute_position", "type": "float"},
     ],
     "status_parameters": [
-        {"name": "x_maxspeed", "type": "int"},
-        {"name": "y_maxspeed", "type": "int"},
-        {"name": "x_absolute_position", "type": "int"},
-        {"name": "y_absolute_position", "type": "int"},
+        {"name": "x_absolute_position", "type": "float"},
+        {"name": "y_absolute_position", "type": "float"},
     ],
     "status_refresh": 3,
     "actions": ["x_home", "y_home", "x_stop", "y_stop", "x_reset_position", "y_reset_position", "x_check_errors",

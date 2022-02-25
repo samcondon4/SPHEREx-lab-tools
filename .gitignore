@@ -141,7 +141,7 @@ __pycache__
 
 # debug files #
 test.py
-test.h5
+*.h5
 output.txt
 motor.py
 wcu.py

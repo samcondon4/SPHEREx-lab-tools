@@ -52,9 +52,9 @@ class HDF5Recorder(QueueThread):
 
         # append received data to store with the current record number and index #
         data = record.data
-        shape = data.shape
-        index = pd.MultiIndex.from_product([[self.record_num], [self.record_ind], np.arange(shape[0])],
-                                           names=["RecordNum", "RecordInd", "Row"])
+        #shape = data.shape
+        index = pd.MultiIndex.from_product([[self.record_num], [self.record_ind]],
+                                           names=["RecordNum", "RecordInd"])
         df = pd.DataFrame(data, index=index)
         df.sort_index(inplace=True)
         self.store.append(group, df, **kwargs)

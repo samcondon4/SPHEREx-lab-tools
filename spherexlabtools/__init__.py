@@ -8,10 +8,10 @@ import logging
 __version__ = "0.6"
 
 # configure logging #
-LOG_LOCATION = os.path.join(os.getcwd(), "spherexlabtools", "slt.log")
+LOG_LOCATION = os.path.join(os.getcwd(), "spherexlabtools", "wcu.log")
 LOG_FORMAT = "%(levelname)s:%(asctime)s::%(name)s:%(message)s"
 LOG_LEVEL = logging.INFO
-logging.basicConfig(filename="slt.log", format=LOG_FORMAT, level=LOG_LEVEL)
+logging.basicConfig(filename="wcu.log", format=LOG_FORMAT, level=LOG_LEVEL)
 logging.info("SPHERExLABTOOLS VERSION %s" % __version__)
 
 # Base package namespace
