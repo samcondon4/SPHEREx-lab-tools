@@ -15,11 +15,17 @@ log.addHandler(logging.NullHandler())
 class LinearStageController(DPSeriesMotorController):
     """ Represents a Anaheim DP Series Motor Controller driving a linear stage. This class overrides the home()
         method and implements unit conversions between controller steps and distance along the linear stage.
+    :param resource_name: string resource name to pass to pymeasure driver.
+    :param homedir: string with value "CW" or "CCW" corresponding to the direction the motor is spun during a
+                    homing operation.
+    :param kwargs: pymeasure driver kwargs
+
     :var homedir: Direction that the controller should turn the motor in a homing operation. Valid values are "CW" and
                   "CCW" (default = "CCW")
     :var homespeed: Speed that the controller will turn the motor in a homing operation. Default = 500
     :var turns_per_step: motor turns per individual controller step.
     :var units_per_turn: distance in specified units that the linear stage travels in a single turn of the motor.
+
     """
 
     # homing attributes #
@@ -36,10 +42,6 @@ class LinearStageController(DPSeriesMotorController):
 
     def __init__(self, resource_name, homedir, **kwargs):
         """ Instantiate a stage controller.
-        :param resource_name: string resource name to pass to pymeasure driver.
-        :param homedir: string with value "CW" or "CCW" corresponding to the direction the motor is spun during a
-                        homing operation.
-        :param kwargs: pymeasure driver kwargs
         """
         self.resource_name = resource_name
         if resource_name not in LinearStageController.locks.keys():

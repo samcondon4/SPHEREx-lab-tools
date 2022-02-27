@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attocube ANC300 Motion Controller &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="BK Precision" href="../bkprecision/index.html" />
+    <link rel="prev" title="Attocube Adapters" href="adapters.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Attocube</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="adapters.html">Attocube Adapters</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Attocube ANC300 Motion Controller</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Attocube</a> &raquo;</li>
+      <li>Attocube ANC300 Motion Controller</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/attocube/anc300.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="attocube-anc300-motion-controller">
+<h1>Attocube ANC300 Motion Controller<a class="headerlink" href="#attocube-anc300-motion-controller" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.attocube.anc300.ANC300Controller">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.attocube.anc300.</code><code class="sig-name descname">ANC300Controller</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">host</span></em>, <em class="sig-param"><span class="n">axisnames</span></em>, <em class="sig-param"><span class="n">passwd</span></em>, <em class="sig-param"><span class="n">query_delay</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.ANC300Controller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Attocube ANC300 Piezo stage controller with several axes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> – host address of the instrument</p></li>
+<li><p><strong>axisnames</strong> – a list of axis names which will be used to create
+properties with these names</p></li>
+<li><p><strong>passwd</strong> – password for the attocube standard console</p></li>
+<li><p><strong>query_delay</strong> – delay between sending and reading (default 0.05 sec)</p></li>
+<li><p><strong>kwargs</strong> – Any valid key-word argument for TelnetAdapter</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.ANC300Controller.controllerBoardVersion">
+<em class="property">property </em><code class="sig-name descname">controllerBoardVersion</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.ANC300Controller.controllerBoardVersion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serial number of the controller board</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.ANC300Controller.ground_all">
+<code class="sig-name descname">ground_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.ANC300Controller.ground_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grounds all axis of the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.ANC300Controller.stop_all">
+<code class="sig-name descname">stop_all</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.ANC300Controller.stop_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop all movements of the axis.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.ANC300Controller.version">
+<em class="property">property </em><code class="sig-name descname">version</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.ANC300Controller.version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Version number and instrument identification</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.attocube.anc300.Axis">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.attocube.anc300.</code><code class="sig-name descname">Axis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">controller</span></em>, <em class="sig-param"><span class="n">axis</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a single open loop axis of the Attocube ANC350</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> – axis identifier, integer from 1 to 7</p></li>
+<li><p><strong>controller</strong> – ANC300Controller instance used for the communication</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.capacity">
+<em class="property">property </em><code class="sig-name descname">capacity</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.capacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saved capacity value in nF of the axis.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.frequency">
+<em class="property">property </em><code class="sig-name descname">frequency</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Frequency of the stepping motion in Hertz from 1 to 10000 Hz.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.measure_capacity">
+<code class="sig-name descname">measure_capacity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.measure_capacity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains a new measurement of the capacity. The mode of the axis
+returns to ‘gnd’ after the measurement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns capacity</dt>
+<dd class="field-odd"><p>the freshly measured capacity in nF.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.mode">
+<em class="property">property </em><code class="sig-name descname">mode</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Axis mode. This can be ‘gnd’, ‘inp’, ‘cap’, ‘stp’, ‘off’,
+‘stp+’, ‘stp-’. Available modes depend on the actual axis model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.move">
+<code class="sig-name descname">move</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">steps</span></em>, <em class="sig-param"><span class="n">gnd</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.move" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move ‘steps’ steps in the direction given by the sign of the
+argument. This method will change the mode of the axis automatically
+and ground the axis on the end if ‘gnd’ is True. The method returns
+only when the movement is finished.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>steps</strong> – finite integer value of steps to be performed. A positive
+sign corresponds to upwards steps, a negative sign to downwards
+steps.</p></li>
+<li><p><strong>gnd</strong> – bool, flag to decide if the axis should be grounded after
+completion of the movement</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.offset_voltage">
+<em class="property">property </em><code class="sig-name descname">offset_voltage</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.offset_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offset voltage in Volts from 0 to 150 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.output_voltage">
+<em class="property">property </em><code class="sig-name descname">output_voltage</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.output_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output voltage in volts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.pattern_down">
+<em class="property">property </em><code class="sig-name descname">pattern_down</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.pattern_down" title="Permalink to this definition">¶</a></dt>
+<dd><p>step down pattern of the piezo drive. 256 values ranging from 0
+to 255 representing the the sequence of output voltages within one
+step of the piezo drive. This property can be set, the set value
+needs to be an array with 256 integer values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.pattern_up">
+<em class="property">property </em><code class="sig-name descname">pattern_up</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.pattern_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>step up pattern of the piezo drive. 256 values ranging from 0
+to 255 representing the the sequence of output voltages within one
+step of the piezo drive. This property can be set, the set value
+needs to be an array with 256 integer values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.serial_nr">
+<em class="property">property </em><code class="sig-name descname">serial_nr</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.serial_nr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serial number of the axis</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.stepd">
+<em class="property">property </em><code class="sig-name descname">stepd</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.stepd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step downwards for N steps. Mode must be ‘stp’ and N must be
+positive.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.stepu">
+<em class="property">property </em><code class="sig-name descname">stepu</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.stepu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step upwards for N steps. Mode must be ‘stp’ and N must be
+positive.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop any motion of the axis</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.attocube.anc300.Axis.voltage">
+<em class="property">property </em><code class="sig-name descname">voltage</code><a class="headerlink" href="#pymeasure.instruments.attocube.anc300.Axis.voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Amplitude of the stepping voltage in volts from 0 to 150 V. This
+property can be set.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="adapters.html" class="btn btn-neutral float-left" title="Attocube Adapters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../bkprecision/index.html" class="btn btn-neutral float-right" title="BK Precision" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

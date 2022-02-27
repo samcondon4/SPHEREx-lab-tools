@@ -1,0 +1,10 @@
+##################
+Configuration
+##################
+
+In a manner similar to Jonathon Hunacek's PyHk (pyhk_), SpherexLabTools makes use of configuration files in the json5 format to build the :ref:calibration.focus.InstrumentSuite object. 
+
+
+
+.. _pyhk: http://docs.pyhk.net/en/beta/
+
