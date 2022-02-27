@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'SPHERExLabTools'
-copyright = '2022, Sam Condon'
-author = 'Sam Condon'
+copyright = '2022, Sam Condon, Marco Viero'
+author = 'Sam Condon, Marco Viero'
 
 # The full version, including alpha/beta/rc tags
 release = '0.6'
@@ -31,7 +31,7 @@ release = '0.6'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.extlinks", "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.doctest"
+    "sphinx.ext.extlinks", "sphinx.ext.autodoc", "sphinx.ext.autosummary", "sphinx.ext.doctest", "sphinx.ext.autosectionlabel"
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -56,11 +56,16 @@ html_theme = 'pyramid'
 html_static_path = ['_static']
 
 
-# Additional configs #
+# -- Extension configs -----------------------------------------------------------------
 
+# extlinks
 extlinks = {
         "pymeasure": ("https://pymeasure.readthedocs.io/en/latest/%s", "PyMeasure %s"),
         "python": ("https://docs.python.org/3/%s", "Python3/%s")
 }
+
+# autosectionlabel
+autosectionlabel_prefix_document = True
+
 
 

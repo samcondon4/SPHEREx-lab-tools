@@ -5,4 +5,6 @@ API Reference
         :maxdepth: 2
 
         instruments/index
+        procedures/index
+        applications/index
 

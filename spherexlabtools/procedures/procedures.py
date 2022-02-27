@@ -21,8 +21,8 @@ logger = logging.getLogger(__name__)
 
 
 class Record:
-    """ Basic class implementing thread-safe attribute access. This allows a procedure to write data
-        out to multiple queues on separate threads without worrying about collisions.
+    """ Basic class implementing thread-safe attribute access. This allows a procedure to write the same data
+        out to multiple queues on separate threads without worrying about race-conditions.
     """
 
     lock = None

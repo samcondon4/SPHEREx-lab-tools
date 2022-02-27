@@ -4,12 +4,24 @@
 spherexlabtools.instruments
 ############################
 
-This section contains documentation on the instrument classes implemented that fall out of scope of the :pymeasure:`PyMeasure Instrument Repository <api/instruments>`. Where new instrument drivers were needed that fell within the scope of this repo, a pull-request was made to add the driver to PyMeasure. 
+All SPHERExLabTools instrument driver classes either inherit directly from, or are based heavily on the :pymeasure:`PyMeasure Instrument Base Class <api/instruments/instruments.html>`. 
 
-Instruments by manufacturer:
+This section documents the `Instrument Wrappers`_ implemented to bring multiple instrument drivers together into a single object for portability and convenience in defining procedures. Additionally, the instrument classes that fall out of scope of the :pymeasure:`PyMeasure Instrument Repository <api/instruments>` are documented in the `Instruments By Manufacturer`_ section.
 
+
+Instrument Wrappers
+--------------------
+.. toctree::
+        :maxdepth: 2
+        
+        instrument_wrappers
+
+
+Instruments By Manufacturer
+---------------------------
 .. toctree::
         :maxdepth: 2
 
         anaheimautomation/index
+
 

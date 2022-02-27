@@ -5,7 +5,8 @@ SPHERExLabTools consists of a set of :ref:`instrument-drivers` for low-level com
 
 .. image:: SPHERExLabTools_Dataflow.png
 
-Each color in the diagram corresponds to a separate thread of execution. The graphical interfaces created by :ref:`controllers` and the code run by :ref:`instrument-drivers` each execute from within the main thread. :ref:`procedures`, which control and retrieve data from instruments, have their own thread. Since both controllers and procedures interact with instrument drivers on separate threads, a locking mechanism is implemented to prevent race conditions where multiple threads try to access the same instrument driver at the same time. Finally, :ref:`recorders` and :ref:`viewers` run in threads that pend on data to be placed on independent :python:`Queues </library/queue.html>` by active :ref:`procedures`. Once data is placed on a queue, the viewer or recorder thread becomes active in order to process the data to update a live display or save for later analysis.  
+Each color in the diagram corresponds to a separate thread of execution. The graphical interfaces created by :ref:`controllers` and the code run by :ref:`instrument-drivers` each execute from within the main thread. :ref:`procedures`, which control and retrieve data from instruments, have their own thread. Since both controllers and procedures interact with instrument drivers on separate threads, a locking mechanism is implemented to prevent race conditions where multiple threads try to access the same instrument driver at the same time. Finally, :ref:`recorders` and :ref:`viewers` run in threads that pend on data to be placed on independent :python:`Queues </library/queue.html>` by active :ref:`procedures`. Once data is placed on a queue, the viewer or recorder thread becomes active in order to process the data to update a live display or save for later analysis. Each of these components can be configured independently in the manner described in :doc:`custom_experiments`. This configurability combined with the multi-threaded architecture provide a streamlined and flexible workflow for the setup of complex data-acquisition schemes. 
+
 
 .. _`instrument-drivers`:
 
@@ -19,6 +20,11 @@ SPHERExLabTools builds off of the existing repository of instrument drivers foun
 Procedures
 ----------
 
+At its core, a :ref:`SPHERExLabTools Procedure object <api/procedures/procedures:Base Procedure>` is no different from the :pymeasure:`PyMeasure Procedure object <api/experiment/procedure.html>` and many of the methods and attributes defined in the former are copied directly from the latter. The two differ in a few key technical implementation details that are not important for the purposes of this document. The curious reader can refer to the detailed api documentation for the SPHERExLabTools Procedure object linked above for more information. Quoting from the PyMeasure documentation:
+
+        "The Procedure object bundles the sequence of steps in an experiment with the parameters required for its successful execution. This simple structure comes with huge benefits, since a number of convenient tools for making the measurement use this common interface."       
+
+Let's take a look at a simple example procedure, *CamViewProc* which is defined in the alskdjfdas;jklasfd;jk
 
 .. _controllers:
 
