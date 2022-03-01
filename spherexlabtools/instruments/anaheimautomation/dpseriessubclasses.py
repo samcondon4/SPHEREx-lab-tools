@@ -82,8 +82,10 @@ class LinearStageController(DPSeriesMotorController):
 
         :param command: command string to be sent to the motor controller.
         """
+        log.debug("LinearStageController acquiring lock for write.")
         with LinearStageController.locks[self.resource_name]:
             super().write(command)
+        log.debug("LinearStageController released lock for write.")
 
     def values(self, command, **kwargs):
         """ Override the instrument base values method to add the motor controller's address to the
@@ -91,9 +93,11 @@ class LinearStageController(DPSeriesMotorController):
 
         :param command: command string to be sent to the motor controller.
         """
+        log.debug("LinearStageController acquiring lock for values.")
         with LinearStageController.locks[self.resource_name]:
             vals = super().values(command, **kwargs)
-            return vals
+        log.debug("LinearStageController released lock for values.")
+        return vals
 
     def ask(self, command):
         """ Override the instrument base ask method to add the motor controller's address to the
@@ -101,6 +105,8 @@ class LinearStageController(DPSeriesMotorController):
 
         :param command: command string to be sent to the instrument
         """
+        logging.debug("LinearStageController acquiring lock for ask.")
         with LinearStageController.locks[self.resource_name]:
             val = super().ask(command)
-            return val
+        logging.debug("LinearStageController released lock for ask.")
+        return val

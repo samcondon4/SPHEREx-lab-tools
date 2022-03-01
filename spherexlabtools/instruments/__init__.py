@@ -6,3 +6,4 @@ from .instrument import PylabInstrument, PymeasureInstrumentSub, CompoundInstrum
 #from . import labjack
 from . import newport
 from . import srs
+from . import spherex

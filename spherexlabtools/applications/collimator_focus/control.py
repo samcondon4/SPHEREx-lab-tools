@@ -21,14 +21,17 @@ Gimbal0_Controller = {
     "type": "InstrumentController",
     "hw": "Gimbal0",
     "control_parameters": [
-        {"name": "gimbal0_az_step_position", "type": "int"},
-        {"name": "gimbal0_zth_step_position", "type": "int"}
+        {"name": "az_step_position", "type": "int"},
+        {"name": "zth_step_position", "type": "int"}
     ],
     "status_parameters": [
-        {"name": "gimbal0_az_step_position", "type": "int"},
-        {"name": "gimbal0_zth_step_position", "type": "int"}
+        {"name": "az_step_position", "type": "float"},
+        {"name": "zth_step_position", "type": "float"}
     ],
-    "status_refresh": 1
+    "status_refresh": 1,
+    "actions": [
+        "az_stop", "zth_stop", "az_home", "zth_home", "az_reset_position", "zth_reset_position"
+    ]
 }
 
 LogProc_Controller = {

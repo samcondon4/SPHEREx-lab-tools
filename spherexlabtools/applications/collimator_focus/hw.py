@@ -56,24 +56,26 @@ MscopeCfg = {
 # RELAY ##########################################################
 # relay gimbal0 x config
 relay_gimbal0_az = {
-    "instance_name": "gimbal0_az",
+    "instance_name": "az",
     "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
         "address": 1,
-        "homedir": "CW"
+        "homedir": "CW",
+        "encoder_enabled": True,
     }
 }
 
 relay_gimbal0_zth = {
-    "instance_name": "gimbal0_zth",
+    "instance_name": "zth",
     "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
-        "address": 0,
-        "homedir": "CW"
+        "address": 3,
+        "homedir": "CW",
+        "encoder_enabled": True,
     }
 }
 
