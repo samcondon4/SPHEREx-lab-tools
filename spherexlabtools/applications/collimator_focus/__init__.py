@@ -15,7 +15,5 @@ from .control import CONTROLLERS
 from . import procedures
 
 
-# TODO: figure out motor addressing for gimbal
-# TODO: Turn off viewer auto-scale, Mono-8 and Mono-16 Camera settings, live streaming + moving average in viewer,
-# TODO: save contents of any viewer, absolute position conversion
+# TODO: Mono-8 and Mono-16 Camera settings, Image viewer levels based on camera settings
 

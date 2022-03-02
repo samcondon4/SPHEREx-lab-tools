@@ -35,7 +35,6 @@ CameraView_Proc = {
     "hw": "Microscope",
     "records": {
         "cam_latest_frame": {"viewer": "CamView"},
-        "cam_avg": {"viewer": "CamViewAvg"},
     },
     "params": {
         "frames_per_image": 100
@@ -53,4 +52,4 @@ CollimatorFocus_Proc = {
     }
 }
 
-PROCEDURES = []
+PROCEDURES = [CameraView_Proc, CollimatorFocus_Proc]

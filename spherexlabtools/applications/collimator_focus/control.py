@@ -1,4 +1,3 @@
-"""
 MScope_Controller = {
     "instance_name": "MicroscopeCntrl",
     "type": "InstrumentController",
@@ -12,23 +11,22 @@ MScope_Controller = {
         {"name": "gauge_position", "type": "float"},
         {"name": "cam_gain", "type": "float"}
     ],
-    "status_refresh": 0.5
+    "status_refresh": 2
 }
-"""
 
 Gimbal0_Controller = {
     "instance_name": "Gimbal0Cntrl",
     "type": "InstrumentController",
     "hw": "Gimbal0",
     "control_parameters": [
-        {"name": "az_step_position", "type": "int"},
-        {"name": "zth_step_position", "type": "int"}
+        {"name": "az_absolute_position", "type": "float"},
+        {"name": "zth_absolute_position", "type": "float"},
     ],
     "status_parameters": [
-        {"name": "az_step_position", "type": "float"},
-        {"name": "zth_step_position", "type": "float"}
+        {"name": "az_absolute_position", "type": "float"},
+        {"name": "zth_absolute_position", "type": "float"},
     ],
-    "status_refresh": 1,
+    "status_refresh": 2,
     "actions": [
         "az_stop", "zth_stop", "az_home", "zth_home", "az_reset_position", "zth_reset_position"
     ]
@@ -46,4 +44,4 @@ CollimatorFocus_Controller = {
     "procedure": "CollimatorFocusProc"
 }
 
-CONTROLLERS = [Gimbal0_Controller]
+CONTROLLERS = [MScope_Controller, Gimbal0_Controller, LogProc_Controller, CollimatorFocus_Controller]

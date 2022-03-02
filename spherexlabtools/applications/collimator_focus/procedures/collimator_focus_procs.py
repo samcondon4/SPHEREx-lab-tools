@@ -39,8 +39,6 @@ class CamViewProc(CamProc, LogProc):
         a faster frame rate.
     """
 
-    average_num = IntegerParameter("Images Averaged", default=1)
-
     def __init__(self, cfg, **kwargs):
         LogProc.__init__(self, cfg, **kwargs)
         CamProc.__init__(self, cfg, **kwargs)

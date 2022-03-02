@@ -12,7 +12,7 @@ import threading
 import importlib
 from PyQt5 import QtCore
 from copy import deepcopy
-from pymeasure.experiment import Parameter, FloatParameter
+from pymeasure.experiment import Parameter, FloatParameter, IntegerParameter
 
 from ..thread import StoppableReusableThread, QueueThread
 
@@ -80,7 +80,7 @@ class BaseProcedure(StoppableReusableThread):
     }
     _parameters = {}
 
-    def __init__(self, cfg, hw=None, viewers=None, recorders=None, **kwargs):
+    def __init__(self, cfg, hw=None, viewers=None, recorders=None, update_params=True, **kwargs):
         """ Initialize a bare procedure instance.
 
         :param hw: :class:`..instruments.InstrumentSuite` object.
@@ -88,6 +88,7 @@ class BaseProcedure(StoppableReusableThread):
                          calls to emit().
         :param viewers: Dictionary of Viewer objects.
         :param recorders: Dictionary of recorder objects.
+        :param update_params: Boolean to indicate if self._update_parameters() should run in this init.
         :param kwargs: Key-word arguments to set the procedure parameters.
         """
         super().__init__()
@@ -103,7 +104,8 @@ class BaseProcedure(StoppableReusableThread):
             qdict[key] = qdict_val
         self.records = qdict
         self.status = BaseProcedure.QUEUED
-        self._update_parameters()
+        if update_params:
+            self._update_parameters()
         for key in kwargs:
             if key in self._parameters.keys():
                 setattr(self, key, kwargs[key])
@@ -144,13 +146,20 @@ class BaseProcedure(StoppableReusableThread):
         """
         if not self._parameters:
             self._parameters = {}
+        for item, parameter in self.__dict__.items():
+            self._update_p(item, parameter, check=lambda p, cls: issubclass(type(p), cls))
         for item, parameter in inspect.getmembers(self.__class__):
-            if isinstance(parameter, Parameter):
-                self._parameters[item] = deepcopy(parameter)
-                if parameter.is_set():
-                    setattr(self, item, parameter.value)
-                else:
-                    setattr(self, item, None)
+            self._update_p(item, parameter, check=isinstance)
+
+    def _update_p(self, i, p, check):
+        """ Update a single parameter. Used by the above method.
+        """
+        if check(p, Parameter):
+            self._parameters[i] = deepcopy(p)
+            if p.is_set():
+                setattr(self, i, p.value)
+            else:
+                setattr(self, i, None)
 
     def parameters_are_set(self):
         """ Returns True if all parameters are set """
@@ -230,14 +239,21 @@ class LogProc(BaseProcedure):
 
     refresh_rate = FloatParameter("Log Rate", units="Hz.", default=1)
 
+    _buf_id = "_buf"
+    _avg_id = "_average"
+
     def __init__(self, cfg, **kwargs):
         """ Initialize a basic procedure that will record data from the prop argument.
 
         :param cfg: List of procedure configurations.
         :param kwargs: Key-word arguments for :class:`.BaseProcedure`
         """
-        super().__init__(cfg, **kwargs)
+        super().__init__(cfg, update_params=False, **kwargs)
         self.DATA_COLUMNS = list(self.records.keys())
+        for rec in self.DATA_COLUMNS:
+            setattr(self, rec+self._avg_id, IntegerParameter(rec+self._avg_id, units="records", default=1))
+            setattr(self, rec+self._buf_id, [0])
+        self._update_parameters()
 
     def execute(self):
         """ Procedure execution method. Calls get_properties() to start recording props at a fixed interval.
@@ -246,11 +262,25 @@ class LogProc(BaseProcedure):
             self.get_properties()
             time.sleep(1/self.refresh_rate)
 
+    def update_buf(self, p, data, return_avg=False):
+        """ Update a buffer for the record, p.
+        """
+        buf = getattr(self, p+self._buf_id)
+        avg_len = getattr(self, p+self._avg_id)
+        if len(buf) != avg_len:
+            setattr(self, p+self._buf_id, [0 for _ in range(avg_len)])
+            buf = getattr(self, p+self._buf_id)
+        buf.pop(-1)
+        buf.insert(0, data)
+        if return_avg:
+            return sum(buf) / len(buf)
+
     def get_properties(self):
         """ Retrieve all properties given in the DATA_COLUMNS list and emit results.
         """
         for p in self.DATA_COLUMNS:
             logger.debug("LogProc getting %s" % p)
             data = getattr(self.hw, p)
+            data = self.update_buf(p, data, return_avg=True)
             self.emit(p, data)
 

@@ -40,7 +40,7 @@ class LinearStageController(DPSeriesMotorController):
     # dictionary of locks for thread-safety #
     locks = {}
 
-    def __init__(self, resource_name, homedir, **kwargs):
+    def __init__(self, resource_name, homedir,encoder_motor_ratio=1.0, encoder_enabled=False, **kwargs):
         """ Instantiate a stage controller.
         """
         self.resource_name = resource_name
@@ -48,6 +48,8 @@ class LinearStageController(DPSeriesMotorController):
             LinearStageController.locks[resource_name] = threading.Lock()
         super().__init__(resourceName=resource_name, **kwargs)
         self.homedir = homedir
+        self.encd_enabled = encoder_enabled
+        self.encd_mot_ratio = encoder_motor_ratio
 
     def absolute_to_steps(self, pos):
         """ Convert from absolute position on a linear stage to steps.
@@ -61,6 +63,8 @@ class LinearStageController(DPSeriesMotorController):
         :param steps:
         :return:
         """
+        if self.encd_enabled:
+            steps = steps / self.encd_mot_ratio
         return steps*self.turns_per_step*self.units_per_turn
 
     def home(self, home_mode=None, block_interval=3):
