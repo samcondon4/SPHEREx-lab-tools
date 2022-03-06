@@ -62,6 +62,7 @@ class InstrumentController(Controller):
     """
 
     refresh_timer = QtCore.QTimer()
+    params_set = QtCore.pyqtSignal()
 
     def __init__(self, cfg, hw, **kwargs):
         """ Initialize the InstrumentController Widget as a pyqtgraph parameter tree.
@@ -70,7 +71,8 @@ class InstrumentController(Controller):
         :param: hw: Instrument driver.
         :param: control_params: list of parameter configuration dictionaries.
         :param: status_params: list of status configuration dictionaries.
-        :param: status_refresh: seconds between updates to the status parameters.
+        :param: status_refresh: seconds between updates to the status parameters, or can be the string "after_set",
+                                so that parameters are only ever updated after they are set to new values.
         """
         super().__init__(cfg, **kwargs)
         self.hw = getattr(hw, cfg["hw"])
@@ -127,9 +129,19 @@ class InstrumentController(Controller):
                 c.sigActivated.connect(lambda _, act=name: self.run_instrument_action(act))
 
         # Parameter refresh setup #
+        self.status_refresh = None
         if "status_refresh" in cfg.keys():
-            self.refresh_timer.timeout.connect(self.get_inst_params)
-            self.refresh_timer.start(cfg["status_refresh"])
+            ref = cfg["status_refresh"]
+            ref_typ = type(ref)
+            if ref_typ is float or ref_typ is int:
+                logger.debug("Starting refresh timer for %f seconds" % ref)
+                self.refresh_timer.timeout.connect(self.get_inst_params)
+                self.refresh_timer.start(cfg["status_refresh"])
+                self.status_refresh = ref
+            elif ref == "after_set":
+                logger.debug("Connecting params_set signal to get_inst_params")
+                self.params_set.connect(self.get_inst_params)
+                self.status_refresh = ref
 
     def set_inst_params(self, children):
         """ Write instrument control parameters to the hardware.
@@ -144,6 +156,7 @@ class InstrumentController(Controller):
                     value = child.value()
                     logger.debug("Setting instrument parameter {} with value {}".format(name, value))
                     setattr(self.hw, name, value)
+            self.params_set.emit()
 
     def get_inst_params(self):
         """ Get instrument parameters and write them to GUI elements. Start timer threads that periodically
@@ -152,6 +165,7 @@ class InstrumentController(Controller):
         if self.alive:
             for c in self.status_group.children():
                 param = c.name()
+                logger.debug("Getting instrument parameter %s" % param)
                 val = getattr(self.hw, param)
                 if val != self.status_values[param]:
                     self.status_values[param] = val
@@ -179,7 +193,7 @@ class InstrumentController(Controller):
         """ Kill the controller.
         """
         self.alive = False
-        self.get_timer.cancel()
+        self.refresh_timer.stop()
         self.close()
 
 
