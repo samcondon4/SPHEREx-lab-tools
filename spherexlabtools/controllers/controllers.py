@@ -61,6 +61,8 @@ class InstrumentController(Controller):
     """ Controller class to implement manual control over an individual instrument within a GUI.
     """
 
+    refresh_timer = QtCore.QTimer()
+
     def __init__(self, cfg, hw, **kwargs):
         """ Initialize the InstrumentController Widget as a pyqtgraph parameter tree.
 
@@ -108,10 +110,6 @@ class InstrumentController(Controller):
         # parameter tree #
         self.set_parameters(params, showTop=True)
 
-        # Threading setup #
-        self.get_timer = None
-        self.status_refresh = 0 if "status_refresh" not in cfg.keys() else cfg["status_refresh"]
-
         # connect buttons to methods #
         self.set_params.sigActivated.connect(lambda _, children=self.control_group.children():
                                              self.set_inst_params([c.name() for c in children]))
@@ -127,6 +125,11 @@ class InstrumentController(Controller):
                 name = c.name()
                 logger.debug("Connecting action method for {}".format(name))
                 c.sigActivated.connect(lambda _, act=name: self.run_instrument_action(act))
+
+        # Parameter refresh setup #
+        if "status_refresh" in cfg.keys():
+            self.refresh_timer.timeout.connect(self.get_inst_params)
+            self.refresh_timer.start(cfg["status_refresh"])
 
     def set_inst_params(self, children):
         """ Write instrument control parameters to the hardware.
@@ -153,8 +156,6 @@ class InstrumentController(Controller):
                 if val != self.status_values[param]:
                     self.status_values[param] = val
                     c.setValue(val)
-            self.get_timer = threading.Timer(self.status_refresh, self.get_inst_params)
-            self.get_timer.start()
 
     def run_instrument_action(self, action):
         """ Run an instrument method from a new thread.
