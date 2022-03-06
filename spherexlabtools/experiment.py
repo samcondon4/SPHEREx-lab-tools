@@ -31,7 +31,7 @@ class Experiment:
                 - imports the hw.py module and instantiates an :class:`.InstrumentSuite`
                   instance using the INSTRUMENT_SUITE name found within.
 
-                - imports the record.py module and creates a set of recorders using the
+                - imports the measure.py module and creates a set of recorders using the
                   RECORDERS name found within.
 
                 - imports the view.py module and creates a set of viewers using the VIEWERS

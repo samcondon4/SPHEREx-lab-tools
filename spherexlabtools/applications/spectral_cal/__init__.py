@@ -1,1 +1,6 @@
-from .main import run
+from .hw import INSTRUMENT_SUITE
+
+RECORDERS = []
+VIEWERS = []
+PROCEDURES = []
+CONTROLLERS = []

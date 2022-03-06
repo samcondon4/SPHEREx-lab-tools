@@ -3,7 +3,7 @@
 import numpy as np
 import subprocess as sp
 from pymeasure.instruments import Instrument
-from pymeasure.instruments.validators import strict_discrete_range, strict_discrete_set
+from pymeasure.instruments.validators import strict_discrete_set
 
 
 class CS260:
@@ -18,8 +18,8 @@ class CS260:
 
     osf = Instrument.control("FILTER?", "FILTER %i", """Integer property representing the current
     order sort filter setting. This property can be set.""",
-                             validator=strict_discrete_range,
-                             values=[1, 7, 1])
+                             validator=strict_discrete_set,
+                             values=np.arange(1, 7))
 
     shutter = Instrument.control("SHUTTER?", "SHUTTER %s", """String property representing the current
     shutter setting. This property can be set.""",
