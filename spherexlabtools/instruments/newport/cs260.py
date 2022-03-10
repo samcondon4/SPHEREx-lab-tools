@@ -1,6 +1,6 @@
 """ This module provides the driver for the Oriel/Newport Cs260 Monochromator.
 """
-import numpy as np
+import time
 import subprocess as sp
 from pymeasure.instruments import Instrument
 from pymeasure.instruments.validators import strict_discrete_set
@@ -22,13 +22,12 @@ class CS260:
     the current grating setting. This property can be set.""",
                                   validator=strict_discrete_set,
                                   values=[1, 2, 3],
-                                  get_process=lambda g: int(g.split(",")[0]))
+                                  get_process=lambda g: g.split(",")[0])
 
     _osf = Instrument.control("FILTER?", "FILTER %i", """Integer property representing the current
     order sort filter setting. This property can be set.""",
                               validator=strict_discrete_set,
-                              values=[1, 2, 3, 4, 5, 6],
-                              get_process=lambda osf: int(osf))
+                              values=[1, 2, 3, 4, 5, 6])
 
     _wavelength = Instrument.control("WAVE?", "GOWAVE %f", """Float property representing
     the current wavelength setting in um. or nm. This property can be set.""")
@@ -48,7 +47,7 @@ class CS260:
         5: [3.7, 1000]
     }
 
-    def __init__(self, resourceName, **kwargs):
+    def __init__(self, resourceName, pend_time=3, **kwargs):
         """ Initialize communication with the CS260 monochromator. Note that the USB interface
         of this device utilizes a set of Newport proprietary DLL drivers. The provided C++EXE.exe
         file wraps the communication with these files in a compiled binary that python can execute
@@ -62,6 +61,7 @@ class CS260:
         self.units = "UM"
         self.osf_auto = False
         self.grating_auto = False
+        self.pend_time = pend_time
 
     def update_grating_and_osf_from_wavelength(self, wave):
         """ Update the grating and order sort filter based on a wavelength. This method is
@@ -71,13 +71,13 @@ class CS260:
             cur_osf = self._osf
             for osf, rnge in self.OSF_RANGES.items():
                 if rnge[0] < wave <= rnge[1] and osf != cur_osf:
-                    self._osf = osf
+                    self._osf = int(osf)
 
         if self.grating_auto:
             cur_g = self._grating
             for g, rnge in self.GRATING_RANGES.items():
                 if rnge[0] < wave <= rnge[1] and g != cur_g:
-                    self._grating = g
+                    self._grating = int(g)
 
     @property
     def grating(self):
@@ -90,7 +90,7 @@ class CS260:
             self.grating_auto = True
         else:
             self.grating_auto = False
-            self._grating = g
+            self._grating = int(g)
 
     @property
     def osf(self):
@@ -103,7 +103,7 @@ class CS260:
             self.osf_auto = True
         else:
             self.osf_auto = False
-            self._osf = osf
+            self._osf = int(osf)
 
     @property
     def wavelength(self):
@@ -112,6 +112,7 @@ class CS260:
 
     @wavelength.setter
     def wavelength(self, w):
+        w = float(w)
         self.update_grating_and_osf_from_wavelength(w)
         self._wavelength = w
 

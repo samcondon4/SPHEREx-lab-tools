@@ -71,6 +71,7 @@ class StoppableReusableThread:
 
     def __init__(self, **kwargs):
         self.thread = None
+        self.running = False
 
     def start(self):
         """ Start running a thread, assuming it is not already running.
@@ -78,13 +79,16 @@ class StoppableReusableThread:
         if self.thread is None or not self.thread.is_alive():
             self.thread = StoppableThread(target=self.run)
             self.thread.start()
+            self.running = True
         else:
             raise RuntimeError("Thread already running!")
 
     def run(self):
         """ Call the thread execution methods, which should be overridden in subclasses.
         """
+        logger.debug("startup")
         self.startup()
+        logger.debug("execute")
         self.execute()
         if not self.should_stop():
             self.stop()
@@ -93,7 +97,9 @@ class StoppableReusableThread:
         """ Stop a running thread.
         """
         self.thread.stop()
+        logger.debug("stop")
         self.shutdown()
+        self.running = False
 
     def should_stop(self):
         """
