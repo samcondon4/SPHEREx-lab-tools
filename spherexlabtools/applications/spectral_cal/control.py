@@ -14,7 +14,7 @@ Mono_Controller = {
         {"name": "wavelength", "type": "float"},
         {"name": "shutter", "type": "list", "limits": ["O", "C"]},
     ],
-    "status_refresh": "after_set",
+    "status_refresh": "manual",
 }
 
 CONTROLLERS = [Mono_Controller]

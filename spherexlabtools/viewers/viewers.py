@@ -17,8 +17,9 @@ class Viewer(QueueThread, pg.GraphicsLayoutWidget):
     update_signal = QtCore.pyqtSignal(object)
     shutdown_signal = QtCore.pyqtSignal()
 
-    def __init__(self, cfg, **kwargs):
+    def __init__(self, cfg, exp, **kwargs):
         self.name = cfg["instance_name"]
+        self.exp = exp
         QueueThread.__init__(self, **kwargs)
         pg.GraphicsLayoutWidget.__init__(self)
         self.startup_signal.connect(self.show_view)
@@ -52,7 +53,7 @@ class LineViewer(Viewer):
     # this viewer operates on buffered data, so override update_signal to take no arguments on emit() #
     update_signal = QtCore.pyqtSignal()
 
-    def __init__(self, cfg, buf_size=10, **kwargs):
+    def __init__(self, cfg, exp, buf_size=10, **kwargs):
         """ Basic line viewer initialization.
 
         :param cfg: Configuration dictionary.
@@ -66,7 +67,7 @@ class LineViewer(Viewer):
         # remove buf_size from kwargs so that two values aren't received #
         if "buf_size" in kwargs:
             kwargs.pop("buf_size")
-        super().__init__(cfg, buf_size=buf_size, **kwargs)
+        super().__init__(cfg, exp, buf_size=buf_size, **kwargs)
 
         # create plot item #
         pkwargs = {} if "params" not in cfg.keys() else cfg["params"]
@@ -94,10 +95,10 @@ class ImageViewer(Viewer):
     """ Basic image viewer based on the pyqtgraph GraphicsLayoutWidget.
     """
 
-    def __init__(self, cfg, **kwargs):
+    def __init__(self, cfg, exp, **kwargs):
         """ Initialize the image viewer.
         """
-        super(ImageViewer, self).__init__(cfg)
+        super(ImageViewer, self).__init__(cfg, exp)
         self.view = self.addViewBox()
         self.view.setAspectLocked(True)
         self.img = pg.ImageItem(border="w")

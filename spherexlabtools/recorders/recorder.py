@@ -17,11 +17,12 @@ class HDF5Recorder(QueueThread):
     PARAMS_GROUP = "Params"
     GROUP_DELIMITER = "/"
 
-    def __init__(self, cfg, **kwargs):
+    def __init__(self, cfg, exp, **kwargs):
         """ Initialize a recorder.
         """
         super().__init__(**kwargs)
         self.filename = cfg["filename"]
+        self.exp = exp
         self.store = pd.HDFStore(self.filename)
         # if this is a new hdf file, with no Meta group, add the group #
         if (self.GROUP_DELIMITER + self.META_GROUP) not in self.store.keys():

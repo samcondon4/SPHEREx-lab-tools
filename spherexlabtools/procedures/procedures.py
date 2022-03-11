@@ -80,10 +80,11 @@ class BaseProcedure(StoppableReusableThread):
     }
     _parameters = {}
 
-    def __init__(self, cfg, hw=None, viewers=None, recorders=None, update_params=True, **kwargs):
+    def __init__(self, cfg, exp, hw=None, viewers=None, recorders=None, update_params=True, **kwargs):
         """ Initialize a bare procedure instance.
 
         :param hw: :class:`..instruments.InstrumentSuite` object.
+        :param exp: Experiment object. Used for compatiblity with general class loader.
         :param records: Dictionary containing lists of queues to which data should be posted on
                          calls to emit().
         :param viewers: Dictionary of Viewer objects.
@@ -92,6 +93,7 @@ class BaseProcedure(StoppableReusableThread):
         :param kwargs: Key-word arguments to set the procedure parameters.
         """
         super().__init__()
+        self.exp = exp
         if type(cfg["hw"]) is list:
             self.hw = type("proc_hw", (object,), {})()
             for inst in cfg["hw"]:
@@ -242,13 +244,13 @@ class LogProc(BaseProcedure):
     _buf_id = "_buf"
     _avg_id = "_average"
 
-    def __init__(self, cfg, **kwargs):
+    def __init__(self, cfg, exp, **kwargs):
         """ Initialize a basic procedure that will record data from the prop argument.
 
         :param cfg: List of procedure configurations.
         :param kwargs: Key-word arguments for :class:`.BaseProcedure`
         """
-        super().__init__(cfg, update_params=False, **kwargs)
+        super().__init__(cfg, exp, update_params=False, **kwargs)
         self.DATA_COLUMNS = list(self.records.keys())
         for rec in self.DATA_COLUMNS:
             setattr(self, rec+self._avg_id, IntegerParameter(rec+self._avg_id, units="records", default=1))
