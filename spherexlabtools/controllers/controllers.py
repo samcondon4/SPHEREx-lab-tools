@@ -138,7 +138,8 @@ class InstrumentController(Controller):
             for c in self.actions_group.children():
                 act_name = c.name()
                 logger.debug("Connecting action method for {}".format(act_name))
-                thread = StoppableReusableThread(target=lambda act=act_name: self.run_instrument_action(act))
+                thread = StoppableReusableThread()
+                thread.execute = lambda act=act_name: self.run_instrument_action(act)
                 c.sigActivated.connect(self.exp.get_start_thread_lambda(
                     "%s: Action %s" % (self.name, act_name), thread
                 ))
@@ -197,8 +198,7 @@ class InstrumentController(Controller):
         """
         logger.debug("Running action %s on instrument %s" % (action, str(self.hw)))
         act = getattr(self.hw, action)
-        thread = threading.Thread(target=act)
-        Experiment.start_thread(self)
+        act()
 
     def start(self):
         """ Start the controller.

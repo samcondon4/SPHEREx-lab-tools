@@ -20,4 +20,11 @@ Mono = {
     }
 }
 
-INSTRUMENT_SUITE = [Mono]
+Ndf = {
+    "instance_name": "NDFWheel",
+    "manufacturer": "edmund",
+    "resource_name": "",
+    "instrument": "NDF",
+}
+
+INSTRUMENT_SUITE = [Mono, Ndf]
