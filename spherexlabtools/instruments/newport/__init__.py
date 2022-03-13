@@ -1,1 +1,1 @@
-from .CS260 import CS260
+from .cs260 import CS260

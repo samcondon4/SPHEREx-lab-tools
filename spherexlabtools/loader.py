@@ -15,12 +15,14 @@ class LoaderError(Exception):
     pass
 
 
-def load_objects_from_cfg_list(search_order, cfg_list, **kwargs):
+def load_objects_from_cfg_list(search_order, exp, cfg_list, **kwargs):
     """ Load a set of object instances from a list of configs with a specific module search order.
 
     :param search_order: List of module objects to search for class definitions.
     :param cfg_list: List of instance configuration dictionaries. These dictionaries must have at least
                      an 'instance_name' and 'type' key-value pair.
+    :param exp: Experiment object to pass to class instantiation.
+    :param cfg_list: String name of the exp_pkg attribute to retrieve the configuration list from.
     """
     objects = {}
     og_kwargs = kwargs
@@ -39,7 +41,7 @@ def load_objects_from_cfg_list(search_order, cfg_list, **kwargs):
             else:
                 logger.info("Initializing %s as %s" % (cfg["instance_name"], inst_class))
                 try:
-                    objects[name] = inst_class(cfg, **passed_kwargs)
+                    objects[name] = inst_class(cfg, exp=exp, **passed_kwargs)
                 except Exception as e:
                     logger.error("Error while initializing {} of type {}! {}({})".format(name, typ, type(e), e))
                     raise e
