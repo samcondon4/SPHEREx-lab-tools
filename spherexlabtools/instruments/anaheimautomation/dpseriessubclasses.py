@@ -40,7 +40,7 @@ class LinearStageController(DPSeriesMotorController):
     # dictionary of locks for thread-safety #
     locks = {}
 
-    def __init__(self, resource_name, homedir,encoder_motor_ratio=1.0, encoder_enabled=False, **kwargs):
+    def __init__(self, resource_name, homedir, encoder_motor_ratio=1.0, encoder_enabled=False, **kwargs):
         """ Instantiate a stage controller.
         """
         self.resource_name = resource_name
@@ -56,7 +56,7 @@ class LinearStageController(DPSeriesMotorController):
         :param pos: absolute position in units defined by the absolute_units property.
         :return:
         """
-        return pos*(1/self.units_per_turn)*(1/self.turns_per_step)
+        return int(pos*(1/self.units_per_turn)*(1/self.turns_per_step))
 
     def steps_to_absolute(self, steps):
         """ Convert from steps to an absolute position on a linear stage.

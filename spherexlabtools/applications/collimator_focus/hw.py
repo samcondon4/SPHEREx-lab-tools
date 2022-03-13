@@ -23,11 +23,11 @@ CamCfg = {
 
 GaugeCfg = {
     "instance_name": "gauge",
-    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
     "manufacturer": "heidenhain",
     "instrument": "ND287",
     "params": {
-        "units": "inch",
+        "units": "mm",
     },
     "kwargs": {
         "baud_rate": 115200
@@ -40,14 +40,23 @@ FocuserCfg = {
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
-        "homedir": "CCW",
         "address": 0,
+        "homedir": "CCW",
+        "encoder_enabled": False,
+    },
+    "params": {
+        "turns_per_step": 1 / 3600,
+        "units_per_turn": 1.87,
+        "units": "mm",
     }
 }
 
 MscopeCfg = {
     "instance_name": "Microscope",
     "subinstruments": [CamCfg, GaugeCfg, FocuserCfg],
+    "property_config": [
+        ("focuser_absolute_position", "gauge_position", "focuser_absolute_position")
+    ]
 }
 ##################################################################
 
@@ -55,7 +64,7 @@ MscopeCfg = {
 # relay gimbal0 x config
 relay_gimbal0_az = {
     "instance_name": "az",
-    "resource_name": "ASRL/dev/ttyUSB3::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
@@ -72,13 +81,13 @@ relay_gimbal0_az = {
 }
 
 relay_gimbal0_zth = {
-    "instance_name": "zth",
-    "resource_name": "ASRL/dev/ttyUSB3::INSTR",
+    "instance_name": "za",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
         "address": 3,
-        "homedir": "CW",
+        "homedir": "CCW",
         "encoder_enabled": False,
     },
     "params": {

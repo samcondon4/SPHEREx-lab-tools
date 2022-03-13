@@ -249,10 +249,17 @@ class LogProc(BaseProcedure):
         :param kwargs: Key-word arguments for :class:`.BaseProcedure`
         """
         super().__init__(cfg, update_params=False, **kwargs)
-        self.DATA_COLUMNS = list(self.records.keys())
-        for rec in self.DATA_COLUMNS:
-            setattr(self, rec+self._avg_id, IntegerParameter(rec+self._avg_id, units="records", default=1))
-            setattr(self, rec+self._buf_id, [0])
+        self.DATA_COLUMNS = []
+        records = list(self.records.keys())
+        for rec in records:
+            if self._avg_id in rec:
+                rec_no_avg_id = rec.split(self._avg_id)[0]
+                setattr(self, rec, IntegerParameter(rec, units="records", default=1))
+                setattr(self, rec_no_avg_id + self._buf_id, [0])
+                records.remove(rec)
+                rec = rec_no_avg_id
+            if rec not in self.DATA_COLUMNS:
+                self.DATA_COLUMNS.append(rec)
         self._update_parameters()
 
     def execute(self):
@@ -281,6 +288,7 @@ class LogProc(BaseProcedure):
         for p in self.DATA_COLUMNS:
             logger.debug("LogProc getting %s" % p)
             data = getattr(self.hw, p)
-            data = self.update_buf(p, data, return_avg=True)
+            data_avg = self.update_buf(p, data, return_avg=True)
             self.emit(p, data)
+            self.emit(p+self._avg_id, data_avg)
 

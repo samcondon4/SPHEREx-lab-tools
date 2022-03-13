@@ -4,14 +4,20 @@ MScope_Controller = {
     "hw": "Microscope",
     "control_parameters": [
         {"name": "focuser_step_position", "type": "int"},
+        {"name": "focuser_absolute_position", "type": "float"},
         {"name": "cam_gain_auto", "type": "list", "values": ["Off", "Once", "Continuous"]},
         {"name": "cam_gain", "type": "float"}
     ],
     "status_parameters": [
+        {"name": "focuser_step_position", "type": "int"},
         {"name": "gauge_position", "type": "float"},
+        {"name": "focuser_absolute_position", "type": "float"},
         {"name": "cam_gain", "type": "float"}
     ],
-    "status_refresh": 2
+    "status_refresh": 2,
+    "actions": [
+        "focuser_stop", "focuser_reset_position"
+    ]
 }
 
 Gimbal0_Controller = {
@@ -20,15 +26,15 @@ Gimbal0_Controller = {
     "hw": "Gimbal0",
     "control_parameters": [
         {"name": "az_absolute_position", "type": "float"},
-        {"name": "zth_absolute_position", "type": "float"},
+        {"name": "za_absolute_position", "type": "float"},
     ],
     "status_parameters": [
         {"name": "az_absolute_position", "type": "float"},
-        {"name": "zth_absolute_position", "type": "float"},
+        {"name": "za_absolute_position", "type": "float"},
     ],
     "status_refresh": 2,
     "actions": [
-        "az_stop", "zth_stop", "az_home", "zth_home", "az_reset_position", "zth_reset_position"
+        "az_stop", "za_stop", "az_home", "za_home", "az_reset_position", "za_reset_position"
     ]
 }
 

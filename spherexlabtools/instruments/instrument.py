@@ -331,8 +331,8 @@ class CompoundInstrument:
             for prop_cfg in cfg["property_config"]:
                 prop_name, fget, fset = prop_cfg
                 self.__dict__[prop_name] = property(self.__dict__[fget].fget, self.__dict__[fset].fset)
-                self.__dict__.pop(fget)
-                self.__dict__.pop(fset)
+                #self.__dict__.pop(fget)
+                #self.__dict__.pop(fset)
                 self.property_map[prop_name] = {"fget": fget.split("_")[0], "fset": fset.split("_")[0]}
 
         # apply the attribute configuration, if one is present
