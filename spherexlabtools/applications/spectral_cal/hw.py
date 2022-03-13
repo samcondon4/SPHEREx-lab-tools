@@ -27,4 +27,25 @@ Ndf = {
     "instrument": "NDF",
 }
 
-INSTRUMENT_SUITE = [Mono, Ndf]
+Sr510 = {
+    "instance_name": "sr510",
+    "manufacturer": "srs",
+    "resource_name": "GPIB0::6::INSTR",
+    "instrument": "SR510"
+}
+
+Sr830 = {
+    "instance_name": "sr830",
+    "manufacturer": "srs",
+    "resource_name": "GPIB0::15::INSTR",
+    "instrument": "SR830"
+}
+
+Lockin = {
+    "instance_name": "Lockin",
+    "subinstruments": [
+        Sr830, Sr510
+    ]
+}
+
+INSTRUMENT_SUITE = [Mono, Ndf, Lockin]

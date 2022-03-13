@@ -78,89 +78,36 @@ class InstrumentController(Controller):
         params = []
 
         # configure control parameters if they are present. #
-        control_params = cfg.get("control_parameters", [])
-        self.set_buttons = [Parameter.create(name="Set", type="action") for p in control_params]
+        self.set_buttons = None
         self.control_group = None
-        if len(control_params) > 0:
-            # create set buttons #
-            for i in range(len(control_params)):
-                control_params[i].update({"children": [self.set_buttons[i]], "expanded": False})
-            self.set_params = Parameter.create(name="Set All Parameters", type="action")
-            control_params.append(self.set_params)
-            self.control_group = Parameter.create(name="Control", type="group", children=control_params)
+        self.set_params = None
+        self.set_processes = {}
+        self._configure_control_parameters(cfg.get("control_parameters", []))
+        if self.control_group is not None:
             params.append(self.control_group)
 
         # configure status parameters if they are present #
-        status_params = cfg.get("status_parameters", [])
-        self.status_group = None
         self.status_refresh_button = None
+        self.status_group = None
         self.status_names = None
-        if len(status_params) > 0:
-            self.status_names = [p["name"] for p in status_params]
-            for p in status_params:
-                p["enabled"] = False
-            if cfg["status_refresh"] == "manual":
-                self.status_refresh_button = Parameter.create(**{"name": "Refresh", "type": "action"})
-                status_params.append(self.status_refresh_button)
-            self.status_group = Parameter.create(name="Status", type="group", children=status_params)
-            self.status_values = {c.name(): c.value() for c in self.status_group.children()}
+        self.status_refresh = None
+        self.get_processes = {}
+        if "status_parameters" in cfg.keys():
+            status_dict = {key: cfg[key] for key in ["status_parameters", "status_refresh"]}
+            self._configure_status_parameters(status_dict)
             params.append(self.status_group)
 
         # create action buttons if present in the configuration ###############
-        actions = cfg.get("actions", [])
         self.actions_group = None
+        actions = cfg.get("actions", [])
         if len(actions) > 0:
             self.actions_group = Parameter.create(name="Actions", type="group",
                                                   children=[Parameter.create(type="action", name=a) for a in actions])
             params.append(self.actions_group)
 
-        # parameter tree #
+        # complete the final configurations #
         self.set_parameters(params, showTop=True)
-
-        # connect buttons to methods #
-        thread = StoppableReusableThread()
-        thread.execute = lambda: self.set_inst_params([c.name() for c in self.control_group.children()])
-        self.set_params.sigActivated.connect(self.exp.get_start_thread_lambda("%s: Set All Params" % self.name, thread))
-
-        # individual set buttons #
-        if self.control_group is not None:
-            for c in self.control_group.children():
-                if c is not self.set_params:
-                    child_name = c.name()
-                    logger.debug("Connecting set method for {}".format(child_name))
-                    button = c.child("Set")
-                    thread = StoppableReusableThread()
-                    thread.execute = lambda child=child_name: self.set_inst_params([child])
-                    button.sigActivated.connect(self.exp.get_start_thread_lambda(
-                        "%s: Set %s" % (self.name, child_name), thread))
-
-        if self.actions_group is not None:
-            for c in self.actions_group.children():
-                act_name = c.name()
-                logger.debug("Connecting action method for {}".format(act_name))
-                thread = StoppableReusableThread()
-                thread.execute = lambda act=act_name: self.run_instrument_action(act)
-                c.sigActivated.connect(self.exp.get_start_thread_lambda(
-                    "%s: Action %s" % (self.name, act_name), thread
-                ))
-
-        # Parameter refresh setup #
-        self.status_refresh = None
-        if "status_refresh" in cfg.keys():
-            ref = cfg["status_refresh"]
-            ref_typ = type(ref)
-            if ref_typ is float or ref_typ is int:
-                logger.debug("Starting refresh timer for %f seconds" % ref)
-                self.refresh_timer.timeout.connect(self.get_inst_params)
-                self.refresh_timer.start(cfg["status_refresh"])
-                self.status_refresh = ref
-            elif ref == "after_set":
-                logger.debug("Connecting params_set signal to get_inst_params")
-                self.params_set.connect(self.get_inst_params)
-                self.status_refresh = ref
-            elif ref == "manual":
-                logger.debug("Connecting status_refresh_button to get_inst_params")
-                self.status_refresh_button.sigActivated.connect(self.get_inst_params)
+        self._configure_buttons()
 
     def set_inst_params(self, children):
         """ Write instrument control parameters to the hardware.
@@ -172,21 +119,22 @@ class InstrumentController(Controller):
                 child = self.control_group.child(c)
                 if child is not self.set_params:
                     name = child.name()
-                    value = child.value()
+                    value = self.set_processes[name](child)
                     logger.debug("Setting instrument parameter {} with value {}".format(name, value))
                     setattr(self.hw, name, value)
             self.params_set.emit()
 
     def get_inst_params(self):
-        """ Get instrument parameters and write them to GUI elements. Start timer threads that periodically
-            execute this method.
+        """ Get instrument parameters and write them to GUI elements.
         """
         if self.alive:
             for c in self.status_group.children():
                 param = c.name()
+                print(param)
                 logger.debug("Getting instrument parameter %s" % param)
                 if param in self.status_names:
-                    val = getattr(self.hw, param)
+                    val = self.get_processes[param](getattr(self.hw, param))
+                    logger.debug(f"Got {val}")
                     if val != self.status_values[param]:
                         self.status_values[param] = val
                         c.setValue(val)
@@ -214,6 +162,90 @@ class InstrumentController(Controller):
         self.alive = False
         self.refresh_timer.stop()
         self.close()
+
+    def _configure_control_parameters(self, control_params):
+        """ Configure the set of instrument control parameters.
+
+        :param control_params: List of configurations for the instrument control parameters.
+        """
+        self.set_buttons = [Parameter.create(name="Set", type="action") for p in control_params]
+        if len(self.set_buttons) > 0:
+            i = 0
+            for param_cfg in control_params:
+                set_proc = param_cfg.get("set_process", lambda child: child.value())
+                self.set_processes[param_cfg["name"]] = set_proc
+                if "children" in param_cfg.keys():
+                    param_cfg["children"] = [Parameter.create(**child_dict) for child_dict in param_cfg["children"]]
+                    param_cfg["children"].append(self.set_buttons[i])
+                    param_cfg.update({"expanded": False})
+                else:
+                    param_cfg.update({"children": [self.set_buttons[i]], "expanded": False})
+                i += 1
+            self.set_params = Parameter.create(name="Set All Parameters", type="action")
+            control_params.append(self.set_params)
+            self.control_group = Parameter.create(name="Control", type="group", children=control_params)
+
+    def _configure_status_parameters(self, status_dict):
+        """ Configure the status parameter ui features.
+
+        :param status_dict: Dictionary of the form {"status_parameters": list, "status_refresh": str}
+        """
+        status_params = status_dict["status_parameters"]
+        self.status_refresh = status_dict["status_refresh"]
+        sref_typ = type(self.status_refresh)
+        self.status_names = [p["name"] for p in status_params]
+        for param in status_params:
+            get_proc = param.get("get_process", lambda v: v)
+            self.get_processes[param["name"]] = get_proc
+            param["enabled"] = False
+
+        if sref_typ is float or sref_typ is int:
+            logger.debug("Starting refresh timer for %f seconds" % self.status_refresh)
+            thread = StoppableReusableThread()
+            self.refresh_timer.timeout.connect(self.get_inst_params)
+            self.refresh_timer.start(self.status_refresh)
+
+        elif self.status_refresh == "after_set":
+            logger.debug("Connecting params_set signal to get_inst_params")
+            self.params_set.connect(self.get_inst_params)
+
+        elif self.status_refresh == "manual":
+            logger.debug("Connecting status_refresh_button to get_inst_params")
+            self.status_refresh_button = Parameter.create(name="Refresh", type="action")
+            self.status_refresh_button.sigActivated.connect(self.get_inst_params)
+            status_params.append(self.status_refresh_button)
+
+        self.status_group = Parameter.create(name="Status", type="group", children=status_params)
+        self.status_values = {c.name(): c.value() for c in self.status_group.children()}
+
+    def _configure_buttons(self):
+        """ Connect buttons to the appropriate methods.
+        """
+        if self.control_group is not None:
+            thread = StoppableReusableThread()
+            thread.execute = lambda: self.set_inst_params([c.name() for c in self.control_group.children()])
+            self.set_params.sigActivated.connect(
+                self.exp.get_start_thread_lambda("%s: Set All Params" % self.name, thread))
+
+            for c in self.control_group.children():
+                if c is not self.set_params:
+                    child_name = c.name()
+                    logger.debug("Connecting set method for {}".format(child_name))
+                    button = c.child("Set")
+                    thread = StoppableReusableThread()
+                    thread.execute = lambda child=child_name: self.set_inst_params([child])
+                    button.sigActivated.connect(self.exp.get_start_thread_lambda(
+                        "%s: Set %s" % (self.name, child_name), thread))
+
+        if self.actions_group is not None:
+            for c in self.actions_group.children():
+                act_name = c.name()
+                logger.debug("Connecting action method for {}".format(act_name))
+                thread = StoppableReusableThread()
+                thread.execute = lambda act=act_name: self.run_instrument_action(act)
+                c.sigActivated.connect(self.exp.get_start_thread_lambda(
+                    "%s: Action %s" % (self.name, act_name), thread
+                ))
 
 
 class ProcedureController(Controller):
