@@ -84,7 +84,7 @@ class Sequencer(pTypes.GroupParameter):
     """ GroupParameter type wrapping the :class:`.SequenceGroup`
     """
 
-    new_sequence = QtCore.pyqtSignal(object)
+    new_sequence = QtCore.pyqtSignal(object, object)
     pause_proc_sequence = QtCore.pyqtSignal()
     abort_proc_sequence = QtCore.pyqtSignal()
 
@@ -129,7 +129,8 @@ class Sequencer(pTypes.GroupParameter):
             new_dict = {key.split(SequenceGroup.level_identifier)[-1]: val for key, val in proc_dict.items()}
             sequence[i] = new_dict
 
-        self.new_sequence.emit(sequence)
+        print(sequence)
+        self.new_sequence.emit(seq_dict, sequence)
 
     def build_node_sequence(self, node, sequence, procs):
         """ Build procedure sequence for a single parameter tree node.
@@ -172,13 +173,14 @@ class Sequencer(pTypes.GroupParameter):
         if val.startswith("-"):
             val = val[1:]
             sign = -1
-        if val.isdigit():
+        try:
             typecast = sign*float(val)
-        elif val.startswith("[") and val.endswith("]"):
-            val_list = val[1:-1].split(",")
-            for i in range(len(val_list)):
-                val_list[i] = self.typecast(val_list[i].strip())
-            typecast = val_list
+        except ValueError:
+            if val.startswith("[") and val.endswith("]"):
+                val_list = val[1:-1].split(",")
+                for i in range(len(val_list)):
+                    val_list[i] = self.typecast(val_list[i].strip())
+                typecast = val_list
 
         return typecast
 

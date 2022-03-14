@@ -5,12 +5,6 @@ CollimatorFocus_Recorder = {
     "filename": "test.h5",
 }
 
-SingleFrame_Recorder = {
-    "instance_name": "SingleFrameRecorder",
-    "type": "JpgRecorder",
-    "directory": "path"
-}
-
 RECORDERS = [CollimatorFocus_Recorder]
 
 

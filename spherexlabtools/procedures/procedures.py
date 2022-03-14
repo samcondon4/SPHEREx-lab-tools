@@ -93,16 +93,22 @@ class BaseProcedure(StoppableReusableThread):
         :param kwargs: Key-word arguments to set the procedure parameters.
         """
         super().__init__()
+        self.name = cfg["instance_name"]
         self.exp = exp
-        if type(cfg["hw"]) is list:
-            self.hw = type("proc_hw", (object,), {})()
-            for inst in cfg["hw"]:
-                self.hw.__dict__[inst] = getattr(hw, inst)
-        else:
-            self.hw = getattr(hw, cfg["hw"])
+        if hw is not None:
+            if type(cfg["hw"]) is list:
+                self.hw = type("proc_hw", (object,), {})()
+                for inst in cfg["hw"]:
+                    self.hw.__dict__[inst] = getattr(hw, inst)
+            else:
+                self.hw = getattr(hw, cfg["hw"])
         qdict = {}
         for key, val in cfg["records"].items():
-            qdict_val = [{"viewer": viewers, "recorder": recorders}[k][v].queue for k, v in val.items()]
+            # check if a list of queues has already been provided #
+            if type(val) is not list:
+                qdict_val = [{"viewer": viewers, "recorder": recorders}[k][v].queue for k, v in val.items()]
+            else:
+                qdict_val = val
             qdict[key] = qdict_val
         self.records = qdict
         self.status = BaseProcedure.QUEUED
@@ -111,6 +117,7 @@ class BaseProcedure(StoppableReusableThread):
         for key in kwargs:
             if key in self._parameters.keys():
                 setattr(self, key, kwargs[key])
+        self.parameter_map = {pval.name: pkey for pkey, pval in self.parameter_objects().items()}
 
     def startup(self):
         """ Check that all procedure parameters have been set.
@@ -285,4 +292,52 @@ class LogProc(BaseProcedure):
             data = getattr(self.hw, p)
             data = self.update_buf(p, data, return_avg=True)
             self.emit(p, data)
+
+
+class ProcedureSequence(BaseProcedure):
+    """ Procedure class that wraps and executes a standalone procedure in a loop.
+    """
+
+    seq = Parameter("Procedure Sequence", default="")
+    param_list = Parameter("Parameter List")
+    sleep = FloatParameter("Sleep Interval", default=1, units="s.")
+    seq_ind = 0
+
+    def __init__(self, cfg, exp, proc, **kwargs):
+        """
+        """
+        super().__init__(cfg, exp, **kwargs)
+        self.procedure = proc
+
+    def startup(self):
+        """ Emit the provided sequence, and build the list of sequence parameters.
+        """
+        BaseProcedure.startup(self)
+        if self.seq_ind == 0:
+            self.emit("sequence", self.seq)
+
+    def execute(self):
+        """ Execute the provided procedure in a loop from the constructed parameter list.
+        """
+        stopped = False
+        for params in self.param_list[self.seq_ind:]:
+            # set procedure parameters #
+            for pkey, pval in params.items():
+                setattr(self.procedure, self.procedure.parameter_map[pkey], pval)
+            self.exp.start_thread(f"{self.name}: starting procedure {self.procedure.name} at index {self.seq_ind}",
+                                  self.procedure)
+            while not self.procedure.status == self.procedure.FINISHED:
+                time.sleep(self.sleep)
+                if self.should_stop():
+                    self.procedure.stop()
+                    stopped = True
+                    break
+            if stopped:
+                break
+            else:
+                self.seq_ind += 1
+
+        if not stopped:
+            self.seq_ind = 0
+
 

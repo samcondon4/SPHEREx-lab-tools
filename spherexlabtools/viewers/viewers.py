@@ -53,11 +53,13 @@ class LineViewer(Viewer):
     # this viewer operates on buffered data, so override update_signal to take no arguments on emit() #
     update_signal = QtCore.pyqtSignal()
 
-    def __init__(self, cfg, exp, buf_size=10, **kwargs):
+    def __init__(self, cfg, exp, buf_size=10, channels=1, **kwargs):
         """ Basic line viewer initialization.
 
         :param cfg: Configuration dictionary.
         :param buf_size: Size of the curve buffer.
+        :param channels: Integer number of lines to plot in the view, or list with
+                         string labels of different channels to plot.
         """
         if buf_size == 0:
             err_msg = "Error in initialization of viewer: %s: LineViewer cannot operate without a buffer!" \
@@ -82,7 +84,6 @@ class LineViewer(Viewer):
         """
         logger.debug("LineViewer updating plot data.")
         self.plot.setData(np.array(self.buffer))
-        # print(self.buffer)
 
     def handle(self, record):
         """ Update the plot.
