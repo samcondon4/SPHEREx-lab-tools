@@ -8,8 +8,8 @@ import time
 import logging
 import numpy as np
 from spherexlabtools.thread import StoppableThread
-from spherexlabtools.procedures import BaseProcedure, LogProc
-from pymeasure.experiment import FloatParameter, IntegerParameter, BooleanParameter
+from spherexlabtools.procedures import BaseProcedure
+from spherexlabtools.parameters import FloatParameter, IntegerParameter, BooleanParameter
 
 
 logger = logging.getLogger(__name__)

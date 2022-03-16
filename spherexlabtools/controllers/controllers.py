@@ -7,14 +7,15 @@ import logging
 import threading
 
 from PyQt5 import QtWidgets, QtCore
-from pymeasure.experiment.parameters import FloatParameter, IntegerParameter, BooleanParameter
-from pymeasure.experiment.parameters import Parameter as pymeasureParam
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
-from ..widgets import Sequencer
-from ..procedures import BaseProcedure
+from ..widgets import Sequencer, Records
 from ..parameters import ParameterInspect
 from ..thread import StoppableReusableThread
+from ..procedures import BaseProcedure, ProcedureSequence
+from ..parameters import Parameter as pymeasureParam
+from ..parameters import FloatParameter, IntegerParameter, BooleanParameter
+
 
 logger = logging.getLogger(__name__)
 
@@ -263,7 +264,7 @@ class ProcedureController(Controller):
 
     proc_complete = QtCore.pyqtSignal()
 
-    def __init__(self, cfg, exp, procs, place_params=True, sequencer=True, records=True, connect=True, **kwargs):
+    def __init__(self, cfg, exp, procs, place_params=True, records=True, connect=True, **kwargs):
         """ Initialize the procedure controller gui interface.
 
         :param name: String name of the controller.
@@ -272,19 +273,19 @@ class ProcedureController(Controller):
         :param place_params: Boolean to indicate if the default parameter layout should be set.
         :param connect: Boolean to indicate if the start and stop procedure buttons should be connected to methods.
         :param sequencer: Boolean indicating if a sequencer interface should be generated.
-        :param records: Boolean indicating if a record viewer/manipulating interface should be generated.
+        :param records: Boolean indicating if a record viewer/manipulation interface should be generated.
         """
         super().__init__(cfg, exp, **kwargs)
         if "place_params" in cfg.keys():
             place_params = cfg["place_params"]
         self.procedure = procs[cfg["procedure"]]
-        self.proc_param_objs = ParameterInspect.parameter_objects(self)
+        self.proc_param_objs = ParameterInspect.parameter_objects(self.procedure)
+
+        params = []
 
         # configure a procedure sequence class if the sequence record is provided. #
         self.sequencer = None
         self.proc_seq = None
-        # create parameter dictionaries for the procedure parameters #
-        self.proc_param_objs = self.procedure.parameter_objects()
         j = 0
         self.proc_params_tree = [{} for _ in range(len(self.proc_param_objs.keys()))]
         self.param_name_map = {}
@@ -293,6 +294,7 @@ class ProcedureController(Controller):
             self.proc_params_tree[j] = {"name": val.name, "type": self.parameter_map[type(val)], "value": val.value}
             j += 1
         self.proc_params = Parameter.create(name="Procedure Params", type="group", children=self.proc_params_tree)
+        params.append(self.proc_params)
 
         if "sequence" in self.procedure.records.keys():
             proc_seq_cfg = {
@@ -306,6 +308,12 @@ class ProcedureController(Controller):
             self.procedure_sequence_thread = StoppableReusableThread()
             self.procedure_sequence_thread_string = f"{self.name}: Procedure Sequence"
             self.sequencer = Sequencer(self.proc_params_tree)
+            params.append(self.sequencer)
+
+        # generate records interface #
+        if records:
+            self.records_interface = Records(self.procedure.records)
+            params.append(self.records_interface)
 
         # create start and stop procedure buttons #
         self.start_proc = Parameter.create(name="Start Procedure", type="action")
@@ -315,7 +323,6 @@ class ProcedureController(Controller):
         # place parameters if flag is set #
         if place_params:
             self.proc_params.addChildren(self.proc_actions)
-            params = [self.proc_params, self.sequencer] if self.sequencer is not None else [self.proc_params]
             self.set_parameters(params)
 
         # connect buttons to methods #

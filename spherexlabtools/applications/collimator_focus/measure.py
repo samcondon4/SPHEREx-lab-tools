@@ -32,7 +32,6 @@ CameraView_Proc = {
     "hw": "Microscope",
     "records": {
         "cam_latest_frame": {"viewer": "CamView"},
-        "cam_latest_frame_average": {"viewer": "CamViewAvg"}
     },
     "params": {
         "frames_per_image": 100

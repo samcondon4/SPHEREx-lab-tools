@@ -26,108 +26,6 @@ import inspect
 from copy import deepcopy
 
 
-class ParameterInspect:
-
-    @staticmethod
-    def update_p(obj, item, param, check):
-        """ Update a single parameter. Used by the below function.
-        """
-        if check(param, Parameter):
-            obj.parameters[item] = deepcopy(param)
-            if param.is_set():
-                setattr(obj, item, param.value)
-            else:
-                setattr(obj, item, None)
-
-    @staticmethod
-    def update_parameters(obj):
-        """ Collects all the Parameter objects for the provided object and stores
-        them in a meta dictionary so that the actual values can be set in
-        their stead
-        """
-        if not obj.parameters:
-            obj.parameters = {}
-        for item, parameter in obj.__dict__.items():
-            ParameterInspect.update_p(obj, item, parameter, check=lambda p, cls: issubclass(type(p), cls))
-        for item, parameter in inspect.getmembers(obj.__class__):
-            ParameterInspect.update_p(obj, item, parameter, check=isinstance)
-
-    @staticmethod
-    def parameters_are_set(obj):
-        """ Returns True if all parameters are set """
-        for name, parameter in obj.parameters.items():
-            if getattr(obj, name) is None:
-                return False
-        return True
-
-    @staticmethod
-    def check_parameters(obj):
-        """ Raises an exception if any parameter is missing before calling
-        the associated function. Ensures that each value can be set and
-        got, which should cast it into the right format. Used as a decorator
-        @check_parameters on the startup method
-        """
-        for name, parameter in obj.parameters.items():
-            value = getattr(obj, name)
-            if value is None:
-                raise NameError("Missing {} '{}' in {}".format(
-                    parameter.__class__, name, obj.__class__))
-
-    @staticmethod
-    def parameter_values(obj):
-        """ Returns a dictionary of all the Parameter values and grabs any
-        current values that are not in the default definitions
-        """
-        result = {}
-        for name, parameter in obj.parameters.items():
-            value = getattr(obj, name)
-            if value is not None:
-                parameter.value = value
-                setattr(obj, name, parameter.value)
-                result[name] = parameter.value
-            else:
-                result[name] = None
-        return result
-
-    @staticmethod
-    def parameter_objects(obj):
-        """ Returns a dictionary of all the Parameter objects and grabs any
-        current values that are not in the default definitions
-        """
-        result = {}
-        for name, parameter in obj.parameters.items():
-            value = getattr(obj, name)
-            if value is not None:
-                parameter.value = value
-                setattr(obj, name, parameter.value)
-            result[name] = parameter
-        return result
-
-    @staticmethod
-    def refresh_parameters(obj):
-        """ Enforces that all the parameters are re-cast and updated in the meta
-        dictionary
-        """
-        for name, parameter in obj.parameters.items():
-            value = getattr(obj, name)
-            parameter.value = value
-            setattr(obj, name, parameter.value)
-
-    @staticmethod
-    def set_parameters(obj, parameters, except_missing=True):
-        """ Sets a dictionary of parameters and raises an exception if additional
-        parameters are present if except_missing is True
-        """
-        for name, value in parameters.items():
-            if name in obj.parameters:
-                obj.parameters[name].value = value
-                setattr(obj, name, obj.parameters[name].value)
-            else:
-                if except_missing:
-                    raise NameError("Parameter '{}' does not belong to '{}'".format(
-                        name, repr(obj)))
-
-
 class Parameter:
     """ Encapsulates the information for an experiment parameter
     with information about the name, and units if supplied.
@@ -609,3 +507,105 @@ class Measurable:
     @value.setter
     def value(self, value):
         self._value = value
+
+
+class ParameterInspect:
+
+    @staticmethod
+    def update_p(obj, item, param, check):
+        """ Update a single parameter. Used by the below function.
+        """
+        if check(param, Parameter):
+            obj.parameters[item] = deepcopy(param)
+            if param.is_set():
+                setattr(obj, item, param.value)
+            else:
+                setattr(obj, item, None)
+
+    @staticmethod
+    def update_parameters(obj):
+        """ Collects all the Parameter objects for the provided object and stores
+        them in a meta dictionary so that the actual values can be set in
+        their stead
+        """
+        if not obj.parameters:
+            obj.parameters = {}
+        for item, parameter in obj.__dict__.items():
+            ParameterInspect.update_p(obj, item, parameter, check=lambda p, cls: issubclass(type(p), cls))
+        for item, parameter in inspect.getmembers(obj.__class__):
+            ParameterInspect.update_p(obj, item, parameter, check=isinstance)
+
+    @staticmethod
+    def parameters_are_set(obj):
+        """ Returns True if all parameters are set """
+        for name, parameter in obj.parameters.items():
+            if getattr(obj, name) is None:
+                return False
+        return True
+
+    @staticmethod
+    def check_parameters(obj):
+        """ Raises an exception if any parameter is missing before calling
+        the associated function. Ensures that each value can be set and
+        got, which should cast it into the right format. Used as a decorator
+        @check_parameters on the startup method
+        """
+        for name, parameter in obj.parameters.items():
+            value = getattr(obj, name)
+            if value is None:
+                raise NameError("Missing {} '{}' in {}".format(
+                    parameter.__class__, name, obj.__class__))
+
+    @staticmethod
+    def parameter_values(obj):
+        """ Returns a dictionary of all the Parameter values and grabs any
+        current values that are not in the default definitions
+        """
+        result = {}
+        for name, parameter in obj.parameters.items():
+            value = getattr(obj, name)
+            if value is not None:
+                parameter.value = value
+                setattr(obj, name, parameter.value)
+                result[name] = parameter.value
+            else:
+                result[name] = None
+        return result
+
+    @staticmethod
+    def parameter_objects(obj):
+        """ Returns a dictionary of all the Parameter objects and grabs any
+        current values that are not in the default definitions
+        """
+        result = {}
+        for name, parameter in obj.parameters.items():
+            value = getattr(obj, name)
+            if value is not None:
+                parameter.value = value
+                setattr(obj, name, parameter.value)
+            result[name] = parameter
+        return result
+
+    @staticmethod
+    def refresh_parameters(obj):
+        """ Enforces that all the parameters are re-cast and updated in the meta
+        dictionary
+        """
+        for name, parameter in obj.parameters.items():
+            value = getattr(obj, name)
+            parameter.value = value
+            setattr(obj, name, parameter.value)
+
+    @staticmethod
+    def set_parameters(obj, parameters, except_missing=True):
+        """ Sets a dictionary of parameters and raises an exception if additional
+        parameters are present if except_missing is True
+        """
+        for name, value in parameters.items():
+            if name in obj.parameters:
+                obj.parameters[name].value = value
+                setattr(obj, name, obj.parameters[name].value)
+            else:
+                if except_missing:
+                    raise NameError("Parameter '{}' does not belong to '{}'".format(
+                        name, repr(obj)))

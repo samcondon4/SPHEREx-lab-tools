@@ -7,8 +7,7 @@ Sam Condon, 02/05/2022
 import logging
 import numpy as np
 from spherexlabtools.procedures import BaseProcedure, LogProc
-from pymeasure.experiment import FloatParameter, IntegerParameter
-
+from spherexlabtools.parameters import FloatParameter, IntegerParameter
 
 logger = logging.getLogger(__name__)
 
@@ -17,13 +16,14 @@ class CamProc(BaseProcedure):
     """ Base class defining microscope camera startup and shutdown methods.
     """
 
-    refresh_rate = FloatParameter("Frame Rate", units="Hz.", default=8, minimum=1, maximum=8)
+    refresh_rate = FloatParameter("Frame Rate", units="Hz.", default=8.0, minimum=1.0, maximum=8.0)
 
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(cfg, exp, **kwargs)
 
     def startup(self):
         BaseProcedure.startup(self)
+        print(self.refresh_rate)
         self.hw.cam_acquisition_frame_rate_auto = "Off"
         self.hw.cam_acquisition_frame_rate_en = True
         self.hw.cam_acquisition_frame_rate = self.refresh_rate

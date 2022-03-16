@@ -48,34 +48,36 @@ class Record:
     :ivar save_type: Type of file to save record to. Currently, .mat and .pkl are supported.
     """
 
-    lock = None
-    lock_initialized = False
+    lock = threading.Lock()
+    lock_initialized = True
+    proc = None
+    data = None
+    ancillary = {}
+    proc_params = None
+    inst_params = None
+    emit_kwargs = {}
+    buffer = []
+    to_date = False
+
+    # update attributes #
+    avg = BooleanParameter("Average Buffer", default=False)
+    buffer_size = IntegerParameter("Buffer Size", default=1)
+    histogram = BooleanParameter("Generate Histogram", default=False)
+
+    # save attributes #
+    filepath = Parameter("Save Path", default=os.path.join(os.getcwd(), "Record"))
+    save_type = Parameter("Save Type", default=".pkl")
+
+    # for compatibility with the Parameter types #
+    parameters = {}
 
     def __init__(self, proc):
         """ Initialize a record by providing a string representation of the procedure object used.
 
         :param proc: String representing the procedure object that updates the record.
         """
-        # general attributes #
-        self.lock = threading.Lock()
-        self.lock_initialized = True
         self.proc = proc
-        self.data = None
-        self.ancillary = {}
-        self.proc_params = None
-        self.inst_params = None
-        self.emit_kwargs = {}
-        self.buffer = []
-        self.to_date = False
-
-        # update attributes #
-        self.avg = BooleanParameter("Average Buffer", default=False)
-        self.buffer_size = IntegerParameter("Buffer Size", default=1)
-        self.histogram = BooleanParameter("Generate Histogram", default=False)
-
-        # save attributes #
-        self.filepath = Parameter("Save Path", default=os.path.join(os.getcwd(), "Record"))
-        self.save_type = Parameter("Save Type", default=".pkl")
+        ParameterInspect.update_parameters(self)
 
     def update(self, data, proc_params=None, inst_params=None, **kwargs):
         """ Update the general attributes of the record.
@@ -192,7 +194,7 @@ class BaseProcedure(StoppableReusableThread):
         for key in kwargs:
             if key in self.parameters.keys():
                 setattr(self, key, kwargs[key])
-        self.parameter_map = {pval.name: pkey for pkey, pval in self.parameter_objects().items()}
+        self.parameter_map = {pval.name: pkey for pkey, pval in self.parameters.items()}
 
     def startup(self):
         """ Check that all procedure parameters have been set.

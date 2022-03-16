@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from spherexlabtools.procedures import BaseProcedure
-from pymeasure.experiment import IntegerParameter, FloatParameter, Parameter
+from spherexlabtools.parameters import IntegerParameter, FloatParameter, Parameter
 
 
 class SpecCalProc(BaseProcedure):
