@@ -5,41 +5,118 @@
 
 Sam Condon, 01/31/2022
 """
+import os
 import time
+import pickle
 import logging
-import inspect
 import threading
-import importlib
-from PyQt5 import QtCore
-from copy import deepcopy
-from pymeasure.experiment import Parameter, FloatParameter, IntegerParameter
+import numpy as np
+import scipy.io as spio
 
-from ..thread import StoppableReusableThread, QueueThread
+from ..thread import StoppableReusableThread
+from ..parameters import ParameterInspect, Parameter, FloatParameter, IntegerParameter, BooleanParameter
 
 
 logger = logging.getLogger(__name__)
 
 
 class Record:
-    """ Basic class implementing thread-safe attribute access. This allows a procedure to write the same data
-        out to multiple queues on separate threads without worrying about race-conditions.
+    """ The fundamental class representing a data object in SPHERExLabTools. This class provides a thread safe
+        object with the following attributes:
+
+    **General**: Attributes used for general class behavior.
+    :ivar lock: :class:`.threading.Lock` type used for thread safe access to instances.
+    :ivar lock_initialized: Boolean to indicate if the lock has been initialized.
+    :ivar proc: String representation of the procedure used to generate the record.
+    :ivar data: Main data object of any type.
+    :ivar ancillary: Secondary information to accompany the data object, such as a histogram of the data values.
+    :ivar proc_params: Dictionary containing the parameters of the procedure that generated the record.
+    :ivar inst_params: Dictionary containing the instrument parameters associated with the record.
+    :ivar handle_kwargs: Key-word arguments used in the handle method of the appropriate viewer/recorder.
+    :ivar to_date: Boolean to indicate if the data attribute is up-to-date. This is True immediately after the
+                   :meth:`Record.update()` method is called, and gets set to False after the record is emitted.
+
+    **Update**: Attributes that determine how the :meth:`Record.update()` method behaves.
+    :ivar buffer: :class:`.IntegerParameter` which determines how large of a buffer to generate to hold data objects.
+    :ivar avg: :class:`.IntegerParameter` which determines the number of data items in the buffer to average over
+                to update the data attribute.
+    :ivar histogram: Boolean to indicate if a histogram should be generated to accompany the data as ancillary
+                     information.
+
+    **Save**: Attributes that determine how the :meth:`Record.save()` method behaves.
+    :ivar filepath: File path to where the record should get saved.
+    :ivar save_type: Type of file to save record to. Currently, .mat and .pkl are supported.
     """
 
     lock = None
     lock_initialized = False
 
-    def __init__(self, data, params=None, handle=None):
-        """ Initialize a record with specified data, parameters, and handle key-words.
+    def __init__(self, proc):
+        """ Initialize a record by providing a string representation of the procedure object used.
 
-        :params data: Data of any type.
-        :param params: Parameters specifying the conditions under which the data was taken.
-        :param handle: Dictionary of key-words specifying data handling arguments.
+        :param proc: String representing the procedure object that updates the record.
         """
+        # general attributes #
         self.lock = threading.Lock()
         self.lock_initialized = True
-        self.data = data
-        self.params = params
-        self.handle = handle
+        self.proc = proc
+        self.data = None
+        self.ancillary = {}
+        self.proc_params = None
+        self.inst_params = None
+        self.emit_kwargs = {}
+        self.buffer = []
+        self.to_date = False
+
+        # update attributes #
+        self.avg = BooleanParameter("Average Buffer", default=False)
+        self.buffer_size = IntegerParameter("Buffer Size", default=1)
+        self.histogram = BooleanParameter("Generate Histogram", default=False)
+
+        # save attributes #
+        self.filepath = Parameter("Save Path", default=os.path.join(os.getcwd(), "Record"))
+        self.save_type = Parameter("Save Type", default=".pkl")
+
+    def update(self, data, proc_params=None, inst_params=None, **kwargs):
+        """ Update the general attributes of the record.
+        """
+        self.proc_params = proc_params
+        self.inst_params = inst_params
+        self.emit_kwargs = kwargs
+        # update the buffer attribute #
+        if len(self.buffer) < self.buffer_size:
+            self.buffer.append(data)
+        else:
+            self.buffer[:-1] = self.buffer[1:]
+            self.buffer[-1] = data
+
+        # update the data attribute #
+        if self.avg:
+            self.data = sum(self.buffer) / len(self.buffer)
+        else:
+            self.data = self.buffer[-1]
+
+        # generate ancillary data #
+        if self.histogram:
+            self.ancillary["histogram"] = np.histogram(self.data)
+
+        # record is now up-to-date #
+        self.to_date = True
+
+    def save(self):
+        """ Save the record to a .mat or .pkl file.
+        """
+        save_obj = {
+            "data": self.data,
+            "procedure": self.proc,
+            "proc_params": self.proc_params,
+            "inst_params": self.inst_params,
+        }
+        with open(self.filepath + self.save_type, "+") as file:
+            if self.save_type == ".pkl":
+                pickle.dump(save_obj, file)
+            elif self.save_type == ".mat":
+                spio.savemat(file, save_obj)
 
     def __getattribute__(self, name):
         """ Attribute access override for thread safety.
@@ -78,7 +155,7 @@ class BaseProcedure(StoppableReusableThread):
         ABORTED: 'Aborted', QUEUED: 'Queued',
         RUNNING: 'Running'
     }
-    _parameters = {}
+    parameters = {}
 
     def __init__(self, cfg, exp, hw=None, viewers=None, recorders=None, update_params=True, **kwargs):
         """ Initialize a bare procedure instance.
@@ -94,46 +171,46 @@ class BaseProcedure(StoppableReusableThread):
         """
         super().__init__()
         self.exp = exp
+        self.hw = None
+        self.records = {}
+        self.record_queues = {}
+        self.status = BaseProcedure.QUEUED
+
         if type(cfg["hw"]) is list:
             self.hw = type("proc_hw", (object,), {})()
             for inst in cfg["hw"]:
                 self.hw.__dict__[inst] = getattr(hw, inst)
         else:
             self.hw = getattr(hw, cfg["hw"])
-        qdict = {}
         for key, val in cfg["records"].items():
             qdict_val = [{"viewer": viewers, "recorder": recorders}[k][v].queue for k, v in val.items()]
-            qdict[key] = qdict_val
-        self.records = qdict
-        self.status = BaseProcedure.QUEUED
+            self.record_queues[key] = qdict_val
+            self.records[key] = Record(str(self))
         if update_params:
-            self._update_parameters()
+            ParameterInspect.update_parameters(self)
         for key in kwargs:
-            if key in self._parameters.keys():
+            if key in self.parameters.keys():
                 setattr(self, key, kwargs[key])
 
     def startup(self):
         """ Check that all procedure parameters have been set.
         """
         self.status = BaseProcedure.RUNNING
-        self.check_parameters()
+        ParameterInspect.check_parameters(self)
 
-    def emit(self, record_name, record_data, record_params=True, **kwargs):
+    def emit(self, record_name, record_data, proc_params=None, inst_params=None, **kwargs):
         """ Post a record to the appropriate queues.
 
         :param record_name: String name of the record to post data to.
         :param record_data: Data to be posted to the record queue.
-        :param record_params: Boolean to indicate if the procedure parameters should be included in the
-                              dictionary placed on the recorder queue. Optional argument with default
-                              value of True.
+        :param proc_params: Optional set of procedure parameters to record.
+        :param inst_params: Optional set of instrument parameters to record.
         :param kwargs: Key-word arguments that are passed to the handle method of the corresponding
                        :class:`.QueueThread`.
         """
-        params = None
-        if record_params:
-            params = self.parameter_values()
-        record = Record(record_data, params=params, handle=kwargs)
-        for q in self.records[record_name]:
+        record = self.records[record_name]
+        record.update(record_data, proc_params, inst_params, **kwargs)
+        for q in self.record_queues[record_name]:
             q.put(record)
 
     def shutdown(self):
@@ -141,96 +218,17 @@ class BaseProcedure(StoppableReusableThread):
         """
         self.status = BaseProcedure.FINISHED
 
-    def _update_parameters(self):
-        """ Collects all the Parameter objects for the procedure and stores
-        them in a meta dictionary so that the actual values can be set in
-        their stead
-        """
-        if not self._parameters:
-            self._parameters = {}
-        for item, parameter in self.__dict__.items():
-            self._update_p(item, parameter, check=lambda p, cls: issubclass(type(p), cls))
-        for item, parameter in inspect.getmembers(self.__class__):
-            self._update_p(item, parameter, check=isinstance)
-
-    def _update_p(self, i, p, check):
-        """ Update a single parameter. Used by the above method.
-        """
-        if check(p, Parameter):
-            self._parameters[i] = deepcopy(p)
-            if p.is_set():
-                setattr(self, i, p.value)
-            else:
-                setattr(self, i, None)
-
-    def parameters_are_set(self):
-        """ Returns True if all parameters are set """
-        for name, parameter in self._parameters.items():
-            if getattr(self, name) is None:
-                return False
-        return True
-
-    def check_parameters(self):
-        """ Raises an exception if any parameter is missing before calling
-        the associated function. Ensures that each value can be set and
-        got, which should cast it into the right format. Used as a decorator
-        @check_parameters on the startup method
-        """
-        for name, parameter in self._parameters.items():
-            value = getattr(self, name)
-            if value is None:
-                raise NameError("Missing {} '{}' in {}".format(
-                    parameter.__class__, name, self.__class__))
-
-    def parameter_values(self):
-        """ Returns a dictionary of all the Parameter values and grabs any
-        current values that are not in the default definitions
-        """
-        result = {}
-        for name, parameter in self._parameters.items():
-            value = getattr(self, name)
-            if value is not None:
-                parameter.value = value
-                setattr(self, name, parameter.value)
-                result[name] = parameter.value
-            else:
-                result[name] = None
+    def __str__(self):
+        result = repr(self) + "\n"
+        for parameter in self.parameters.items():
+            result += str(parameter)
         return result
 
-    def parameter_objects(self):
-        """ Returns a dictionary of all the Parameter objects and grabs any
-        current values that are not in the default definitions
-        """
-        result = {}
-        for name, parameter in self._parameters.items():
-            value = getattr(self, name)
-            if value is not None:
-                parameter.value = value
-                setattr(self, name, parameter.value)
-            result[name] = parameter
-        return result
-
-    def refresh_parameters(self):
-        """ Enforces that all the parameters are re-cast and updated in the meta
-        dictionary
-        """
-        for name, parameter in self._parameters.items():
-            value = getattr(self, name)
-            parameter.value = value
-            setattr(self, name, parameter.value)
-
-    def set_parameters(self, parameters, except_missing=True):
-        """ Sets a dictionary of parameters and raises an exception if additional
-        parameters are present if except_missing is True
-        """
-        for name, value in parameters.items():
-            if name in self._parameters:
-                self._parameters[name].value = value
-                setattr(self, name, self._parameters[name].value)
-            else:
-                if except_missing:
-                    raise NameError("Parameter '{}' does not belong to '{}'".format(
-                        name, repr(self)))
+    def __repr__(self):
+        return "<{}(status={},parameters_are_set={})>".format(
+            self.__class__.__name__, self.STATUS_STRINGS[self.status],
+            ParameterInspect.parameters_are_set(self)
+        )
 
 
 class LogProc(BaseProcedure):
@@ -241,28 +239,19 @@ class LogProc(BaseProcedure):
 
     refresh_rate = FloatParameter("Log Rate", units="Hz.", default=1)
 
-    _buf_id = "_buf"
-    _avg_id = "_average"
-
     def __init__(self, cfg, exp, **kwargs):
         """ Initialize a basic procedure that will record data from the prop argument.
 
         :param cfg: List of procedure configurations.
         :param kwargs: Key-word arguments for :class:`.BaseProcedure`
         """
-        super().__init__(cfg, update_params=False, **kwargs)
+        super().__init__(cfg, exp, update_params=False, **kwargs)
         self.DATA_COLUMNS = []
-        records = list(self.records.keys())
+        records = list(self.record_queues.keys())
         for rec in records:
-            if self._avg_id in rec:
-                rec_no_avg_id = rec.split(self._avg_id)[0]
-                setattr(self, rec, IntegerParameter(rec, units="records", default=1))
-                setattr(self, rec_no_avg_id + self._buf_id, [0])
-                records.remove(rec)
-                rec = rec_no_avg_id
             if rec not in self.DATA_COLUMNS:
                 self.DATA_COLUMNS.append(rec)
-        self._update_parameters()
+        ParameterInspect.update_parameters(self)
 
     def execute(self):
         """ Procedure execution method. Calls get_properties() to start recording props at a fixed interval.
@@ -271,26 +260,11 @@ class LogProc(BaseProcedure):
             self.get_properties()
             time.sleep(1/self.refresh_rate)
 
-    def update_buf(self, p, data, return_avg=False):
-        """ Update a buffer for the record, p.
-        """
-        buf = getattr(self, p+self._buf_id)
-        avg_len = getattr(self, p+self._avg_id)
-        if len(buf) != avg_len:
-            setattr(self, p+self._buf_id, [0 for _ in range(avg_len)])
-            buf = getattr(self, p+self._buf_id)
-        buf.pop(-1)
-        buf.insert(0, data)
-        if return_avg:
-            return sum(buf) / len(buf)
-
     def get_properties(self):
         """ Retrieve all properties given in the DATA_COLUMNS list and emit results.
         """
         for p in self.DATA_COLUMNS:
             logger.debug("LogProc getting %s" % p)
             data = getattr(self.hw, p)
-            data_avg = self.update_buf(p, data, return_avg=True)
             self.emit(p, data)
-            self.emit(p+self._avg_id, data_avg)
 

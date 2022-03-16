@@ -19,8 +19,8 @@ class CamProc(BaseProcedure):
 
     refresh_rate = FloatParameter("Frame Rate", units="Hz.", default=8, minimum=1, maximum=8)
 
-    def __init__(self, cfg, **kwargs):
-        super().__init__(cfg, **kwargs)
+    def __init__(self, cfg, exp, **kwargs):
+        super().__init__(cfg, exp, **kwargs)
 
     def startup(self):
         BaseProcedure.startup(self)
@@ -39,9 +39,9 @@ class CamViewProc(CamProc, LogProc):
         a faster frame rate.
     """
 
-    def __init__(self, cfg, **kwargs):
-        LogProc.__init__(self, cfg, **kwargs)
-        CamProc.__init__(self, cfg, **kwargs)
+    def __init__(self, cfg, exp, **kwargs):
+        LogProc.__init__(self, cfg, exp, **kwargs)
+        CamProc.__init__(self, cfg, exp, **kwargs)
 
 
 class CollimatorFocusProc(CamProc):
@@ -52,10 +52,10 @@ class CollimatorFocusProc(CamProc):
     frames_per_image = IntegerParameter("Frames Per Image", default=10)
     images = IntegerParameter("Images", default=1)
 
-    def __init__(self, cfg, **kwargs):
+    def __init__(self, cfg, exp, **kwargs):
         """
         """
-        super().__init__(cfg, **kwargs)
+        super().__init__(cfg, exp, **kwargs)
 
     def execute(self):
         # move the focuser and wait for its motion to complete #

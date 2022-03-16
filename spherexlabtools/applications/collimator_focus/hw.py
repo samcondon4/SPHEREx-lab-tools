@@ -23,7 +23,7 @@ CamCfg = {
 
 GaugeCfg = {
     "instance_name": "gauge",
-    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
     "manufacturer": "heidenhain",
     "instrument": "ND287",
     "params": {
@@ -36,7 +36,7 @@ GaugeCfg = {
 
 FocuserCfg = {
     "instance_name": "focuser",
-    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {

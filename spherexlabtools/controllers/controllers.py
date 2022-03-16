@@ -12,7 +12,8 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 
 from ..widgets import Sequencer
 from ..procedures import BaseProcedure
-from ..thread import StoppableThread, StoppableReusableThread
+from ..parameters import ParameterInspect
+from ..thread import StoppableReusableThread
 
 logger = logging.getLogger(__name__)
 
@@ -130,7 +131,6 @@ class InstrumentController(Controller):
         if self.alive:
             for c in self.status_group.children():
                 param = c.name()
-                print(param)
                 logger.debug("Getting instrument parameter %s" % param)
                 if param in self.status_names:
                     val = self.get_processes[param](getattr(self.hw, param))
@@ -261,7 +261,7 @@ class ProcedureController(Controller):
 
     proc_complete = QtCore.pyqtSignal()
 
-    def __init__(self, cfg, exp, procs, place_params=True, sequencer=True, connect=True, **kwargs):
+    def __init__(self, cfg, exp, procs, place_params=True, sequencer=True, records=True, connect=True, **kwargs):
         """ Initialize the procedure controller gui interface.
 
         :param name: String name of the controller.
@@ -270,6 +270,7 @@ class ProcedureController(Controller):
         :param place_params: Boolean to indicate if the default parameter layout should be set.
         :param connect: Boolean to indicate if the start and stop procedure buttons should be connected to methods.
         :param sequencer: Boolean indicating if a sequencer interface should be generated.
+        :param records: Boolean indicating if a record viewer/manipulating interface should be generated.
         """
         super().__init__(cfg, exp, **kwargs)
         if "place_params" in cfg.keys():
@@ -277,7 +278,7 @@ class ProcedureController(Controller):
         if "sequencer" in cfg.keys():
             sequencer = cfg["sequencer"]
         self.procedure = procs[cfg["procedure"]]
-        self.proc_param_objs = self.procedure.parameter_objects()
+        self.proc_param_objs = ParameterInspect.parameter_objects(self)
 
         # create parameter dictionaries for the procedure parameters #
         j = 0

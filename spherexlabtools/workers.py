@@ -26,7 +26,7 @@ class FlexibleWorker(StoppableThread):
         self.procedure.status = BaseProcedure.QUEUED
 
         # set up the proper queues for procedure records #
-        for record in self.procedure.records:
+        for record in self.procedure.record_queues:
             pass
 
         self.logger = Logger(log)

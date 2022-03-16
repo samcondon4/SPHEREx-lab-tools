@@ -14,7 +14,8 @@ class HDF5Recorder(QueueThread):
     """
 
     META_GROUP = "Meta"
-    PARAMS_GROUP = "Params"
+    PROC_PARAMS_GROUP = "ProcParams"
+    INST_PARAMS_GROUP = "InstParams"
     GROUP_DELIMITER = "/"
 
     def __init__(self, cfg, exp, **kwargs):
@@ -40,7 +41,7 @@ class HDF5Recorder(QueueThread):
     def handle(self, record):
         """ HDF5 recorder handle.
         """
-        kwargs = record.handle
+        kwargs = record.emit_kwargs
         if "group" not in kwargs:
             err_msg = "required group argument not provided to the HDF5Recorder!"
             logger.error(err_msg)
@@ -51,20 +52,27 @@ class HDF5Recorder(QueueThread):
         if "group_records" in kwargs:
             self.record_size = kwargs.pop("group_records")
 
-        # append received data to store with the current record number and index #
+        # append received data to the store with the current record number and index #
         data = record.data
-        #shape = data.shape
-        index = pd.MultiIndex.from_product([[self.record_num], [self.record_ind], np.arange(2048)],
+        shape = data.shape
+        index = pd.MultiIndex.from_product([[self.record_num], [self.record_ind], np.arange(shape[0])],
                                            names=["RecordNum", "RecordInd", "Row"])
         df = pd.DataFrame(data, index=index)
         df.sort_index(inplace=True)
         self.store.append(group, df, **kwargs)
 
-        # write parameters #
-        params = record.params
-        index = pd.MultiIndex.from_tuples([(self.record_num, self.record_ind)], names=["RecordNum", "RecordInd"])
-        param_df = pd.DataFrame(params, index=index)
-        self.store.append(self.PARAMS_GROUP, param_df, data_columns=True)
+        # write procedure parameters #
+        param_index = pd.MultiIndex.from_tuples([(self.record_num, self.record_ind)], names=["RecordNum", "RecordInd"])
+        proc_params = record.proc_params
+        if proc_params is not None:
+            param_df = pd.DataFrame(proc_params, index=param_index)
+            self.store.append(self.PROC_PARAMS_GROUP, param_df, data_columns=True)
+
+        # write instrument parameters #
+        inst_params = record.inst_params
+        if inst_params is not None:
+            param_df = pd.DataFrame(inst_params, index=param_index)
+            self.store.append(self.INST_PARAMS_GROUP, param_df, data_columns=True)
 
         # update record index #
         record_complete = False

@@ -191,3 +191,14 @@ class Sequencer(pTypes.GroupParameter):
                 self.write_dict(dct, c)
         dct[child.name()] = child.value()
 
+
+class Records(pTypes.GroupParameter):
+    """ Group parameter type providing an interface to save and interact with :class:`.procedures.Record` classes.
+    """
+
+    def __init__(self, records):
+        """ Initialize the interface.
+
+        :param records: List of records to generate the interface around.
+        """
+        pass

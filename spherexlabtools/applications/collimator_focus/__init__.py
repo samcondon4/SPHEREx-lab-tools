@@ -15,5 +15,7 @@ from .control import CONTROLLERS
 from . import procedures
 
 
-# TODO: Mono-8 and Mono-16 Camera settings, Image viewer levels based on camera settings
+# TODO: Fix CamViewAvg display, Save records,
+#  Mono-8 and Mono-16 Camera settings, Image viewer levels based on camera settings
+
 
