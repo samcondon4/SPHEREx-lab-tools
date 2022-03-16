@@ -68,6 +68,8 @@ class LineViewer(Viewer):
 
         :param cfg: Configuration dictionary.
         :param buf_size: Size of the curve buffer.
+        :param channels: Integer number of lines to plot in the view, or list with
+                         string labels of different channels to plot.
         """
         super().__init__(cfg, exp, **kwargs)
 

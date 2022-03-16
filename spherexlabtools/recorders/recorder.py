@@ -56,7 +56,7 @@ class HDF5Recorder(QueueThread):
         data = record.data
         shape = data.shape
         index = pd.MultiIndex.from_product([[self.record_num], [self.record_ind], np.arange(shape[0])],
-                                           names=["RecordNum", "RecordInd", "Row"])
+                                           names=["RecordGroupNum", "RecordGroupInd", "Row"])
         df = pd.DataFrame(data, index=index)
         df.sort_index(inplace=True)
         self.store.append(group, df, **kwargs)

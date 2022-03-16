@@ -170,6 +170,7 @@ class BaseProcedure(StoppableReusableThread):
         :param kwargs: Key-word arguments to set the procedure parameters.
         """
         super().__init__()
+        self.name = cfg["instance_name"]
         self.exp = exp
         self.hw = None
         self.records = {}
@@ -191,6 +192,7 @@ class BaseProcedure(StoppableReusableThread):
         for key in kwargs:
             if key in self.parameters.keys():
                 setattr(self, key, kwargs[key])
+        self.parameter_map = {pval.name: pkey for pkey, pval in self.parameter_objects().items()}
 
     def startup(self):
         """ Check that all procedure parameters have been set.
@@ -267,4 +269,52 @@ class LogProc(BaseProcedure):
             logger.debug("LogProc getting %s" % p)
             data = getattr(self.hw, p)
             self.emit(p, data)
+
+
+class ProcedureSequence(BaseProcedure):
+    """ Procedure class that wraps and executes a standalone procedure in a loop.
+    """
+
+    seq = Parameter("Procedure Sequence", default="")
+    param_list = Parameter("Parameter List")
+    sleep = FloatParameter("Sleep Interval", default=1, units="s.")
+    seq_ind = 0
+
+    def __init__(self, cfg, exp, proc, **kwargs):
+        """
+        """
+        super().__init__(cfg, exp, **kwargs)
+        self.procedure = proc
+
+    def startup(self):
+        """ Emit the provided sequence, and build the list of sequence parameters.
+        """
+        BaseProcedure.startup(self)
+        if self.seq_ind == 0:
+            self.emit("sequence", self.seq)
+
+    def execute(self):
+        """ Execute the provided procedure in a loop from the constructed parameter list.
+        """
+        stopped = False
+        for params in self.param_list[self.seq_ind:]:
+            # set procedure parameters #
+            for pkey, pval in params.items():
+                setattr(self.procedure, self.procedure.parameter_map[pkey], pval)
+            self.exp.start_thread(f"{self.name}: starting procedure {self.procedure.name} at index {self.seq_ind}",
+                                  self.procedure)
+            while not self.procedure.status == self.procedure.FINISHED:
+                time.sleep(self.sleep)
+                if self.should_stop():
+                    self.procedure.stop()
+                    stopped = True
+                    break
+            if stopped:
+                break
+            else:
+                self.seq_ind += 1
+
+        if not stopped:
+            self.seq_ind = 0
+
 

@@ -7,8 +7,17 @@ PORT = 6550
 
 rec_name = f"TCPIP::{HOST}::{PORT}::SOCKET"
 
+
+Ndf = {
+    "instance_name": "ndf",
+    "manufacturer": "edmund",
+    "resource_name": "",
+    "instrument": "NDF",
+}
+
+
 Mono = {
-    "instance_name": "Monochromator",
+    "instance_name": "mono",
     "manufacturer": "spherex",
     "resource_name": rec_name,
     "instrument": "MonoControlClient",
@@ -20,12 +29,6 @@ Mono = {
     }
 }
 
-Ndf = {
-    "instance_name": "NDFWheel",
-    "manufacturer": "edmund",
-    "resource_name": "",
-    "instrument": "NDF",
-}
 
 Sr510 = {
     "instance_name": "sr510",
@@ -42,10 +45,10 @@ Sr830 = {
 }
 
 Lockin = {
-    "instance_name": "Lockin",
+    "instance_name": "lockin",
     "subinstruments": [
         Sr830, Sr510
     ]
 }
 
-INSTRUMENT_SUITE = [Mono, Ndf, Lockin]
+INSTRUMENT_SUITE = [Ndf, Mono, Lockin]
