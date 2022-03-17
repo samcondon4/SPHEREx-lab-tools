@@ -301,7 +301,7 @@ class ProcedureController(Controller):
                 "instance_name": "ProcedureSequence",
                 "type": "ProcedureSequence",
                 "hw": None,
-                "records": {"sequence": self.procedure.records["sequence"]}
+                "records": {"sequence": self.procedure.record_cfg["sequence"]}
             }
             self.procedure_sequence = ProcedureSequence(proc_seq_cfg, self.exp, self.procedure)
             self.procedure_sequence.seq_ind = 0
@@ -311,8 +311,10 @@ class ProcedureController(Controller):
             params.append(self.sequencer)
 
         # generate records interface #
+        self.records_interface = None
         if records:
             self.records_interface = Records(self.procedure.records)
+            self.records_interface.new_record_params.connect(self.update_record_attrs)
             params.append(self.records_interface)
 
         # create start and stop procedure buttons #
@@ -328,6 +330,11 @@ class ProcedureController(Controller):
         # connect buttons to methods #
         if connect:
             self._connect_buttons()
+
+    def update_record_attrs(self, rec_state):
+        """ Update a record with the provided attributes.
+        """
+        print(rec_state)
 
     def start_procedure(self, params=None, log_msg=None):
         """ Start the procedure thread.
@@ -406,7 +413,7 @@ class LogProcController(ProcedureController):
     """
 
     def __init__(self, cfg, exp, procs, **kwargs):
-        super().__init__(cfg, exp, procs, place_params=False, sequencer=False, connect=False,
+        super().__init__(cfg, exp, procs, place_params=False, connect=False,
                          **kwargs)
 
         # configure parameter tree #
@@ -418,6 +425,7 @@ class LogProcController(ProcedureController):
 
         params = [self.proc_params]
         params.extend(self.proc_actions)
+        params.append(self.records_interface)
         # build widget #
         self.set_parameters(params, showTop=True)
 

@@ -129,7 +129,6 @@ class Sequencer(pTypes.GroupParameter):
             new_dict = {key.split(SequenceGroup.level_identifier)[-1]: val for key, val in proc_dict.items()}
             sequence[i] = new_dict
 
-        print(sequence)
         self.new_sequence.emit(seq_dict, sequence)
 
     def build_node_sequence(self, node, sequence, procs):
@@ -174,7 +173,7 @@ class Sequencer(pTypes.GroupParameter):
             val = val[1:]
             sign = -1
         try:
-            typecast = sign*float(val)
+            typecast = sign * float(val)
         except ValueError:
             if val.startswith("[") and val.endswith("]"):
                 val_list = val[1:-1].split(",")
@@ -198,9 +197,34 @@ class Records(pTypes.GroupParameter):
     """ Group parameter type providing an interface to save and interact with :class:`.procedures.Record` classes.
     """
 
-    def __init__(self, records):
+    new_record_params = QtCore.pyqtSignal(object)
+
+    def __init__(self, records, **opts):
         """ Initialize the interface.
 
-        :param records: List of records to generate the interface around.
+        :param records: List records to generate the interface around.
         """
-        pass
+        children = [None for _ in records]
+        i = 0
+        for rec in records:
+            update_general = Parameter.create(name="Update General Attributes", type="action", children=[
+                {"name": "Buffer Size", "type": "int", "value": 1},
+                {"name": "Integrate Buffer", "type": "bool", "value": False}
+            ])
+            update_ancillary = Parameter.create(name="Update Ancillary Attributes", type="action", children=[
+                {"name": "Generate histogram", "type": "bool", "value": False}
+            ])
+            save_param = Parameter.create(name="Save Record", type="action", children=[
+                {"name": "File-path", "type": "str"},
+                {"name": "Type", "type": "list", "limits": [".pkl", ".mat"]}
+            ])
+            children[i] = Parameter.create(name=rec, type="group", children=[
+                update_general, update_ancillary, save_param
+            ])
+            i += 1
+        opts["children"] = children
+        opts["name"] = "Records"
+        opts["type"] = "group"
+        pTypes.GroupParameter.__init__(self, **opts)
+
+        self.sigTreeStateChanged.connect(self.new_record_params.emit)

@@ -71,7 +71,7 @@ class Record:
     # for compatibility with the Parameter types #
     parameters = {}
 
-    def __init__(self, proc):
+    def __init__(self, name, proc):
         """ Initialize a record by providing a string representation of the procedure object used.
 
         :param proc: String representing the procedure object that updates the record.
@@ -163,7 +163,7 @@ class BaseProcedure(StoppableReusableThread):
         """ Initialize a bare procedure instance.
 
         :param hw: :class:`..instruments.InstrumentSuite` object.
-        :param exp: Experiment object. Used for compatiblity with general class loader.
+        :param exp: Experiment object. Used for compatibility with general class loader.
         :param records: Dictionary containing lists of queues to which data should be posted on
                          calls to emit().
         :param viewers: Dictionary of Viewer objects.
@@ -177,18 +177,19 @@ class BaseProcedure(StoppableReusableThread):
         self.hw = None
         self.records = {}
         self.record_queues = {}
+        self.record_cfg = cfg["records"]
         self.status = BaseProcedure.QUEUED
 
         if type(cfg["hw"]) is list:
             self.hw = type("proc_hw", (object,), {})()
             for inst in cfg["hw"]:
                 self.hw.__dict__[inst] = getattr(hw, inst)
-        else:
+        elif cfg["hw"] is not None:
             self.hw = getattr(hw, cfg["hw"])
         for key, val in cfg["records"].items():
-            qdict_val = [{"viewer": viewers, "recorder": recorders}[k][v].queue for k, v in val.items()]
+            qdict_val = [{"viewer": self.exp.viewers, "recorder": self.exp.recorders}[k][v].queue for k, v in val.items()]
             self.record_queues[key] = qdict_val
-            self.records[key] = Record(str(self))
+            self.records[key] = Record(key, str(self))
         if update_params:
             ParameterInspect.update_parameters(self)
         for key in kwargs:
