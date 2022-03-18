@@ -3,7 +3,7 @@
 Sam Condon, 02/06/2022
 """
 
-import copy
+import os
 from PyQt5 import QtCore
 from collections.abc import Iterable
 import pyqtgraph.parametertree.parameterTypes as pTypes
@@ -197,34 +197,39 @@ class Records(pTypes.GroupParameter):
     """ Group parameter type providing an interface to save and interact with :class:`.procedures.Record` classes.
     """
 
-    new_record_params = QtCore.pyqtSignal(object)
+    new_record_params_sig = QtCore.pyqtSignal(object, object)
+    save_record_sig = QtCore.pyqtSignal(object, object)
+
+    save_record_name = "Save Record"
 
     def __init__(self, records, **opts):
         """ Initialize the interface.
 
-        :param records: List records to generate the interface around.
+        :param records: List of records to generate the interface around.
         """
         children = [None for _ in records]
         i = 0
         for rec in records:
-            update_general = Parameter.create(name="Update General Attributes", type="action", children=[
-                {"name": "Buffer Size", "type": "int", "value": 1},
-                {"name": "Integrate Buffer", "type": "bool", "value": False}
-            ])
-            update_ancillary = Parameter.create(name="Update Ancillary Attributes", type="action", children=[
-                {"name": "Generate histogram", "type": "bool", "value": False}
-            ])
-            save_param = Parameter.create(name="Save Record", type="action", children=[
-                {"name": "File-path", "type": "str"},
+            buffer_size = {"name": "Buffer Size", "type": "int", "value": 1}
+            integrate_buffer = {"name": "Integrate Buffer", "type": "bool", "value": False}
+            generate_histogram = {"name": "Generate histogram", "type": "bool", "value": False}
+            save_param = Parameter.create(name=self.save_record_name, type="action", children=[
+                {"name": "File-path", "type": "str", "value": os.path.join(os.getcwd(), "Record")},
                 {"name": "Type", "type": "list", "limits": [".pkl", ".mat"]}
             ])
             children[i] = Parameter.create(name=rec, type="group", children=[
-                update_general, update_ancillary, save_param
+                buffer_size, integrate_buffer, generate_histogram, save_param
             ])
             i += 1
         opts["children"] = children
         opts["name"] = "Records"
         opts["type"] = "group"
         pTypes.GroupParameter.__init__(self, **opts)
+        for rec_param in children:
+            for c in rec_param.children():
+                if c.name() != self.save_record_name:
+                    c.sigTreeStateChanged.connect(lambda param: self.new_record_params_sig.emit(param,
+                                                                                                rec_param.name()))
+                else:
+                    c.sigActivated.connect(lambda param: self.save_record_sig.emit(param, rec_param.name()))
 
-        self.sigTreeStateChanged.connect(self.new_record_params.emit)

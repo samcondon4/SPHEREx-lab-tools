@@ -2,9 +2,7 @@
 
 Sam Condon, 01/27/2022
 """
-import time
 import logging
-import threading
 
 from PyQt5 import QtWidgets, QtCore
 from pyqtgraph.parametertree import Parameter, ParameterTree
@@ -264,16 +262,16 @@ class ProcedureController(Controller):
 
     proc_complete = QtCore.pyqtSignal()
 
-    def __init__(self, cfg, exp, procs, place_params=True, records=True, connect=True, **kwargs):
+    def __init__(self, cfg, exp, procs,  sequencer=True, records=True, place_params=True, connect=True, **kwargs):
         """ Initialize the procedure controller gui interface.
 
-        :param name: String name of the controller.
+        :param cfg: :ref:`Procedure controller config dictionary <user_guide/custom_experiments:Procedure Controller Configuration Dictionaries>`.
         :param exp: Experiment object.
         :param procs: Procedure object to control.
-        :param place_params: Boolean to indicate if the default parameter layout should be set.
-        :param connect: Boolean to indicate if the start and stop procedure buttons should be connected to methods.
         :param sequencer: Boolean indicating if a sequencer interface should be generated.
         :param records: Boolean indicating if a record viewer/manipulation interface should be generated.
+        :param place_params: Boolean to indicate if the default parameter layout should be set.
+        :param connect: Boolean to indicate if the start and stop procedure buttons should be connected to methods.
         """
         super().__init__(cfg, exp, **kwargs)
         if "place_params" in cfg.keys():
@@ -283,8 +281,6 @@ class ProcedureController(Controller):
 
         params = []
 
-        # configure a procedure sequence class if the sequence record is provided. #
-        self.sequencer = None
         self.proc_seq = None
         j = 0
         self.proc_params_tree = [{} for _ in range(len(self.proc_param_objs.keys()))]
@@ -296,12 +292,14 @@ class ProcedureController(Controller):
         self.proc_params = Parameter.create(name="Procedure Params", type="group", children=self.proc_params_tree)
         params.append(self.proc_params)
 
-        if "sequence" in self.procedure.records.keys():
+        # configure the sequencer interface if the sequencer kwarg is true. #
+        self.sequencer = None
+        if sequencer:
             proc_seq_cfg = {
                 "instance_name": "ProcedureSequence",
                 "type": "ProcedureSequence",
                 "hw": None,
-                "records": {"sequence": self.procedure.record_cfg["sequence"]}
+                "records": {}
             }
             self.procedure_sequence = ProcedureSequence(proc_seq_cfg, self.exp, self.procedure)
             self.procedure_sequence.seq_ind = 0
@@ -314,7 +312,8 @@ class ProcedureController(Controller):
         self.records_interface = None
         if records:
             self.records_interface = Records(self.procedure.records)
-            self.records_interface.new_record_params.connect(self.update_record_attrs)
+            self.records_interface.new_record_params_sig.connect(self.update_record_attrs)
+            self.records_interface.save_record_sig.connect(self.save_record)
             params.append(self.records_interface)
 
         # create start and stop procedure buttons #
@@ -331,10 +330,25 @@ class ProcedureController(Controller):
         if connect:
             self._connect_buttons()
 
-    def update_record_attrs(self, rec_state):
+    def update_record_attrs(self, record_param, record_name):
         """ Update a record with the provided attributes.
         """
-        print(rec_state)
+        rec_name_param_set_map = {
+            "Integrate Buffer": "avg",
+            "Buffer Size": "buffer_size",
+            "Generate histogram": "histogram"
+        }
+        record = self.procedure.records[record_name]
+        setattr(record, rec_name_param_set_map[record_param.name()], record_param.value())
+
+    def save_record(self, save_record_params, record_name):
+        """ Save the record in the format specified.
+        """
+        record = self.procedure.records[record_name]
+        save_vals = save_record_params.getValues()
+        record.filepath = save_vals["File-path"][0]
+        record.save_type = save_vals["Type"][0]
+        record.save()
 
     def start_procedure(self, params=None, log_msg=None):
         """ Start the procedure thread.
@@ -406,7 +420,6 @@ class ProcedureController(Controller):
             self.sequencer.new_sequence.connect(lambda seq_dict, sequence: self.start_procedure_sequence(seq_dict,
                                                                                                          sequence))
             self.sequencer.abort_proc_sequence.connect(self.stop_procedure_sequence)
-
 
 class LogProcController(ProcedureController):
     """ Controller class to implement control over a procedure through a GUI.

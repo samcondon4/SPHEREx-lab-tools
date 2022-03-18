@@ -28,10 +28,11 @@ class Record:
     :ivar lock: :class:`.threading.Lock` type used for thread safe access to instances.
     :ivar lock_initialized: Boolean to indicate if the lock has been initialized.
     :ivar proc: String representation of the procedure used to generate the record.
-    :ivar data: Main data object of any type.
-    :ivar ancillary: Secondary information to accompany the data object, such as a histogram of the data values.
+    :ivar sequence: Procedure sequence dictionary associated with the record.
     :ivar proc_params: Dictionary containing the parameters of the procedure that generated the record.
     :ivar inst_params: Dictionary containing the instrument parameters associated with the record.
+    :ivar data: Main data object of any type.
+    :ivar ancillary: Secondary information to accompany the data object, such as a histogram of the data values.
     :ivar handle_kwargs: Key-word arguments used in the handle method of the appropriate viewer/recorder.
     :ivar to_date: Boolean to indicate if the data attribute is up-to-date. This is True immediately after the
                    :meth:`Record.update()` method is called, and gets set to False after the record is emitted.
@@ -51,10 +52,11 @@ class Record:
     lock = threading.Lock()
     lock_initialized = True
     proc = None
-    data = None
-    ancillary = {}
+    sequence = None
     proc_params = None
     inst_params = None
+    data = None
+    ancillary = {}
     emit_kwargs = {}
     buffer = []
     to_date = False
@@ -79,22 +81,27 @@ class Record:
         self.proc = proc
         ParameterInspect.update_parameters(self)
 
-    def update(self, data, proc_params=None, inst_params=None, **kwargs):
+    def update(self, data, proc_params=None, inst_params=None, sequence=None, **kwargs):
         """ Update the general attributes of the record.
         """
         self.proc_params = proc_params
         self.inst_params = inst_params
+        self.sequence = sequence
         self.emit_kwargs = kwargs
         # update the buffer attribute #
-        if len(self.buffer) < self.buffer_size:
+        dbuf_size = self.buffer_size - len(self.buffer)
+        if dbuf_size > 0:
             self.buffer.append(data)
+        elif dbuf_size < 0:
+            self.buffer = self.buffer[:dbuf_size-1]
+            self.buffer[-1] = data
         else:
             self.buffer[:-1] = self.buffer[1:]
             self.buffer[-1] = data
 
         # update the data attribute #
         if self.avg:
-            self.data = sum(self.buffer) / len(self.buffer)
+            self.data = np.sum(self.buffer) / len(self.buffer)
         else:
             self.data = self.buffer[-1]
 
@@ -106,19 +113,22 @@ class Record:
         self.to_date = True
 
     def save(self):
-        """ Save the record to a .mat or .pkl file.
+        """ Save the record to a .mat or .pkl file. Note that the sequence is not saved out here, as it is of less
+            concern what sequence a record was generated within when an individual record is saved out to a file.
         """
         save_obj = {
             "data": self.data,
-            "procedure": self.proc,
-            "proc_params": self.proc_params,
-            "inst_params": self.inst_params,
+            "procedure": self.proc
         }
-        with open(self.filepath + self.save_type, "+") as file:
-            if self.save_type == ".pkl":
-                pickle.dump(save_obj, file)
-            elif self.save_type == ".mat":
-                spio.savemat(file, save_obj)
+        if self.proc_params is not None:
+            save_obj.update({"proc_params": self.proc_params})
+        if self.inst_params is not None:
+            save_obj.update({"inst_params": self.inst_params})
+        fp = self.filepath + self.save_type
+        if self.save_type == ".pkl":
+            pickle.dump(save_obj, open(fp, "wb"))
+        elif self.save_type == ".mat":
+            spio.savemat(fp, save_obj)
 
     def __getattribute__(self, name):
         """ Attribute access override for thread safety.
@@ -158,6 +168,12 @@ class BaseProcedure(StoppableReusableThread):
         RUNNING: 'Running'
     }
     parameters = {}
+
+    # this attribute gets replaced with a string representation of a procedure sequence if this procedure
+    # is being run within a ProcedureSequence.
+    sequence = None
+    # parameters of the currently executing procedure #
+    proc_params = None
 
     def __init__(self, cfg, exp, hw=None, viewers=None, recorders=None, update_params=True, **kwargs):
         """ Initialize a bare procedure instance.
@@ -202,19 +218,20 @@ class BaseProcedure(StoppableReusableThread):
         """
         self.status = BaseProcedure.RUNNING
         ParameterInspect.check_parameters(self)
+        self.proc_params = ParameterInspect.parameter_values(self)
 
-    def emit(self, record_name, record_data, proc_params=None, inst_params=None, **kwargs):
+    def emit(self, record_name, record_data, inst_params=None, **kwargs):
         """ Post a record to the appropriate queues.
 
         :param record_name: String name of the record to post data to.
         :param record_data: Data to be posted to the record queue.
-        :param proc_params: Optional set of procedure parameters to record.
         :param inst_params: Optional set of instrument parameters to record.
         :param kwargs: Key-word arguments that are passed to the handle method of the corresponding
                        :class:`.QueueThread`.
         """
         record = self.records[record_name]
-        record.update(record_data, proc_params, inst_params, **kwargs)
+        record.update(record_data, inst_params=inst_params, proc_params=self.proc_params, sequence=self.sequence,
+                      **kwargs)
         for q in self.record_queues[record_name]:
             q.put(record)
 
@@ -290,11 +307,10 @@ class ProcedureSequence(BaseProcedure):
         self.procedure = proc
 
     def startup(self):
-        """ Emit the provided sequence, and build the list of sequence parameters.
+        """ Set the sequence attribute of the procedure attribute.
         """
         BaseProcedure.startup(self)
-        if self.seq_ind == 0:
-            self.emit("sequence", self.seq)
+        self.procedure.sequence = self.seq
 
     def execute(self):
         """ Execute the provided procedure in a loop from the constructed parameter list.
@@ -304,8 +320,14 @@ class ProcedureSequence(BaseProcedure):
             # set procedure parameters #
             for pkey, pval in params.items():
                 setattr(self.procedure, self.procedure.parameter_map[pkey], pval)
-            self.exp.start_thread(f"{self.name}: starting procedure {self.procedure.name} at index {self.seq_ind}",
-                                  self.procedure)
+            log_str = f"{self.name}: starting procedure {self.procedure.name} at index {self.seq_ind}"
+            logger.info(log_str)
+            self.exp.start_thread(log_str, self.procedure)
+            # wait for the procedure to start running. #
+            while not self.procedure.status == self.procedure.RUNNING:
+                time.sleep(self.sleep)
+
+            # wait until the procedure completes its execution. #
             while not self.procedure.status == self.procedure.FINISHED:
                 time.sleep(self.sleep)
                 if self.should_stop():
@@ -320,4 +342,8 @@ class ProcedureSequence(BaseProcedure):
         if not stopped:
             self.seq_ind = 0
 
+    def shutdown(self):
+        """ Clear the sequence attribute of the procedure attribute.
+        """
+        self.procedure.sequence = None
 

@@ -46,7 +46,6 @@ CollimatorFocus_Proc = {
         "frame": {"viewer": "CamView"},
         "frame_avg": {"viewer": "CamViewAvg"},
         "image": {"recorder": "CollimatorFocusRecorder"},
-        "sequence": {"recorder": "CollimatorFocusRecorder"}
     }
 }
 

@@ -23,7 +23,6 @@ class CamProc(BaseProcedure):
 
     def startup(self):
         BaseProcedure.startup(self)
-        print(self.refresh_rate)
         self.hw.cam_acquisition_frame_rate_auto = "Off"
         self.hw.cam_acquisition_frame_rate_en = True
         self.hw.cam_acquisition_frame_rate = self.refresh_rate
@@ -77,5 +76,4 @@ class CollimatorFocusProc(CamProc):
                 self.emit("frame_avg", image)
 
             # pass data_columns and group as argument to HDF5Recorder handle() method #
-            self.emit("image", image, group="Data", group_records=self.images)
-
+            self.emit("image", image, group_records=self.images)
