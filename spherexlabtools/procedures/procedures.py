@@ -93,7 +93,7 @@ class Record:
         if dbuf_size > 0:
             self.buffer.append(data)
         elif dbuf_size < 0:
-            self.buffer = self.buffer[:dbuf_size-1]
+            self.buffer = self.buffer[:dbuf_size]
             self.buffer[-1] = data
         else:
             self.buffer[:-1] = self.buffer[1:]
@@ -101,13 +101,15 @@ class Record:
 
         # update the data attribute #
         if self.avg:
-            self.data = np.sum(self.buffer) / len(self.buffer)
+            self.data = np.sum(self.buffer, axis=0) / len(self.buffer)
         else:
             self.data = self.buffer[-1]
 
         # generate ancillary data #
         if self.histogram:
             self.ancillary["histogram"] = np.histogram(self.data)
+        else:
+            self.ancillary["histogram"] = None
 
         # record is now up-to-date #
         self.to_date = True

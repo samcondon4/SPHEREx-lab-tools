@@ -257,7 +257,7 @@ class SmCustomState(AsyncState, SQLTools):
         self._running_coros = []
 
     def add_transition(self, next_state, arg=None, arg_result=None, identifier=None):
-        """ Description: add a custom state transition to the state machine.
+        """ Description: add a procedures state transition to the state machine.
 
         :param next_state: (SMCustomState) SMCustomState instance to transition to.
         :param arg: (str, list of str) sm_global_args key to base transition logic off. None indicates that this is
