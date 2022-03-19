@@ -275,6 +275,7 @@ class LogProc(BaseProcedure):
         for rec in records:
             if rec not in self.DATA_COLUMNS:
                 self.DATA_COLUMNS.append(rec)
+                self.__dict__[rec] = BooleanParameter(rec, default=False)
         ParameterInspect.update_parameters(self)
 
     def execute(self):
@@ -288,9 +289,11 @@ class LogProc(BaseProcedure):
         """ Retrieve all properties given in the DATA_COLUMNS list and emit results.
         """
         for p in self.DATA_COLUMNS:
-            logger.debug("LogProc getting %s" % p)
-            data = getattr(self.hw, p)
-            self.emit(p, data)
+            log_param = getattr(self, p)
+            if log_param:
+                logger.debug("LogProc getting %s" % p)
+                data = getattr(self.hw, p)
+                self.emit(p, data)
 
 
 class ProcedureSequence(BaseProcedure):

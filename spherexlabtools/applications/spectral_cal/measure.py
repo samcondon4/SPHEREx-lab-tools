@@ -1,9 +1,6 @@
 lockin_viewer = {
     "instance_name": "LockinView",
     "type": "LineViewer",
-    "kwargs": {
-        "buf_size": 500,
-    },
     "params": {
         "labels": {
             "left": "Output Voltage (V.)",
@@ -25,6 +22,18 @@ SpecCalMeta_Recorder = {
 RECORDERS = [SpecCalMeta_Recorder]
 
 
+LockinViewProc = {
+    "instance_name": "LockinViewProc",
+    "type": "LogProc",
+    "hw": "lockin",
+    "records": {
+        "sr510_output": {"viewer": "LockinView"},
+        "sr830_x": {"viewer": "LockinView"},
+        "sr830_y": {"viewer": "LockinView"}
+    }
+}
+
+
 SpecCalProc = {
     "instance_name": "SpecCalProc",
     "type": "SpecCalProc",
@@ -32,8 +41,7 @@ SpecCalProc = {
     "records": {
         "lockin_output_view": {"viewer": "LockinView"},
         "lockin_output_record": {"recorder": "SpecCalMetaRecorder"},
-        "sequence": {"recorder": "SpecCalMetaRecorder"}
     }
 }
 
-PROCEDURES = [SpecCalProc]
+PROCEDURES = [LockinViewProc, SpecCalProc]

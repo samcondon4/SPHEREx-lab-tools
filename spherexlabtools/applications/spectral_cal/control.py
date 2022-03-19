@@ -99,6 +99,16 @@ Lockin_Controller = {
 ##############################################################################################################
 
 # PROCEDURE CONTROLLERS ######################################################################################
+LockinViewProc_Controller = {
+    "instance_name": "LockinViewProcCntrl",
+    "type": "ProcedureController",
+    "procedure": "LockinViewProc",
+    "kwargs": {
+        "sequencer": False
+    }
+}
+
+
 SpecCalProc_Controller = {
     "instance_name": "SpecCalProcCntrl",
     "type": "ProcedureController",
@@ -106,4 +116,4 @@ SpecCalProc_Controller = {
 }
 ##############################################################################################################
 
-CONTROLLERS = [Mono_Controller, Ndf_Controller, Lockin_Controller, SpecCalProc_Controller]
+CONTROLLERS = [Mono_Controller, Ndf_Controller, Lockin_Controller, LockinViewProc_Controller, SpecCalProc_Controller]

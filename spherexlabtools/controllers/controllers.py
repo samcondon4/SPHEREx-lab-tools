@@ -321,14 +321,14 @@ class ProcedureController(Controller):
         self.stop_proc = Parameter.create(name="Stop Procedure", type="action")
         self.proc_actions = [self.start_proc, self.stop_proc]
 
+        # connect buttons to methods #
+        if connect:
+            self._connect_buttons()
+
         # place parameters if flag is set #
         if place_params:
             self.proc_params.addChildren(self.proc_actions)
             self.set_parameters(params)
-
-        # connect buttons to methods #
-        if connect:
-            self._connect_buttons()
 
     def update_record_attrs(self, record_param, record_name):
         """ Update a record with the provided attributes.
@@ -338,6 +338,7 @@ class ProcedureController(Controller):
             "Buffer Size": "buffer_size",
             "Generate histogram": "histogram"
         }
+        print(record_param, record_name)
         record = self.procedure.records[record_name]
         setattr(record, rec_name_param_set_map[record_param.name()], record_param.value())
 
@@ -414,12 +415,13 @@ class ProcedureController(Controller):
         self.start_proc.sigActivated.connect(lambda a: self.start_procedure(params=None, log_msg="%s: Starting single"
                                                                                                  "procedure" %
                                                                                                  self.name))
-        self.stop_proc.sigStateChanged.connect(lambda a: self.stop_procedure())
+        self.stop_proc.sigActivated.connect(lambda a: self.stop_procedure())
 
         if self.sequencer is not None:
             self.sequencer.new_sequence.connect(lambda seq_dict, sequence: self.start_procedure_sequence(seq_dict,
                                                                                                          sequence))
             self.sequencer.abort_proc_sequence.connect(self.stop_procedure_sequence)
+
 
 class LogProcController(ProcedureController):
     """ Controller class to implement control over a procedure through a GUI.

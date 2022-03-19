@@ -226,10 +226,12 @@ class Records(pTypes.GroupParameter):
         opts["type"] = "group"
         pTypes.GroupParameter.__init__(self, **opts)
         for rec_param in children:
+            rec_param_name = rec_param.name()
+            print(rec_param_name)
             for c in rec_param.children():
                 if c.name() != self.save_record_name:
-                    c.sigTreeStateChanged.connect(lambda param: self.new_record_params_sig.emit(param,
-                                                                                                rec_param.name()))
+                    c.sigTreeStateChanged.connect(lambda param, changes, name=rec_param_name:
+                                                  self.new_record_params_sig.emit(param, name))
                 else:
-                    c.sigActivated.connect(lambda param: self.save_record_sig.emit(param, rec_param.name()))
+                    c.sigActivated.connect(lambda param, name=rec_param_name: self.save_record_sig.emit(param, name))
 
