@@ -139,4 +139,10 @@ spherexlabtools/calibration/spectral/config
 __pycache__
 
 
+# debug files #
+test.py
+*.h5
+output.txt
+motor.py
+wcu.py
 

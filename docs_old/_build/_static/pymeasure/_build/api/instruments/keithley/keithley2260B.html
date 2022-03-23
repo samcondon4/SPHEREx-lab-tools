@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keithley 2260B DC Power Supply &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Keithley 2400 SourceMeter" href="keithley2400.html" />
+    <link rel="prev" title="Keithley 2000 Multimeter" href="keithley2000.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Keithley</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="keithley2000.html">Keithley 2000 Multimeter</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Keithley 2260B DC Power Supply</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2400.html">Keithley 2400 SourceMeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2450.html">Keithley 2450 SourceMeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2700.html">Keithley 2700 MultiMeter/Switch System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley6221.html">Keithley 6221 AC and DC Current Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley6517b.html">Keithley 6517B Electrometer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2750.html">Keithley 2750 Multimeter/Switch System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2600.html">Keithley 2600 SourceMeter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Keithley</a> &raquo;</li>
+      <li>Keithley 2260B DC Power Supply</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/keithley/keithley2260B.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="keithley-2260b-dc-power-supply">
+<h1>Keithley 2260B DC Power Supply<a class="headerlink" href="#keithley-2260b-dc-power-supply" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.keithley.Keithley2260B">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.keithley.</code><code class="sig-name descname">Keithley2260B</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="n">read_termination</span><span class="o">=</span><span class="default_value">'\n'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represents the Keithley 2260B Power Supply (minimal implementation)
+and provides a high-level interface for interacting with the instrument.</p>
+<p>For a connection through tcpip, the device only accepts
+connections at port 2268, which cannot be configured otherwise.
+example connection string: ‘TCPIP::xxx.xxx.xxx.xxx::2268::SOCKET’
+the read termination for this interface is</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">=</span> <span class="n">Keithley2260B</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="n">source</span><span class="o">.</span><span class="n">voltage</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">voltage</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">current</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">applied</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.applied">
+<em class="property">property </em><code class="sig-name descname">applied</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.applied" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simultaneous control of voltage (volts) and current (amps).
+Values need to be supplied as tuple of (voltage, current). Depending on
+whether the instrument is in constant current or constant voltage mode,
+the values achieved by the instrument will differ from the ones set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.check_errors">
+<code class="sig-name descname">check_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.check_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs any system errors reported by the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.complete">
+<em class="property">property </em><code class="sig-name descname">complete</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>This property allows synchronization between a controller and a device. The Operation Complete
+query places an ASCII character 1 into the device’s Output Queue when all pending
+selected device operations have been finished.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.current">
+<em class="property">property </em><code class="sig-name descname">current</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the current (in Ampere) the dc power supply is putting out.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.current_limit">
+<em class="property">property </em><code class="sig-name descname">current_limit</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.current_limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the source current
+in amps. This is not checked against the allowed range. Depending on
+whether the instrument is in constant current or constant voltage mode,
+this might differ from the actual current achieved.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.enabled">
+<em class="property">property </em><code class="sig-name descname">enabled</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that controls whether the source is enabled, takes
+values True or False.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.error">
+<em class="property">property </em><code class="sig-name descname">error</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a tuple of an error code and message from a
+single error.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the identification of the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.options">
+<em class="property">property </em><code class="sig-name descname">options</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the device options installed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.power">
+<em class="property">property </em><code class="sig-name descname">power</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.power" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the power (in Watt) the dc power supply is putting out.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable output, call parent function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.status">
+<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the status byte and Master Summary Status bit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.voltage">
+<em class="property">property </em><code class="sig-name descname">voltage</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the voltage (in Volt) the dc power supply is putting out.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2260B.voltage_setpoint">
+<em class="property">property </em><code class="sig-name descname">voltage_setpoint</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2260B.voltage_setpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the source voltage
+in volts. This is not checked against the allowed range. Depending on
+whether the instrument is in constant current or constant voltage mode,
+this might differ from the actual voltage achieved.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="keithley2000.html" class="btn btn-neutral float-left" title="Keithley 2000 Multimeter" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="keithley2400.html" class="btn btn-neutral float-right" title="Keithley 2400 SourceMeter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

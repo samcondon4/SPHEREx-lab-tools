@@ -1,0 +1,5 @@
+from .hw import INSTRUMENT_SUITE
+CONTROLLERS = []
+RECORDERS = []
+VIEWERS = []
+PROCEDURES = []

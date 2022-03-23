@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agilent 8257D Signal Generator &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Agilent 8722ES Vector Network Analyzer" href="agilent8722ES.html" />
+    <link rel="prev" title="Agilent" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Agilent</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Agilent 8257D Signal Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent8722ES.html">Agilent 8722ES Vector Network Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentE4408B.html">Agilent E4408B Spectrum Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentE4980.html">Agilent E4980 LCR Meter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent34410A.html">Agilent 34410A Multimeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent34450A.html">HP/Agilent/Keysight 34450A Digital Multimeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent4156.html">Agilent 4155/4156 Semiconductor Parameter Analyzer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33220A.html">Agilent 33220A Arbitrary Waveform Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33500.html">Agilent 33500 Function/Arbitrary Waveform Generator Family</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilent33521A.html">Agilent 33521A Function/Arbitrary Waveform Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="agilentB1500.html">Agilent B1500 Semiconductor Parameter Analyzer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Agilent</a> &raquo;</li>
+      <li>Agilent 8257D Signal Generator</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/agilent/agilent8257D.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="agilent-8257d-signal-generator">
+<h1>Agilent 8257D Signal Generator<a class="headerlink" href="#agilent-8257d-signal-generator" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.agilent.Agilent8257D">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.agilent.</code><code class="sig-name descname">Agilent8257D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represents the Agilent 8257D Signal Generator and 
+provides a high-level interface for interacting with 
+the instrument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">generator</span> <span class="o">=</span> <span class="n">Agilent8257D</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+
+<span class="n">generator</span><span class="o">.</span><span class="n">power</span> <span class="o">=</span> <span class="mi">0</span>                     <span class="c1"># Sets the output power to 0 dBm</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">frequency</span> <span class="o">=</span> <span class="mi">5</span>                 <span class="c1"># Sets the output frequency to 5 GHz</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>                      <span class="c1"># Enables the output</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.amplitude_depth">
+<em class="property">property </em><code class="sig-name descname">amplitude_depth</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.amplitude_depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the amplitude modulation
+in precent, which can take values from 0 to 100 %.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.amplitude_source">
+<em class="property">property </em><code class="sig-name descname">amplitude_source</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.amplitude_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the source of the amplitude modulation
+signal, which can take the values: ‘internal’, ‘internal 2’, ‘external’, and
+‘external 2’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.center_frequency">
+<em class="property">property </em><code class="sig-name descname">center_frequency</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.center_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the center frequency
+in Hz. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.config_amplitude_modulation">
+<code class="sig-name descname">config_amplitude_modulation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency</span><span class="o">=</span><span class="default_value">1000.0</span></em>, <em class="sig-param"><span class="n">depth</span><span class="o">=</span><span class="default_value">100.0</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">'sine'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.config_amplitude_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the amplitude modulation of the output signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frequency</strong> – A modulation frequency for the internal oscillator</p></li>
+<li><p><strong>depth</strong> – A linear depth precentage</p></li>
+<li><p><strong>shape</strong> – A string that describes the shape for the internal oscillator</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.config_low_freq_out">
+<code class="sig-name descname">config_low_freq_out</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span><span class="o">=</span><span class="default_value">'internal'</span></em>, <em class="sig-param"><span class="n">amplitude</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.config_low_freq_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the low-frequency output signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – The source for the low-frequency output signal.</p></li>
+<li><p><strong>amplitude</strong> – Amplitude of the low-frequency output</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.config_pulse_modulation">
+<code class="sig-name descname">config_pulse_modulation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency</span><span class="o">=</span><span class="default_value">1000.0</span></em>, <em class="sig-param"><span class="n">input</span><span class="o">=</span><span class="default_value">'square'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.config_pulse_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the pulse modulation of the output signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frequency</strong> – A pulse rate frequency in Hertz</p></li>
+<li><p><strong>input</strong> – A string that describes the internal pulse input</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.config_step_sweep">
+<code class="sig-name descname">config_step_sweep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.config_step_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures a step sweep through frequency</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.disable">
+<code class="sig-name descname">disable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.disable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the output of the signal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.disable_amplitude_modulation">
+<code class="sig-name descname">disable_amplitude_modulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.disable_amplitude_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables amplitude modulation of the output signal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.disable_low_freq_out">
+<code class="sig-name descname">disable_low_freq_out</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.disable_low_freq_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables low frequency output</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.disable_modulation">
+<code class="sig-name descname">disable_modulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.disable_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the signal modulation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.disable_pulse_modulation">
+<code class="sig-name descname">disable_pulse_modulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.disable_pulse_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables pulse modulation of the output signal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.dwell_time">
+<em class="property">property </em><code class="sig-name descname">dwell_time</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.dwell_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the settling time
+in seconds at the current frequency or power setting. 
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.enable">
+<code class="sig-name descname">enable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.enable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables the output of the signal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.enable_amplitude_modulation">
+<code class="sig-name descname">enable_amplitude_modulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.enable_amplitude_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables amplitude modulation of the output signal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.enable_low_freq_out">
+<code class="sig-name descname">enable_low_freq_out</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.enable_low_freq_out" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables low frequency output</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.enable_pulse_modulation">
+<code class="sig-name descname">enable_pulse_modulation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.enable_pulse_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables pulse modulation of the output signal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.frequency">
+<em class="property">property </em><code class="sig-name descname">frequency</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the output frequency
+in Hz. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.has_amplitude_modulation">
+<em class="property">property </em><code class="sig-name descname">has_amplitude_modulation</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.has_amplitude_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a boolean value that is True if the amplitude modulation is enabled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.has_modulation">
+<em class="property">property </em><code class="sig-name descname">has_modulation</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.has_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a boolean value that is True if the modulation is enabled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.has_pulse_modulation">
+<em class="property">property </em><code class="sig-name descname">has_pulse_modulation</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.has_pulse_modulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a boolean value that is True if the pulse modulation is enabled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.internal_frequency">
+<em class="property">property </em><code class="sig-name descname">internal_frequency</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.internal_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the frequency of the internal
+oscillator in Hertz, which can take values from 0.5 Hz to 1 MHz.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.internal_shape">
+<em class="property">property </em><code class="sig-name descname">internal_shape</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.internal_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the shape of the internal oscillations,
+which can take the values: ‘sine’, ‘triangle’, ‘square’, ‘ramp’, ‘noise’,
+‘dual-sine’, and ‘swept-sine’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.is_enabled">
+<em class="property">property </em><code class="sig-name descname">is_enabled</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.is_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a boolean value that is True if the output is on.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.low_freq_out_amplitude">
+<em class="property">property </em><code class="sig-name descname">low_freq_out_amplitude</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.low_freq_out_amplitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the peak voltage (amplitude) of the
+low frequency output in volts, which can take values from 0-3.5V</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.low_freq_out_source">
+<em class="property">property </em><code class="sig-name descname">low_freq_out_source</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.low_freq_out_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property which controls the source of the low frequency output, which
+can take the values ‘internal [2]’ for the inernal source, or ‘function [2]’ for an internal
+function generator which can be configured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.power">
+<em class="property">property </em><code class="sig-name descname">power</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.power" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the output power
+in dBm. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.pulse_frequency">
+<em class="property">property </em><code class="sig-name descname">pulse_frequency</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.pulse_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the pulse rate frequency in Hertz,
+which can take values from 0.1 Hz to 10 MHz.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.pulse_input">
+<em class="property">property </em><code class="sig-name descname">pulse_input</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.pulse_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the internally generated modulation
+input for the pulse modulation, which can take the values: ‘square’, ‘free-run’,
+‘triggered’, ‘doublet’, and ‘gated’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.pulse_source">
+<em class="property">property </em><code class="sig-name descname">pulse_source</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.pulse_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the source of the pulse modulation
+signal, which can take the values: ‘internal’, ‘external’, and
+‘scalar’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuts down the instrument by disabling any modulation
+and the output signal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.start_frequency">
+<em class="property">property </em><code class="sig-name descname">start_frequency</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.start_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the start frequency
+in Hz. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.start_power">
+<em class="property">property </em><code class="sig-name descname">start_power</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.start_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the start power
+in dBm. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.start_step_sweep">
+<code class="sig-name descname">start_step_sweep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.start_step_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts a step sweep.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.step_points">
+<em class="property">property </em><code class="sig-name descname">step_points</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.step_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer number of points in a step sweep. This property
+can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.stop_frequency">
+<em class="property">property </em><code class="sig-name descname">stop_frequency</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.stop_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the stop frequency
+in Hz. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.stop_power">
+<em class="property">property </em><code class="sig-name descname">stop_power</code><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.stop_power" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the stop power
+in dBm. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.agilent.Agilent8257D.stop_step_sweep">
+<code class="sig-name descname">stop_step_sweep</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.agilent.Agilent8257D.stop_step_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops a step sweep.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Agilent" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="agilent8722ES.html" class="btn btn-neutral float-right" title="Agilent 8722ES Vector Network Analyzer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

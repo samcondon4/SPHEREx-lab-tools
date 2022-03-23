@@ -1,6 +1,9 @@
 import PySpin
+import logging
 from pymeasure.instruments import Instrument
 from pymeasure.instruments.validators import strict_discrete_set
+
+logger = logging.getLogger(__name__)
 
 
 class FlirInstrument:
@@ -172,30 +175,33 @@ class Flea3:
     def stream_active(self, val):
         self._stream_active = bool(val)
 
-    def stream_to_object(self, obj):
-        """ This method starts continuous frame streaming to an object.
-        :param: obj: Any object with a "data" attribute. Image data will be written to this
-                     attribute.
+    @property
+    def latest_frame(self):
+        """ Property representing the frame retrieved from the camera. If the camera is not in streaming
+        mode, then get_frames() is called to return a frame.
         """
-        self.stream_active = True
-        self.start_stream()
-        while self.stream_active:
-            im = self.get_stream_frame()
-            obj.data = im
-        self.stop_stream()
+        if self.stream_active:
+            latest_frame = self.get_stream_frame()
+        else:
+            latest_frame = self.get_frames()
+        return latest_frame
 
     def start_stream(self):
-        """ This method starts continous frame streaming.
+        """ This method starts continuous frame streaming.
         """
+        logger.debug("Starting camera stream!")
         # set acquisition mode #
         self.acquisition_mode = "Continuous"
         self.cam.BeginAcquisition()
+        self.stream_active = True
 
     def stop_stream(self):
         """ This method stops continuous frame streaming.
         """
+        logger.debug("Stopping camera stream!")
         self.cam.EndAcquisition()
         self.acquisition_mode = "SingleFrame"
+        self.stream_active = False
 
     def get_stream_frame(self):
         """ This method retrieves the latest frame and returns it as a numpy array when

@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NI Virtual Bench &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Oxford Instruments" href="../oxfordinstruments/index.html" />
+    <link rel="prev" title="National Instruments" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">National Instruments</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">NI Virtual Bench</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#general-information">General Information</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#instrument-class">Instrument Class</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">National Instruments</a> &raquo;</li>
+      <li>NI Virtual Bench</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/ni/virtualbench.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ni-virtual-bench">
+<h1>NI Virtual Bench<a class="headerlink" href="#ni-virtual-bench" title="Permalink to this headline">¶</a></h1>
+<section id="general-information">
+<h2>General Information<a class="headerlink" href="#general-information" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://github.com/armstrap/armstrap-pyvirtualbench">armstrap/pyvirtualbench</a>
+Python wrapper for the VirtualBench C-API is required.
+This Instrument driver only interfaces the pyvirtualbench Python wrapper.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>To be documented. Check the examples in the pyvirtualbench repository to get an idea.</p>
+<p>Simple Example to switch digital lines of the DIO module.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pymeasure.instruments.ni</span> <span class="kn">import</span> <span class="n">VirtualBench</span>
+
+<span class="n">vb</span> <span class="o">=</span> <span class="n">VirtualBench</span><span class="p">(</span><span class="n">device_name</span><span class="o">=</span><span class="s1">&#39;VB8012-3057E1C&#39;</span><span class="p">)</span>
+<span class="n">line</span> <span class="o">=</span> <span class="s1">&#39;dig/2&#39;</span>  <span class="c1"># may be list of lines</span>
+<span class="c1"># initialize DIO module -&gt; available via vb.dio</span>
+<span class="n">vb</span><span class="o">.</span><span class="n">acquire_digital_input_output</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">reset</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">vb</span><span class="o">.</span><span class="n">dio</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="p">{</span><span class="kc">True</span><span class="p">})</span>
+<span class="n">sleep</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">vb</span><span class="o">.</span><span class="n">dio</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="p">{</span><span class="kc">False</span><span class="p">})</span>
+
+<span class="n">vb</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="instrument-class">
+<h2>Instrument Class<a class="headerlink" href="#instrument-class" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.ni.virtualbench.</code><code class="sig-name descname">VirtualBench</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">device_name</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'VirtualBench'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents National Instruments Virtual Bench main frame.</p>
+<p>Subclasses implement the functionalities of the different modules:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Mixed-Signal-Oscilloscope (MSO)</p></li>
+<li><p>Digital Input Output (DIO)</p></li>
+<li><p>Function Generator (FGEN)</p></li>
+<li><p>Power Supply (PS)</p></li>
+<li><p>Serial Peripheral Interface (SPI) -&gt; not implemented
+for pymeasure yet</p></li>
+<li><p>Inter Integrated Circuit (I2C) -&gt; not implemented for pymeasure yet</p></li>
+</ul>
+</div></blockquote>
+<p>For every module exist methods to save/load the configuration to file.
+These methods are not wrapped so far, checkout the pyvirtualbench file.</p>
+<p>All calibration methods and classes are not wrapped so far, since these
+are not required on a very regular basis. Also the connections via network
+are not yet implemented.
+Check the pyvirtualbench file, if you need the functionality.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_name</strong> (<em>str</em>) – Full unique device name</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name for display in pymeasure</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput">
+<em class="property">class </em><code class="sig-name descname">DigitalInputOutput</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">virtualbench</span></em>, <em class="sig-param"><span class="n">lines</span></em>, <em class="sig-param"><span class="n">reset</span></em>, <em class="sig-param"><span class="n">vb_name</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.ni.virtualbench.VirtualBench.VirtualBenchInstrument</span></code></p>
+<p>Represents Digital Input Output (DIO) Module of Virtual Bench
+device. Allows to read/write digital channels and/or set channels
+to export the start signal of FGEN module or trigger of MSO module.</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.export_signal">
+<code class="sig-name descname">export_signal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span></em>, <em class="sig-param"><span class="n">digitalSignalSource</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.export_signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exports a signal to the specified line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> (<em>str</em>) – Line string</p></li>
+<li><p><strong>digitalSignalSource</strong> (<em>int</em>) – <code class="docutils literal notranslate"><span class="pre">0</span></code> for FGEN start or <code class="docutils literal notranslate"><span class="pre">1</span></code>
+for MSO trigger</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.query_export_signal">
+<code class="sig-name descname">query_export_signal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">line</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.query_export_signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the signal being exported on the specified line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – Line string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Exported signal (FGEN start or MSO trigger)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>enum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.query_line_configuration">
+<code class="sig-name descname">query_line_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.query_line_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the current line configurations. Tristate Lines,
+Static Lines, and Export Lines contain comma-separated
+range_data and/or colon-delimited lists of all acquired lines</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the current state of the specified lines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lines</strong> (<em>str</em>) – Line string,  requires full name specification e.g.
+<code class="docutils literal notranslate"><span class="pre">'VB8012-xxxxxxx/dig/0:7'</span></code> since instrument_handle
+is not required (only library_handle)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of line states (HIGH/LOW)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.reset_instrument">
+<code class="sig-name descname">reset_instrument</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.reset_instrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the session configuration to default values, and
+resets the device and driver software to a known state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the session and deallocates any resources acquired
+during the session. If output is enabled on any channels, they
+remain in their current state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.tristate_lines">
+<code class="sig-name descname">tristate_lines</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.tristate_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets all specified lines to a high-impedance state. (Default)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.validate_lines">
+<code class="sig-name descname">validate_lines</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em>, <em class="sig-param"><span class="n">return_single_lines</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">validate_init</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.validate_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate lines string
+Allowed patterns (case sensitive):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'VBxxxx-xxxxxxx/dig/0:7'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'VBxxxx-xxxxxxx/dig/0'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'dig/0'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'VBxxxx-xxxxxxx/trig'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'trig'</span></code></p></li>
+</ul>
+<p>Allowed Line Numbers: 0-7 or trig</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lines</strong> (<em>str</em>) – Line string to test</p></li>
+<li><p><strong>return_single_lines</strong> (<em>bool</em><em>, </em><em>optional</em>) – Return list of line numbers as well,
+defaults to False</p></li>
+<li><p><strong>validate_init</strong> (<em>bool</em><em>, </em><em>optional</em>) – Check if lines are initialized (in
+<code class="code docutils literal notranslate"><span class="pre">self._line_numbers</span></code>),
+defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Line string, optional list of single line numbers</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str, optional (str, list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em>, <em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalInputOutput.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes data to the specified lines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lines</strong> (<em>str</em>) – Line string</p></li>
+<li><p><strong>data</strong> (<em>list</em><em> or </em><em>tuple</em>) – List of data, (<code class="docutils literal notranslate"><span class="pre">True</span></code> = High, <code class="docutils literal notranslate"><span class="pre">False</span></code> = Low)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter">
+<em class="property">class </em><code class="sig-name descname">DigitalMultimeter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">virtualbench</span></em>, <em class="sig-param"><span class="n">reset</span></em>, <em class="sig-param"><span class="n">vb_name</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.ni.virtualbench.VirtualBench.VirtualBenchInstrument</span></code></p>
+<p>Represents Digital Multimeter (DMM) Module of Virtual Bench
+device. Allows to measure either DC/AC voltage or current,
+Resistance or Diodes.</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.configure_ac_current">
+<code class="sig-name descname">configure_ac_current</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">auto_range_terminal</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.configure_ac_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure auto rage terminal for AC current measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>auto_range_terminal</strong> – Terminal to perform auto ranging
+(<code class="docutils literal notranslate"><span class="pre">'LOW'</span></code> or <code class="docutils literal notranslate"><span class="pre">'HIGH'</span></code>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.configure_dc_current">
+<code class="sig-name descname">configure_dc_current</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">auto_range_terminal</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.configure_dc_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure auto rage terminal for DC current measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>auto_range_terminal</strong> – Terminal to perform auto ranging
+(<code class="docutils literal notranslate"><span class="pre">'LOW'</span></code> or <code class="docutils literal notranslate"><span class="pre">'HIGH'</span></code>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.configure_dc_voltage">
+<code class="sig-name descname">configure_dc_voltage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dmm_input_resistance</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.configure_dc_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure DC voltage input resistance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dmm_input_resistance</strong> (<em>int</em><em> or </em><em>str</em>) – Input resistance (<code class="docutils literal notranslate"><span class="pre">'TEN_MEGA_OHM'</span></code>
+or <code class="docutils literal notranslate"><span class="pre">'TEN_GIGA_OHM'</span></code>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.configure_measurement">
+<code class="sig-name descname">configure_measurement</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dmm_function</span></em>, <em class="sig-param"><span class="n">auto_range</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">manual_range</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.configure_measurement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure Instrument to take a DMM measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function index</strong><strong> or </strong><strong>name</strong> (<em>dmm_function:DMM</em>) – <ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">'DC_VOLTS'</span></code>, <code class="docutils literal notranslate"><span class="pre">'AC_VOLTS'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'DC_CURRENT'</span></code>, <code class="docutils literal notranslate"><span class="pre">'AC_CURRENT'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'RESISTANCE'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'DIODE'</span></code></p></li>
+</ul>
+</p></li>
+<li><p><strong>auto_range</strong> (<em>bool</em>) – Enable/Disable auto ranging</p></li>
+<li><p><strong>manual_range</strong> (<em>float</em>) – Manually set measurement range</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.query_ac_current">
+<code class="sig-name descname">query_ac_current</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.query_ac_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates auto range terminal for AC current measurement</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.query_dc_current">
+<code class="sig-name descname">query_dc_current</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.query_dc_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates auto range terminal for DC current measurement</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.query_dc_voltage">
+<code class="sig-name descname">query_dc_voltage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.query_dc_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates input resistance setting for DC voltage measurement</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.query_measurement">
+<code class="sig-name descname">query_measurement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.query_measurement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query DMM measurement settings from the instrument</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Auto range, range data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(bool, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read measurement value from the instrument</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Measurement value</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.reset_instrument">
+<code class="sig-name descname">reset_instrument</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.reset_instrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the DMM module to defaults</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the session and deallocates any resources acquired
+during the session. If output is enabled on any channels, they
+remain in their current state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.validate_auto_range_terminal">
+<code class="sig-name descname">validate_auto_range_terminal</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">auto_range_terminal</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.validate_auto_range_terminal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check value for choosing the auto range terminal for
+DC current measurement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>auto_range_terminal</strong> (<em>int</em><em> or </em><em>str</em>) – Terminal to perform
+auto ranging (<code class="docutils literal notranslate"><span class="pre">'LOW'</span></code>
+or <code class="docutils literal notranslate"><span class="pre">'HIGH'</span></code>)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Auto range terminal to pass to the instrument</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.validate_dmm_function">
+<code class="sig-name descname">validate_dmm_function</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dmm_function</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.validate_dmm_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if DMM function <em>dmm_function</em> exists</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dmm_function</strong> (<em>int</em><em> or </em><em>str</em>) – <p>DMM function index or name:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">'DC_VOLTS'</span></code>, <code class="docutils literal notranslate"><span class="pre">'AC_VOLTS'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'DC_CURRENT'</span></code>, <code class="docutils literal notranslate"><span class="pre">'AC_CURRENT'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'RESISTANCE'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'DIODE'</span></code></p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DMM function index to pass to the instrument</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.validate_range">
+<em class="property">static </em><code class="sig-name descname">validate_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dmm_function</span></em>, <em class="sig-param"><span class="n">range</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.DigitalMultimeter.validate_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if <code class="docutils literal notranslate"><span class="pre">range</span></code> is valid for the chosen <code class="docutils literal notranslate"><span class="pre">dmm_function</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dmm_function</strong> (<em>int</em>) – DMM Function</p></li>
+<li><p><strong>range</strong> (<em>int</em><em> or </em><em>float</em>) – Range value, e.g. maximum value to measure</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Range value to pass to instrument</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator">
+<em class="property">class </em><code class="sig-name descname">FunctionGenerator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">virtualbench</span></em>, <em class="sig-param"><span class="n">reset</span></em>, <em class="sig-param"><span class="n">vb_name</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.ni.virtualbench.VirtualBench.VirtualBenchInstrument</span></code></p>
+<p>Represents Function Generator (FGEN) Module of Virtual
+Bench device.</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.configure_arbitrary_waveform">
+<code class="sig-name descname">configure_arbitrary_waveform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">waveform</span></em>, <em class="sig-param"><span class="n">sample_period</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.configure_arbitrary_waveform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to output a waveform. The waveform is
+output either after the end of the current waveform if output
+is enabled, or immediately after output is enabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>waveform</strong> (<em>list</em>) – Waveform as list of values</p></li>
+<li><p><strong>sample_period</strong> (<em>float</em>) – Time between two waveform points
+(maximum of 125MS/s, which equals 80ns)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.configure_arbitrary_waveform_gain_and_offset">
+<code class="sig-name descname">configure_arbitrary_waveform_gain_and_offset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gain</span></em>, <em class="sig-param"><span class="n">dc_offset</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.configure_arbitrary_waveform_gain_and_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to output an arbitrary waveform with
+a specified gain and offset value. The waveform is output either
+after the end of the current waveform if output is enabled, or
+immediately after output is enabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gain</strong> (<em>float</em>) – Gain, multiplier of waveform values</p></li>
+<li><p><strong>dc_offset</strong> (<em>float</em>) – DC offset in volts</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.configure_standard_waveform">
+<code class="sig-name descname">configure_standard_waveform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">waveform_function</span></em>, <em class="sig-param"><span class="n">amplitude</span></em>, <em class="sig-param"><span class="n">dc_offset</span></em>, <em class="sig-param"><span class="n">frequency</span></em>, <em class="sig-param"><span class="n">duty_cycle</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.configure_standard_waveform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to output a standard waveform.
+Check instrument manual for maximum ratings which depend on load.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>waveform_function</strong> (<em>int</em><em> or </em><em>str</em>) – Waveform function (<code class="docutils literal notranslate"><span class="pre">&quot;SINE&quot;,</span> <span class="pre">&quot;SQUARE&quot;,</span>
+<span class="pre">&quot;TRIANGLE/RAMP&quot;,</span> <span class="pre">&quot;DC&quot;</span></code>)</p></li>
+<li><p><strong>amplitude</strong> (<em>float</em>) – Amplitude in volts</p></li>
+<li><p><strong>dc_offset</strong> (<em>float</em>) – DC offset in volts</p></li>
+<li><p><strong>frequency</strong> (<em>float</em>) – Frequency in Hz</p></li>
+<li><p><strong>duty_cycle</strong> (<em>int</em>) – Duty cycle in %</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.filter">
+<em class="property">property </em><code class="sig-name descname">filter</code><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables or disables the filter on the instrument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>enable_filter</strong> (<em>bool</em>) – Enable/Disable filter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_arbitrary_waveform">
+<code class="sig-name descname">query_arbitrary_waveform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_arbitrary_waveform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the samples per second for arbitrary waveform
+generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Samples per second</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_arbitrary_waveform_gain_and_offset">
+<code class="sig-name descname">query_arbitrary_waveform_gain_and_offset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_arbitrary_waveform_gain_and_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the settings for arbitrary waveform generation that
+includes gain and offset settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Gain, DC offset</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_generation_status">
+<code class="sig-name descname">query_generation_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_generation_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the status of waveform generation on the instrument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Status</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>enum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_standard_waveform">
+<code class="sig-name descname">query_standard_waveform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_standard_waveform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the settings for a standard waveform generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Waveform function, amplitude, dc_offset, frequency,
+duty_cycle</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(enum, float, float, float, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_waveform_mode">
+<code class="sig-name descname">query_waveform_mode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.query_waveform_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates whether the waveform output by the instrument is a
+standard or arbitrary waveform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Waveform mode</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>enum</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.reset_instrument">
+<code class="sig-name descname">reset_instrument</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.reset_instrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the session configuration to default values, and resets
+the device and driver software to a known state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transitions the session from the Stopped state to the Running
+state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.self_calibrate">
+<code class="sig-name descname">self_calibrate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.self_calibrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs offset nulling calibration on the device. You must run
+FGEN Initialize prior to running this method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the session and deallocates any resources acquired
+during the session. If output is enabled on any channels, they
+remain in their current state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.FunctionGenerator.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transitions the acquisition from either the Triggered or
+Running state to the Stopped state.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope">
+<em class="property">class </em><code class="sig-name descname">MixedSignalOscilloscope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">virtualbench</span></em>, <em class="sig-param"><span class="n">reset</span></em>, <em class="sig-param"><span class="n">vb_name</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.ni.virtualbench.VirtualBench.VirtualBenchInstrument</span></code></p>
+<p>Represents Mixed Signal Oscilloscope (MSO) Module of Virtual Bench
+device. Allows to measure oscilloscope data from analog and digital
+channels.</p>
+<p>Methods from pyvirtualbench not implemented in pymeasure yet:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">enable_digital_channels</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure_digital_threshold</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure_advanced_digital_timing</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure_state_mode</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure_digital_edge_trigger</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure_digital_pattern_trigger</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure_digital_glitch_trigger</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configure_digital_pulse_width_trigger</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_digital_channel</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_enabled_digital_channels</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_digital_threshold</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_advanced_digital_timing</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_state_mode</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_digital_edge_trigger</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_digital_pattern_trigger</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_digital_glitch_trigger</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">query_digital_pulse_width_trigger</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">read_digital_u64</span></code></p></li>
+</ul>
+</div></blockquote>
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.auto_setup">
+<code class="sig-name descname">auto_setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.auto_setup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Automatically configure the instrument</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_analog_channel">
+<code class="sig-name descname">configure_analog_channel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">enable_channel</span></em>, <em class="sig-param"><span class="n">vertical_range</span></em>, <em class="sig-param"><span class="n">vertical_offset</span></em>, <em class="sig-param"><span class="n">probe_attenuation</span></em>, <em class="sig-param"><span class="n">vertical_coupling</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_analog_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure analog measurement channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<em>str</em>) – Channel string</p></li>
+<li><p><strong>enable_channel</strong> (<em>bool</em>) – Enable/Disable channel</p></li>
+<li><p><strong>vertical_range</strong> (<em>float</em>) – Vertical measurement range (0V - 20V),
+the instrument discretizes to these ranges:
+<code class="docutils literal notranslate"><span class="pre">[20,</span> <span class="pre">10,</span> <span class="pre">5,</span> <span class="pre">2,</span> <span class="pre">1,</span> <span class="pre">0.5,</span> <span class="pre">0.2,</span> <span class="pre">0.1,</span> <span class="pre">0.05]</span></code>
+which are 5x the values shown in the native UI.</p></li>
+<li><p><strong>vertical_offset</strong> (<em>float</em>) – Vertical offset to correct for
+(inverted compared to VB native UI,
+-20V - +20V, resolution 0.1mV)</p></li>
+<li><p><strong>probe_attenuation</strong> (<em>int</em><em> or </em><em>str</em>) – Probe attenuation (<code class="docutils literal notranslate"><span class="pre">'ATTENUATION_10X'</span></code>
+or <code class="docutils literal notranslate"><span class="pre">'ATTENUATION_1X'</span></code>)</p></li>
+<li><p><strong>vertical_coupling</strong> (<em>int</em><em> or </em><em>str</em>) – Vertical coupling (<code class="docutils literal notranslate"><span class="pre">'AC'</span></code> or <code class="docutils literal notranslate"><span class="pre">'DC'</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_analog_channel_characteristics">
+<code class="sig-name descname">configure_analog_channel_characteristics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">input_impedance</span></em>, <em class="sig-param"><span class="n">bandwidth_limit</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_analog_channel_characteristics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure electrical characteristics of the specified channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<em>str</em>) – Channel string</p></li>
+<li><p><strong>input_impedance</strong> (<em>int</em><em> or </em><em>str</em>) – Input Impedance (<code class="docutils literal notranslate"><span class="pre">'ONE_MEGA_OHM'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">'FIFTY_OHMS'</span></code>)</p></li>
+<li><p><strong>bandwidth_limit</strong> (<em>int</em>) – Bandwidth limit (100MHz or 20MHz)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_analog_edge_trigger">
+<code class="sig-name descname">configure_analog_edge_trigger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trigger_source</span></em>, <em class="sig-param"><span class="n">trigger_slope</span></em>, <em class="sig-param"><span class="n">trigger_level</span></em>, <em class="sig-param"><span class="n">trigger_hysteresis</span></em>, <em class="sig-param"><span class="n">trigger_instance</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_analog_edge_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures a trigger to activate on the specified source when
+the analog edge reaches the specified levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trigger_source</strong> (<em>str</em>) – Channel string</p></li>
+<li><p><strong>trigger_slope</strong> (<em>int</em><em> or </em><em>str</em>) – Trigger slope (<code class="docutils literal notranslate"><span class="pre">'RISING'</span></code>, <code class="docutils literal notranslate"><span class="pre">'FALLING'</span></code>
+or <code class="docutils literal notranslate"><span class="pre">'EITHER'</span></code>)</p></li>
+<li><p><strong>trigger_level</strong> (<em>float</em>) – Trigger level</p></li>
+<li><p><strong>trigger_hysteresis</strong> (<em>float</em>) – Trigger hysteresis</p></li>
+<li><p><strong>trigger_instance</strong> (<em>int</em><em> or </em><em>str</em>) – Trigger instance</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_analog_pulse_width_trigger">
+<code class="sig-name descname">configure_analog_pulse_width_trigger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trigger_source</span></em>, <em class="sig-param"><span class="n">trigger_polarity</span></em>, <em class="sig-param"><span class="n">trigger_level</span></em>, <em class="sig-param"><span class="n">comparison_mode</span></em>, <em class="sig-param"><span class="n">lower_limit</span></em>, <em class="sig-param"><span class="n">upper_limit</span></em>, <em class="sig-param"><span class="n">trigger_instance</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_analog_pulse_width_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures a trigger to activate on the specified source when
+the analog edge reaches the specified levels within a specified
+window of time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trigger_source</strong> (<em>str</em>) – Channel string</p></li>
+<li><p><strong>trigger_polarity</strong> (<em>int</em><em> or </em><em>str</em>) – Trigger slope (<code class="docutils literal notranslate"><span class="pre">'POSITIVE'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">'NEGATIVE'</span></code>)</p></li>
+<li><p><strong>trigger_level</strong> (<em>float</em>) – Trigger level</p></li>
+<li><p><strong>comparison_mode</strong> (<em>int</em><em> or </em><em>str</em>) – Mode of compariosn (
+<code class="docutils literal notranslate"><span class="pre">'GREATER_THAN_UPPER_LIMIT'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'LESS_THAN_LOWER_LIMIT'</span></code>,
+<code class="docutils literal notranslate"><span class="pre">'INSIDE_LIMITS'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">'OUTSIDE_LIMITS'</span></code>)</p></li>
+<li><p><strong>lower_limit</strong> (<em>float</em>) – Lower limit</p></li>
+<li><p><strong>upper_limit</strong> (<em>float</em>) – Upper limit</p></li>
+<li><p><strong>trigger_instance</strong> (<em>int</em><em> or </em><em>str</em>) – Trigger instance</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_immediate_trigger">
+<code class="sig-name descname">configure_immediate_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_immediate_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures a trigger to immediately activate on the specified
+channels after the pretrigger time has expired.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_timing">
+<code class="sig-name descname">configure_timing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sample_rate</span></em>, <em class="sig-param"><span class="n">acquisition_time</span></em>, <em class="sig-param"><span class="n">pretrigger_time</span></em>, <em class="sig-param"><span class="n">sampling_mode</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_timing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure timing settings of the MSO</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_rate</strong> (<em>int</em>) – Sample rate (15.26kS - 1GS)</p></li>
+<li><p><strong>acquisition_time</strong> (<em>float</em>) – Acquisition time (1ns - 68.711s)</p></li>
+<li><p><strong>pretrigger_time</strong> (<em>float</em>) – Pretrigger time (0s - 10s)</p></li>
+<li><p><strong>sampling_mode</strong> – Sampling mode (<code class="docutils literal notranslate"><span class="pre">'SAMPLE'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">'PEAK_DETECT'</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_trigger_delay">
+<code class="sig-name descname">configure_trigger_delay</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trigger_delay</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.configure_trigger_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the amount of time to wait after a trigger condition
+is met before triggering.</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">param float trigger_delay</dt>
+<dd class="field-odd"><p>Trigger delay (0s - 17.1799s)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.force_trigger">
+<code class="sig-name descname">force_trigger</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.force_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Causes a software-timed trigger to occur after the pretrigger
+time has expired.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_acquisition_status">
+<code class="sig-name descname">query_acquisition_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_acquisition_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the status of a completed or ongoing acquisition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_analog_channel">
+<code class="sig-name descname">query_analog_channel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_analog_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the vertical configuration of the specified channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Channel enabled, vertical range, vertical offset,
+probe attenuation, vertical coupling</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(bool, float, float, enum, enum)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_analog_channel_characteristics">
+<code class="sig-name descname">query_analog_channel_characteristics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_analog_channel_characteristics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the properties that control the electrical
+characteristics of the specified channel.
+This method returns an error if too much power is
+applied to the channel.</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">return</dt>
+<dd class="field-odd"><p>Input impedance, bandwidth limit</p>
+</dd>
+<dt class="field-even">rtype</dt>
+<dd class="field-even"><p>(enum, float)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_analog_edge_trigger">
+<code class="sig-name descname">query_analog_edge_trigger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trigger_instance</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_analog_edge_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the analog edge trigger configuration of the
+specified instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Trigger source, trigger slope, trigger level, trigger
+hysteresis</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(str, enum, float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_analog_pulse_width_trigger">
+<code class="sig-name descname">query_analog_pulse_width_trigger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trigger_instance</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_analog_pulse_width_trigger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the analog pulse width trigger configuration of the
+specified instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Trigger source, trigger polarity, trigger level,
+comparison mode, lower limit, upper limit</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(str, enum, float, enum, float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_enabled_analog_channels">
+<code class="sig-name descname">query_enabled_analog_channels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_enabled_analog_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns String of enabled analog channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Enabled analog channels</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_timing">
+<code class="sig-name descname">query_timing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_timing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the timing configuration of the MSO.
+Call directly before measurement to read the actual timing
+configuration and write it to the corresponding class variables.
+Necessary to interpret the measurement data, since it contains no
+time information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Sample rate, acquisition time, pretrigger time,
+sampling mode</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(float, float, float, enum)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_trigger_delay">
+<code class="sig-name descname">query_trigger_delay</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_trigger_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the trigger delay setting of the MSO.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Trigger delay</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_trigger_type">
+<code class="sig-name descname">query_trigger_type</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trigger_instance</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.query_trigger_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the trigger type of the specified instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trigger_instance</strong> – Trigger instance (<code class="docutils literal notranslate"><span class="pre">'A'</span></code> or <code class="docutils literal notranslate"><span class="pre">'B'</span></code>)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Trigger type</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.read_analog_digital_dataframe">
+<code class="sig-name descname">read_analog_digital_dataframe</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.read_analog_digital_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfers data from the instrument and returns a pandas
+dataframe of the analog measurement data, including time
+coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dataframe with time and measurement data</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.read_analog_digital_u64">
+<code class="sig-name descname">read_analog_digital_u64</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.read_analog_digital_u64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfers data from the instrument as long as the acquisition
+state is Acquisition Complete. If the state is either Running or
+Triggered, this method will wait until the state transitions to
+Acquisition Complete. If the state is Stopped, this method
+returns an error.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Analog data out, analog data stride, analog t0,
+digital data out, digital timestamps out, digital t0,
+trigger timestamp, trigger reason</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(list, int, pyvb.Timestamp, list, list, pyvb.Timestamp,
+pyvb.Timestamp, enum)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.reset_instrument">
+<code class="sig-name descname">reset_instrument</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.reset_instrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the session configuration to default values, and resets
+the device and driver software to a known state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">autoTrigger</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transitions the acquisition from the Stopped state to the
+Running state. If the current state is Triggered, the
+acquisition is first transitioned to the Stopped state before
+transitioning to the Running state. This method returns an
+error if too much power is applied to any enabled channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>autoTrigger</strong> (<em>bool</em>) – Enable/Disable auto triggering</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the session and deallocates any resources acquired
+during the session. If output is enabled on any channels, they
+remain in their current state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transitions the acquisition from either the Triggered or
+Running state to the Stopped state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.validate_channel">
+<code class="sig-name descname">validate_channel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.validate_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if <code class="docutils literal notranslate"><span class="pre">channel</span></code> is a correct specification</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channel</strong> (<em>str</em>) – Channel string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Channel string</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.validate_trigger_instance">
+<em class="property">static </em><code class="sig-name descname">validate_trigger_instance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">trigger_instance</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.MixedSignalOscilloscope.validate_trigger_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if <code class="docutils literal notranslate"><span class="pre">trigger_instance</span></code> is a valid choice</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>trigger_instance</strong> (<em>int</em><em> or </em><em>str</em>) – Trigger instance (<code class="docutils literal notranslate"><span class="pre">'A'</span></code> or <code class="docutils literal notranslate"><span class="pre">'B'</span></code>)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Trigger instance</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply">
+<em class="property">class </em><code class="sig-name descname">PowerSupply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">virtualbench</span></em>, <em class="sig-param"><span class="n">reset</span></em>, <em class="sig-param"><span class="n">vb_name</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.ni.virtualbench.VirtualBench.VirtualBenchInstrument</span></code></p>
+<p>Represents Power Supply (PS) Module of Virtual Bench device</p>
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.configure_current_output">
+<code class="sig-name descname">configure_current_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">current_level</span></em>, <em class="sig-param"><span class="n">voltage_limit</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.configure_current_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures a current output on the specified channel. This
+method should be called once for every channel you want to
+configure to output current.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.configure_voltage_output">
+<code class="sig-name descname">configure_voltage_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">voltage_level</span></em>, <em class="sig-param"><span class="n">current_limit</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.configure_voltage_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures a voltage output on the specified channel. This
+method should be called once for every channel you want to
+configure to output voltage.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.outputs_enabled">
+<em class="property">property </em><code class="sig-name descname">outputs_enabled</code><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.outputs_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables or disables all outputs on all channels of the
+instrument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>enable_outputs</strong> (<em>bool</em>) – Enable/Disable outputs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.query_current_output">
+<code class="sig-name descname">query_current_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.query_current_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the current output settings on the specified channel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.query_voltage_output">
+<code class="sig-name descname">query_voltage_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.query_voltage_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indicates the voltage output settings on the specified channel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.read_output">
+<code class="sig-name descname">read_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.read_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the voltage and current levels and outout mode of the
+specified channel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.reset_instrument">
+<code class="sig-name descname">reset_instrument</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.reset_instrument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the session configuration to default values, and resets
+the device and driver software to a known state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes the session and deallocates any resources acquired
+during the session. If output is enabled on any channels, they
+remain in their current state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.tracking">
+<em class="property">property </em><code class="sig-name descname">tracking</code><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.tracking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables or disables tracking between the positive and negative
+25V channels. If enabled, any configuration change on the
+positive 25V channel is mirrored to the negative 25V channel,
+and any writes to the negative 25V channel are ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>enable_tracking</strong> (<em>bool</em>) – Enable/Disable tracking</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.validate_channel">
+<code class="sig-name descname">validate_channel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">current</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">voltage</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.PowerSupply.validate_channel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if channel string is valid and if output current/voltage
+are within the output ranges of the channel</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> (<em>str</em>) – Channel string (<code class="docutils literal notranslate"><span class="pre">&quot;ps/+6V&quot;,&quot;ps/+25V&quot;,&quot;ps/-25V&quot;</span></code>)</p></li>
+<li><p><strong>current</strong> (<em>bool</em><em>, </em><em>optional</em>) – Current output, defaults to False</p></li>
+<li><p><strong>voltage</strong> (<em>bool</em><em>, </em><em>optional</em>) – Voltage output, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>channel or channel, current &amp; voltage</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str or (str, float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_digital_input_output">
+<code class="sig-name descname">acquire_digital_input_output</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em>, <em class="sig-param"><span class="n">reset</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_digital_input_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Establishes communication with the DIO module. This method should
+be called once per session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lines</strong> (<em>str</em>) – Lines to acquire, reading is possible on all lines</p></li>
+<li><p><strong>reset</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reset DIO module, defaults to False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_digital_multimeter">
+<code class="sig-name descname">acquire_digital_multimeter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reset</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_digital_multimeter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Establishes communication with the DMM module. This method should
+be called once per session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reset</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reset the DMM module, defaults to False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_function_generator">
+<code class="sig-name descname">acquire_function_generator</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reset</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_function_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Establishes communication with the FGEN module. This method should
+be called once per session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reset</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reset the FGEN module, defaults to False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_mixed_signal_oscilloscope">
+<code class="sig-name descname">acquire_mixed_signal_oscilloscope</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reset</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_mixed_signal_oscilloscope" title="Permalink to this definition">¶</a></dt>
+<dd><p>Establishes communication with the MSO module. This method should
+be called once per session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reset</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reset the MSO module, defaults to False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_power_supply">
+<code class="sig-name descname">acquire_power_supply</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">reset</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.acquire_power_supply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Establishes communication with the PS module. This method should be
+called once per session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reset</strong> (<em>bool</em><em>, </em><em>optional</em>) – Reset the PS module, defaults to False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.collapse_channel_string">
+<code class="sig-name descname">collapse_channel_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">names_in</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.collapse_channel_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collapses a channel string into a comma and colon-delimited
+equivalent. Last element is the number of channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>names_in</strong> (<em>str</em>) – Channel string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Channel string with colon notation where possible,
+number of channels</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(str, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.convert_timestamp_to_values">
+<code class="sig-name descname">convert_timestamp_to_values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.convert_timestamp_to_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a timestamp to seconds and fractional seconds</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>pyvb.Timestamp</em>) – VirtualBench timestamp</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(seconds_since_1970, fractional seconds)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(int, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.convert_values_to_datetime">
+<code class="sig-name descname">convert_values_to_datetime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timestamp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.convert_values_to_datetime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts timestamp to datetime object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>timestamp</strong> (<em>pyvb.Timestamp</em>) – VirtualBench timestamp</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Timestamp as DateTime object</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DateTime</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.convert_values_to_timestamp">
+<code class="sig-name descname">convert_values_to_timestamp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seconds_since_1970</span></em>, <em class="sig-param"><span class="n">fractional_seconds</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.convert_values_to_timestamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts seconds and fractional seconds to a timestamp</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>seconds_since_1970</strong> (<em>int</em>) – Date/Time in seconds since 1970</p></li>
+<li><p><strong>fractional_seconds</strong> (<em>float</em>) – Fractional seconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>VirtualBench timestamp</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pyvb.Timestamp</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.expand_channel_string">
+<code class="sig-name descname">expand_channel_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">names_in</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.expand_channel_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expands a channel string into a comma-delimited (no colon)
+equivalent. Last element is the number of channels.
+<code class="docutils literal notranslate"><span class="pre">'dig/0:2'</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">('dig/0,</span> <span class="pre">dig/1,</span> <span class="pre">dig/2',3)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>names_in</strong> (<em>str</em>) – Channel string</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Channel string with all channels separated by comma,
+number of channels</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(str, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.get_calibration_information">
+<code class="sig-name descname">get_calibration_information</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.get_calibration_information" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns calibration information for the specified device,
+including the last calibration date and calibration interval.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Calibration date, recommended calibration interval in months,
+calibration interval in months</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(pyvb.Timestamp, int, int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.get_library_version">
+<code class="sig-name descname">get_library_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.get_library_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the version of the VirtualBench runtime library</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize the VirtualBench library.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="pymeasure.instruments.ni.virtualbench.VirtualBench_Direct">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.ni.virtualbench.</code><code class="sig-name descname">VirtualBench_Direct</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.ni.virtualbench.VirtualBench_Direct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyvirtualbench.PyVirtualBench</span></code></p>
+<p>Represents National Instruments Virtual Bench main frame.
+This class provides direct access to the armstrap/pyvirtualbench
+Python wrapper.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="National Instruments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../oxfordinstruments/index.html" class="btn btn-neutral float-right" title="Oxford Instruments" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oxford Instruments Intelligent Temperature Controller 503 &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Parker" href="../parker/index.html" />
+    <link rel="prev" title="Oxford Instruments" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Oxford Instruments</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Oxford Instruments Intelligent Temperature Controller 503</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Oxford Instruments</a> &raquo;</li>
+      <li>Oxford Instruments Intelligent Temperature Controller 503</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/oxfordinstruments/ITC503.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="oxford-instruments-intelligent-temperature-controller-503">
+<h1>Oxford Instruments Intelligent Temperature Controller 503<a class="headerlink" href="#oxford-instruments-intelligent-temperature-controller-503" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.oxfordinstruments.</code><code class="sig-name descname">ITC503</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="n">clear_buffer</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">max_temperature</span><span class="o">=</span><span class="default_value">301</span></em>, <em class="sig-param"><span class="n">min_temperature</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represents the Oxford Intelligent Temperature Controller 503.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">itc</span> <span class="o">=</span> <span class="n">ITC503</span><span class="p">(</span><span class="s2">&quot;GPIB::24&quot;</span><span class="p">)</span>        <span class="c1"># Default channel for the ITC503</span>
+
+<span class="n">itc</span><span class="o">.</span><span class="n">control_mode</span> <span class="o">=</span> <span class="s2">&quot;RU&quot;</span>         <span class="c1"># Set the control mode to remote</span>
+<span class="n">itc</span><span class="o">.</span><span class="n">heater_gas_mode</span> <span class="o">=</span> <span class="s2">&quot;AUTO&quot;</span>    <span class="c1"># Turn on auto heater and flow</span>
+<span class="n">itc</span><span class="o">.</span><span class="n">auto_pid</span> <span class="o">=</span> <span class="kc">True</span>             <span class="c1"># Turn on auto-pid</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">itc</span><span class="o">.</span><span class="n">temperature_setpoint</span><span class="p">)</span> <span class="c1"># Print the current set-point</span>
+<span class="n">itc</span><span class="o">.</span><span class="n">temperature_setpoint</span> <span class="o">=</span> <span class="mi">300</span>  <span class="c1"># Change the set-point to 300 K</span>
+<span class="n">itc</span><span class="o">.</span><span class="n">wait_for_temperature</span><span class="p">()</span>      <span class="c1"># Wait for the temperature to stabilize</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">itc</span><span class="o">.</span><span class="n">temperature_1</span><span class="p">)</span>        <span class="c1"># Print the temperature at sensor 1</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.auto_pid">
+<em class="property">property </em><code class="sig-name descname">auto_pid</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.auto_pid" title="Permalink to this definition">¶</a></dt>
+<dd><p>A boolean property that sets the Auto-PID mode on (True) or off (False).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.control_mode">
+<em class="property">property </em><code class="sig-name descname">control_mode</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.control_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that sets the ITC in LOCAL or REMOTE and LOCKES,
+or UNLOCKES, the LOC/REM button. Allowed values are:
+LL: LOCAL &amp; LOCKED
+RL: REMOTE &amp; LOCKED
+LU: LOCAL &amp; UNLOCKED
+RU: REMOTE &amp; UNLOCKED.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.gasflow">
+<em class="property">property </em><code class="sig-name descname">gasflow</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.gasflow" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls gas flow when in manual
+mode. The value is expressed as a percentage of the maximum gas flow.
+Valid values are in range 0 [off] to 99.9 [%].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.heater">
+<em class="property">property </em><code class="sig-name descname">heater</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.heater" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the required heater output when
+in manual mode. The parameter is expressed as a percentage of the
+maximum voltage. Valid values are in range 0 [off] to 99.9 [%].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.heater_gas_mode">
+<em class="property">property </em><code class="sig-name descname">heater_gas_mode</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.heater_gas_mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that sets the heater and gas flow control to
+AUTO or MANUAL. Allowed values are:
+MANUAL: HEATER MANUAL, GAS MANUAL
+AM: HEATER AUTO, GAS MANUAL
+MA: HEATER MANUAL, GAS AUTO
+AUTO: HEATER AUTO, GAS AUTO.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.program_sweep">
+<code class="sig-name descname">program_sweep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">temperatures</span></em>, <em class="sig-param"><span class="n">sweep_time</span></em>, <em class="sig-param"><span class="n">hold_time</span></em>, <em class="sig-param"><span class="n">steps</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.program_sweep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Program a temperature sweep in the controller. Stops any running sweep.
+After programming the sweep, it can be started using
+OxfordITC503.sweep_status = 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>temperatures</strong> – An array containing the temperatures for the sweep</p></li>
+<li><p><strong>sweep_time</strong> – The time (or an array of times) to sweep to a
+set-point in minutes (between 0 and 1339.9).</p></li>
+<li><p><strong>hold_time</strong> – The time (or an array of times) to hold at a
+set-point in minutes (between 0 and 1339.9).</p></li>
+<li><p><strong>steps</strong> – The number of steps in the sweep, if given, the
+temperatures, sweep_time and hold_time will be
+interpolated into (approximately) equal segments</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.sweep_status">
+<em class="property">property </em><code class="sig-name descname">sweep_status</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.sweep_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that sets the sweep status. Values are:
+0: Sweep not running
+1: Start sweep / sweeping to first set-point
+2P - 1: Sweeping to set-point P
+2P: Holding at set-point P.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.sweep_table">
+<em class="property">property </em><code class="sig-name descname">sweep_table</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.sweep_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>A property that sets values in the sweep table. Relies on the
+xpointer and ypointer to point at the location in the table that
+is to be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.temperature_1">
+<em class="property">property </em><code class="sig-name descname">temperature_1</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.temperature_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the temperature of the sensor 1 in Kelvin.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.temperature_2">
+<em class="property">property </em><code class="sig-name descname">temperature_2</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.temperature_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the temperature of the sensor 2 in Kelvin.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.temperature_3">
+<em class="property">property </em><code class="sig-name descname">temperature_3</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.temperature_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the temperature of the sensor 3 in Kelvin.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.temperature_error">
+<em class="property">property </em><code class="sig-name descname">temperature_error</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.temperature_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the difference between the set-point and the measured
+temperature in Kelvin. Positive when set-point is larger than
+measured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.temperature_setpoint">
+<em class="property">property </em><code class="sig-name descname">temperature_setpoint</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.temperature_setpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the temperature set-point of
+the ITC in kelvin.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.wait_for_temperature">
+<code class="sig-name descname">wait_for_temperature</code><span class="sig-paren">(</span><em class="sig-param">error=0.01</em>, <em class="sig-param">timeout=3600</em>, <em class="sig-param">check_interval=0.5</em>, <em class="sig-param">stability_interval=10</em>, <em class="sig-param">thermalize_interval=300</em>, <em class="sig-param">should_stop=&lt;function ITC503.&lt;lambda&gt;&gt;</em>, <em class="sig-param">max_comm_errors=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.wait_for_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for the ITC to reach the set-point temperature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error</strong> – The maximum error in Kelvin under which the temperature
+is considered at set-point</p></li>
+<li><p><strong>timeout</strong> – The maximum time the waiting is allowed to take. If
+timeout is exceeded, a TimeoutError is raised. If
+timeout is set to zero, no timeout will be used.</p></li>
+<li><p><strong>check_interval</strong> – The time between temperature queries to the ITC.</p></li>
+<li><p><strong>stability_interval</strong> – The time over which the temperature_error is
+to be below error to be considered stable.</p></li>
+<li><p><strong>thermalize_interval</strong> – The time to wait after stabilizing for the
+system to thermalize.</p></li>
+<li><p><strong>should_stop</strong> – Optional function (returning a bool) to allow the
+waiting to be stopped before its end.</p></li>
+<li><p><strong>max_comm_errors</strong> – The maximum number of communication errors that
+are allowed before the wait is stopped. if set
+to None (default), no maximum will be used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.xpointer">
+<em class="property">property </em><code class="sig-name descname">xpointer</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.xpointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property to set pointers into tables for loading and
+examining values in the table. For programming the sweep table values
+from 1 to 16 are allowed, corresponding to the maximum number of steps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.oxfordinstruments.ITC503.ypointer">
+<em class="property">property </em><code class="sig-name descname">ypointer</code><a class="headerlink" href="#pymeasure.instruments.oxfordinstruments.ITC503.ypointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property to set pointers into tables for loading and
+examining values in the table. For programming the sweep table the
+allowed values are:
+1: Setpoint temperature,
+2: Sweep-time to set-point,
+3: Hold-time at set-point.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Oxford Instruments" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../parker/index.html" class="btn btn-neutral float-right" title="Parker" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

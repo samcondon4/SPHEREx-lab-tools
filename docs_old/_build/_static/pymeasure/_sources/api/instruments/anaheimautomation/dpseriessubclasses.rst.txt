@@ -1,0 +1,10 @@
+#########################################
+DP-Series Subclasses
+#########################################
+
+This module implements subclasses of the DPSeriesMotorController class to implement additional functionality that falls out of scope of the pymeasure baseclass. 
+
+.. autoclass:: pymeasure.instruments.anaheimautomation.LinearStageController
+    :members:
+    :show-inheritance:
+

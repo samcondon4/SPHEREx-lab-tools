@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SR830 Lock-in Amplifier &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="SR860 Lock-in Amplifier" href="sr860.html" />
+    <link rel="prev" title="SR570 Lock-in Amplifier" href="sr570.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Stanford Research Systems</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="sr510.html">SR510 Lock-in Amplifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sr570.html">SR570 Lock-in Amplifier</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SR830 Lock-in Amplifier</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sr860.html">SR860 Lock-in Amplifier</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Stanford Research Systems</a> &raquo;</li>
+      <li>SR830 Lock-in Amplifier</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/srs/sr830.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sr830-lock-in-amplifier">
+<h1>SR830 Lock-in Amplifier<a class="headerlink" href="#sr830-lock-in-amplifier" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.srs.SR830">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.srs.</code><code class="sig-name descname">SR830</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resourceName</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.adc1">
+<em class="property">property </em><code class="sig-name descname">adc1</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.adc1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Aux input 1 value in Volts with 1/3 mV resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.adc2">
+<em class="property">property </em><code class="sig-name descname">adc2</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.adc2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Aux input 2 value in Volts with 1/3 mV resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.adc3">
+<em class="property">property </em><code class="sig-name descname">adc3</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.adc3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Aux input 3 value in Volts with 1/3 mV resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.adc4">
+<em class="property">property </em><code class="sig-name descname">adc4</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.adc4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Aux input 4 value in Volts with 1/3 mV resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.auto_offset">
+<code class="sig-name descname">auto_offset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.auto_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offsets the channel (X, Y, or R) to zero</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.aux_in_1">
+<em class="property">property </em><code class="sig-name descname">aux_in_1</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.aux_in_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Aux input 1 value in Volts with 1/3 mV resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.aux_in_2">
+<em class="property">property </em><code class="sig-name descname">aux_in_2</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.aux_in_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Aux input 2 value in Volts with 1/3 mV resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.aux_in_3">
+<em class="property">property </em><code class="sig-name descname">aux_in_3</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.aux_in_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Aux input 3 value in Volts with 1/3 mV resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.aux_in_4">
+<em class="property">property </em><code class="sig-name descname">aux_in_4</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.aux_in_4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Aux input 4 value in Volts with 1/3 mV resolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.aux_out_1">
+<em class="property">property </em><code class="sig-name descname">aux_out_1</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.aux_out_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the output of Aux output 1 in
+Volts, taking values between -10.5 V and +10.5 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.aux_out_2">
+<em class="property">property </em><code class="sig-name descname">aux_out_2</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.aux_out_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the output of Aux output 2 in
+Volts, taking values between -10.5 V and +10.5 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.aux_out_3">
+<em class="property">property </em><code class="sig-name descname">aux_out_3</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.aux_out_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the output of Aux output 3 in
+Volts, taking values between -10.5 V and +10.5 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.aux_out_4">
+<em class="property">property </em><code class="sig-name descname">aux_out_4</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.aux_out_4" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the output of Aux output 4 in
+Volts, taking values between -10.5 V and +10.5 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.channel1">
+<em class="property">property </em><code class="sig-name descname">channel1</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.channel1" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that represents the type of Channel 1,
+taking the values X, R, X Noise, Aux In 1, or Aux In 2. 
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.channel2">
+<em class="property">property </em><code class="sig-name descname">channel2</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.channel2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that represents the type of Channel 2,
+taking the values Y, Theta, Y Noise, Aux In 3, or Aux In 4.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.dac1">
+<em class="property">property </em><code class="sig-name descname">dac1</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.dac1" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the output of Aux output 1 in
+Volts, taking values between -10.5 V and +10.5 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.dac2">
+<em class="property">property </em><code class="sig-name descname">dac2</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.dac2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the output of Aux output 2 in
+Volts, taking values between -10.5 V and +10.5 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.dac3">
+<em class="property">property </em><code class="sig-name descname">dac3</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.dac3" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the output of Aux output 3 in
+Volts, taking values between -10.5 V and +10.5 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.dac4">
+<em class="property">property </em><code class="sig-name descname">dac4</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.dac4" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the output of Aux output 4 in
+Volts, taking values between -10.5 V and +10.5 V.
+This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.err_status">
+<em class="property">property </em><code class="sig-name descname">err_status</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.err_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the value of the lockin error (ERR) status byte. Returns an IntFlag type with
+positions within the string corresponding to different error flags:
+bit 0: unused
+bit 1: backup error
+bit 2: RAM error
+bit 3: unused
+bit 4: ROM error
+bit 5: GPIB error
+bit 6: DSP error
+bit 7: Math error</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.filter_slope">
+<em class="property">property </em><code class="sig-name descname">filter_slope</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.filter_slope" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the filter slope, which
+can take on the values 6, 12, 18, and 24 dB/octave. Values are
+truncated to the next highest level if they are not exact.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.frequency">
+<em class="property">property </em><code class="sig-name descname">frequency</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the lock-in frequency
+in Hz. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.get_buffer">
+<code class="sig-name descname">get_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">start</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">end</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.get_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aquires the 32 bit floating point data through binary transfer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.get_scaling">
+<code class="sig-name descname">get_scaling</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.get_scaling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the offset precent and the exapnsion term
+that are used to scale the channel in question</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.harmonic">
+<em class="property">property </em><code class="sig-name descname">harmonic</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.harmonic" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the harmonic that is measured.
+Allowed values are 1 to 19999. Can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.input_config">
+<em class="property">property </em><code class="sig-name descname">input_config</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.input_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>An string property that controls the input configuration. Allowed
+values are: [‘A’, ‘A - B’, ‘I (1 MOhm)’, ‘I (100 MOhm)’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.input_coupling">
+<em class="property">property </em><code class="sig-name descname">input_coupling</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.input_coupling" title="Permalink to this definition">¶</a></dt>
+<dd><p>An string property that controls the input coupling. Allowed
+values are: [‘AC’, ‘DC’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.input_grounding">
+<em class="property">property </em><code class="sig-name descname">input_grounding</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.input_grounding" title="Permalink to this definition">¶</a></dt>
+<dd><p>An string property that controls the input shield grounding. Allowed
+values are: [‘Float’, ‘Ground’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.input_notch_config">
+<em class="property">property </em><code class="sig-name descname">input_notch_config</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.input_notch_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>An string property that controls the input line notch filter 
+status. Allowed values are: [‘None’, ‘Line’, ‘2 x Line’, ‘Both’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.is_out_of_range">
+<code class="sig-name descname">is_out_of_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.is_out_of_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the magnitude is out of range</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.lia_status">
+<em class="property">property </em><code class="sig-name descname">lia_status</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.lia_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the value of the lockin amplifier (LIA) status byte. Returns a binary string with
+positions within the string corresponding to different status flags:
+bit 0: Input/Amplifier overload
+bit 1: Time constant filter overload
+bit 2: Output overload
+bit 3: Reference unlock
+bit 4: Detection frequency range switched
+bit 5: Time constant changed indirectly
+bit 6: Data storage triggered
+bit 7: unused</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.magnitude">
+<em class="property">property </em><code class="sig-name descname">magnitude</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the magnitude in Volts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.output_conversion">
+<code class="sig-name descname">output_conversion</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.output_conversion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a function that can be used to determine
+the signal from the channel output (X, Y, or R)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.phase">
+<em class="property">property </em><code class="sig-name descname">phase</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.phase" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the lock-in phase
+in degrees. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.quick_range">
+<code class="sig-name descname">quick_range</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.quick_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>While the magnitude is out of range, increase
+the sensitivity by one setting</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.reference_source">
+<em class="property">property </em><code class="sig-name descname">reference_source</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.reference_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>An string property that controls the reference source. Allowed
+values are: [‘External’, ‘Internal’]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.sample_frequency">
+<em class="property">property </em><code class="sig-name descname">sample_frequency</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.sample_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the sample frequency in Hz</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.sensitivity">
+<em class="property">property </em><code class="sig-name descname">sensitivity</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.sensitivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the sensitivity in Volts,
+which can take discrete values from 2 nV to 1 V. Values are truncated
+to the next highest level if they are not exact.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.set_scaling">
+<code class="sig-name descname">set_scaling</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">channel</span></em>, <em class="sig-param"><span class="n">precent</span></em>, <em class="sig-param"><span class="n">expand</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.set_scaling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the offset of a channel (X=1, Y=2, R=3) to a
+certain precent (-105% to 105%) of the signal, with
+an optional expansion term (0, 10=1, 100=2)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.sine_voltage">
+<em class="property">property </em><code class="sig-name descname">sine_voltage</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.sine_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that represents the reference sine-wave
+voltage in Volts. This property can be set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.snap">
+<code class="sig-name descname">snap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val1</span><span class="o">=</span><span class="default_value">'X'</span></em>, <em class="sig-param"><span class="n">val2</span><span class="o">=</span><span class="default_value">'Y'</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">vals</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.snap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that records and retrieves 2 to 6 parameters at a single
+instant. The parameters can be one of: X, Y, R, Theta, Aux In 1,
+Aux In 2, Aux In 3, Aux In 4, Frequency, CH1, CH2.
+Default is “X” and “Y”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val1</strong> – first parameter to retrieve</p></li>
+<li><p><strong>val2</strong> – second parameter to retrieve</p></li>
+<li><p><strong>vals</strong> – other parameters to retrieve (optional)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.theta">
+<em class="property">property </em><code class="sig-name descname">theta</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the theta value in degrees.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.time_constant">
+<em class="property">property </em><code class="sig-name descname">time_constant</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.time_constant" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the time constant
+in seconds, which can take discrete values from 10 microseconds
+to 30,000 seconds. Values are truncated to the next highest
+level if they are not exact.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.wait_for_buffer">
+<code class="sig-name descname">wait_for_buffer</code><span class="sig-paren">(</span><em class="sig-param">count</em>, <em class="sig-param">has_aborted=&lt;function SR830.&lt;lambda&gt;&gt;</em>, <em class="sig-param">timeout=60</em>, <em class="sig-param">timestep=0.01</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.srs.SR830.wait_for_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for the buffer to fill a certain count</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.x">
+<em class="property">property </em><code class="sig-name descname">x</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the X value in Volts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.xy">
+<em class="property">property </em><code class="sig-name descname">xy</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the X and Y values in Volts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.srs.SR830.y">
+<em class="property">property </em><code class="sig-name descname">y</code><a class="headerlink" href="#pymeasure.instruments.srs.SR830.y" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the Y value in Volts.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sr570.html" class="btn btn-neutral float-left" title="SR570 Lock-in Amplifier" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sr860.html" class="btn btn-neutral float-right" title="SR860 Lock-in Amplifier" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

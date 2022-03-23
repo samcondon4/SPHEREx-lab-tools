@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Razorbill RP100 custrom power supply for Razorbill Instrums stress &amp; strain cells &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Rohde &amp; Schwarz" href="../rohdeschwarz/index.html" />
+    <link rel="prev" title="Razorbill" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keithley/index.html">Keithley</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Razorbill</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Razorbill RP100 custrom power supply for Razorbill Instrums stress &amp; strain cells</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Razorbill</a> &raquo;</li>
+      <li>Razorbill RP100 custrom power supply for Razorbill Instrums stress &amp; strain cells</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/razorbill/razorbillRP100.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="razorbill-rp100-custrom-power-supply-for-razorbill-instrums-stress-strain-cells">
+<h1>Razorbill RP100 custrom power supply for Razorbill Instrums stress &amp; strain cells<a class="headerlink" href="#razorbill-rp100-custrom-power-supply-for-razorbill-instrums-stress-strain-cells" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.razorbill.</code><code class="sig-name descname">razorbillRP100</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code></p>
+<p>Represents Razorbill RP100 strain cell controller</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scontrol</span> <span class="o">=</span> <span class="n">razorbillRP100</span><span class="p">(</span><span class="s2">&quot;ASRL/dev/ttyACM0::INSTR&quot;</span><span class="p">)</span>
+
+<span class="n">scontrol</span><span class="o">.</span><span class="n">output_1</span> <span class="o">=</span> <span class="kc">True</span>      <span class="c1"># turns output on</span>
+<span class="n">scontrol</span><span class="o">.</span><span class="n">slew_rate_1</span> <span class="o">=</span> <span class="mi">1</span>      <span class="c1"># sets slew rate to 1V/s</span>
+<span class="n">scontrol</span><span class="o">.</span><span class="n">voltage_1</span> <span class="o">=</span> <span class="mi">10</span>       <span class="c1"># sets voltage on output 1 to 10V</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.contact_current_1">
+<em class="property">property </em><code class="sig-name descname">contact_current_1</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.contact_current_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current in amps present at the front panel output of channel 1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.contact_current_2">
+<em class="property">property </em><code class="sig-name descname">contact_current_2</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.contact_current_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current in amps present at the front panel output of channel 2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.contact_voltage_1">
+<em class="property">property </em><code class="sig-name descname">contact_voltage_1</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.contact_voltage_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Voltage in volts present at the front panel output of channel 1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.contact_voltage_2">
+<em class="property">property </em><code class="sig-name descname">contact_voltage_2</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.contact_voltage_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Voltage in volts present at the front panel output of channel 2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.instant_voltage_1">
+<em class="property">property </em><code class="sig-name descname">instant_voltage_1</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.instant_voltage_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the instantaneous output of source one in volts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.instant_voltage_2">
+<em class="property">property </em><code class="sig-name descname">instant_voltage_2</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.instant_voltage_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the instanteneous output of source two in volts</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.output_1">
+<em class="property">property </em><code class="sig-name descname">output_1</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.output_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns output of channel 1 on or off</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.output_2">
+<em class="property">property </em><code class="sig-name descname">output_2</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.output_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turns output of channel 2 on or off</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.slew_rate_1">
+<em class="property">property </em><code class="sig-name descname">slew_rate_1</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.slew_rate_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets or queries the source slew rate in volts/sec of channel 1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.slew_rate_2">
+<em class="property">property </em><code class="sig-name descname">slew_rate_2</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.slew_rate_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets or queries the source slew rate in volts/sec of channel 2</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.voltage_1">
+<em class="property">property </em><code class="sig-name descname">voltage_1</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.voltage_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets or queries the output voltage of channel 1</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.razorbill.razorbillRP100.voltage_2">
+<em class="property">property </em><code class="sig-name descname">voltage_2</code><a class="headerlink" href="#pymeasure.instruments.razorbill.razorbillRP100.voltage_2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets or queries the output voltage of channel 2</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Razorbill" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../rohdeschwarz/index.html" class="btn btn-neutral float-right" title="Rohde &amp; Schwarz" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

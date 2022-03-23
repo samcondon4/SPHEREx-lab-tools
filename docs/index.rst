@@ -1,28 +1,31 @@
-.. SPHEREx Lab Tools documentation master file, created by
-   sphinx-quickstart on Fri Nov  5 09:16:30 2021.
+.. SPHERExLabTools documentation master file, created by
+   sphinx-quickstart on Fri Feb 25 15:27:44 2022.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to SpherexLabTools' documentation!
-=============================================
+Welcome to SPHERExLabTools's documentation!
+===========================================
 
-SpherexLabTools
-----------------
+SPHERExLabTools is a general purpose data acquisition and instrument control package built in Python for use in the SPHEREx optics test and calibration campaign. The package extends the repository of instrument classes provided in the :pymeasure:`PyMeasure Project <>` and allows the specification of complex measurement procedures through sets of configuration files with only a limited amount of manual coding required by a user. 
+
+Follow the :doc:`Installation Guide <installation>` for installation instructions, then check out :doc:`SPHERExLabTools Fundamentals <user_guide/fundamentals>` to orient yourself with the package. For instructions on running preconfigured experiments see :doc:`SPHERExLabTools Core Experiments <user_guide/core_experiments>`. To configure custom experiments refer to :doc:`SPHERExLabTools Custom Experiments <user_guide/custom_experiments>` 
+
 .. toctree::
    :maxdepth: 2
-        
-   getting_started/index
-   configuration/index 
-   spherexlabtools/index
+   :caption: Contents:
+   
+   installation
+   user_guide/index
+   api/index
 
 
-PyMeasure
-------------
-Here we host a forked version of the **PyMeasure** documentation that includes all of our additions that fall out of scope of the official **PyMeasure** project: 
-`forked pymeasure <_static/pymeasure/index.html>`_
 
-The official **PyMeasure** documentation can be found here: pymeasure_.
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
 
 
-.. _pymeasure: https://pymeasure.readthedocs.io/en/latest/
 

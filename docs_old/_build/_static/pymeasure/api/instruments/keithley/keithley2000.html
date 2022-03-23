@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keithley 2000 Multimeter &mdash; PyMeasure 0.9.0 documentation</title><link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Keithley 2260B DC Power Supply" href="keithley2260B.html" />
+    <link rel="prev" title="Keithley" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> PyMeasure
+          </a>
+              <div class="version">
+                0.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p><span class="caption-text">Learning PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/index.html">Tutorials</a></li>
+</ul>
+<p><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../adapters.html">pymeasure.adapters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../experiment/index.html">pymeasure.experiment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../display/index.html">pymeasure.display</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">pymeasure.instruments</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../instruments.html">Instrument classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../validators.html">Validator functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../comedi.html">Comedi data acquisition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../resources.html">Resource Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../advantest/index.html">Advantest</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../agilent/index.html">Agilent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ametek/index.html">Ametek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ami/index.html">AMI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anaheimautomation/index.html">Anaheim Automation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anapico/index.html">Anapico</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../anritsu/index.html">Anritsu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../attocube/index.html">Attocube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../bkprecision/index.html">BK Precision</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../danfysik/index.html">Danfysik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deltaelektronica/index.html">Delta Elektronika</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../edwards/index.html">Edwards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fluke/index.html">Fluke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fwbell/index.html">F.W. Bell</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hp/index.html">Hewlett Packard</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Keithley</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Keithley 2000 Multimeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2260B.html">Keithley 2260B DC Power Supply</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2400.html">Keithley 2400 SourceMeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2450.html">Keithley 2450 SourceMeter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2700.html">Keithley 2700 MultiMeter/Switch System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley6221.html">Keithley 6221 AC and DC Current Source</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley6517b.html">Keithley 6517B Electrometer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2750.html">Keithley 2750 Multimeter/Switch System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="keithley2600.html">Keithley 2600 SourceMeter</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../keysight/index.html">Keysight</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lakeshore/index.html">Lake Shore Cryogenics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../newport/index.html">Newport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ni/index.html">National Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oxfordinstruments/index.html">Oxford Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parker/index.html">Parker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pendulum/index.html">Pendulum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../razorbill/index.html">Razorbill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../rohdeschwarz/index.html">Rohde &amp; Schwarz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signalrecovery/index.html">Signal Recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../srs/index.html">Stanford Research Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tektronix/index.html">Tektronix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../thorlabs/index.html">Thorlabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../yokogawa/index.html">Yokogawa</a></li>
+</ul>
+</li>
+</ul>
+<p><span class="caption-text">Getting involved</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/contribute.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/reporting_errors.html">Reporting an error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/adding_instruments.html">Adding instruments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev/coding_standards.html">Coding Standards</a></li>
+</ul>
+<p><span class="caption-text">About PyMeasure</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../about/license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">PyMeasure</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">pymeasure.instruments</a> &raquo;</li>
+          <li><a href="index.html">Keithley</a> &raquo;</li>
+      <li>Keithley 2000 Multimeter</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/api/instruments/keithley/keithley2000.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="keithley-2000-multimeter">
+<h1>Keithley 2000 Multimeter<a class="headerlink" href="#keithley-2000-multimeter" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="pymeasure.instruments.keithley.Keithley2000">
+<em class="property">class </em><code class="sig-prename descclassname">pymeasure.instruments.keithley.</code><code class="sig-name descname">Keithley2000</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adapter</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.instrument.Instrument</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.keithley.buffer.KeithleyBuffer</span></code></p>
+<p>Represents the Keithley 2000 Multimeter and provides a high-level
+interface for interacting with the instrument.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">meter</span> <span class="o">=</span> <span class="n">Keithley2000</span><span class="p">(</span><span class="s2">&quot;GPIB::1&quot;</span><span class="p">)</span>
+<span class="n">meter</span><span class="o">.</span><span class="n">measure_voltage</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">meter</span><span class="o">.</span><span class="n">voltage</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.acquire_reference">
+<code class="sig-name descname">acquire_reference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.acquire_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the active value as the reference for the active mode,
+or can set another mode by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> – A valid <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a> name, or None for the active mode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.auto_range">
+<code class="sig-name descname">auto_range</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.auto_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the active mode to use auto-range,
+or can set another mode by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> – A valid <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a> name, or None for the active mode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.beep">
+<code class="sig-name descname">beep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">frequency</span></em>, <em class="sig-param"><span class="n">duration</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.beep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sounds a system beep.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>frequency</strong> – A frequency in Hz between 65 Hz and 2 MHz</p></li>
+<li><p><strong>duration</strong> – A time in seconds between 0 and 7.9 seconds</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.beep_state">
+<em class="property">property </em><code class="sig-name descname">beep_state</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.beep_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that enables or disables the system status beeper,
+which can take the values: :code:’enabled’ and :code:’disabled’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.buffer_data">
+<em class="property">property </em><code class="sig-name descname">buffer_data</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.buffer_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a numpy array of values from the buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.buffer_points">
+<em class="property">property </em><code class="sig-name descname">buffer_points</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.buffer_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of buffer points. This
+does not represent actual points in the buffer, but the configuration
+value instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.check_errors">
+<code class="sig-name descname">check_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.check_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read all errors from the instrument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of error entries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.complete">
+<em class="property">property </em><code class="sig-name descname">complete</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.complete" title="Permalink to this definition">¶</a></dt>
+<dd><p>This property allows synchronization between a controller and a device. The Operation Complete 
+query places an ASCII character 1 into the device’s Output Queue when all pending
+selected device operations have been finished.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.config_buffer">
+<code class="sig-name descname">config_buffer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">points</span><span class="o">=</span><span class="default_value">64</span></em>, <em class="sig-param"><span class="n">delay</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.config_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the measurement buffer for a number of points, to be
+taken with a specified delay.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> – The number of points in the buffer.</p></li>
+<li><p><strong>delay</strong> – The delay time in seconds.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current">
+<em class="property">property </em><code class="sig-name descname">current</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a DC or AC current measurement in Amps, based on the
+active <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_ac_bandwidth">
+<em class="property">property </em><code class="sig-name descname">current_ac_bandwidth</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_ac_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the AC current detector
+bandwidth in Hz, which can take the values 3, 30, and 300 Hz.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_ac_digits">
+<em class="property">property </em><code class="sig-name descname">current_ac_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_ac_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the AC current
+readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_ac_nplc">
+<em class="property">property </em><code class="sig-name descname">current_ac_nplc</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_ac_nplc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the number of power line cycles
+(NPLC) for the AC current measurements, which sets the integration period
+and measurement speed. Takes values from 0.01 to 10, where 0.1, 1, and 10 are
+Fast, Medium, and Slow respectively.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_ac_range">
+<em class="property">property </em><code class="sig-name descname">current_ac_range</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_ac_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the AC current range in
+Amps, which can take values from 0 to 3.1 A.
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_ac_reference">
+<em class="property">property </em><code class="sig-name descname">current_ac_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_ac_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the AC current reference
+value in Amps, which can take values from -3.1 to 3.1 A.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_digits">
+<em class="property">property </em><code class="sig-name descname">current_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the DC current
+readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_nplc">
+<em class="property">property </em><code class="sig-name descname">current_nplc</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_nplc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the number of power line cycles
+(NPLC) for the DC current measurements, which sets the integration period
+and measurement speed. Takes values from 0.01 to 10, where 0.1, 1, and 10 are
+Fast, Medium, and Slow respectively.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_range">
+<em class="property">property </em><code class="sig-name descname">current_range</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the DC current range in
+Amps, which can take values from 0 to 3.1 A.
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.current_reference">
+<em class="property">property </em><code class="sig-name descname">current_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.current_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the DC current reference
+value in Amps, which can take values from -3.1 to 3.1 A.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.disable_buffer">
+<code class="sig-name descname">disable_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.disable_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the connection between measurements and the
+buffer, but does not abort the measurement process.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.disable_filter">
+<code class="sig-name descname">disable_filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.disable_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the averaging filter for the active mode,
+or can set another mode by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> – A valid <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a> name, or None for the active mode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.disable_reference">
+<code class="sig-name descname">disable_reference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.disable_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables the reference for the active mode,
+or can set another mode by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> – A valid <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a> name, or None for the active mode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.enable_filter">
+<code class="sig-name descname">enable_filter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">type</span><span class="o">=</span><span class="default_value">'repeat'</span></em>, <em class="sig-param"><span class="n">count</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.enable_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables the averaging filter for the active mode,
+or can set another mode by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mode</strong> – A valid <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a> name, or None for the active mode</p></li>
+<li><p><strong>type</strong> – The type of averaging filter, either ‘repeat’ or ‘moving’.</p></li>
+<li><p><strong>count</strong> – A number of averages, which can take take values from 1 to 100</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.enable_reference">
+<code class="sig-name descname">enable_reference</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mode</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.enable_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enables the reference for the active mode,
+or can set another mode by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mode</strong> – A valid <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a> name, or None for the active mode</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.frequency">
+<em class="property">property </em><code class="sig-name descname">frequency</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a frequency measurement in Hz, based on the
+active <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.frequency_aperature">
+<em class="property">property </em><code class="sig-name descname">frequency_aperature</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.frequency_aperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the frequency aperature in seconds,
+which sets the integration period and measurement speed. Takes values
+from 0.01 to 1.0 s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.frequency_digits">
+<em class="property">property </em><code class="sig-name descname">frequency_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.frequency_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the frequency
+readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.frequency_reference">
+<em class="property">property </em><code class="sig-name descname">frequency_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.frequency_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the frequency reference
+value in Hz, which can take values from 0 to 15 MHz.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.frequency_threshold">
+<em class="property">property </em><code class="sig-name descname">frequency_threshold</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.frequency_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the voltage signal threshold
+level in Volts for the frequency measurement, which can take values
+from 0 to 1010 V.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the identification of the instrument.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.is_buffer_full">
+<code class="sig-name descname">is_buffer_full</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.is_buffer_full" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the buffer is full of measurements.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.local">
+<code class="sig-name descname">local</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.local" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns control to the instrument panel, and enables
+the panel if disabled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.measure_continuity">
+<code class="sig-name descname">measure_continuity</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.measure_continuity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to perform continuity testing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.measure_current">
+<code class="sig-name descname">measure_current</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_current</span><span class="o">=</span><span class="default_value">0.01</span></em>, <em class="sig-param"><span class="n">ac</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.measure_current" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure current,
+based on a maximum current to set the range, and
+a boolean flag to determine if DC or AC is required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_current</strong> – A current in Volts to set the current range</p></li>
+<li><p><strong>ac</strong> – False for DC current, and True for AC current</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.measure_diode">
+<code class="sig-name descname">measure_diode</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.measure_diode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to perform diode testing.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.measure_frequency">
+<code class="sig-name descname">measure_frequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.measure_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure the frequency.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.measure_period">
+<code class="sig-name descname">measure_period</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.measure_period" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure the period.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.measure_resistance">
+<code class="sig-name descname">measure_resistance</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_resistance</span><span class="o">=</span><span class="default_value">10000000.0</span></em>, <em class="sig-param"><span class="n">wires</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.measure_resistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure voltage,
+based on a maximum voltage to set the range, and
+a boolean flag to determine if DC or AC is required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_voltage</strong> – A voltage in Volts to set the voltage range</p></li>
+<li><p><strong>ac</strong> – False for DC voltage, and True for AC voltage</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.measure_temperature">
+<code class="sig-name descname">measure_temperature</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.measure_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure the temperature.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.measure_voltage">
+<code class="sig-name descname">measure_voltage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_voltage</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">ac</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.measure_voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configures the instrument to measure voltage,
+based on a maximum voltage to set the range, and
+a boolean flag to determine if DC or AC is required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_voltage</strong> – A voltage in Volts to set the voltage range</p></li>
+<li><p><strong>ac</strong> – False for DC voltage, and True for AC voltage</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.mode">
+<em class="property">property </em><code class="sig-name descname">mode</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string property that controls the configuration mode for measurements,
+which can take the values: :code:’current’ (DC), :code:’current ac’,
+:code:’voltage’ (DC),  :code:’voltage ac’, :code:’resistance’ (2-wire),
+:code:’resistance 4W’ (4-wire), :code:’period’, :code:’frequency’,
+:code:’temperature’, :code:’diode’, and :code:’frequency’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.options">
+<em class="property">property </em><code class="sig-name descname">options</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the device options installed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.period">
+<em class="property">property </em><code class="sig-name descname">period</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.period" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a period measurement in seconds, based on the
+active <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.period_aperature">
+<em class="property">property </em><code class="sig-name descname">period_aperature</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.period_aperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the period aperature in seconds,
+which sets the integration period and measurement speed. Takes values
+from 0.01 to 1.0 s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.period_digits">
+<em class="property">property </em><code class="sig-name descname">period_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.period_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the period
+readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.period_reference">
+<em class="property">property </em><code class="sig-name descname">period_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.period_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the period reference value
+in seconds, which can take values from 0 to 1 s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.period_threshold">
+<em class="property">property </em><code class="sig-name descname">period_threshold</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.period_threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the voltage signal threshold
+level in Volts for the period measurement, which can take values
+from 0 to 1010 V.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.remote">
+<code class="sig-name descname">remote</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.remote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Places the instrument in the remote state, which is
+does not need to be explicity called in general.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.remote_lock">
+<code class="sig-name descname">remote_lock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.remote_lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disables and locks the front panel controls to prevent
+changes during remote operations. This is disabled by
+calling <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.local" title="pymeasure.instruments.keithley.Keithley2000.local"><code class="xref py py-meth docutils literal notranslate"><span class="pre">local()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the instrument state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.reset_buffer">
+<code class="sig-name descname">reset_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.reset_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance">
+<em class="property">property </em><code class="sig-name descname">resistance</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a resistance measurement in Ohms for both 2-wire and 4-wire
+configurations, based on the active <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance_4W_digits">
+<em class="property">property </em><code class="sig-name descname">resistance_4W_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance_4W_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the 4-wire
+resistance readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance_4W_nplc">
+<em class="property">property </em><code class="sig-name descname">resistance_4W_nplc</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance_4W_nplc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the number of power line cycles
+(NPLC) for the 4-wire resistance measurements, which sets the integration period
+and measurement speed. Takes values from 0.01 to 10, where 0.1, 1, and 10 are
+Fast, Medium, and Slow respectively.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance_4W_range">
+<em class="property">property </em><code class="sig-name descname">resistance_4W_range</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance_4W_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the 4-wire resistance range
+in Ohms, which can take values from 0 to 120 MOhms.
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance_4W_reference">
+<em class="property">property </em><code class="sig-name descname">resistance_4W_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance_4W_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the 4-wire resistance
+reference value in Ohms, which can take values from 0 to 120 MOhms.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance_digits">
+<em class="property">property </em><code class="sig-name descname">resistance_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the 2-wire
+resistance readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance_nplc">
+<em class="property">property </em><code class="sig-name descname">resistance_nplc</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance_nplc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the number of power line cycles
+(NPLC) for the 2-wire resistance measurements, which sets the integration period
+and measurement speed. Takes values from 0.01 to 10, where 0.1, 1, and 10 are
+Fast, Medium, and Slow respectively.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance_range">
+<em class="property">property </em><code class="sig-name descname">resistance_range</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the 2-wire resistance range
+in Ohms, which can take values from 0 to 120 MOhms.
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.resistance_reference">
+<em class="property">property </em><code class="sig-name descname">resistance_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.resistance_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the 2-wire resistance
+reference value in Ohms, which can take values from 0 to 120 MOhms.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Brings the instrument to a safe and stable state</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.start_buffer">
+<code class="sig-name descname">start_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.start_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the buffer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.status">
+<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests and returns the status byte and Master Summary Status bit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.stop_buffer">
+<code class="sig-name descname">stop_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.stop_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aborts the buffering measurement, by stopping the measurement
+arming and triggering sequence. If possible, a Selected Device 
+Clear (SDC) is used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.temperature">
+<em class="property">property </em><code class="sig-name descname">temperature</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a temperature measurement in Celsius, based on the
+active <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.temperature_digits">
+<em class="property">property </em><code class="sig-name descname">temperature_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.temperature_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the temperature
+readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.temperature_nplc">
+<em class="property">property </em><code class="sig-name descname">temperature_nplc</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.temperature_nplc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the number of power line cycles
+(NPLC) for the temperature measurements, which sets the integration period
+and measurement speed. Takes values from 0.01 to 10, where 0.1, 1, and 10 are
+Fast, Medium, and Slow respectively.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.temperature_reference">
+<em class="property">property </em><code class="sig-name descname">temperature_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.temperature_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the temperature reference value
+in Celsius, which can take values from -200 to 1372 C.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.trigger_count">
+<em class="property">property </em><code class="sig-name descname">trigger_count</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.trigger_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the trigger count,
+which can take values from 1 to 9,999.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.trigger_delay">
+<em class="property">property </em><code class="sig-name descname">trigger_delay</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.trigger_delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the trigger delay
+in seconds, which can take values from 1 to 9,999,999.999 s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage">
+<em class="property">property </em><code class="sig-name descname">voltage</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a DC or AC voltage measurement in Volts, based on the
+active <a class="reference internal" href="#pymeasure.instruments.keithley.Keithley2000.mode" title="pymeasure.instruments.keithley.Keithley2000.mode"><code class="xref py py-attr docutils literal notranslate"><span class="pre">mode</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_ac_bandwidth">
+<em class="property">property </em><code class="sig-name descname">voltage_ac_bandwidth</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_ac_bandwidth" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that sets the AC voltage detector
+bandwidth in Hz, which can take the values  3, 30, and 300 Hz.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_ac_digits">
+<em class="property">property </em><code class="sig-name descname">voltage_ac_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_ac_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the AC voltage
+readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_ac_nplc">
+<em class="property">property </em><code class="sig-name descname">voltage_ac_nplc</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_ac_nplc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the number of power line cycles
+(NPLC) for the AC voltage measurements, which sets the integration period
+and measurement speed. Takes values from 0.01 to 10, where 0.1, 1, and 10 are
+Fast, Medium, and Slow respectively.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_ac_range">
+<em class="property">property </em><code class="sig-name descname">voltage_ac_range</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_ac_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the AC voltage range in
+Volts, which can take values from 0 to 757.5 V.
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_ac_reference">
+<em class="property">property </em><code class="sig-name descname">voltage_ac_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_ac_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the AC voltage reference
+value in Volts, which can take values from -757.5 to 757.5 Volts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_digits">
+<em class="property">property </em><code class="sig-name descname">voltage_digits</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_digits" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integer property that controls the number of digits in the DC voltage
+readings, which can take values from 4 to 7.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_nplc">
+<em class="property">property </em><code class="sig-name descname">voltage_nplc</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_nplc" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the number of power line cycles
+(NPLC) for the DC voltage measurements, which sets the integration period
+and measurement speed. Takes values from 0.01 to 10, where 0.1, 1, and 10 are
+Fast, Medium, and Slow respectively.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_range">
+<em class="property">property </em><code class="sig-name descname">voltage_range</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_range" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the DC voltage range in
+Volts, which can take values from 0 to 1010 V.
+Auto-range is disabled when this property is set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.voltage_reference">
+<em class="property">property </em><code class="sig-name descname">voltage_reference</code><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.voltage_reference" title="Permalink to this definition">¶</a></dt>
+<dd><p>A floating point property that controls the DC voltage reference
+value in Volts, which can take values from -1010 to 1010 V.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="pymeasure.instruments.keithley.Keithley2000.wait_for_buffer">
+<code class="sig-name descname">wait_for_buffer</code><span class="sig-paren">(</span><em class="sig-param">should_stop=&lt;function KeithleyBuffer.&lt;lambda&gt;&gt;</em>, <em class="sig-param">timeout=60</em>, <em class="sig-param">interval=0.1</em><span class="sig-paren">)</span><a class="headerlink" href="#pymeasure.instruments.keithley.Keithley2000.wait_for_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blocks the program, waiting for a full buffer. This function 
+returns early if the <code class="code docutils literal notranslate"><span class="pre">should_stop</span></code> function returns True or
+the timeout is reached before the buffer is full.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>should_stop</strong> – A function that returns True when this function should return early</p></li>
+<li><p><strong>timeout</strong> – A time in seconds after which this function should return early</p></li>
+<li><p><strong>interval</strong> – A time in seconds for how often to check if the buffer is full</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Keithley" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="keithley2260B.html" class="btn btn-neutral float-right" title="Keithley 2260B DC Power Supply" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2013-2021, PyMeasure Developers.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
