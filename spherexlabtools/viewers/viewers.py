@@ -1,6 +1,4 @@
-import os
 import logging
-import numpy as np
 import pyqtgraph as pg
 from ..thread import QueueThread
 from PyQt5 import QtCore, QtWidgets
@@ -63,6 +61,8 @@ class LineViewer(Viewer):
     """ Basic line viewer.
     """
 
+    pen_colors = ["r", "g", "b", "c", "m", "y", "k", "w"]
+
     def __init__(self, cfg, exp, **kwargs):
         """ Basic line viewer initialization.
 
@@ -76,22 +76,30 @@ class LineViewer(Viewer):
         # create plot item #
         pkwargs = {} if "params" not in cfg.keys() else cfg["params"]
         self.plot_item = self.graphics_layout.addPlot(row=0, col=0, **pkwargs)
-        self.plot = self.plot_item.plot(self.buffer)
+        self.curves = {}
+
+        self.pen_color_ind = 0
 
         self.update_signal.connect(self.update_line)
 
-    def update_line(self, buf):
+    def update_line(self, record):
         """ Slot for the update signal. This is executed in the main thread and updates
             the data displayed in the plot item.
         """
-        logger.debug("LineViewer updating plot data.")
-        self.plot.setData(np.array(buf))
+        logger.debug(f"LineViewer updating plot data for record {record.name}")
+        print(record.name, record.data)
+        if record.name not in self.curves.keys():
+            curve_item = pg.PlotCurveItem(name=record.name, pen=self.pen_colors[self.pen_color_ind])
+            self.pen_color_ind += 1
+            self.curves[record.name] = curve_item
+            self.plot_item.addItem(curve_item)
+        self.curves[record.name].setData(record.buffer)
 
     def handle(self, record):
         """ Update the plot.
         """
         if not self.should_stop():
-            self.update_signal.emit(record.buffer)
+            self.update_signal.emit(record)
 
 
 class ImageViewer(Viewer):

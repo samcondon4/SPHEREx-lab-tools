@@ -33,11 +33,16 @@ class SpecCalProc(BaseProcedure):
 
     PARAM_DELIMITER = "_"
 
+    SR830_X_STR = "sr830_x_voltage"
+    SR830_Y_STR = "sr830_y_voltage"
+    SR510_STR = "sr510_output_voltage"
+
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(cfg, exp, **kwargs)
         self.ndf = self.hw.ndf
         self.mono = self.hw.mono
         self.lockin = self.hw.lockin
+        self.inst_params_emit = {}
 
     def startup(self):
         """ Initialize the spectral-cal measurement by moving all hardware into the proper state.
@@ -50,16 +55,30 @@ class SpecCalProc(BaseProcedure):
             val = getattr(self, param)
             setattr(inst, SpecCalProc.PARAM_DELIMITER.join(param_split[1:]), val)
 
+        # read the resulting instrument parameters #
+        self.inst_params_emit = {}
+        for param in self.inst_params:
+            param_split = param.split(SpecCalProc.PARAM_DELIMITER)
+            inst = getattr(self, param_split[0])
+            val = getattr(inst, SpecCalProc.PARAM_DELIMITER.join(param_split[1:]))
+            self.inst_params_emit[SpecCalProc.PARAM_DELIMITER.join(inst + param_split[1:])] = val
+
     def execute(self):
         """ Execute the spectral-cal measurement.
         """
         samples = int(self.lockin_sample_rate * self.sample_time)
-        record_data_df = pd.DataFrame({"sr830_x_voltage": np.zeros(samples), "sr830_y_voltage": np.zeros(samples),
-                                       "sr510_voltage": np.zeros(samples)})
+        record_data_df = pd.DataFrame({self.SR830_X_STR: np.zeros(samples), self.SR830_Y_STR: np.zeros(samples),
+                                       self.SR510_STR: np.zeros(samples)})
         for i in range(samples):
             sr830_voltages = self.lockin.sr830_xy
             sr510_voltage = self.lockin.sr510_output
-            sample = {"sr830_x_voltage": sr830_voltages[0], "sr830_y_voltage": sr830_voltages[1],
-                      "sr510_voltage": sr510_voltage}
+            sample = {self.SR830_X_STR: sr830_voltages[0], self.SR830_Y_STR: sr830_voltages[1],
+                      self.SR510_STR: sr510_voltage}
             record_data_df.loc[i] = sample
+            # emit viewer records for live plots ########
+            self.emit("sr830_x", sr830_voltages[0])
+            self.emit("sr830_y", sr830_voltages[1])
+            self.emit("sr510_output", sr510_voltage)
             time.sleep(1 / self.lockin_sample_rate)
+        # emit recorder record ####################################
+        self.emit("lockin_output", record_data_df, inst_params=self.inst_params_emit)

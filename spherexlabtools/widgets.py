@@ -227,7 +227,6 @@ class Records(pTypes.GroupParameter):
         pTypes.GroupParameter.__init__(self, **opts)
         for rec_param in children:
             rec_param_name = rec_param.name()
-            print(rec_param_name)
             for c in rec_param.children():
                 if c.name() != self.save_record_name:
                     c.sigTreeStateChanged.connect(lambda param, changes, name=rec_param_name:

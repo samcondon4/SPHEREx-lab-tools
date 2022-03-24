@@ -71,7 +71,7 @@ class HDF5Recorder(QueueThread):
         index = pd.MultiIndex.from_product([[self.record_num], [self.record_group_ind], np.arange(shape[0])],
                                            names=["RecordGroupNum", "RecordGroupInd", "Row"])
         data_df = pd.DataFrame(data, index=index)
-        self.store.append(self.DATA_GROUP, data_df)
+        self.store.append(self.DATA_GROUP + self.GROUP_DELIMITER + record.name, data_df)
 
         # update the record index ###################################################################################
         record_complete = False
@@ -84,4 +84,3 @@ class HDF5Recorder(QueueThread):
         # update record number #
         if record_complete:
             self.record_num += 1
-            #self.store.put(self.META_GROUP, pd.Series({"Records": self.record_num}), data_columns=True)
