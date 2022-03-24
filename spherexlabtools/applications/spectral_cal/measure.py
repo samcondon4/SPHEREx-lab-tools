@@ -15,7 +15,7 @@ VIEWERS = [lockin_viewer]
 SpecCalMeta_Recorder = {
     "instance_name": "SpecCalMetaRecorder",
     "type": "HDF5Recorder",
-    "filename": "test.h5"
+    "filename": "spec_cal.h5"
 }
 
 
@@ -39,8 +39,10 @@ SpecCalProc = {
     "type": "SpecCalProc",
     "hw": ["mono", "ndf", "lockin"],
     "records": {
-        "lockin_output_view": {"viewer": "LockinView"},
-        "lockin_output_record": {"recorder": "SpecCalMetaRecorder"},
+        "sr830_x": {"viewer": "LockinView"},
+        "sr830_y": {"viewer": "LockinView"},
+        "sr510_output": {"viewer": "LockinView"},
+        "lockin_output": {"recorder": "SpecCalMetaRecorder"}
     }
 }
 
