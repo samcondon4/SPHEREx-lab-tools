@@ -58,7 +58,6 @@ class Record:
     data = None
     ancillary = {}
     emit_kwargs = {}
-    buffer = []
     to_date = False
 
     # update attributes #
@@ -78,7 +77,9 @@ class Record:
 
         :param proc: String representing the procedure object that updates the record.
         """
+        self.name = name
         self.proc = proc
+        self.buffer = []
         ParameterInspect.update_parameters(self)
 
     def update(self, data, proc_params=None, inst_params=None, sequence=None, **kwargs):
@@ -101,7 +102,7 @@ class Record:
 
         # update the data attribute #
         if self.avg:
-            self.data = np.sum(self.buffer, axis=0) / len(self.buffer)
+            self.data = sum(self.buffer) / len(self.buffer)
         else:
             self.data = self.buffer[-1]
 
@@ -120,6 +121,7 @@ class Record:
         """
         save_obj = {
             "data": self.data,
+            "buffer": self.buffer,
             "procedure": self.proc
         }
         if self.proc_params is not None:
@@ -293,6 +295,7 @@ class LogProc(BaseProcedure):
             if log_param:
                 logger.debug("LogProc getting %s" % p)
                 data = getattr(self.hw, p)
+                print(p, data)
                 self.emit(p, data)
 
 

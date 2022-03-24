@@ -10,8 +10,8 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 from ..widgets import Sequencer, Records
 from ..parameters import ParameterInspect
 from ..thread import StoppableReusableThread
-from ..procedures import BaseProcedure, ProcedureSequence
 from ..parameters import Parameter as pymeasureParam
+from ..procedures import BaseProcedure, ProcedureSequence
 from ..parameters import FloatParameter, IntegerParameter, BooleanParameter
 
 
@@ -338,7 +338,6 @@ class ProcedureController(Controller):
             "Buffer Size": "buffer_size",
             "Generate histogram": "histogram"
         }
-        print(record_param, record_name)
         record = self.procedure.records[record_name]
         setattr(record, rec_name_param_set_map[record_param.name()], record_param.value())
 
