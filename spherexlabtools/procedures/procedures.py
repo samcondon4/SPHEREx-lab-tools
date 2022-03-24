@@ -78,8 +78,8 @@ class Record:
         :param proc: String representing the procedure object that updates the record.
         """
         self.name = name
-        self.proc = proc
         self.buffer = []
+        self.proc = proc
         ParameterInspect.update_parameters(self)
 
     def update(self, data, proc_params=None, inst_params=None, sequence=None, **kwargs):

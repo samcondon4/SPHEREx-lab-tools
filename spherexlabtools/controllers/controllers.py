@@ -103,7 +103,9 @@ class InstrumentController(Controller):
         actions = cfg.get("actions", [])
         if len(actions) > 0:
             self.actions_group = Parameter.create(name="Actions", type="group",
-                                                  children=[Parameter.create(type="action", name=a) for a in actions])
+                                                  children=[Parameter.create(**act) if type(act) is dict
+                                                            else Parameter.create(name=act, type="action")
+                                                            for act in actions])
             params.append(self.actions_group)
 
         # complete the final configurations #
@@ -139,14 +141,17 @@ class InstrumentController(Controller):
                         self.status_values[param] = val
                         c.setValue(val)
 
-    def run_instrument_action(self, action):
+    def run_instrument_action(self, act_param):
         """ Run an instrument method from a new thread.
 
-        :param action: String name of the method to run.
+        :param act_param: Parameter object corresponding to the instrument action to run.
         """
-        logger.debug("Running action %s on instrument %s" % (action, str(self.hw)))
-        act = getattr(self.hw, action)
-        act()
+        act_name = act_param.name()
+        act_param_values = act_param.getValues()
+        kwargs = {pkey: pval[0] for pkey, pval in act_param_values.items()}
+        act = getattr(self.hw, act_name)
+        logger.debug("Running action %s on instrument %s" % (act_name, str(self.hw)))
+        act(**kwargs)
 
     def start(self):
         """ Start the controller.
@@ -238,13 +243,12 @@ class InstrumentController(Controller):
                         "%s: Set %s" % (self.name, child_name), thread))
 
         if self.actions_group is not None:
-            for c in self.actions_group.children():
-                act_name = c.name()
-                logger.debug("Connecting action method for {}".format(act_name))
+            for act_param in self.actions_group.children():
+                logger.info("Connecting action method for {}".format(act_param.name()))
                 thread = StoppableReusableThread()
-                thread.execute = lambda act=act_name: self.run_instrument_action(act)
-                c.sigActivated.connect(self.exp.get_start_thread_lambda(
-                    "%s: Action %s" % (self.name, act_name), thread
+                thread.execute = lambda act=act_param: self.run_instrument_action(act)
+                act_param.sigActivated.connect(self.exp.get_start_thread_lambda(
+                    "%s: Action %s" % (self.name, act_param.name()), thread
                 ))
 
 
