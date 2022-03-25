@@ -1,5 +1,0 @@
-This file lists the labels created in the documentation to prevent duplication of labels.
-
-resource-name-id:
-	-> /getting_started/instrument_communication -> Resource Name Identification
-
