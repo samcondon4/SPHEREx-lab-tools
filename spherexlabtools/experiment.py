@@ -66,12 +66,20 @@ class Experiment:
 
         # initialize procedures ###################################################
         proc_cfgs = exp_pkg.PROCEDURES
+        # get all compound procedure configurations #
+        compound_proc_cfgs = []
+        for proc in proc_cfgs:
+            if "subprocedures" in proc.keys():
+                compound_proc_cfgs.append(proc)
+                proc_cfgs.remove(proc)
         try:
             search_order = [exp_pkg.procedures, slt_proc]
         except AttributeError:
             search_order = [slt_proc]
         self.procedures = load_objects_from_cfg_list(search_order, self, proc_cfgs, hw=self.hw,
                                                      viewers=self.viewers, recorders=self.recorders)
+        # instantiate compound procedures #
+        self.procedures.update(load_objects_from_cfg_list([slt_proc], self, compound_proc_cfgs))
 
         # initialize controllers ##################################################
         control_cfgs = exp_pkg.CONTROLLERS

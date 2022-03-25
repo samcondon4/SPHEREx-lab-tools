@@ -1,3 +1,4 @@
+import os
 import logging
 import importlib
 
@@ -9,8 +10,25 @@ from ..thread import QueueThread
 logger = logging.getLogger(__name__)
 
 
+class CsvRecorder(QueueThread):
+    """ Basic csv recorder class.
+    """
+
+    def __init__(self, cfg, exp, **kwargs):
+        super().__init__(**kwargs)
+
+    def handle(self, record):
+        """ Handle incoming records: and append to existing csv or create a new one.
+        """
+        data = record.data
+        filepath = data.pop("filepath")
+        data = pd.DataFrame(data)
+        header = not (os.path.exists(filepath))
+        data.to_csv(filepath, mode="a", header=header)
+
+
 class HDF5Recorder(QueueThread):
-    """ Base recorder class.
+    """ Basic HDF5 recorder class.
     """
 
     META_GROUP = "Meta"

@@ -295,8 +295,54 @@ class LogProc(BaseProcedure):
             if log_param:
                 logger.debug("LogProc getting %s" % p)
                 data = getattr(self.hw, p)
-                print(p, data)
                 self.emit(p, data)
+
+
+class CompoundProcedure(BaseProcedure):
+    """ Procedure class that merges multiple procedures so that they can be executed at the same time.
+    """
+
+    def __init__(self, cfg, exp, pend=1, **kwargs):
+        """
+        """
+        cfg["hw"] = None
+        cfg["records"] = {}
+        self.subprocedures = {c["instance_name"]: exp.procedures[c["instance_name"]] for c in cfg["subprocedures"]}
+        self.param_to_proc_map = {}
+        self.pend = pend
+        for proc in self.subprocedures.values():
+            cfg["records"].update(proc.record_cfg)
+            for key, val in ParameterInspect.parameter_objects(proc).items():
+                self.__dict__[key] = val
+                self.param_to_proc_map[key] = proc
+        super().__init__(cfg, exp, **kwargs)
+
+    def startup(self):
+        BaseProcedure.startup(self)
+        for pkey, param in ParameterInspect.parameter_objects(self).items():
+            setattr(self.param_to_proc_map[pkey], pkey, param.value)
+
+    def execute(self):
+        # start all procedures #
+        for proc in self.subprocedures.values():
+            self.exp.start_thread(proc.name, proc)
+
+        while self.procs_running():
+            if self.should_stop():
+                for proc in self.subprocedures.values():
+                    proc.stop()
+            time.sleep(self.pend)
+
+    def procs_running(self):
+        """ Check if there are any procedures running.
+        """
+        ret = False
+        for proc in self.subprocedures.values():
+            if proc.status == BaseProcedure.RUNNING and type(proc) is not LogProc:
+                ret = True
+                break
+
+        return ret
 
 
 class ProcedureSequence(BaseProcedure):

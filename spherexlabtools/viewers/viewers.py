@@ -76,6 +76,7 @@ class LineViewer(Viewer):
         # create plot item #
         pkwargs = {} if "params" not in cfg.keys() else cfg["params"]
         self.plot_item = self.graphics_layout.addPlot(row=0, col=0, **pkwargs)
+        self.legend_item = self.plot_item.addLegend()
         self.curves = {}
 
         self.pen_color_ind = 0
@@ -87,7 +88,6 @@ class LineViewer(Viewer):
             the data displayed in the plot item.
         """
         logger.debug(f"LineViewer updating plot data for record {record.name}")
-        print(record.name, record.data)
         if record.name not in self.curves.keys():
             curve_item = pg.PlotCurveItem(name=record.name, pen=self.pen_colors[self.pen_color_ind])
             self.pen_color_ind += 1
