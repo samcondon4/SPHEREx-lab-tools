@@ -24,7 +24,7 @@ class CsvRecorder(QueueThread):
         filepath = data.pop("filepath")
         data = pd.DataFrame(data)
         header = not (os.path.exists(filepath))
-        data.to_csv(filepath, mode="a", header=header)
+        data.to_csv(filepath, mode="a", header=header, index=False)
 
 
 class HDF5Recorder(QueueThread):
