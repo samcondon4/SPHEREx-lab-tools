@@ -68,6 +68,38 @@ class LakeShore218(Instrument):
         "KRDG? 8", """ Query the temperature of the channel 8 sensor. """
     )
 
+    sensor1 = Instrument.measurement(
+        "SRDG? 1", """ Query sensor units reading of channel 1 sensor. """
+    )
+
+    sensor2 = Instrument.measurement(
+        "SRDG? 2", """ Query sensor units reading of channel 2 sensor. """
+    )
+
+    sensor3 = Instrument.measurement(
+        "SRDG? 3", """ Query sensor units reading of channel 3 sensor. """
+    )
+
+    sensor4 = Instrument.measurement(
+        "SRDG? 4", """ Query sensor units reading of channel 4 sensor. """
+    )
+
+    sensor5 = Instrument.measurement(
+        "SRDG? 5", """ Query sensor units reading of channel 5 sensor. """
+    )
+
+    sensor6 = Instrument.measurement(
+        "SRDG? 6", """ Query sensor units reading of channel 6 sensor. """
+    )
+
+    sensor7 = Instrument.measurement(
+        "SRDG? 7", """ Query sensor units reading of channel 7 sensor. """
+    )
+
+    sensor8 = Instrument.measurement(
+        "SRDG? 8", """ Query sensor units reading of channel 8 sensor. """
+    )
+
     status = Instrument.measurement(
         "QSTB?", """ Query the status byte. """
     )

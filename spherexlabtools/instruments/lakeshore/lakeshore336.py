@@ -23,6 +23,7 @@
 #
 
 import logging
+import threading
 from pymeasure.instruments import Instrument
 from pymeasure.instruments.validators import *
 from .ls336_prop_helpers import Lakeshore336PropHelpers
@@ -32,6 +33,10 @@ logger.addHandler(logging.NullHandler())
 
 
 class LakeShore336(Instrument):
+
+    # lock for multiple threads accessing the lakeshore #
+    lock = threading.Lock()
+    lock_initialized = True
 
     # manual output properties #
     mout1 = Lakeshore336PropHelpers.get_mout_prop(1)
@@ -62,6 +67,23 @@ class LakeShore336(Instrument):
     outmode2 = Lakeshore336PropHelpers.get_outmode_prop(2)
     outmode3 = Lakeshore336PropHelpers.get_outmode_prop(3)
     outmode4 = Lakeshore336PropHelpers.get_outmode_prop(4)
+
+    # sensor outputs #
+    sensorA = Instrument.measurement(
+        "SRDG? A", """ Query sensor units reading of channel A sensor. """
+    )
+
+    sensorB = Instrument.measurement(
+        "SRDG? B", """ Query sensor units reading of channel B sensor. """
+    )
+
+    sensorC = Instrument.measurement(
+        "SRDG? C", """ Query sensor units reading of channel C sensor. """
+    )
+
+    sensorD = Instrument.measurement(
+        "SRDG? D", """ Query sensor units reading of channel D sensor. """
+    )
 
     outmode_map = {
         "Off": 0, "Closed Loop PID": 1, "Zone": 2, "Open Loop": 3, "Monitor Out": 4, "Warmup Supply": 5
@@ -109,3 +131,4 @@ class LakeShore336(Instrument):
         d = truncated_range(d, [0, 200])
 
         self.write(f"PID {channel},{p},{i},{d}")
+

@@ -33,7 +33,7 @@ class Record:
     :ivar inst_params: Dictionary containing the instrument parameters associated with the record.
     :ivar data: Main data object of any type.
     :ivar ancillary: Secondary information to accompany the data object, such as a histogram of the data values.
-    :ivar handle_kwargs: Key-word arguments used in the handle method of the appropriate viewer/recorder.
+    :ivar emit_kwargs: Key-word arguments used in the handle method of the appropriate viewer/recorder.
     :ivar to_date: Boolean to indicate if the data attribute is up-to-date. This is True immediately after the
                    :meth:`Record.update()` method is called, and gets set to False after the record is emitted.
 
