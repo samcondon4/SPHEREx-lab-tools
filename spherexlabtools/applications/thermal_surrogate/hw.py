@@ -1,3 +1,14 @@
+"""
+Hardware
+--------
+
+    - "ls218": LakeShore218 temperature monitor.
+    - "ls336": LakeShore336 temperature controller.
+    - "aglnt_daq": Agilent34970A multiplexing DMM.
+    - "ts_log_hw": Compound instrument wrapping all the above drivers.
+
+"""
+
 from pyvisa.constants import Parity, StopBits
 
 

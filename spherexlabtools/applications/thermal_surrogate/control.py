@@ -1,4 +1,11 @@
-""" Controller configuration for thermal surrogate testing.
+"""
+Controllers
+------------
+
+    - "Ls336Cntrl": InstrumentController for manual control over the "ls336"
+    - "LogProcCntrl": ProcedureController for "DataLogProc" to start and stop data logging.
+    - "Ls336AoutProcCntrl": ProcedureController for "Ls336AoutProc" to input the ls336 heater channel 3 vectors.
+
 """
 
 

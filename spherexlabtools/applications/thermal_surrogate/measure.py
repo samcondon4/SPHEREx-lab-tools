@@ -1,3 +1,24 @@
+"""
+Procedures
+-----------
+
+    - "DataLogProc": Retrieves all temperatures and ls336 heater output percents and sends them to
+       the appropriate viewers and recorders.
+    - "Ls336AoutProc": Sets a time varying ls336 heater output channel 3 profile from two vector inputs.
+
+Viewers
+-------
+
+    - "TempView": LineViewer for temperatures monitored by the ls218 and ls336.
+    - "Ls336AoutView": LineViewer for the ls336 heater channel 3 analog output.
+
+Recorders
+----------
+
+    - "TempRecorder": CsvRecorder to log all temperatures and ls336 heater output percents.
+    - "PyhkRecorder": Logs all temperatures to the Pyhk web interface.
+"""
+
 # VIEWER CONFIG #########################################
 temp_viewer = {
     "instance_name": "TempView",
