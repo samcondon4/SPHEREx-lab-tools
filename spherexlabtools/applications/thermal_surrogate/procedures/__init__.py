@@ -1,1 +1,1 @@
-from .ts_procs import Ls218TempProc, Ls336AoutProc
+from .ts_procs import Ls336AoutProc, DataLogProc

@@ -12,6 +12,7 @@ import logging
 import threading
 import numpy as np
 import scipy.io as spio
+from datetime import datetime
 
 from ..thread import StoppableReusableThread
 from ..parameters import ParameterInspect, Parameter, FloatParameter, IntegerParameter, BooleanParameter
@@ -72,14 +73,27 @@ class Record:
     # for compatibility with the Parameter types #
     parameters = {}
 
-    def __init__(self, name, proc):
+    def __init__(self, name, proc, alias=None, typ=None, viewer=None, recorder=None, subrecords=None):
         """ Initialize a record by providing a string representation of the procedure object used.
 
+        :param name: String identifying the record.
         :param proc: String representing the procedure object that updates the record.
+        :param alias: String representing an alias name for the record.
+        :param typ: String identifying the type of the record.
+        :param viewer: String identifying the viewer associated with this record.
+        :param recorder: String identifying the recorder associated with this record.
+        :param subrecords: None, or list of records whose data this record encapsulates.
         """
         self.name = name
         self.buffer = []
         self.proc = proc
+        self.alias = alias
+        self.type = typ
+        self.viewer = viewer
+        self.recorder = recorder
+        self.recorder_write_path = os.path.join(os.getcwd(), self.name)
+        self.subrecords = subrecords
+        self.timestamp = None
         ParameterInspect.update_parameters(self)
 
     def update(self, data, proc_params=None, inst_params=None, sequence=None, **kwargs):
@@ -207,9 +221,19 @@ class BaseProcedure(StoppableReusableThread):
         elif cfg["hw"] is not None:
             self.hw = getattr(hw, cfg["hw"])
         for key, val in cfg["records"].items():
+            subrecords = val.get("subrecords", None)
+            if subrecords is not None:
+                val.pop("subrecords")
+            alias = val.get("alias", None)
+            if alias is not None:
+                val.pop("alias")
+            typ = val.get("type", None)
+            if typ is not None:
+                val.pop("type")
             qdict_val = [{"viewer": self.exp.viewers, "recorder": self.exp.recorders}[k][v].queue for k, v in val.items()]
             self.record_queues[key] = qdict_val
-            self.records[key] = Record(key, str(self))
+            cfg["records"][key].update({"subrecords": subrecords, "alias": alias, "typ": typ})
+            self.records[key] = Record(key, str(self), **(cfg["records"][key]))
         if update_params:
             ParameterInspect.update_parameters(self)
         for key in kwargs:
@@ -224,18 +248,20 @@ class BaseProcedure(StoppableReusableThread):
         ParameterInspect.check_parameters(self)
         self.proc_params = ParameterInspect.parameter_values(self)
 
-    def emit(self, record_name, record_data, inst_params=None, **kwargs):
+    def emit(self, record_name, record_data, inst_params=None, timestamp=None, **kwargs):
         """ Post a record to the appropriate queues.
 
         :param record_name: String name of the record to post data to.
         :param record_data: Data to be posted to the record queue.
         :param inst_params: Optional set of instrument parameters to record.
+        :param timestamp: Timestamp to set as the timestamp attribute of the record.
         :param kwargs: Key-word arguments that are passed to the handle method of the corresponding
                        :class:`.QueueThread`.
         """
         record = self.records[record_name]
         record.update(record_data, inst_params=inst_params, proc_params=self.proc_params, sequence=self.sequence,
                       **kwargs)
+        record.timestamp = timestamp
         for q in self.record_queues[record_name]:
             q.put(record)
 
@@ -272,12 +298,14 @@ class LogProc(BaseProcedure):
         :param kwargs: Key-word arguments for :class:`.BaseProcedure`
         """
         super().__init__(cfg, exp, update_params=False, **kwargs)
-        self.DATA_COLUMNS = []
-        records = list(self.record_queues.keys())
-        for rec in records:
-            if rec not in self.DATA_COLUMNS:
-                self.DATA_COLUMNS.append(rec)
-                self.__dict__[rec] = BooleanParameter(rec, default=False)
+        self.DATA_RECORDS = []
+        self.COMPOUND_RECORDS = []
+        for rec in self.records.values():
+            if rec.subrecords is not None:
+                self.COMPOUND_RECORDS.append(rec)
+            if rec not in self.DATA_RECORDS and rec not in self.COMPOUND_RECORDS:
+                self.DATA_RECORDS.append(rec)
+                self.__dict__[rec.name] = BooleanParameter(rec.name, default=True)
         ParameterInspect.update_parameters(self)
 
     def execute(self):
@@ -288,14 +316,26 @@ class LogProc(BaseProcedure):
             time.sleep(1/self.refresh_rate)
 
     def get_properties(self):
-        """ Retrieve all properties given in the DATA_COLUMNS list and emit results.
+        """ Retrieve all properties given in the DATA_RECORDS list and emit results.
+            Generate data for all records in the COMPOUND_RECORDS list and emit results.
         """
-        for p in self.DATA_COLUMNS:
-            log_param = getattr(self, p)
+        # get record timestamp #
+        ts = datetime.timestamp(datetime.now())
+        data_vals = {rec.name: None for rec in self.DATA_RECORDS}
+        # retrieve data for all data records #
+        for rec in self.DATA_RECORDS:
+            log_param = getattr(self, rec.name)
             if log_param:
-                logger.debug("LogProc getting %s" % p)
-                data = getattr(self.hw, p)
-                self.emit(p, data)
+                logger.debug("LogProc getting %s" % rec.name)
+                data = getattr(self.hw, rec.name)
+                data_vals[rec.name] = data
+                self.emit(rec.name, data, timestamp=ts)
+
+        # collect and emit data for all compound records #
+        for rec in self.COMPOUND_RECORDS:
+            subrecords = rec.subrecords
+            sr_dict = {subrec_name: [data_vals[subrec_name]] for subrec_name in subrecords}
+            self.emit(rec.name, sr_dict, timestamp=ts)
 
 
 class CompoundProcedure(BaseProcedure):

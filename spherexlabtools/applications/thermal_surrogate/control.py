@@ -30,10 +30,10 @@ ls336_cntrl = {
         {"name": "mout2", "type": "float"},
         {"name": "mout3", "type": "float"},
         {"name": "mout4", "type": "float"},
-        {"name": "range1", "type": "list", "limits": ["Off", "Low", "Medium", "High"]},
-        {"name": "range2", "type": "list", "limits": ["Off", "Low", "Medium", "High"]},
-        {"name": "range3", "type": "list", "limits": ["Off", "On"]},
-        {"name": "range4", "type": "list", "limits": ["Off", "On"]},
+        {"name": "range1", "type": "list", "limits": ["off", "low", "medium", "high"]},
+        {"name": "range2", "type": "list", "limits": ["off", "low", "medium", "high"]},
+        {"name": "range3", "type": "list", "limits": ["off", "on"]},
+        {"name": "range4", "type": "list", "limits": ["off", "on"]},
         {"name": "setpoint1", "type": "float"},
         {"name": "setpoint2", "type": "float"},
         {"name": "setpoint3", "type": "float"},
@@ -44,10 +44,10 @@ ls336_cntrl = {
         {"name": "mout2", "type": "float"},
         {"name": "mout3", "type": "float"},
         {"name": "mout4", "type": "float"},
-        {"name": "range1", "type": "list", "limits": ["Off", "Low", "Medium", "High"]},
-        {"name": "range2", "type": "list", "limits": ["Off", "Low", "Medium", "High"]},
-        {"name": "range3", "type": "list", "limits": ["Off", "On"]},
-        {"name": "range4", "type": "list", "limits": ["Off", "On"]},
+        {"name": "range1", "type": "list", "limits": ["off", "low", "medium", "high"]},
+        {"name": "range2", "type": "list", "limits": ["off", "low", "medium", "high"]},
+        {"name": "range3", "type": "list", "limits": ["off", "on"]},
+        {"name": "range4", "type": "list", "limits": ["off", "on"]},
         {"name": "setpoint1", "type": "float"},
         {"name": "setpoint2", "type": "float"},
         {"name": "setpoint3", "type": "float"},
@@ -61,7 +61,7 @@ ls336_cntrl = {
         {"name": "outmode3", "type": "str", "get_process": outmode_get_process},
         {"name": "outmode4", "type": "str", "get_process": outmode_get_process},
     ],
-    "status_refresh": "after_set",
+    "status_refresh": "manual",
     "actions": [
         {"name": "set_output_mode", "type": "action", "children": [
             {"name": "channel", "type": "list", "limits": [1, 2, 3, 4]},
@@ -79,10 +79,10 @@ ls336_cntrl = {
 }
 
 
-ls218_logproc_cntrl = {
-    "instance_name": "Ls218TempProcCntrl",
+logproc_cntrl = {
+    "instance_name": "LogProcCntrl",
     "type": "ProcedureController",
-    "procedure": "Ls218TempProc",
+    "procedure": "DataLogProc",
     "kwargs": {
         "sequencer": False,
     }
@@ -99,4 +99,4 @@ ls336_aout_proc_cntrl = {
 }
 
 
-CONTROLLERS = [ls336_cntrl, ls218_logproc_cntrl, ls336_aout_proc_cntrl]
+CONTROLLERS = [ls336_cntrl, logproc_cntrl, ls336_aout_proc_cntrl]

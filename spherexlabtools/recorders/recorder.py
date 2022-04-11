@@ -23,8 +23,12 @@ class CsvRecorder(QueueThread):
             provided, then the current working directory will be used as the output.
         """
         data = record.data
-        filepath = record.emit_kwargs.get("filepath", os.getcwd())
+        filepath = record.recorder_write_path
+        if ".csv" not in filepath:
+            filepath += ".csv"
         data = pd.DataFrame(data)
+        if record.timestamp is not None:
+            data["timestamp"] = [record.timestamp]
         header = not (os.path.exists(filepath))
         data.to_csv(filepath, mode="a", header=header, index=False)
 
@@ -41,39 +45,33 @@ class PyhkRecorder(QueueThread):
 
     def __init__(self, cfg, exp, **kwargs):
         """ Initialize a Pyhk recorder.
-
-        :param data_dir: Path to directory where the pyhk database lives.
         """
         super().__init__(**kwargs)
 
     def handle(self, record):
-        """ Handle incoming records by appending to the appropriate .txt. Pyhk requires the `sensor_type` and
-            'sensor_name' to be specified, so these values must be provided as keywords in calls to
-            :py:meth:`BaseProcedure.emit`. Also note that "timestamp" must be indexable within record.data.
+        """ Handle incoming records by appending to the appropriate .txt.
         """
-        kwargs = record.emit_kwargs
-        assert "sensor_type" in kwargs.keys(), "Pyhk sensor type must be provided as a keyword in emit()!"
-        assert "sensor_name" in kwargs.keys(), "Pyhk sensor name must be provided as a keyword in emit()!"
-        sens_type = kwargs["sensor_type"]
-        sens_name = kwargs["sensor_name"]
+        data = record.data
+        ts = record.timestamp
+
+        sens_name = record.__dict__.get("alias", record.name)
+        sens_type = record.type
         for c, dc in self._delimiter_map.items():
             sens_name = sens_name.replace(c, dc)
-
-        data = record.data
-        ts = data["timestamp"]
 
         # convert timestamp to datetime and create the file-path #
         dt = datetime.fromtimestamp(ts)
         dt_str = dt.strftime("%Y:%m:%d")
         dt_str_split = dt_str.split(":")
-        fp = os.path.join(self._data_dir, dt_str_split[0], dt_str_split[1], dt_str_split[2], sens_type, sens_name,
-                          ".txt")
+        fp = os.path.join(self._data_dir, dt_str_split[0], dt_str_split[1], dt_str_split[2], sens_type,
+                          sens_name+".txt")
 
         # convert data to DataFrame if it is not already that type #
-        if type(data) is not pd.DataFrame:
-            data = pd.DataFrame(data)
+        data = pd.DataFrame(
+            {"timestamp": [ts], "data": [data]}
+        )
 
-        data.to_csv(fp, sep=self._separator, header=False, index=False)
+        data.to_csv(fp, mode="a", sep=self._separator, header=False, index=False)
 
 
 class HDF5Recorder(QueueThread):

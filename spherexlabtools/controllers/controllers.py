@@ -346,7 +346,8 @@ class ProcedureController(Controller):
         rec_name_param_set_map = {
             "Integrate Buffer": "avg",
             "Buffer Size": "buffer_size",
-            "Generate histogram": "histogram"
+            "Generate histogram": "histogram",
+            "Recorder Write Path": "recorder_write_path"
         }
         record = self.procedure.records[record_name]
         setattr(record, rec_name_param_set_map[record_param.name()], record_param.value())
