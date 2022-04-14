@@ -14,8 +14,7 @@ VIEWERS = [lockin_viewer]
 
 SpecCalMeta_Recorder = {
     "instance_name": "SpecCalMetaRecorder",
-    "type": "HDF5Recorder",
-    "filename": "spec_cal.h5"
+    "type": "CsvRecorder",
 }
 
 
