@@ -1,1 +1,1 @@
-from .procedures import BaseProcedure, LogProc, ProcedureSequence
+from .procedures import BaseProcedure, LogProc, CompoundProcedure, ProcedureSequence

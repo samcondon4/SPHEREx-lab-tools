@@ -12,7 +12,7 @@ from ..parameters import ParameterInspect
 from ..thread import StoppableReusableThread
 from ..parameters import Parameter as pymeasureParam
 from ..procedures import BaseProcedure, ProcedureSequence
-from ..parameters import FloatParameter, IntegerParameter, BooleanParameter
+from ..parameters import FloatParameter, IntegerParameter, BooleanParameter, ListParameter
 
 
 logger = logging.getLogger(__name__)
@@ -103,7 +103,9 @@ class InstrumentController(Controller):
         actions = cfg.get("actions", [])
         if len(actions) > 0:
             self.actions_group = Parameter.create(name="Actions", type="group",
-                                                  children=[Parameter.create(type="action", name=a) for a in actions])
+                                                  children=[Parameter.create(**act) if type(act) is dict
+                                                            else Parameter.create(name=act, type="action")
+                                                            for act in actions])
             params.append(self.actions_group)
 
         # complete the final configurations #
@@ -139,14 +141,20 @@ class InstrumentController(Controller):
                         self.status_values[param] = val
                         c.setValue(val)
 
-    def run_instrument_action(self, action):
+    def run_instrument_action(self, act_param):
         """ Run an instrument method from a new thread.
 
-        :param action: String name of the method to run.
+        :param act_param: Parameter object corresponding to the instrument action to run.
         """
-        logger.debug("Running action %s on instrument %s" % (action, str(self.hw)))
-        act = getattr(self.hw, action)
-        act()
+        act_name = act_param.name()
+        act_param_values = act_param.getValues()
+        kwargs = {pkey: pval[0] for pkey, pval in act_param_values.items()}
+        act = getattr(self.hw, act_name)
+        logger.debug("Running action %s on instrument %s" % (act_name, str(self.hw)))
+        act(**kwargs)
+        # if the action is a setter, then emit the params_set signal after its execution
+        if act_name.startswith("set"):
+            self.params_set.emit()
 
     def start(self):
         """ Start the controller.
@@ -238,13 +246,12 @@ class InstrumentController(Controller):
                         "%s: Set %s" % (self.name, child_name), thread))
 
         if self.actions_group is not None:
-            for c in self.actions_group.children():
-                act_name = c.name()
-                logger.debug("Connecting action method for {}".format(act_name))
+            for act_param in self.actions_group.children():
+                logger.info("Connecting action method for {}".format(act_param.name()))
                 thread = StoppableReusableThread()
-                thread.execute = lambda act=act_name: self.run_instrument_action(act)
-                c.sigActivated.connect(self.exp.get_start_thread_lambda(
-                    "%s: Action %s" % (self.name, act_name), thread
+                thread.execute = lambda act=act_param: self.run_instrument_action(act)
+                act_param.sigActivated.connect(self.exp.get_start_thread_lambda(
+                    "%s: Action %s" % (self.name, act_param.name()), thread
                 ))
 
 
@@ -257,17 +264,20 @@ class ProcedureController(Controller):
         FloatParameter: "float",
         IntegerParameter: "int",
         BooleanParameter: "bool",
+        ListParameter: "str",
         pymeasureParam: "str",
     }
 
     proc_complete = QtCore.pyqtSignal()
 
-    def __init__(self, cfg, exp, procs,  sequencer=True, records=True, place_params=True, connect=True, **kwargs):
+    def __init__(self, cfg, exp, procs, proc_params=True, sequencer=True, records=True, place_params=True,
+                 connect=True, **kwargs):
         """ Initialize the procedure controller gui interface.
 
         :param cfg: :ref:`Procedure controller config dictionary <user_guide/custom_experiments:Procedure Controller Configuration Dictionaries>`.
         :param exp: Experiment object.
         :param procs: Procedure object to control.
+        :param proc_params: Should the procedure parameters be automatically generated and placed in the interface.
         :param sequencer: Boolean indicating if a sequencer interface should be generated.
         :param records: Boolean indicating if a record viewer/manipulation interface should be generated.
         :param place_params: Boolean to indicate if the default parameter layout should be set.
@@ -283,14 +293,19 @@ class ProcedureController(Controller):
 
         self.proc_seq = None
         j = 0
-        self.proc_params_tree = [{} for _ in range(len(self.proc_param_objs.keys()))]
-        self.param_name_map = {}
-        for key, val in self.proc_param_objs.items():
-            self.param_name_map[val.name] = key
-            self.proc_params_tree[j] = {"name": val.name, "type": self.parameter_map[type(val)], "value": val.value}
-            j += 1
-        self.proc_params = Parameter.create(name="Procedure Params", type="group", children=self.proc_params_tree)
-        params.append(self.proc_params)
+        if proc_params:
+            self.proc_params_tree = [{} for _ in range(len(self.proc_param_objs.keys()))]
+            self.param_name_map = {}
+            for key, val in self.proc_param_objs.items():
+                self.param_name_map[val.name] = key
+                self.proc_params_tree[j] = {"name": val.name, "type": self.parameter_map[type(val)], "value": val.value}
+                j += 1
+            self.proc_params = Parameter.create(name="Procedure Params", type="group", children=self.proc_params_tree)
+            params.append(self.proc_params)
+            # create start and stop procedure buttons #
+            self.start_proc = Parameter.create(name="Start Procedure", type="action")
+            self.stop_proc = Parameter.create(name="Stop Procedure", type="action")
+            self.proc_actions = [self.start_proc, self.stop_proc]
 
         # configure the sequencer interface if the sequencer kwarg is true. #
         self.sequencer = None
@@ -316,18 +331,13 @@ class ProcedureController(Controller):
             self.records_interface.save_record_sig.connect(self.save_record)
             params.append(self.records_interface)
 
-        # create start and stop procedure buttons #
-        self.start_proc = Parameter.create(name="Start Procedure", type="action")
-        self.stop_proc = Parameter.create(name="Stop Procedure", type="action")
-        self.proc_actions = [self.start_proc, self.stop_proc]
-
         # connect buttons to methods #
-        if connect:
+        if connect and proc_params:
+            self.proc_params.addChildren(self.proc_actions)
             self._connect_buttons()
 
         # place parameters if flag is set #
         if place_params:
-            self.proc_params.addChildren(self.proc_actions)
             self.set_parameters(params)
 
     def update_record_attrs(self, record_param, record_name):
@@ -336,7 +346,8 @@ class ProcedureController(Controller):
         rec_name_param_set_map = {
             "Integrate Buffer": "avg",
             "Buffer Size": "buffer_size",
-            "Generate histogram": "histogram"
+            "Generate histogram": "histogram",
+            "Recorder Write Path": "recorder_write_path"
         }
         record = self.procedure.records[record_name]
         setattr(record, rec_name_param_set_map[record_param.name()], record_param.value())

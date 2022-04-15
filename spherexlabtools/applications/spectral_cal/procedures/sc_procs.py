@@ -4,9 +4,6 @@
 
 """
 import time
-import numpy as np
-import pandas as pd
-
 from spherexlabtools.procedures import BaseProcedure
 from spherexlabtools.parameters import IntegerParameter, FloatParameter, Parameter
 
@@ -61,24 +58,23 @@ class SpecCalProc(BaseProcedure):
             param_split = param.split(SpecCalProc.PARAM_DELIMITER)
             inst = getattr(self, param_split[0])
             val = getattr(inst, SpecCalProc.PARAM_DELIMITER.join(param_split[1:]))
-            self.inst_params_emit[SpecCalProc.PARAM_DELIMITER.join(inst + param_split[1:])] = val
+            self.inst_params_emit[param] = [val]
+
+        time.sleep(6*self.lockin_sr830_time_constant)
 
     def execute(self):
         """ Execute the spectral-cal measurement.
         """
         samples = int(self.lockin_sample_rate * self.sample_time)
-        record_data_df = pd.DataFrame({self.SR830_X_STR: np.zeros(samples), self.SR830_Y_STR: np.zeros(samples),
-                                       self.SR510_STR: np.zeros(samples)})
         for i in range(samples):
             sr830_voltages = self.lockin.sr830_xy
             sr510_voltage = self.lockin.sr510_output
-            sample = {self.SR830_X_STR: sr830_voltages[0], self.SR830_Y_STR: sr830_voltages[1],
-                      self.SR510_STR: sr510_voltage}
-            record_data_df.loc[i] = sample
+            sample = {self.SR830_X_STR: [sr830_voltages[0]], self.SR830_Y_STR: [sr830_voltages[1]],
+                      self.SR510_STR: [sr510_voltage]}
+            sample.update(self.inst_params_emit)
             # emit viewer records for live plots ########
             self.emit("sr830_x", sr830_voltages[0])
             self.emit("sr830_y", sr830_voltages[1])
             self.emit("sr510_output", sr510_voltage)
             time.sleep(1 / self.lockin_sample_rate)
-        # emit recorder record ####################################
-        self.emit("lockin_output", record_data_df, inst_params=self.inst_params_emit)
+            self.emit("lockin_output", sample)

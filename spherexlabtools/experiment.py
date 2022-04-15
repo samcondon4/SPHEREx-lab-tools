@@ -11,6 +11,7 @@ import spherexlabtools.procedures as slt_proc
 import spherexlabtools.recorders as slt_record
 import spherexlabtools.controllers as slt_control
 from spherexlabtools.instruments import InstrumentSuite
+from spherexlabtools.thread import StoppableReusableThread
 
 
 app = None
@@ -66,12 +67,20 @@ class Experiment:
 
         # initialize procedures ###################################################
         proc_cfgs = exp_pkg.PROCEDURES
+        # get all compound procedure configurations #
+        compound_proc_cfgs = []
+        for proc in proc_cfgs:
+            if "subprocedures" in proc.keys():
+                compound_proc_cfgs.append(proc)
+                proc_cfgs.remove(proc)
         try:
             search_order = [exp_pkg.procedures, slt_proc]
         except AttributeError:
             search_order = [slt_proc]
         self.procedures = load_objects_from_cfg_list(search_order, self, proc_cfgs, hw=self.hw,
                                                      viewers=self.viewers, recorders=self.recorders)
+        # instantiate compound procedures #
+        self.procedures.update(load_objects_from_cfg_list([slt_proc], self, compound_proc_cfgs))
 
         # initialize controllers ##################################################
         control_cfgs = exp_pkg.CONTROLLERS
@@ -135,17 +144,18 @@ class Experiment:
         controller = self.controllers[cntrl_key]
         controller.stop()
 
-    def start_thread(self, thread_key, thread):
+    def start_thread(self, thread_key, thread, stop_thread=False):
         """ Start a thread and update the active_threads dictionary. This should only be called internally.
 
         :param thread_key: String key name to use in the active_threads dictionary.
         :param thread: Thread object to start.
+        :param stop_thread: Boolean to indicate if an active thread should be stopped an restarted.
         """
-        if thread_key not in self.active_threads.keys() or not self.active_threads[thread_key].running:
+        if thread_key not in self.active_threads.keys() or not self.active_threads[thread_key].thread.is_alive():
             thread.start()
             self.active_threads[thread_key] = thread
         else:
-            raise RuntimeError("Thread %s is already active!" % thread_key)
+            raise RuntimeWarning(f"Thread {thread_key} is already active! Thread reset = {stop_thread}")
 
     def get_start_thread_lambda(self, thread_key, thread):
         """ Return a lambda function to call the start_thread method. This is useful to generate lambda functions
@@ -173,6 +183,12 @@ class Experiment:
         :param thread: Same as for :meth:`Experiment.start_thread`
         """
         return lambda key=thread_key, t=thread: self.start_thread(key, t)
+
+    def kill_threads(self):
+        """ Call the :meth:`StoppableReusableThread.stop` method on each thread in the active threads dictionary.
+        """
+        for t in self.active_threads.values():
+            t.stop()
 
 
 def create_experiment(exp_pkg):

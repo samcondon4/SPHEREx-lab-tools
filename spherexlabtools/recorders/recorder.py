@@ -1,16 +1,81 @@
+import os
 import logging
-import importlib
-
 import numpy as np
 import pandas as pd
+from datetime import datetime
+
 from ..thread import QueueThread
 
 
 logger = logging.getLogger(__name__)
 
 
+class CsvRecorder(QueueThread):
+    """ Basic csv recorder class.
+    """
+
+    def __init__(self, cfg, exp, **kwargs):
+        super().__init__(**kwargs)
+
+    def handle(self, record):
+        """ Handle incoming records and append to existing csv or create a new one. Note that specific file paths should
+            be specified with the 'filepath' keyword in calls to :py:meth:`BaseProcedure.emit`. If this key-word is not
+            provided, then the current working directory will be used as the output.
+        """
+        data = record.data
+        filepath = record.recorder_write_path
+        if ".csv" not in filepath:
+            filepath += ".csv"
+        data = pd.DataFrame(data)
+        if record.timestamp is not None:
+            data["timestamp"] = [record.timestamp]
+        header = not (os.path.exists(filepath))
+        data.to_csv(filepath, mode="a", header=header, index=False)
+
+
+class PyhkRecorder(QueueThread):
+    """ Basic recorder to log data to a .txt file in a Pyhk database.
+    """
+
+    _data_dir = "/data/hk"
+    _delimiter_map = {
+        " ": "%20"
+    }
+    _separator = "\t"
+
+    def __init__(self, cfg, exp, **kwargs):
+        """ Initialize a Pyhk recorder.
+        """
+        super().__init__(**kwargs)
+
+    def handle(self, record):
+        """ Handle incoming records by appending to the appropriate .txt.
+        """
+        data = record.data
+        ts = record.timestamp
+
+        sens_name = record.__dict__.get("alias", record.name)
+        sens_type = record.type
+        for c, dc in self._delimiter_map.items():
+            sens_name = sens_name.replace(c, dc)
+
+        # convert timestamp to datetime and create the file-path #
+        dt = datetime.fromtimestamp(ts)
+        dt_str = dt.strftime("%Y:%m:%d")
+        dt_str_split = dt_str.split(":")
+        fp = os.path.join(self._data_dir, dt_str_split[0], dt_str_split[1], dt_str_split[2], sens_type,
+                          sens_name+".txt")
+
+        # convert data to DataFrame if it is not already that type #
+        data = pd.DataFrame(
+            {"timestamp": [ts], "data": [data]}
+        )
+
+        data.to_csv(fp, mode="a", sep=self._separator, header=False, index=False)
+
+
 class HDF5Recorder(QueueThread):
-    """ Base recorder class.
+    """ Basic HDF5 recorder class.
     """
 
     META_GROUP = "Meta"

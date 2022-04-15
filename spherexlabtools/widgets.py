@@ -200,7 +200,7 @@ class Records(pTypes.GroupParameter):
     new_record_params_sig = QtCore.pyqtSignal(object, object)
     save_record_sig = QtCore.pyqtSignal(object, object)
 
-    save_record_name = "Save Record"
+    save_record_name = "Save Single Record"
 
     def __init__(self, records, **opts):
         """ Initialize the interface.
@@ -209,18 +209,28 @@ class Records(pTypes.GroupParameter):
         """
         children = [None for _ in records]
         i = 0
-        for rec in records:
+        for rec in records.values():
             buffer_size = {"name": "Buffer Size", "type": "int", "value": 1}
             integrate_buffer = {"name": "Integrate Buffer", "type": "bool", "value": False}
+            # TODO: Add ability to generate a true histogram #
             generate_histogram = {"name": "Generate histogram", "type": "bool", "value": False}
             save_param = Parameter.create(name=self.save_record_name, type="action", children=[
                 {"name": "File-path", "type": "str", "value": os.path.join(os.getcwd(), "Record")},
                 {"name": "Type", "type": "list", "limits": [".pkl", ".mat"]}
             ])
-            children[i] = Parameter.create(name=rec, type="group", children=[
-                buffer_size, integrate_buffer, generate_histogram, save_param
-            ])
+            params = [buffer_size, integrate_buffer, save_param]
+            # recorders/viewers #
+            if rec.viewer is not None:
+                viewer_param = Parameter.create(name="Viewer", type="str", value=rec.viewer, enabled=False)
+                params.append(viewer_param)
+            if rec.recorder is not None:
+                rec_param = Parameter.create(name="Recorder", type="str", value=rec.recorder, enabled=False)
+                recorder_filepath = {"name": "Recorder Write Path", "type": "str", "value": os.path.join(os.getcwd(),
+                                                                                                         rec.name)}
+                params.extend([rec_param, recorder_filepath])
+            children[i] = Parameter.create(name=rec.name, type="group", children=params)
             i += 1
+
         opts["children"] = children
         opts["name"] = "Records"
         opts["type"] = "group"
