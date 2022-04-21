@@ -1,3 +1,23 @@
+"""
+Procedures
+-----------
+
+    - "LockinViewProc": Logging procedure to retrieve output voltages from the sr510 and sr830 lockin amplifiers.
+    - "SpecCalProc": Procedure to run monochromator scans, log lockin reference detector data, and trigger detector
+                     exposures.
+
+Viewers
+-------
+
+    - "LockinView": LineViewer to view live data recorded from the lock-in amplifiers.
+
+Recorders
+---------
+
+    - "SpecCalMetaRecorder": CsvRecorder to log all spectral calibration warm optics instrumentation metadata.
+
+"""
+
 lockin_viewer = {
     "instance_name": "LockinView",
     "type": "LineViewer",

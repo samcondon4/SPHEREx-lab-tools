@@ -115,4 +115,5 @@ SpecCalProc_Controller = {
 }
 ##############################################################################################################
 
-CONTROLLERS = [Mono_Controller, Ndf_Controller, Lockin_Controller, LockinViewProc_Controller, SpecCalProc_Controller]
+CONTROLLERS = [Mono_Controller, Ndf_Controller, Lockin_Controller, LockinViewProc_Controller,
+               SpecCalProc_Controller]

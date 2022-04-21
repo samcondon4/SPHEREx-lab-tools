@@ -6,25 +6,29 @@ SPHERExLabTools ships with the following preconfigured experiments:
 .. toctree::
         :maxdepth: 1
 
+        core_exp_docs/spectral_cal
         core_exp_docs/thermal_surrogate
 
 To run the control software associated with each of these experiments, perform the following steps:
 
-    1. Activate the **spherexlabtools** Anaconda environment::
+    1. Open the **Anaconda Prompt** application (on windows type anaconda prompt in the search bar)
+    2. Activate the **spherexlabtools** Anaconda environment::
 
         conda activate spherexlabtools
 
-    2. Navigate to the directory where you would like all output data files to be saved.
-    3. Start a python interpreter by typing **python** into the terminal.
-    4. Import the **spherexlabtools** package::
+    3. Navigate to the directory where you would like all output data files to be saved.
+    4. Start a python interpreter by typing **python** into the terminal.
+    5. Import the **spherexlabtools** package::
 
         import spherexlabtools as slt
 
-    5. Import the core experiment configuration package::
+    6. Import the desired core experiment configuration package::
 
         from spherexlabtools.applications import <name of core experiment> as <core_exp_alias>
 
-    6. Create the :ref:`Experiment Object <user_guide/fundamentals:Experiment Class>` with the core experiment
+       The specific form of this line varies depending on which core experiment is being used. See the documentation
+       specific to each core experiment provided at the links above.
+    7. Create the :ref:`Experiment Object <user_guide/fundamentals:Experiment Class>` with the core experiment
        configuration::
 
         exp = slt.create_experiment(<core_exp_alias>)
