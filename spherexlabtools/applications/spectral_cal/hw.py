@@ -16,6 +16,8 @@ the following code::
    from spherexlabtools.instruments.spherex import MonoControlServer
    mserve = MonoControlServer()
    mserve.start()
+
+These steps must be executed **before** creating the experiment object with exp = slt.create_experiment(sc).
 """
 HOST = "131.215.200.118"
 PORT = 6550
