@@ -6,13 +6,13 @@ Mono_Controller = {
     "control_parameters": [
         {"name": "osf", "type": "list", "limits": [1, 2, 3, 4, 5, 6, "Auto"]},
         {"name": "grating", "type": "list", "limits": [1, 2, 3, "Auto"]},
-        {"name": "wavelength", "type": "float"},
+        {"name": "wavelength", "type": "str"},
         {"name": "shutter", "type": "list", "limits": [0, 1]}
     ],
     "status_parameters": [
         {"name": "osf", "type": "list", "limits": [1, 2, 3, 4, 5, 6]},
         {"name": "grating", "type": "list", "limits": [1, 2, 3]},
-        {"name": "wavelength", "type": "float"},
+        {"name": "wavelength", "type": "str"},
         {"name": "shutter", "type": "list", "limits": [0, 1]},
     ],
     "status_refresh": "manual",
