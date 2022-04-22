@@ -7,4 +7,4 @@ API Reference
         instruments/index
         procedures/index
         applications/index
-
+        recorders/index

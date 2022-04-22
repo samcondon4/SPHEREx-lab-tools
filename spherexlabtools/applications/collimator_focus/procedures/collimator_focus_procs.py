@@ -15,21 +15,28 @@ logger = logging.getLogger(__name__)
 class CamProc(BaseProcedure):
     """ Base class defining microscope camera startup and shutdown methods.
     """
-
-    refresh_rate = FloatParameter("Frame Rate", units="Hz.", default=8.0, minimum=1.0, maximum=8.0)
+    
+    refresh_rate = FloatParameter("Exposure Time", units="us.", default=100000, minimum=30, maximum=5929218.769073486)
 
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(cfg, exp, **kwargs)
 
     def startup(self):
         BaseProcedure.startup(self)
-        self.hw.cam_acquisition_frame_rate_auto = "Off"
-        self.hw.cam_acquisition_frame_rate_en = True
-        self.hw.cam_acquisition_frame_rate = self.refresh_rate
-        self.hw.cam_start_stream()
+        try:
+            self.hw.acquisition_frame_rate_en = False
+            self.hw.exposure_time = self.refresh_rate
+            self.hw.start_stream()
+        except AttributeError:
+            self.hw.Camera.acquisition_frame_rate_en = False
+            self.hw.Camera.exposure_time = self.refresh_rate
+            self.hw.Camera.start_stream()
 
     def shutdown(self):
-        self.hw.cam_stop_stream()
+        try:
+            self.hw.stop_stream()
+        except AttributeError:
+            self.hw.Camera.stop_stream()
         BaseProcedure.shutdown(self)
 
 
@@ -55,25 +62,35 @@ class CollimatorFocusProc(CamProc):
         """
         """
         super().__init__(cfg, exp, **kwargs)
+        self.cam = self.hw.Camera
+        self.mscope = self.hw.MscopeMotors
+        self.inst_params = {}
+
+    def startup(self):
+        """ Override startup to get instrument parameters
+        """
+        super().startup()
+        self.inst_params.update({"focus_position": self.mscope.focuser_absolute_position,
+                                 "camera_gain": self.cam.gain,
+                                 "camera_exposure_time": self.cam.exposure_time})
 
     def execute(self):
         # move the focuser and wait for its motion to complete #
-        self.hw.focuser_step_position = self.focus_position
-        self.hw.focuser_wait_for_completion()
+        self.mscope.focuser_step_position = self.focus_position
+        self.mscope.focuser_wait_for_completion()
 
-        frame_width = self.hw.cam_exposure_width
-        frame_height = self.hw.cam_exposure_height
+        frame_width = self.cam.exposure_width
+        frame_height = self.cam.exposure_height
 
         # take a set of images averaged over several frames #
-        for i in range(int(self.images)):
-            image = np.zeros([frame_height, frame_width], dtype=np.uint64)
-            for e in range(int(self.frames_per_image)):
-                exp = self.hw.cam_latest_frame
+        for _ in range(int(self.images)):
+            image = np.zeros([frame_height, frame_width], dtype=np.float64)
+            for __ in range(self.frames_per_image):
+                exp = self.cam.latest_frame
                 image = image + (exp / self.frames_per_image)
                 # write out to viewers #
                 logger.debug("CollimatorFocusProc emitting data")
                 self.emit("frame", exp)
                 self.emit("frame_avg", image)
 
-            # pass data_columns and group as argument to HDF5Recorder handle() method #
-            self.emit("image", image, group_records=self.images)
+            self.emit("image", image, inst_params=self.inst_params)

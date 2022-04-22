@@ -139,7 +139,7 @@ class ImageViewer(Viewer):
             self.levels_params = Parameter.create(name="Levels", type="group", children=[
                 {"name": "Min", "type": "float", "value": self.levels[0]},
                 {"name": "Max", "type": "float", "value": self.levels[1]},
-                {"name": "Auto_scale", "type": "bool", "value": True}
+                {"name": "Auto_scale", "type": "bool", "value": False}
             ])
             params.append(self.levels_params)
             self.levels_params.sigTreeStateChanged.connect(self.update_levels)

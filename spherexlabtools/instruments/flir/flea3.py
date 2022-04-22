@@ -126,6 +126,10 @@ class Flea3:
     exposure_width = FlirInstrument.control("Width", "int", "Integer property representing the width in pixels of an "
                                                             "image.")
 
+    pixel_format = FlirInstrument.control("PixelFormat", "enum", "Enum property that can be set with the following"
+                                                                 "values: ['Mono8', 'Mono12Packed', 'Mono16']",
+                                          values=["Mono8", "Mono16", "Mono12Packed"])
+
     def __init__(self, resource):
         """ Initialize the interface to the camera object provided.
         :param: resource: PySpin Camera object.
@@ -141,7 +145,7 @@ class Flea3:
         # stream active flag #
         self._stream_active = False
 
-    def get_frames(self, n=1, timeout=1000):
+    def get_frames(self, n=1, timeout=35000):
         """ This method retrieves a set number of frames from the camera.
         :param: n: Integer parameter specifying the number of frames to retrieve.
         :param: timeout: Time in miliseconds to wait before timing out during image acquisition. 
@@ -203,11 +207,13 @@ class Flea3:
         self.acquisition_mode = "SingleFrame"
         self.stream_active = False
 
-    def get_stream_frame(self):
+    def get_stream_frame(self, timeout=35000):
         """ This method retrieves the latest frame and returns it as a numpy array when
             the camera is continuously streaming data.
+        
+        :param timeout: Time in milliseconds before an image acquisition event should time-out. 
         """
-        im = self.cam.GetNextImage(1000)
+        im = self.cam.GetNextImage(timeout)
         im_arr = im.GetNDArray()
         im.Release()
         return im_arr
