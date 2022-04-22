@@ -1,5 +1,8 @@
 """
-The spectral calibration control software is initialized with the following code::
+.. automodule:: spherexlabtools.applications.spectral_cal.hw
+    :members:
+
+To initialize the spectral calibration software, run the following code on the control computer:
 
     import spherexlabtools as slt
     from spherexlabtools.applications import spectral_cal as sc
@@ -12,9 +15,6 @@ The variable **exp** now contains the :ref:`user_guide/fundamentals:Instrument D
 of starting a controller, the following code will start the manual monochromator control gui::
 
     exp.start_controller("MonoCntrl")
-
-.. automodule:: spherexlabtools.applications.spectral_cal.hw
-    :members:
 
 .. automodule:: spherexlabtools.applications.spectral_cal.measure
     :members:

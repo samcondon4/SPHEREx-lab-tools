@@ -1,6 +1,7 @@
 """
 Hardware
 --------
+The spectral_cal control software implements control over the following instruments:
 
     - "ndf": Edmund Optics neutral density filter wheel.
     - "mono": Newport CS260 monochromator.
@@ -13,6 +14,7 @@ the following code::
 
    cd Documents\Github\SPHERExLabTools
    conda activate spherexlabtools
+   python
    from spherexlabtools.instruments.spherex import MonoControlServer
    mserve = MonoControlServer()
    mserve.start()
