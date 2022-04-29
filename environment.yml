@@ -217,4 +217,4 @@ dependencies:
     - pyqtgraph==0.12.3
     - pytz==2021.3
     - sphinx-rtd-theme==1.0.0
-prefix: /home/spherex-lab/anaconda3/envs/spherexlabtools
+prefix: /home/sam-lab/anaconda3/envs/spherexlabtools
