@@ -22,7 +22,8 @@ class SpecCalProc(BaseProcedure):
     lockin_sr830_time_constant = FloatParameter("Sr830 Time-Constant", default=1, units="S.")
     lockin_sample_rate = FloatParameter("Lockin Sample-Rate", default=1, units="Hz.")
 
-    sample_time = FloatParameter("Sample Time", default=10, units="S.")
+    exposure_time = FloatParameter("Exposure Time", default=10, units="S.")
+    exposure_comment = Parameter("Exposure Comment", default="")
 
     inst_params = ["ndf_position", "mono_shutter", "mono_osf", "mono_grating", "mono_wavelength",
                    "lockin_sr510_time_constant", "lockin_sr830_time_constant", "lockin_sr510_sensitivity",

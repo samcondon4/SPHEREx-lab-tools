@@ -56,7 +56,7 @@ LockinViewProc = {
 SpecCalProc = {
     "instance_name": "SpecCalProc",
     "type": "SpecCalProc",
-    "hw": ["mono", "ndf", "lockin"],
+    "hw": ["mono", "ndf", "lockin", "readout"],
     "records": {
         "sr830_x": {"viewer": "LockinView"},
         "sr830_y": {"viewer": "LockinView"},

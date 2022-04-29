@@ -1,4 +1,18 @@
 # INSTRUMENT CONTROLLERS #######################################################################################
+Readout_Controller = {
+    "instance_name": "ReadoutCntrl",
+    "type": "InstrumentController",
+    "hw": "readout",
+    "actions": [
+        {
+            "name": "start_exposure", "type": "action", "children": [
+                {"name": "exposure_time", "type": "float"},
+                {"name": "comment", "type": "str"}
+            ]
+        }
+    ]
+}
+
 Mono_Controller = {
     "instance_name": "MonoCntrl",
     "type": "InstrumentController",
@@ -107,7 +121,6 @@ LockinViewProc_Controller = {
     }
 }
 
-
 SpecCalProc_Controller = {
     "instance_name": "SpecCalProcCntrl",
     "type": "ProcedureController",
@@ -116,4 +129,4 @@ SpecCalProc_Controller = {
 ##############################################################################################################
 
 CONTROLLERS = [Mono_Controller, Ndf_Controller, Lockin_Controller, LockinViewProc_Controller,
-               SpecCalProc_Controller]
+               SpecCalProc_Controller, Readout_Controller]

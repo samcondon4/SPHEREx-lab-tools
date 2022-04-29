@@ -27,6 +27,14 @@ PORT = 6550
 rec_name = f"TCPIP::{HOST}::{PORT}::SOCKET"
 
 
+Readout = {
+    "instance_name": "readout",
+    "manufacturer": "spherex",
+    "resource_name": "",
+    "instrument": "DetectorCom"
+}
+
+
 Ndf = {
     "instance_name": "ndf",
     "manufacturer": "edmund",
@@ -70,4 +78,4 @@ Lockin = {
     ]
 }
 
-INSTRUMENT_SUITE = [Ndf, Mono, Lockin]
+INSTRUMENT_SUITE = [Ndf, Mono, Lockin, Readout]
