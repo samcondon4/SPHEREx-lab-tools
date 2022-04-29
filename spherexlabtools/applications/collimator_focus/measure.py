@@ -3,7 +3,7 @@ import numpy as np
 
 CollimatorFocus_Recorder = {
     "instance_name": "CollimatorFocusRecorder",
-    "type": "MatRecorder",
+    "type": "HDF5Recorder",
 }
 
 RECORDERS = [CollimatorFocus_Recorder]
@@ -14,7 +14,7 @@ Camera_Viewer = {
     "instance_name": "CamView",
     "type": "ImageViewer",
     "kwargs": {
-        "levels": [2**12, 2**16]
+        "levels": [2**4, 2**16]
     }
 }
 
@@ -22,7 +22,7 @@ CameraAvg_Viewer = {
     "instance_name": "CamViewAvg",
     "type": "ImageViewer",
     "kwargs": {
-        "levels": [2**12, 2**16]
+        "levels": [2**4, 2**16]
     }
 }
 
