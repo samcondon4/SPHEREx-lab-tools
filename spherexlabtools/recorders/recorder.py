@@ -4,11 +4,15 @@ import numpy as np
 import pandas as pd
 import scipy.io as spio
 from datetime import datetime
+import pymysql
 
 from ..thread import QueueThread
 
 logger = logging.getLogger(__name__)
 
+SCHEMA_NAME = 'spherexlab'
+SCHEMA_USER = 'root'
+SCHEMA_PSWD = '$PHEREx_B111'
 
 class SltRecorder(QueueThread):
     """ Abstract base-class for SPHERExLabTools specific recorders. This class generates the indices used in the
@@ -185,6 +189,215 @@ class MatRecorder(SltRecorder):
         spio.savemat(self.results_path + ".mat", mat_dict)
         self.opened_results = spio.loadmat(self.results_path+".mat")
 
+class SQLRecorder(SltRecorder):
+    table = None
+
+    def __init__(self, cfg, exp, **kwargs):
+        """ Initialize a recorder.
+        """
+        super().__init__(cfg, exp, **kwargs)
+
+        # Begin by confirming schema exists and creating it if not.
+        DB_NAME = SCHEMA_NAME
+
+        cnx = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD)
+        cursor = cnx.cursor()
+        try:
+            cursor.execute("USE {}".format(DB_NAME))
+            print("Database {} exists.".format(DB_NAME))
+        except:
+            print("Database {} does not exist.".format(DB_NAME))
+            cursor.execute(
+                "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
+            print("Database {} created successfully.".format(DB_NAME))
+            cnx.database = DB_NAME
+
+        # Check that table exists
+        table = cfg['params'].get("table", None)
+        if table is not None:
+            self.table = table
+
+        table_description = "CREATE TABLE  IF NOT EXISTS {0} (" \
+                            "exp_id varchar(50)," \
+                            " PRIMARY KEY (exp_id)" \
+                            ") ENGINE=InnoDB".format(table)
+
+        cursor.execute(table_description)
+
+        cnx.close()
+
+    def connect_mysql(self):
+        ''' Connect to server
+        '''
+        db = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD, database=SCHEMA_NAME)
+        self.db = db
+        self.cursor = db.cursor()
+
+    def disconnect_mysql(self):
+        ''' Disconnect from server
+        '''
+        self.cursor.close()
+
+    def add_missing_columns(self, table_name_server, columns_dict):
+        ''' Check that columns exist, and add them if they do not.
+        '''
+        self.connect_mysql()
+        self.cursor.execute("DESCRIBE {}".format(table_name_server))
+        indexList = self.cursor.fetchall()
+        table_dict = {}
+
+        for row in indexList:
+            table_dict[row[0]] = row[1]
+
+        for column_name_local in columns_dict:
+            if column_name_local not in table_dict:
+                add_column_dict = {table_name_server: {column_name_local: columns_dict[column_name_local]}}
+                sql_add_column_commands = self.get_add_column_command(add_column_dict)
+                for i in sql_add_column_commands:
+                    self.cursor.execute(sql_add_column_commands[i])
+
+        self.disconnect_mysql()
+
+    def get_add_column_command(self, mod_dict):
+        ''' Return command to add column to table.  Uses the type_lookup table to assign data type to column definition
+        '''
+        type_lookup = {float: "float", str: "varchar (50)", int: "int", bool: "bool"}
+        for table_name in mod_dict:
+            print('table_name mod is:', table_name)
+            alter_statement_columns = {}
+            for column_name in mod_dict[table_name]:
+                print('column_name mod is:', column_name)
+                if 'timestamp' in column_name:
+                    type_mod = 'datetime'
+                elif 'date' in column_name:
+                    type_mod = 'date'
+                else:
+                    try:
+                        type_mod = type_lookup[type(mod_dict[table_name][column_name])]
+                    except:
+                        type_mod = "float"
+
+                alter_statement = """
+                ALTER TABLE {0} 
+                ADD {1} {2};
+                """.format(table_name, column_name, type_mod)
+                #print('alter_statement is', alter_statement)
+                alter_statement_columns[column_name] = alter_statement
+            return alter_statement_columns
+
+    def upsert(self, table, **kwargs):
+        """ Add rows to table given the key-value pairs in kwargs
+        """
+        keys = ["%s" % k for k in kwargs]
+        values = ["'%s'" % v for v in kwargs.values()]
+        sql = list()
+        sql.append("INSERT INTO %s (" % table)
+        sql.append(", ".join(keys))
+        sql.append(") VALUES (")
+        sql.append(", ".join(values))
+
+        return "".join(sql) + ")"
+
+    def build_sql_table_command(self, ini_dict):
+        ''' Return command to add new table(s) to schema
+        '''
+
+        for itable, ilist in ini_dict.items():
+            sql_command = 'CREATE TABLE ' + itable + ' ('
+
+            for icol in ilist:
+                sql_command += icol + " " + ilist[icol] + ", "
+
+            sql_command += 'PRIMARY KEY (exp_id)) ENGINE=InnoDB'
+
+            self.TABLES[itable] = sql_command
+
+    def sql_insert_row_command(self, table_name, commands_dict0):
+        '''
+        Construct SQL command, e.g.;
+        """INSERT INTO spectral_cal
+            (exp_id, timestamp, date, sequence, wavelength, grating, order_sort_filter, ndf_position)
+            VALUES ('20220420_153633_12','2022-04-20 15:36:33','2022-04-20','sequencename', 5.2, 580 ,'3','1')"""
+        and write Table to Database.
+        '''
+
+        commands_dict = {key: value for (key, value) in commands_dict0.items() if value is not None}
+
+        return self.upsert(table_name, **commands_dict)
+
+    def execute_sql_statements(self, statement_dict):
+        ''' Execute SQL statements by looping through statement_dict
+        '''
+        for key, statement_text in statement_dict.items():
+            if 'add_row' in key:
+                try:
+                    # Connect to database
+                    self.connect_mysql()
+
+                    # Creation of cursor object
+                    cursorObject = self.cursor
+
+                    # Execute the SQL statement
+                    cursorObject.execute(statement_text)
+                    self.db.commit()
+
+                except Exception as e:
+                    print("Exeception occured:{}".format(e))
+                    self.db.rollback()
+                    print('Rolling Back', statement_text)
+
+                finally:
+                    # Disconnect from database
+                    self.disconnect_mysql()
+
+    def open_results(self, results_path):
+        """ Open existing or create new .mat file.
+        """
+        rec_group = 0
+        rec_group_ind = 0
+
+        return rec_group, rec_group_ind
+
+    def close_results(self):
+        pass
+
+    def update_results(self, record):
+        """ SqlHandle
+        """
+        # sql_dict = record.emit_kwargs.get("sql_dict", None)
+        table = record.emit_kwargs.get("table", None)
+        if table is not None:
+            self.table = table
+
+        sql_dict = record.inst_params
+        if sql_dict is None:
+            sql_dict = {}
+
+        for iproc in record.proc_params:
+            if type(record.proc_params[iproc]) == bool:
+                if record.proc_params[iproc] == True:
+                    sql_dict["_".join(['proc', iproc])] = 1
+                if record.proc_params[iproc] == False:
+                    sql_dict["_".join(['proc', iproc])] = 0
+            else:
+                sql_dict["_".join(['proc', iproc])] = record.proc_params[iproc]
+            # print('proc is ', "_".join(['proc', iproc]), sql_dict["_".join(['proc', iproc])])
+
+        if 'storage_path' not in sql_dict:
+            sql_dict['storage_path'] = record.file_path
+
+        # sql_dict['sequence'] = record.sequence
+        if record.emit_kwargs.get("keep_recordgroup_info", False):
+            sql_dict['RecordGroupNum'] = self.record_group
+            sql_dict['RecordGroupInd'] = self.record_group_ind
+
+        # Check for missing columns and add if needed
+        self.add_missing_columns(self.table, sql_dict)
+
+        # Execute sql command to add row
+        sql_command = self.sql_insert_row_command(self.table, sql_dict)
+        sql_command_dict = {'add_row': sql_command}
+        self.execute_sql_statements(sql_command_dict)
 
 class CsvRecorder(QueueThread):
     """ Basic csv recorder class.
