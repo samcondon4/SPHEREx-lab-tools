@@ -7,7 +7,7 @@ Sam Condon, 02/05/2022
 import logging
 import numpy as np
 from spherexlabtools.procedures import BaseProcedure, LogProc
-from spherexlabtools.parameters import FloatParameter, IntegerParameter
+from spherexlabtools.parameters import FloatParameter, IntegerParameter, Parameter
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ class CamProc(BaseProcedure):
     """ Base class defining microscope camera startup and shutdown methods.
     """
     
-    refresh_rate = FloatParameter("Exposure Time", units="us.", default=100000, minimum=30, maximum=5929218.769073486)
+    refresh_rate = FloatParameter("Exposure Time us.", default=100000, minimum=30, maximum=5929218.769073486)
 
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(cfg, exp, **kwargs)
@@ -54,7 +54,7 @@ class CollimatorFocusProc(CamProc):
     """ Main collimator focus measurement procedure.
     """
 
-    focus_position = IntegerParameter("Focus Position", units="step position", default=0)
+    focus_position = Parameter("Absolute Focus Position mm.", default=0)
     frames_per_image = IntegerParameter("Frames Per Image", default=10)
     images = IntegerParameter("Images", default=1)
 
@@ -76,7 +76,7 @@ class CollimatorFocusProc(CamProc):
 
     def execute(self):
         # move the focuser and wait for its motion to complete #
-        self.mscope.focuser_step_position = self.focus_position
+        self.mscope.focuser_absolute_position = self.focus_position
         self.mscope.focuser_wait_for_completion()
 
         frame_width = self.cam.exposure_width

@@ -57,6 +57,7 @@ class SltRecorder(QueueThread):
         """ Update the record_group, record_group_ind, and record_row attributes based on information provided in
             the record.
         """
+        print(record.sequence)
         if record.filepath != self.results_path:
             self.results_path = record.filepath
             self.close_results()
@@ -65,9 +66,11 @@ class SltRecorder(QueueThread):
         # update record_group #
         rec_group_changed = False
         if record.sequence is None:
+            self.prev_seq_ts = None
             self.record_group += 1
             rec_group_changed = True
-        elif self.prev_group_ts != record.sequence_timestamp:
+        elif self.prev_seq_ts != record.sequence_timestamp:
+            self.prev_seq_ts = record.sequence_timestamp
             self.record_group += 1
             rec_group_changed = True
 
@@ -90,6 +93,7 @@ class SltRecorder(QueueThread):
 
         self.sequence_index = [self.record_group]
 
+        print(self.record_group, self.record_group_ind)
         # update the results file with the new indices #
         self.update_results(record)
 
@@ -119,6 +123,9 @@ class MatRecorder(SltRecorder):
 
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(cfg, exp, **kwargs)
+        # data indices where a sequence starts and stops #
+        self.seq_start_ind = None
+        self.seq_end_ind = None
 
     def open_results(self, results_path):
         """ Open existing or create new .mat file.
@@ -135,6 +142,7 @@ class MatRecorder(SltRecorder):
         else:
             rec_group = len(self.opened_results["sequence"])
             rec_group_ind = 0
+            self.seq_start_ind = self.opened_results["data"]
 
         return rec_group, rec_group_ind
 
@@ -148,22 +156,29 @@ class MatRecorder(SltRecorder):
         """
         try:
             data = self.opened_results["data"]
-            proc_params = {key: val for key, val in self.opened_results.items() if "proc" in key}
-            inst_params = {key: val for key, val in self.opened_results.items() if "inst" in key}
+            proc_params = {key: val[0] for key, val in self.opened_results.items() if "proc" in key}
+            inst_params = {key: val[0] for key, val in self.opened_results.items() if "inst" in key}
+            seqs = self.opened_results["sequence"]
         except KeyError:
             data = record.data
-            proc_params = {"proc_"+key: val for key, val in record.proc_params}
-            inst_params = {"inst_"+key: val for key, val in record.inst_params}
+            proc_params = {"proc_"+key: val for key, val in record.proc_params.items()}
+            inst_params = {"inst_"+key: val for key, val in record.inst_params.items()}
+            seqs = np.array([str(record.sequence).strip()])
         else:
             data = np.append(data, record.data, axis=0)
+            if self.record_group > len(seqs):
+                seqs = np.append(seqs, str(record.sequence).strip())
             for key, val in record.proc_params.items():
-                proc_params["proc_"+key] = np.append(proc_params[key], val)
+                pkey = "proc_"+key
+                proc_params[pkey] = np.append(proc_params[pkey], val)
             for key, val in record.inst_params.items():
-                inst_params["inst_"+key] = np.append(inst_params[key], val)
+                ikey = "inst_"+key
+                inst_params[ikey] = np.append(inst_params[ikey], val)
 
         # write dataframes back to .mat and reopen the updated results file. #
         mat_dict = {
             "data": data,
+            "sequence": seqs,
         }
         mat_dict.update(proc_params)
         mat_dict.update(inst_params)
@@ -235,7 +250,52 @@ class PyhkRecorder(QueueThread):
         data.to_csv(fp, mode="a", sep=self._separator, header=False, index=False)
 
 
-class HDF5Recorder(QueueThread):
+class HDF5Recorder(SltRecorder):
+    """ HDF5 recorder utilizing the SltRecorder base class.
+    """
+
+    def __init__(self, cfg, exp, **kwargs):
+        super().__init__(cfg, exp, **kwargs)
+
+    def open_results(self, results_path):
+        """ Open existing or create a new .h5 file.
+        """
+        fn = results_path+".h5"
+        self.opened_results = pd.HDFStore(fn)
+        rec_group = -1
+        rec_group_ind = 0
+        try:
+            rec_group, rec_group_ind = self.opened_results["proc_params"].index[-1]
+        except KeyError:
+            pass
+        return rec_group, rec_group_ind
+
+    def update_results(self, record):
+        """ Update the .h5 results file with information from the new record.
+        """
+        data_df = pd.DataFrame(record.data, index=self.data_index)
+        pp_df = pd.DataFrame(record.proc_params, index=self.meta_index)
+        ip_df = pd.DataFrame(record.inst_params, index=self.meta_index)
+        seq_str = str(record.sequence)
+        seq_df = pd.DataFrame({"sequence": seq_str}, index=self.sequence_index)
+        self.opened_results.append("data", data_df)
+        self.opened_results.append("proc_params", pp_df)
+        self.opened_results.append("inst_params", ip_df)
+        try:
+            if self.record_group > self.opened_results["sequence"].shape[0]:
+                self.opened_results.append("sequence", seq_df, min_itemsize={"sequence": len(seq_str)},
+                                           encoding="utf-8")
+        except KeyError:
+            self.opened_results.append("sequence", seq_df, min_itemsize={"sequence": len(seq_str)}, encoding="utf-8")
+
+    def close_results(self):
+        """ Close the .h5 results file.
+        """
+        if self.opened_results is not None:
+            self.opened_results.close()
+
+
+class HDF5Recorder_Old(QueueThread):
     """ Basic HDF5 recorder class.
     """
 
