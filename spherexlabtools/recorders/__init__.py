@@ -1,1 +1,2 @@
-from .recorder import CsvRecorder, HDF5Recorder, PyhkRecorder
+from .recorder import CsvRecorder, MatRecorder, HDF5Recorder, \
+    PyhkRecorder, SltRecorder

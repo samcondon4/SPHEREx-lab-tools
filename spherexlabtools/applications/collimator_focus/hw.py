@@ -2,7 +2,7 @@ from spherexlabtools.instruments.flir import Flea3 as _Fl3
 
 # MICROSCOPE ##############################################################
 CamCfg = {
-    "instance_name": "cam",
+    "instance_name": "Camera",
     "resource_name": _Fl3.cam_list[0],
     "manufacturer": "flir",
     "instrument": "Flea3",
@@ -12,11 +12,11 @@ CamCfg = {
         "blacklevel_en": False,
         "gamma_en": False,
         "sharpess_en": False,
-        "acquisition_frame_rate_auto": "Off",
-        "acquisition_frame_rate_en": True,
-        "acquisition_frame_rate": 8,
+        "acquisition_frame_rate_en": False,
         "exposure_width": 2448,
         "exposure_height": 2048,
+        "exposure_mode": "Timed",
+        "exposure_auto": "Off"
     }
 }
 
@@ -36,7 +36,7 @@ GaugeCfg = {
 
 FocuserCfg = {
     "instance_name": "focuser",
-    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
@@ -52,8 +52,8 @@ FocuserCfg = {
 }
 
 MscopeCfg = {
-    "instance_name": "Microscope",
-    "subinstruments": [CamCfg, GaugeCfg, FocuserCfg],
+    "instance_name": "MscopeMotors",
+    "subinstruments": [GaugeCfg, FocuserCfg],
     "property_config": [
         ("focuser_absolute_position", "gauge_position", "focuser_absolute_position")
     ]
@@ -64,7 +64,7 @@ MscopeCfg = {
 # relay gimbal0 x config
 relay_gimbal0_az = {
     "instance_name": "az",
-    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
@@ -82,7 +82,7 @@ relay_gimbal0_az = {
 
 relay_gimbal0_zth = {
     "instance_name": "za",
-    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
@@ -105,6 +105,6 @@ Gimbal0 = {
 ##################################################################
 
 # Instrument suite list for the experiment object ################
-INSTRUMENT_SUITE = [MscopeCfg, Gimbal0]
+INSTRUMENT_SUITE = [MscopeCfg, CamCfg, Gimbal0]
 
 
