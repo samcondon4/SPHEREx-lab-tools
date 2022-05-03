@@ -144,15 +144,16 @@ class Experiment:
         controller = self.controllers[cntrl_key]
         controller.stop()
 
-    def start_thread(self, thread_key, thread, stop_thread=False):
+    def start_thread(self, thread_key, thread, stop_thread=False, **tkwargs):
         """ Start a thread and update the active_threads dictionary. This should only be called internally.
 
         :param thread_key: String key name to use in the active_threads dictionary.
         :param thread: Thread object to start.
         :param stop_thread: Boolean to indicate if an active thread should be stopped an restarted.
+        :param tkwargs: Key-word arguments passed when the thread is started.
         """
         if thread_key not in self.active_threads.keys() or not self.active_threads[thread_key].thread.is_alive():
-            thread.start()
+            thread.start(**tkwargs)
             self.active_threads[thread_key] = thread
         else:
             raise RuntimeWarning(f"Thread {thread_key} is already active! Thread reset = {stop_thread}")

@@ -7,12 +7,14 @@ from datetime import datetime
 import pymysql
 
 from ..thread import QueueThread
+from spherexlabtools.parameters import *
 
 logger = logging.getLogger(__name__)
 
 SCHEMA_NAME = 'spherexlab'
 SCHEMA_USER = 'root'
 SCHEMA_PSWD = '$PHEREx_B111'
+
 
 class SltRecorder(QueueThread):
     """ Abstract base-class for SPHERExLabTools specific recorders. This class generates the indices used in the
@@ -61,7 +63,6 @@ class SltRecorder(QueueThread):
         """ Update the record_group, record_group_ind, and record_row attributes based on information provided in
             the record.
         """
-        print(record.sequence)
         if record.filepath != self.results_path:
             self.results_path = record.filepath
             self.close_results()
@@ -97,7 +98,6 @@ class SltRecorder(QueueThread):
 
         self.sequence_index = [self.record_group]
 
-        print(self.record_group, self.record_group_ind)
         # update the results file with the new indices #
         self.update_results(record)
 
@@ -189,6 +189,7 @@ class MatRecorder(SltRecorder):
         spio.savemat(self.results_path + ".mat", mat_dict)
         self.opened_results = spio.loadmat(self.results_path+".mat")
 
+
 class SQLRecorder(SltRecorder):
     table = None
 
@@ -261,20 +262,23 @@ class SQLRecorder(SltRecorder):
     def get_add_column_command(self, mod_dict):
         ''' Return command to add column to table.  Uses the type_lookup table to assign data type to column definition
         '''
-        type_lookup = {float: "float", str: "varchar (50)", int: "int", bool: "bool"}
+        type_lookup = {float: "float", str: "varchar (50)", int: "int", bool: "tinyint",
+                       FloatParameter: "float", Parameter: "varchar (50)", IntegerParameter: "int",
+                       BooleanParameter: "tinyint"}
         for table_name in mod_dict:
             print('table_name mod is:', table_name)
             alter_statement_columns = {}
             for column_name in mod_dict[table_name]:
                 print('column_name mod is:', column_name)
                 if 'timestamp' in column_name:
-                    type_mod = 'datetime'
+                    type_mod = 'varchar (50)'
                 elif 'date' in column_name:
                     type_mod = 'date'
                 else:
                     try:
                         type_mod = type_lookup[type(mod_dict[table_name][column_name])]
                     except:
+                        logger.error("Add column type conversion still breaking!")
                         type_mod = "float"
 
                 alter_statement = """
@@ -364,6 +368,8 @@ class SQLRecorder(SltRecorder):
     def update_results(self, record):
         """ SqlHandle
         """
+        print(f"SEQUENCE TIMESTAMP = {record.sequence_timestamp}")
+        print(f"PROCEDURE TIMESTAMP = {record.procedure_timestamp}")
         # sql_dict = record.emit_kwargs.get("sql_dict", None)
         table = record.emit_kwargs.get("table", None)
         if table is not None:
@@ -383,8 +389,11 @@ class SQLRecorder(SltRecorder):
                 sql_dict["_".join(['proc', iproc])] = record.proc_params[iproc]
             # print('proc is ', "_".join(['proc', iproc]), sql_dict["_".join(['proc', iproc])])
 
+        if 'exp_id' not in sql_dict:
+            sql_dict['exp_id'] = "_".join([datetime.now().strftime("%Y%m%d_%H%M%S"), str(self.record_group_ind)])
+
         if 'storage_path' not in sql_dict:
-            sql_dict['storage_path'] = record.file_path
+            sql_dict['storage_path'] = record.filepath
 
         # sql_dict['sequence'] = record.sequence
         if record.emit_kwargs.get("keep_recordgroup_info", False):
@@ -398,6 +407,7 @@ class SQLRecorder(SltRecorder):
         sql_command = self.sql_insert_row_command(self.table, sql_dict)
         sql_command_dict = {'add_row': sql_command}
         self.execute_sql_statements(sql_command_dict)
+
 
 class CsvRecorder(QueueThread):
     """ Basic csv recorder class.

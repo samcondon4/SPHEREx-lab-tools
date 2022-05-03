@@ -4,24 +4,29 @@
 
 """
 import time
+import numpy as np
 from spherexlabtools.procedures import BaseProcedure
 from spherexlabtools.parameters import IntegerParameter, FloatParameter, Parameter
 
 
 class SpecCalProc(BaseProcedure):
+    # neutral density filter #
     ndf_position = IntegerParameter("NDF Position", default=1, minimum=1, maximum=8)
 
+    # monochromator #
     mono_shutter = IntegerParameter("Monochromator Shutter", default=1)
     mono_osf = Parameter("Monochromator OSF", default="Auto")
     mono_grating = Parameter("Monochromator Grating", default="Auto")
     mono_wavelength = FloatParameter("Monochomator Wavelength", default=0.5, units="um.")
 
+    # lockins for reference detectors #
     lockin_sr510_sensitivity = FloatParameter("Sr510 Sensitivity", default=0.5, units="V. rms")
     lockin_sr510_time_constant = FloatParameter("Sr510 Time-Constant", default=1, units="S.")
     lockin_sr830_sensitivity = FloatParameter("Sr830 Sensitivity", default=0.5, units="V. rms")
     lockin_sr830_time_constant = FloatParameter("Sr830 Time-Constant", default=1, units="S.")
     lockin_sample_rate = FloatParameter("Lockin Sample-Rate", default=1, units="Hz.")
 
+    # exposure time and comment for detector readout #
     exposure_time = FloatParameter("Exposure Time", default=10, units="S.")
     exposure_comment = Parameter("Exposure Comment", default="")
 
@@ -40,6 +45,7 @@ class SpecCalProc(BaseProcedure):
         self.ndf = self.hw.ndf
         self.mono = self.hw.mono
         self.lockin = self.hw.lockin
+        self.readout = self.hw.readout
         self.inst_params_emit = {}
 
     def startup(self):
@@ -66,7 +72,13 @@ class SpecCalProc(BaseProcedure):
     def execute(self):
         """ Execute the spectral-cal measurement.
         """
-        samples = int(self.lockin_sample_rate * self.sample_time)
+        readout_response = self.readout.start_exposure(self.exposure_time, self.exposure_comment).json()
+        sql_dict = readout_response["testcom"]
+        fp = sql_dict["filename"]
+        sql_dict["storage_path"] = fp
+        self.emit("mySQL", np.array([fp]), inst_params=sql_dict, keep_recordgroup_info=True)
+        """ 
+        #samples = int(self.lockin_sample_rate * self.sample_time)
         for i in range(samples):
             sr830_voltages = self.lockin.sr830_xy
             sr510_voltage = self.lockin.sr510_output
@@ -79,3 +91,4 @@ class SpecCalProc(BaseProcedure):
             self.emit("sr510_output", sr510_voltage)
             time.sleep(1 / self.lockin_sample_rate)
             self.emit("lockin_output", sample)
+        """

@@ -37,8 +37,16 @@ SpecCalMeta_Recorder = {
     "type": "CsvRecorder",
 }
 
+SpecCalSql_Recorder = {
+    "instance_name": "SQLRecorder",
+    "type": "SQLRecorder",
+    "params": {
+        "table": "spectral_cal"
+    }
+}
 
-RECORDERS = [SpecCalMeta_Recorder]
+
+RECORDERS = [SpecCalMeta_Recorder, SpecCalSql_Recorder]
 
 
 LockinViewProc = {
@@ -58,6 +66,7 @@ SpecCalProc = {
     "type": "SpecCalProc",
     "hw": ["mono", "ndf", "lockin", "readout"],
     "records": {
+        "mySQL": {"recorder": "SQLRecorder"},
         "sr830_x": {"viewer": "LockinView"},
         "sr830_y": {"viewer": "LockinView"},
         "sr510_output": {"viewer": "LockinView"},
