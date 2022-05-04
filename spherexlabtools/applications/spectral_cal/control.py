@@ -124,7 +124,7 @@ LockinViewProc_Controller = {
 SpecCalProc_Controller = {
     "instance_name": "SpecCalProcCntrl",
     "type": "ProcedureController",
-    "procedure": "SpecCalProc"
+    "procedure": "SpecCalProc",
 }
 ##############################################################################################################
 

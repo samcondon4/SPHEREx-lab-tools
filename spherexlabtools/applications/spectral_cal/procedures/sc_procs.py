@@ -5,8 +5,10 @@
 """
 import time
 import numpy as np
+import pandas as pd
+
 from spherexlabtools.procedures import BaseProcedure
-from spherexlabtools.parameters import IntegerParameter, FloatParameter, Parameter
+from spherexlabtools.parameters import IntegerParameter, FloatParameter, Parameter, BooleanParameter
 
 
 class SpecCalProc(BaseProcedure):
@@ -29,6 +31,9 @@ class SpecCalProc(BaseProcedure):
     # exposure time and comment for detector readout #
     exposure_time = FloatParameter("Exposure Time", default=10, units="S.")
     exposure_comment = Parameter("Exposure Comment", default="")
+
+    # parameters for the readout #
+    generate_fits = IntegerParameter("Generate Fits", default=1)
 
     inst_params = ["ndf_position", "mono_shutter", "mono_osf", "mono_grating", "mono_wavelength",
                    "lockin_sr510_time_constant", "lockin_sr830_time_constant", "lockin_sr510_sensitivity",
@@ -67,16 +72,20 @@ class SpecCalProc(BaseProcedure):
             val = getattr(inst, SpecCalProc.PARAM_DELIMITER.join(param_split[1:]))
             self.inst_params_emit[param] = [val]
 
+        # TODO: This is a point that could potentially add a lot of time over long scans. Maybe this can be modified?
         time.sleep(6*self.lockin_sr830_time_constant)
 
     def execute(self):
         """ Execute the spectral-cal measurement.
         """
-        readout_response = self.readout.start_exposure(self.exposure_time, self.exposure_comment).json()
-        sql_dict = readout_response["testcom"]
-        fp = sql_dict["filename"]
-        sql_dict["storage_path"] = fp
-        self.emit("mySQL", np.array([fp]), inst_params=sql_dict, keep_recordgroup_info=True)
+        readout_response = self.readout.start_exposure(self.exposure_time, self.exposure_comment,
+                                                       nofits=int(not self.generate_fits))
+        readout_keep_dict = readout_response["testcom"]
+        readout_keep_dict.update({"dio": readout_response["dio"], "fits": readout_response["fits"]})
+        self.inst_params_emit.update(readout_keep_dict)
+        data = self.inst_params_emit["filename"]
+        data_df = pd.DataFrame({"exposure_filename": [data]})
+        self.emit("spec_cal_csv", data_df, inst_params=self.inst_params_emit)
         """ 
         #samples = int(self.lockin_sample_rate * self.sample_time)
         for i in range(samples):

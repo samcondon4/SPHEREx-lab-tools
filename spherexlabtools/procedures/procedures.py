@@ -118,7 +118,7 @@ class Record:
         """
         self.proc_params = proc_params
         self.inst_params = inst_params
-        self.sequence = sequence
+        self.sequence = {"sequence": [str(sequence)]}
         self.emit_kwargs = kwargs
         # update the buffer attribute #
         dbuf_size = self.buffer_size - len(self.buffer)
@@ -268,13 +268,15 @@ class BaseProcedure(StoppableReusableThread):
         self.proc_params = ParameterInspect.parameter_values(self)
         self.start_ts = datetime.now().timestamp()
 
-    def emit(self, record_name, record_data, inst_params=None, data_ts=None, **kwargs):
+    def emit(self, record_name, record_data, inst_params=None, data_ts=None, filepath=None, **kwargs):
         """ Post a record to the appropriate queues.
 
         :param record_name: String name of the record to post data to.
         :param record_data: Data to be posted to the record queue.
         :param inst_params: Optional set of instrument parameters to record.
         :param data_ts: Timestamp of when the individual data point was generated.
+        :param filepath: String filepath to where the record should be saved if it is connected to a recorder.
+                         If set to None, the record.filepath is not modified as it may have been set by a controller.
         :param kwargs: Key-word arguments that are passed to the handle method of the corresponding
                        :class:`.QueueThread`.
         """
@@ -282,6 +284,8 @@ class BaseProcedure(StoppableReusableThread):
         record.sequence_timestamp = self.sequence_start_ts
         record.procedure_timestamp = self.start_ts
         record.data_timestamp = data_ts
+        if filepath is not None:
+            record.filepath = filepath
         record.update(record_data, inst_params=inst_params, proc_params=self.proc_params, sequence=self.sequence,
                       **kwargs)
         for q in self.record_queues[record_name]:

@@ -32,6 +32,12 @@ lockin_viewer = {
 VIEWERS = [lockin_viewer]
 
 
+LockinLog_Recorder = {
+    "instance_name": "LockinLog",
+    "type": "PyhkRecorder"
+}
+
+
 SpecCalMeta_Recorder = {
     "instance_name": "SpecCalMetaRecorder",
     "type": "CsvRecorder",
@@ -66,11 +72,8 @@ SpecCalProc = {
     "type": "SpecCalProc",
     "hw": ["mono", "ndf", "lockin", "readout"],
     "records": {
-        "mySQL": {"recorder": "SQLRecorder"},
-        "sr830_x": {"viewer": "LockinView"},
-        "sr830_y": {"viewer": "LockinView"},
-        "sr510_output": {"viewer": "LockinView"},
-        "lockin_output": {"recorder": "SpecCalMetaRecorder"}
+        "spec_cal_csv": {"recorder": "SpecCalMetaRecorder"},
+        "spec_cal_sql": {"recorder": "SQLRecorder"},
     }
 }
 
