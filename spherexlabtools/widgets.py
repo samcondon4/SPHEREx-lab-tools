@@ -210,6 +210,7 @@ class Records(pTypes.GroupParameter):
         children = [None for _ in records]
         i = 0
         for rec in records.values():
+            print(rec.name, rec.viewer, rec.recorder)
             buffer_size = {"name": "Buffer Size", "type": "int", "value": 1}
             integrate_buffer = {"name": "Integrate Buffer", "type": "bool", "value": False}
             # TODO: Add ability to generate a true histogram #
