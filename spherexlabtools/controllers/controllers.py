@@ -343,6 +343,7 @@ class ProcedureController(Controller):
     def update_record_attrs(self, record_param, record_name):
         """ Update a record with the provided attributes.
         """
+        print(record_param, record_name)
         rec_name_param_set_map = {
             "Integrate Buffer": "avg",
             "Buffer Size": "buffer_size",
