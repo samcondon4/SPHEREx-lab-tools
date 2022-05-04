@@ -1,11 +1,38 @@
-""" Hardware configuration for the SPHEREx Spectral Calibration Measurement.
 """
-import os
+Hardware
+--------
+The spectral_cal control software implements control over the following instruments:
 
+    - "ndf": Edmund Optics neutral density filter wheel.
+    - "mono": Newport CS260 monochromator.
+    - "lockin": Compound instrument wrapping the sr510 and sr830 lockin amplifiers.
+
+Each of these hardware components must be plugged into the computer and turned on or errors will be thrown when the
+nominal configuration is imported. Note that the monochromator is controlled via an interface to the mono control laptop
+on the optical bench. To start the mono control laptop interface, start an anaconda prompt on the laptop and run
+the following code::
+
+   cd Documents\Github\SPHERExLabTools
+   conda activate spherexlabtools
+   python
+   from spherexlabtools.instruments.spherex import MonoControlServer
+   mserve = MonoControlServer()
+   mserve.start()
+
+These steps must be executed **before** creating the experiment object with exp = slt.create_experiment(sc).
+"""
 HOST = "131.215.200.118"
 PORT = 6550
 
 rec_name = f"TCPIP::{HOST}::{PORT}::SOCKET"
+
+
+Readout = {
+    "instance_name": "readout",
+    "manufacturer": "spherex",
+    "resource_name": "",
+    "instrument": "DetectorCom"
+}
 
 
 Ndf = {
@@ -51,4 +78,4 @@ Lockin = {
     ]
 }
 
-INSTRUMENT_SUITE = [Ndf, Mono, Lockin]
+INSTRUMENT_SUITE = [Ndf, Mono, Lockin, Readout]

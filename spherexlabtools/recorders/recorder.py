@@ -4,10 +4,16 @@ import numpy as np
 import pandas as pd
 import scipy.io as spio
 from datetime import datetime
+import pymysql
 
 from ..thread import QueueThread
+from spherexlabtools.parameters import *
 
 logger = logging.getLogger(__name__)
+
+SCHEMA_NAME = 'spherexlab'
+SCHEMA_USER = 'root'
+SCHEMA_PSWD = '$PHEREx_B111'
 
 
 class SltRecorder(QueueThread):
@@ -49,6 +55,7 @@ class SltRecorder(QueueThread):
         self.record_row = None
         self.record_group = None
         self.record_group_ind = None
+        self.record_group_changed = False
         self.data_index = None
         self.meta_index = None
         self.sequence_index = None
@@ -57,25 +64,24 @@ class SltRecorder(QueueThread):
         """ Update the record_group, record_group_ind, and record_row attributes based on information provided in
             the record.
         """
-        print(record.sequence)
         if record.filepath != self.results_path:
             self.results_path = record.filepath
             self.close_results()
             self.record_group, self.record_group_ind = self.open_results(self.results_path)
 
         # update record_group #
-        rec_group_changed = False
-        if record.sequence is None:
+        self.record_group_changed = False
+        if record.sequence["sequence"][0] == "None":
             self.prev_seq_ts = None
             self.record_group += 1
-            rec_group_changed = True
+            self.record_group_changed = True
         elif self.prev_seq_ts != record.sequence_timestamp:
             self.prev_seq_ts = record.sequence_timestamp
             self.record_group += 1
-            rec_group_changed = True
+            self.record_group_changed = True
 
         # update record_group_ind #
-        if rec_group_changed:
+        if self.record_group_changed:
             self.record_group_ind = 0
         else:
             self.record_group_ind += 1
@@ -91,9 +97,8 @@ class SltRecorder(QueueThread):
         self.meta_index = pd.MultiIndex.from_tuples([(self.record_group, self.record_group_ind)],
                                                     names=[self._rgroup_str, self._rgroupind_str])
 
-        self.sequence_index = [self.record_group]
+        self.sequence_index = pd.Index([self.record_group], name=self._rgroup_str)
 
-        print(self.record_group, self.record_group_ind)
         # update the results file with the new indices #
         self.update_results(record)
 
@@ -117,96 +122,299 @@ class SltRecorder(QueueThread):
         raise NotImplementedError("The update_results() method must be implemented in a subclass!")
 
 
-class MatRecorder(SltRecorder):
-    """ Basic class used to save records to a Matlab .mat file.
-    """
+class SQLRecorder(SltRecorder):
+    table = None
 
     def __init__(self, cfg, exp, **kwargs):
+        """ Initialize a recorder.
+        """
         super().__init__(cfg, exp, **kwargs)
-        # data indices where a sequence starts and stops #
-        self.seq_start_ind = None
-        self.seq_end_ind = None
+
+        # Begin by confirming schema exists and creating it if not.
+        DB_NAME = SCHEMA_NAME
+
+        cnx = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD)
+        cursor = cnx.cursor()
+        try:
+            cursor.execute("USE {}".format(DB_NAME))
+            print("Database {} exists.".format(DB_NAME))
+        except:
+            print("Database {} does not exist.".format(DB_NAME))
+            cursor.execute(
+                "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
+            print("Database {} created successfully.".format(DB_NAME))
+            cnx.database = DB_NAME
+
+        # Check that table exists
+        table = cfg['params'].get("table", None)
+        if table is not None:
+            self.table = table
+
+        table_description = "CREATE TABLE  IF NOT EXISTS {0} (" \
+                            "exp_id varchar(50)," \
+                            " PRIMARY KEY (exp_id)" \
+                            ") ENGINE=InnoDB".format(table)
+
+        cursor.execute(table_description)
+
+        cnx.close()
+
+    def connect_mysql(self):
+        ''' Connect to server
+        '''
+        db = pymysql.connect(user=SCHEMA_USER, password=SCHEMA_PSWD, database=SCHEMA_NAME)
+        self.db = db
+        self.cursor = db.cursor()
+
+    def disconnect_mysql(self):
+        ''' Disconnect from server
+        '''
+        self.cursor.close()
+
+    def add_missing_columns(self, table_name_server, columns_dict):
+        ''' Check that columns exist, and add them if they do not.
+        '''
+        self.connect_mysql()
+        self.cursor.execute("DESCRIBE {}".format(table_name_server))
+        indexList = self.cursor.fetchall()
+        table_dict = {}
+
+        for row in indexList:
+            table_dict[row[0]] = row[1]
+
+        for column_name_local in columns_dict:
+            if column_name_local not in table_dict:
+                add_column_dict = {table_name_server: {column_name_local: columns_dict[column_name_local]}}
+                sql_add_column_commands = self.get_add_column_command(add_column_dict)
+                for i in sql_add_column_commands:
+                    self.cursor.execute(sql_add_column_commands[i])
+
+        self.disconnect_mysql()
+
+    def get_add_column_command(self, mod_dict):
+        ''' Return command to add column to table.  Uses the type_lookup table to assign data type to column definition
+        '''
+        type_lookup = {float: "float", str: "varchar (50)", int: "int", bool: "tinyint",
+                       FloatParameter: "float", Parameter: "varchar (50)", IntegerParameter: "int",
+                       BooleanParameter: "tinyint"}
+        for table_name in mod_dict:
+            print('table_name mod is:', table_name)
+            alter_statement_columns = {}
+            for column_name in mod_dict[table_name]:
+                print('column_name mod is:', column_name)
+                if 'timestamp' in column_name:
+                    type_mod = 'varchar (50)'
+                elif 'date' in column_name:
+                    type_mod = 'date'
+                else:
+                    try:
+                        type_mod = type_lookup[type(mod_dict[table_name][column_name])]
+                    except:
+                        logger.error("Add column type conversion still breaking!")
+                        type_mod = "float"
+
+                alter_statement = """
+                ALTER TABLE {0} 
+                ADD {1} {2};
+                """.format(table_name, column_name, type_mod)
+                # print('alter_statement is', alter_statement)
+                alter_statement_columns[column_name] = alter_statement
+            return alter_statement_columns
+
+    def upsert(self, table, **kwargs):
+        """ Add rows to table given the key-value pairs in kwargs
+        """
+        keys = ["%s" % k for k in kwargs]
+        values = ["'%s'" % v for v in kwargs.values()]
+        sql = list()
+        sql.append("INSERT INTO %s (" % table)
+        sql.append(", ".join(keys))
+        sql.append(") VALUES (")
+        sql.append(", ".join(values))
+
+        return "".join(sql) + ")"
+
+    def build_sql_table_command(self, ini_dict):
+        ''' Return command to add new table(s) to schema
+        '''
+
+        for itable, ilist in ini_dict.items():
+            sql_command = 'CREATE TABLE ' + itable + ' ('
+
+            for icol in ilist:
+                sql_command += icol + " " + ilist[icol] + ", "
+
+            sql_command += 'PRIMARY KEY (exp_id)) ENGINE=InnoDB'
+
+            self.TABLES[itable] = sql_command
+
+    def sql_insert_row_command(self, table_name, commands_dict0):
+        '''
+        Construct SQL command, e.g.;
+        """INSERT INTO spectral_cal
+            (exp_id, timestamp, date, sequence, wavelength, grating, order_sort_filter, ndf_position)
+            VALUES ('20220420_153633_12','2022-04-20 15:36:33','2022-04-20','sequencename', 5.2, 580 ,'3','1')"""
+        and write Table to Database.
+        '''
+
+        commands_dict = {key: value for (key, value) in commands_dict0.items() if value is not None}
+
+        return self.upsert(table_name, **commands_dict)
+
+    def execute_sql_statements(self, statement_dict):
+        ''' Execute SQL statements by looping through statement_dict
+        '''
+        for key, statement_text in statement_dict.items():
+            if 'add_row' in key:
+                try:
+                    # Connect to database
+                    self.connect_mysql()
+
+                    # Creation of cursor object
+                    cursorObject = self.cursor
+
+                    # Execute the SQL statement
+                    cursorObject.execute(statement_text)
+                    self.db.commit()
+
+                except Exception as e:
+                    print("Exeception occured:{}".format(e))
+                    self.db.rollback()
+                    print('Rolling Back', statement_text)
+
+                finally:
+                    # Disconnect from database
+                    self.disconnect_mysql()
 
     def open_results(self, results_path):
         """ Open existing or create new .mat file.
         """
-        fn = results_path + ".mat"
-        try:
-            self.opened_results = spio.loadmat(fn)
-        except FileNotFoundError:
-            with open(fn, "wb") as f:
-                spio.savemat(f, {})
-            rec_group = 0
-            rec_group_ind = 0
-            self.opened_results = spio.loadmat(fn)
-        else:
-            rec_group = len(self.opened_results["sequence"])
-            rec_group_ind = 0
-            self.seq_start_ind = self.opened_results["data"]
+        rec_group = 0
+        rec_group_ind = 0
 
         return rec_group, rec_group_ind
 
     def close_results(self):
-        """ Close the opened results.
-        """
-        self.opened_results = None
+        pass
 
     def update_results(self, record):
-        """ Update the dataframes saved in the .mat file.
+        """ SqlHandle
         """
-        try:
-            data = self.opened_results["data"]
-            proc_params = {key: val[0] for key, val in self.opened_results.items() if "proc" in key}
-            inst_params = {key: val[0] for key, val in self.opened_results.items() if "inst" in key}
-            seqs = self.opened_results["sequence"]
-        except KeyError:
-            data = record.data
-            proc_params = {"proc_"+key: val for key, val in record.proc_params.items()}
-            inst_params = {"inst_"+key: val for key, val in record.inst_params.items()}
-            seqs = np.array([str(record.sequence).strip()])
-        else:
-            data = np.append(data, record.data, axis=0)
-            if self.record_group > len(seqs):
-                seqs = np.append(seqs, str(record.sequence).strip())
-            for key, val in record.proc_params.items():
-                pkey = "proc_"+key
-                proc_params[pkey] = np.append(proc_params[pkey], val)
-            for key, val in record.inst_params.items():
-                ikey = "inst_"+key
-                inst_params[ikey] = np.append(inst_params[ikey], val)
+        print(f"SEQUENCE TIMESTAMP = {record.sequence_timestamp}")
+        print(f"PROCEDURE TIMESTAMP = {record.procedure_timestamp}")
+        # sql_dict = record.emit_kwargs.get("sql_dict", None)
+        table = record.emit_kwargs.get("table", None)
+        if table is not None:
+            self.table = table
 
-        # write dataframes back to .mat and reopen the updated results file. #
-        mat_dict = {
-            "data": data,
-            "sequence": seqs,
-        }
-        mat_dict.update(proc_params)
-        mat_dict.update(inst_params)
-        spio.savemat(self.results_path + ".mat", mat_dict)
-        self.opened_results = spio.loadmat(self.results_path+".mat")
+        sql_dict = record.inst_params
+        if sql_dict is None:
+            sql_dict = {}
+
+        for iproc in record.proc_params:
+            if type(record.proc_params[iproc]) == bool:
+                if record.proc_params[iproc] == True:
+                    sql_dict["_".join(['proc', iproc])] = 1
+                if record.proc_params[iproc] == False:
+                    sql_dict["_".join(['proc', iproc])] = 0
+            else:
+                sql_dict["_".join(['proc', iproc])] = record.proc_params[iproc]
+            # print('proc is ', "_".join(['proc', iproc]), sql_dict["_".join(['proc', iproc])])
+
+        if 'exp_id' not in sql_dict:
+            sql_dict['exp_id'] = "_".join([datetime.now().strftime("%Y%m%d_%H%M%S"), str(self.record_group_ind)])
+
+        if 'storage_path' not in sql_dict:
+            sql_dict['storage_path'] = record.filepath
+
+        # sql_dict['sequence'] = record.sequence
+        if record.emit_kwargs.get("keep_recordgroup_info", False):
+            sql_dict['RecordGroupNum'] = self.record_group
+            sql_dict['RecordGroupInd'] = self.record_group_ind
+
+        # Check for missing columns and add if needed
+        self.add_missing_columns(self.table, sql_dict)
+
+        # Execute sql command to add row
+        sql_command = self.sql_insert_row_command(self.table, sql_dict)
+        sql_command_dict = {'add_row': sql_command}
+        self.execute_sql_statements(sql_command_dict)
 
 
-class CsvRecorder(QueueThread):
-    """ Basic csv recorder class.
+class CsvRecorder(SltRecorder):
+    """ Csv recorder class. This recorder writes out 4 csv files corresponding to the inst_params,
+    proc_params, data, and sequence attributes of the records that are placed on the recorder queue.
     """
 
-    def __init__(self, cfg, exp, **kwargs):
-        super().__init__(**kwargs)
+    _inst_params_appnd = "_inst_params"
+    _proc_params_appnd = "_proc_params"
+    _data_appnd = "_data"
+    _seq_appnd = "_sequence"
 
-    def handle(self, record):
-        """ Handle incoming records and append to existing csv or create a new one. Note that specific file paths should
-            be specified with the 'filepath' keyword in calls to :py:meth:`BaseProcedure.emit`. If this key-word is not
-            provided, then the current working directory will be used as the output.
+    def __init__(self, cfg, exp, **kwargs):
+        super().__init__(cfg, exp, **kwargs)
+
+    def open_results(self, results_path):
+        """ Try to open all of the csvs for a measurement within the results_path directory. Use the opened_results
+            attribute as a flag for if the csvs existed already.
         """
-        data = record.data
-        filepath = record.recorder_write_path
-        if ".csv" not in filepath:
-            filepath += ".csv"
-        data = pd.DataFrame(data)
-        if record.timestamp is not None:
-            data["timestamp"] = [record.timestamp]
-        header = not (os.path.exists(filepath))
-        data.to_csv(filepath, mode="a", header=header, index=False)
+        inst_fn = results_path + self._inst_params_appnd + ".csv"
+        proc_fn = results_path + self._proc_params_appnd + ".csv"
+        data_fn = results_path + self._data_appnd + ".csv"
+        seq_fn = results_path + self._seq_appnd + ".csv"
+        try:
+            inst_df = pd.read_csv(inst_fn)
+            proc_df = pd.read_csv(proc_fn)
+            data_df = pd.read_csv(data_fn)
+            seq_df = pd.read_csv(seq_fn)
+        except FileNotFoundError:
+            rec_group = -1
+            rec_group_ind = 0
+            self.opened_results = False
+        else:
+            rec_group = proc_df[self._rgroup_str].values[-1]
+            rec_group_ind = proc_df[self._rgroupind_str].values[-1]
+            self.opened_results = True
+
+        return rec_group, rec_group_ind
+
+    def close_results(self):
+        """ Don't need this for the csv recorder.
+        """
+        pass
+
+    def update_results(self, record):
+        """ Write out to the four csv files associated with the record.
+        """
+        # create a dictionary that maps record attributes to their corresponding dataframes #
+        dfs_map = {
+            self._inst_params_appnd: [record.inst_params, self.meta_index],
+            self._proc_params_appnd: [record.proc_params, self.meta_index],
+            self._data_appnd: [record.data, self.data_index],
+            self._seq_appnd: [record.sequence, self.sequence_index]
+        }
+        for rec_append, rec_stuff in dfs_map.items():
+            if type(rec_stuff[0]) is pd.DataFrame:
+                dfs_map[rec_append][0] = pd.DataFrame({key: val.values for key, val in rec_stuff[0].items()},
+                                                      index=rec_stuff[1])
+            else:
+                dfs_map[rec_append][0] = pd.DataFrame(rec_stuff[0], index=rec_stuff[1])
+
+        # key-words for to_csv() #
+        mode = "a" if self.opened_results else "w"
+        hdr = True if not self.opened_results else False
+        if hdr:
+            self.opened_results = True
+
+        # remove the sequence dataframe from the dictionary since the output will only be updated if the record
+        # group changed. #
+        seq_df = dfs_map.pop(self._seq_appnd)
+        for key, val in dfs_map.items():
+            val[0].to_csv(record.filepath + key + ".csv", mode=mode, header=hdr, index=True)
+
+        # update the sequence csv only if the record group changed #
+        if self.record_group_changed:
+            seq_df[0].to_csv(record.filepath + self._seq_appnd + ".csv", mode=mode, header=hdr, index=True)
 
 
 class PyhkRecorder(QueueThread):
@@ -260,7 +468,7 @@ class HDF5Recorder(SltRecorder):
     def open_results(self, results_path):
         """ Open existing or create a new .h5 file.
         """
-        fn = results_path+".h5"
+        fn = results_path + ".h5"
         self.opened_results = pd.HDFStore(fn)
         rec_group = -1
         rec_group_ind = 0
@@ -276,8 +484,7 @@ class HDF5Recorder(SltRecorder):
         data_df = pd.DataFrame(record.data, index=self.data_index)
         pp_df = pd.DataFrame(record.proc_params, index=self.meta_index)
         ip_df = pd.DataFrame(record.inst_params, index=self.meta_index)
-        seq_str = str(record.sequence)
-        seq_df = pd.DataFrame({"sequence": seq_str}, index=self.sequence_index)
+        seq_df = pd.DataFrame(record.sequence, index=self.sequence_index)
         self.opened_results.append("data", data_df)
         self.opened_results.append("proc_params", pp_df)
         self.opened_results.append("inst_params", ip_df)

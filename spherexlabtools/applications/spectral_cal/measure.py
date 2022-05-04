@@ -1,3 +1,23 @@
+"""
+Procedures
+-----------
+
+    - "LockinViewProc": Logging procedure to retrieve output voltages from the sr510 and sr830 lockin amplifiers.
+    - "SpecCalProc": Procedure to run monochromator scans, log lockin reference detector data, and trigger detector
+                     exposures.
+
+Viewers
+-------
+
+    - "LockinView": LineViewer to view live data recorded from the lock-in amplifiers.
+
+Recorders
+---------
+
+    - "SpecCalMetaRecorder": CsvRecorder to log all spectral calibration warm optics instrumentation metadata.
+
+"""
+
 lockin_viewer = {
     "instance_name": "LockinView",
     "type": "LineViewer",
@@ -12,13 +32,27 @@ lockin_viewer = {
 VIEWERS = [lockin_viewer]
 
 
+LockinLog_Recorder = {
+    "instance_name": "LockinLog",
+    "type": "PyhkRecorder"
+}
+
+
 SpecCalMeta_Recorder = {
     "instance_name": "SpecCalMetaRecorder",
     "type": "CsvRecorder",
 }
 
+SpecCalSql_Recorder = {
+    "instance_name": "SQLRecorder",
+    "type": "SQLRecorder",
+    "params": {
+        "table": "spectral_cal"
+    }
+}
 
-RECORDERS = [SpecCalMeta_Recorder]
+
+RECORDERS = [SpecCalMeta_Recorder, SpecCalSql_Recorder]
 
 
 LockinViewProc = {
@@ -36,12 +70,10 @@ LockinViewProc = {
 SpecCalProc = {
     "instance_name": "SpecCalProc",
     "type": "SpecCalProc",
-    "hw": ["mono", "ndf", "lockin"],
+    "hw": ["mono", "ndf", "lockin", "readout"],
     "records": {
-        "sr830_x": {"viewer": "LockinView"},
-        "sr830_y": {"viewer": "LockinView"},
-        "sr510_output": {"viewer": "LockinView"},
-        "lockin_output": {"recorder": "SpecCalMetaRecorder"}
+        "spec_cal_csv": {"recorder": "SpecCalMetaRecorder"},
+        "spec_cal_sql": {"recorder": "SQLRecorder"},
     }
 }
 

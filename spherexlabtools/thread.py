@@ -73,11 +73,13 @@ class StoppableReusableThread:
         self.thread = None
         self.running = False
 
-    def start(self):
+    def start(self, **tkwargs):
         """ Start running a thread, assuming it is not already running.
+
+        :param tkwargs: Key-word arguments passed to the :py:class:`StoppableThread` instantiation.
         """
         if self.thread is None or not self.thread.is_alive():
-            self.thread = StoppableThread(target=self.run)
+            self.thread = StoppableThread(target=self.run, **tkwargs)
             self.thread.start()
             self.running = True
         else:

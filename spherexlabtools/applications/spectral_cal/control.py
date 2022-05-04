@@ -1,4 +1,18 @@
 # INSTRUMENT CONTROLLERS #######################################################################################
+Readout_Controller = {
+    "instance_name": "ReadoutCntrl",
+    "type": "InstrumentController",
+    "hw": "readout",
+    "actions": [
+        {
+            "name": "start_exposure", "type": "action", "children": [
+                {"name": "exposure_time", "type": "float"},
+                {"name": "comment", "type": "str"}
+            ]
+        }
+    ]
+}
+
 Mono_Controller = {
     "instance_name": "MonoCntrl",
     "type": "InstrumentController",
@@ -6,13 +20,13 @@ Mono_Controller = {
     "control_parameters": [
         {"name": "osf", "type": "list", "limits": [1, 2, 3, 4, 5, 6, "Auto"]},
         {"name": "grating", "type": "list", "limits": [1, 2, 3, "Auto"]},
-        {"name": "wavelength", "type": "float"},
+        {"name": "wavelength", "type": "str"},
         {"name": "shutter", "type": "list", "limits": [0, 1]}
     ],
     "status_parameters": [
         {"name": "osf", "type": "list", "limits": [1, 2, 3, 4, 5, 6]},
         {"name": "grating", "type": "list", "limits": [1, 2, 3]},
-        {"name": "wavelength", "type": "float"},
+        {"name": "wavelength", "type": "str"},
         {"name": "shutter", "type": "list", "limits": [0, 1]},
     ],
     "status_refresh": "manual",
@@ -107,12 +121,12 @@ LockinViewProc_Controller = {
     }
 }
 
-
 SpecCalProc_Controller = {
     "instance_name": "SpecCalProcCntrl",
     "type": "ProcedureController",
-    "procedure": "SpecCalProc"
+    "procedure": "SpecCalProc",
 }
 ##############################################################################################################
 
-CONTROLLERS = [Mono_Controller, Ndf_Controller, Lockin_Controller, LockinViewProc_Controller, SpecCalProc_Controller]
+CONTROLLERS = [Mono_Controller, Ndf_Controller, Lockin_Controller, LockinViewProc_Controller,
+               SpecCalProc_Controller, Readout_Controller]
