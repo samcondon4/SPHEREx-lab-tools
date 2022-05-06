@@ -34,7 +34,7 @@ VIEWERS = [lockin_viewer]
 
 LockinLog_Recorder = {
     "instance_name": "LockinLog",
-    "type": "PyhkRecorder"
+    "type": "CsvRecorder"
 }
 
 

@@ -430,6 +430,7 @@ class PyhkRecorder(QueueThread):
     def __init__(self, cfg, exp, **kwargs):
         """ Initialize a Pyhk recorder.
         """
+        self.name = cfg["instance_name"]
         super().__init__(**kwargs)
 
     def handle(self, record):
