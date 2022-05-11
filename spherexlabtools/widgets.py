@@ -35,7 +35,7 @@ class SequenceGroup(pTypes.GroupParameter):
         # connect buttons to methods #
         self.remove.sigStateChanged.connect(self.remove_child)
 
-    def addNew(self, typ=None, level=None):
+    def addNew(self, typ=None, level=None, val=""):
         """ Add a child to the sequence tree.
         """
         level = level if level is not None else self.level.value().split(".")
@@ -46,7 +46,7 @@ class SequenceGroup(pTypes.GroupParameter):
         for lvl in level:
             if lvl == "x":
                 child.insertChild(insert_pos, dict(name=str(insert_level) + SequenceGroup.level_identifier + typ,
-                                                   type="str", value="", removeable=True))
+                                                   type="str", value=val, removeable=True))
             else:
                 child = children[int(lvl)]
                 children = child.children()
@@ -84,9 +84,9 @@ class SequenceGroup(pTypes.GroupParameter):
         """
         append_str = ""
         for param, val in node_dict.items():
-            string += i*"\t" + f"{param}: {val[0]}\n"
+            string += i * "\t" + f"{param}: {val[0]}\n"
             if len(val[1].items()) > 0:
-                string = self.get_node_str(val[1], string, i+1)
+                string = self.get_node_str(val[1], string, i + 1)
         return string
 
     def get_readable(self):
@@ -136,6 +136,7 @@ class Sequencer(pTypes.GroupParameter):
         self.pause_sequence.sigActivated.connect(self.pause_proc_sequence.emit)
         self.stop_sequence.sigActivated.connect(self.abort_proc_sequence.emit)
         self.save_sequence.sigActivated.connect(self.write_sequence)
+        self.load_sequence.sigActivated.connect(self.input_sequence)
 
     def build_sequence(self):
         """ Build a procedure sequence from the sequencer parameters.
@@ -177,15 +178,44 @@ class Sequencer(pTypes.GroupParameter):
         """
         save_path = self.save_sequence.child("Save Path").value()
         seq_group = self.sequence_group.get_readable()
-        with open(save_path+".txt", "w") as f:
+        with open(save_path + ".txt", "w") as f:
             f.write(seq_group)
 
     def input_sequence(self):
         """ Load an existing sequence .txt file.
         """
         load_path = self.load_sequence.child("Load Path").value()
-        with open(load_path+".txt", "r") as f:
-            pass
+        # clear the current sequence children #
+        for child in self.sequence_group.children():
+            if child not in self.sequence_group.base_children:
+                self.sequence_group.removeChild(child)
+        with open(load_path + ".txt", "r") as f:
+            top_level = -1
+            sub_levels = []
+            tabs = 0
+            for line in f.readlines():
+                if not line.startswith("\t"):
+                    top_level += 1
+                    level = [top_level]
+                    sub_levels = []
+                    tabs = 0
+                else:
+                    tab_split = line.split("\t")
+                    new_tabs = len(tab_split) - 1
+                    if new_tabs > tabs:
+                        sub_levels.append(0)
+                    elif new_tabs < tabs:
+                        for i in range(tabs - new_tabs):
+                            sub_levels.pop()
+                    else:
+                        sub_levels[new_tabs-1] += 1
+                    level = [str(val) for val in [top_level] + sub_levels]
+                    tabs = new_tabs
+                level[-1] = "x"
+                typ_val_split = line.split(":")
+                typ = typ_val_split[1].strip()
+                val = typ_val_split[2].strip()
+                self.sequence_group.addNew(typ=typ, level=level, val=val)
 
     @staticmethod
     def update_procs_list(procs, key, val):
@@ -287,4 +317,3 @@ class Records(pTypes.GroupParameter):
                                                   self.new_record_params_sig.emit(param, name))
                 else:
                     c.sigActivated.connect(lambda param, name=rec_param_name: self.save_record_sig.emit(param, name))
-
