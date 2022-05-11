@@ -249,8 +249,10 @@ class BaseProcedure(StoppableReusableThread):
             for vkey in list(val_dict.keys()):
                 if vkey not in ["viewer", "recorder"]:
                     kwargs_dict[vkey] = val_dict.pop(vkey)
-            qdict_val = [{"viewer": self.exp.viewers, "recorder": self.exp.recorders}[k][v].queue for k, v in
-                         val_dict.items()]
+            view_rec_val = {k: {"viewer": self.exp.viewers, "recorder": self.exp.recorders}[k][v] for k, v in
+                            val_dict.items()}
+            qdict_val = [comp.queue for comp in view_rec_val.values()]
+            kwargs_dict.update({k: v.name for k, v in view_rec_val.items()})
             self.record_queues[key] = qdict_val
             self.records[key] = Record(key, str(self), **kwargs_dict)
         if update_params:

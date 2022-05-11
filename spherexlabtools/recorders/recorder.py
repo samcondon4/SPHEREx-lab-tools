@@ -1,10 +1,9 @@
 import os
 import logging
+import pymysql
 import numpy as np
 import pandas as pd
-import scipy.io as spio
 from datetime import datetime
-import pymysql
 
 from ..thread import QueueThread
 from spherexlabtools.parameters import *
@@ -49,6 +48,7 @@ class SltRecorder(QueueThread):
 
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(**kwargs)
+        self.name = cfg["instance_name"]
         self.results_path = None
         self.opened_results = None
         self.prev_seq_ts = None
@@ -64,8 +64,8 @@ class SltRecorder(QueueThread):
         """ Update the record_group, record_group_ind, and record_row attributes based on information provided in
             the record.
         """
-        if record.filepath != self.results_path:
-            self.results_path = record.filepath
+        if record.recorder_write_path != self.results_path:
+            self.results_path = record.recorder_write_path
             self.close_results()
             self.record_group, self.record_group_ind = self.open_results(self.results_path)
 
@@ -325,7 +325,7 @@ class SQLRecorder(SltRecorder):
             sql_dict['exp_id'] = "_".join([datetime.now().strftime("%Y%m%d_%H%M%S"), str(self.record_group_ind)])
 
         if 'storage_path' not in sql_dict:
-            sql_dict['storage_path'] = record.filepath
+            sql_dict['storage_path'] = record.recorder_write_path
 
         # sql_dict['sequence'] = record.sequence
         if record.emit_kwargs.get("keep_recordgroup_info", False):
@@ -410,11 +410,11 @@ class CsvRecorder(SltRecorder):
         # group changed. #
         seq_df = dfs_map.pop(self._seq_appnd)
         for key, val in dfs_map.items():
-            val[0].to_csv(record.filepath + key + ".csv", mode=mode, header=hdr, index=True)
+            val[0].to_csv(record.recorder_write_path + key + ".csv", mode=mode, header=hdr, index=True)
 
         # update the sequence csv only if the record group changed #
         if self.record_group_changed:
-            seq_df[0].to_csv(record.filepath + self._seq_appnd + ".csv", mode=mode, header=hdr, index=True)
+            seq_df[0].to_csv(record.recorder_write_path + self._seq_appnd + ".csv", mode=mode, header=hdr, index=True)
 
 
 class PyhkRecorder(QueueThread):
@@ -430,6 +430,7 @@ class PyhkRecorder(QueueThread):
     def __init__(self, cfg, exp, **kwargs):
         """ Initialize a Pyhk recorder.
         """
+        self.name = cfg["instance_name"]
         super().__init__(**kwargs)
 
     def handle(self, record):
