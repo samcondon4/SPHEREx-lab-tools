@@ -1,5 +1,5 @@
 from .hw import INSTRUMENT_SUITE
-CONTROLLERS = []
-RECORDERS = []
-VIEWERS = []
-PROCEDURES = []
+from .control import CONTROLLERS
+from .measure import RECORDERS, VIEWERS, PROCEDURES
+
+from .procedures import TestProc
