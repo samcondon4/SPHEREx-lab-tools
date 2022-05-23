@@ -13,7 +13,7 @@ log.addHandler(logging.NullHandler())
 
 
 class LinearStageController(DPSeriesMotorController):
-    """ Represents a Anaheim DP Series Motor Controller driving a linear stage. This class overrides the home()
+    """ Represents an Anaheim DP Series Motor Controller driving a linear stage. This class overrides the home()
         method and implements unit conversions between controller steps and distance along the linear stage.
     :param resource_name: string resource name to pass to pymeasure driver.
     :param homedir: string with value "CW" or "CCW" corresponding to the direction the motor is spun during a
@@ -56,7 +56,10 @@ class LinearStageController(DPSeriesMotorController):
         :param pos: absolute position in units defined by the absolute_units property.
         :return:
         """
-        return int(pos*(1/self.units_per_turn)*(1/self.turns_per_step))
+        pos = float(pos)
+        steps = pos*(1/self.units_per_turn)*(1/self.turns_per_step)
+        isteps = int(steps)
+        return isteps
 
     def steps_to_absolute(self, steps):
         """ Convert from steps to an absolute position on a linear stage.

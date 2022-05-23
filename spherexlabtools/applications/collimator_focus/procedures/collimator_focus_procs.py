@@ -4,6 +4,7 @@
 
 Sam Condon, 02/05/2022
 """
+import time
 import logging
 import numpy as np
 from spherexlabtools.procedures import BaseProcedure, LogProc
@@ -57,6 +58,7 @@ class CollimatorFocusProc(CamProc):
     focus_position = Parameter("Absolute Focus Position mm.", default=0)
     frames_per_image = IntegerParameter("Frames Per Image", default=10)
     images = IntegerParameter("Images", default=1)
+    wait_time = FloatParameter("Wait Time", default=0)
 
     def __init__(self, cfg, exp, **kwargs):
         """
@@ -78,6 +80,9 @@ class CollimatorFocusProc(CamProc):
         # move the focuser and wait for its motion to complete #
         self.mscope.focuser_absolute_position = self.focus_position
         self.mscope.focuser_wait_for_completion()
+
+        # wait for user specified amount of time #
+        time.sleep(self.wait_time)
 
         frame_width = self.cam.exposure_width
         frame_height = self.cam.exposure_height
