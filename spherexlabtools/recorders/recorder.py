@@ -486,6 +486,7 @@ class HDF5Recorder(SltRecorder):
         pp_df = pd.DataFrame(record.proc_params, index=self.meta_index)
         ip_df = pd.DataFrame(record.inst_params, index=self.meta_index)
         seq_df = pd.DataFrame(record.sequence, index=self.sequence_index)
+        seq_str = seq_df["sequence"].values[0]
         self.opened_results.append("data", data_df)
         self.opened_results.append("proc_params", pp_df)
         self.opened_results.append("inst_params", ip_df)

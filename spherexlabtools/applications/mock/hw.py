@@ -30,7 +30,24 @@ Camera = {
     "instance_name": "Camera",
     "manufacturer": "fakes",
     "instrument": "SwissArmyFake",
-    "resource_name": 0.1
+    "resource_name": 0.1,
+    "params": {
+        "frame_format": "mono_16"
+    }
 }
 
-INSTRUMENT_SUITE = [Lockin, Heater, Camera]
+SubclassInst = {
+    "instance_name": "SubTest",
+    "manufacturer": "submock",
+    "instrument": "SwissArmyDoubleSub",
+    "resource_name": 0.1,
+}
+
+CompoundTesting = {
+    "instance_name": "CompoundTest",
+    "subinstruments": [
+        SubclassInst, Camera, Heater
+    ]
+}
+
+INSTRUMENT_SUITE = [Lockin, Heater, Camera, CompoundTesting]

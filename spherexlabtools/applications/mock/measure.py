@@ -1,9 +1,14 @@
 LockinRecord = {
-    "instance_name": "LockinRecord",
+    "instance_name": "LockinRecorder",
     "type": "CsvRecorder"
 }
 
-RECORDERS = [LockinRecord]
+ImRecord = {
+    "instance_name": "ImRecorder",
+    "type": "HDF5Recorder"
+}
+
+RECORDERS = [LockinRecord, ImRecord]
 
 
 CamView = {
@@ -31,7 +36,8 @@ TestProc = {
     "type": "TestProc",
     "hw": ["Camera", "Heater", "LockinAmp"],
     "records": {
-        "lockin_output": {"recorder": "LockinRecord"}
+        "lockin_output": {"recorder": "LockinRecorder"},
+        "image": {"recorder": "ImRecorder", "viewer": "CamView"}
     }
 }
 
