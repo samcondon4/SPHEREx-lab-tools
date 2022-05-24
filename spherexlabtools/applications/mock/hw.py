@@ -30,7 +30,10 @@ Camera = {
     "instance_name": "Camera",
     "manufacturer": "fakes",
     "instrument": "SwissArmyFake",
-    "resource_name": 0.1
+    "resource_name": 0.1,
+    "params": {
+        "frame_format": "mono_16"
+    }
 }
 
 INSTRUMENT_SUITE = [Lockin, Heater, Camera]
