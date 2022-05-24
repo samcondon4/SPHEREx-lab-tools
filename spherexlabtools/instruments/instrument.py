@@ -16,7 +16,7 @@ from pymeasure.instruments.instrument import DynamicProperty
 logger = logging.getLogger(__name__)
 
 
-def instantiate_instrument(inst_dict):
+def instantiate_instrument(inst_dict, exp):
     """ Instantiate and return the appropriate PyMeasure Instrument class based on the inst_dict arguments.
     :param: inst_dict: dictionary corresponding to a single instrument. This dictionary should take the form seen at
                        :ref:`Instrument Dictionaries`
@@ -29,26 +29,27 @@ def instantiate_instrument(inst_dict):
     assert not ("include_attrs" in inst_dict and "exclude_attrs" in inst_dict), \
         "Only one of {'include_attrs', 'exclude_attrs'} is allowed in an instrument dictionary!"
 
-    # get the instrument module and class #
-    if inst_dict["manufacturer"] != "":
-        manufacturer_string = ".%s" % inst_dict["manufacturer"]
-    else:
-        manufacturer_string = ""
+    manufacturer_string = inst_dict["manufacturer"]
 
-    # try to instantiate the instrument from pymeasure. If it is not found, then try to instantiate from
-    # the local instruments folder
-    try:
-        inst_mod = importlib.import_module(name="pymeasure.instruments%s" % manufacturer_string)
+    # first try to instantiate the instrument from the local instruments folder, then from spherexlabtools, then
+    # from pymeasure.
+    try:  # - local instruments module - #
+        inst_mod = getattr(exp.instruments, manufacturer_string)
         inst_class = getattr(inst_mod, inst_dict["instrument"])
     except (AttributeError, ModuleNotFoundError):
-        try:
-            inst_mod = importlib.import_module(name="spherexlabtools.instruments%s" % manufacturer_string)
+        try:  # - spherexlabtools - #
+            inst_mod = importlib.import_module(name="spherexlabtools.instruments.%s" % manufacturer_string)
             inst_class = getattr(inst_mod, inst_dict["instrument"])
         except (AttributeError, ModuleNotFoundError):
-            err_msg = "No instrument driver found for %s.%s" % (manufacturer_string, inst_dict["instrument"])
-            logger.error(err_msg)
-            raise AttributeError("No instrument driver found for %s.%s" % (manufacturer_string,
-                                                                           inst_dict["instrument"]))
+            try:  # - pymeasure - #
+                inst_mod = importlib.import_module(name="pymeasure.instruments.%s" % manufacturer_string)
+                inst_class = getattr(inst_mod, inst_dict["instrument"])
+            except (AttributeError, ModuleNotFoundError):
+                # - if the instrument driver class is still not found, then throw the error - #
+                err_msg = "No instrument driver found for %s.%s" % (manufacturer_string, inst_dict["instrument"])
+                logger.error(err_msg)
+                raise AttributeError("No instrument driver found for %s.%s" % (manufacturer_string,
+                                                                               inst_dict["instrument"]))
 
     # instantiate the instrument class with key-word arguments #
     if "kwargs" in inst_dict:
@@ -67,15 +68,6 @@ def instantiate_instrument(inst_dict):
         for p in inst_dict["params"]:
             setattr(inst, p, inst_dict["params"][p])
 
-    # remove undesired attributes specified by include/exclude attrs #
-    if "include_attrs" in inst_dict:
-        for attr in dir(inst):
-            if not attr.startswith("_") and attr not in dir(Instrument) and attr not in inst_dict["include_attrs"]:
-                delattr(inst, attr)
-    elif "exclude_attrs" in inst_dict:
-        for attr in inst_dict["exclude_attrs"]:
-            delattr(inst, attr)
-
     return inst
 
 
@@ -90,7 +82,7 @@ class CompoundInstrument:
     method_map = {}
     attrs = []
 
-    def __init__(self, cfg):
+    def __init__(self, cfg, exp):
         """
         :param: cfg: :ref:`Compound Instrument Dictionary` specifying subinstruments and optional property
                      configurations.
@@ -99,7 +91,7 @@ class CompoundInstrument:
         self.subinstruments = {}
         # instantiate all subinstruments
         for inst_dict in cfg["subinstruments"]:
-            self.subinstruments[inst_dict["instance_name"]] = instantiate_instrument(inst_dict)
+            self.subinstruments[inst_dict["instance_name"]] = instantiate_instrument(inst_dict, exp)
 
         # perform the initial property merge
         for inst_key in self.subinstruments.keys():
@@ -192,10 +184,10 @@ class InstrumentSuite:
     """ Top-level instrument object to encapsulate all instruments within an experiment.
     """
 
-    def __init__(self, inst_cfg):
+    def __init__(self, inst_cfg, exp):
         for inst in inst_cfg:
             if "subinstruments" not in inst:
-                self.__dict__[inst["instance_name"]] = instantiate_instrument(inst)
+                self.__dict__[inst["instance_name"]] = instantiate_instrument(inst, exp)
             else:
-                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst)
+                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst, exp)
 

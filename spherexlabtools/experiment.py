@@ -47,7 +47,7 @@ class Experiment:
         self.active_threads = {}
 
         # initialize instrument-suite #############################################
-        self.hw = InstrumentSuite(exp_pkg.INSTRUMENT_SUITE)
+        self.hw = InstrumentSuite(exp_pkg.INSTRUMENT_SUITE, exp_pkg)
 
         # initialize viewers ######################################################
         viewer_cfgs = exp_pkg.VIEWERS
