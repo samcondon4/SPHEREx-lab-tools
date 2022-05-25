@@ -117,3 +117,33 @@ class LinearStageController(DPSeriesMotorController):
             val = super().ask(command)
         logging.debug("LinearStageController released lock for ask.")
         return val
+
+
+class FocuserDrive(LinearStageController):
+
+
+    def __init__(self, resource_name, homedir, encoder_motor_ratio=1.0, encoder_enabled=False, **kwargs):
+        """ Instantiate a stage controller.
+        """
+        super().__init__(resource_name, homedir, **kwargs)
+
+    @property
+    def absolute_position(self):
+        """ Float property representing the value of the motor position measured in absolute units.
+        Note that in DP series motor controller instrument manuals, `absolute position` refers to
+        the 'step_position' property rather than this property. Also note that use of this property
+        relies on steps_to_absolute() and absolute_to_steps() being implemented in a subclass. In
+        this way, the user can define the conversion from a motor step position into any desired
+        absolute unit. Absolute units could be the position in meters of a linear stage or the
+        angular position of a gimbal mount, etc. This property can be set.
+        """
+        return super().absolute_position
+
+    @absolute_position.setter
+    def absolute_position(self, abs_pos):
+        cur_pos = self.absolute_position
+        delta_pos = abs_pos - cur_pos
+        delta_step = self.absolute_to_steps(delta_pos)
+        print(delta_step)
+        #self.step_position += delta_step
+

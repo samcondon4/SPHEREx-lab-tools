@@ -34,12 +34,13 @@ Camera_Controller = {
 }
 
 MScope_Controller = {
-    "instance_name": "MicroscopeMotorCntrl",
+    "instance_name": "MscopeCntrl",
     "type": "InstrumentController",
-    "hw": "MscopeMotors",
+    "hw": "Mscope",
     "control_parameters": [
         {"name": "focuser_step_position", "type": "int"},
         {"name": "focuser_absolute_position", "type": "str"},
+        {"name": "shutter_led_channel", "type": "list", "limits": [0, 1]}
     ],
     "status_parameters": [
         {"name": "focuser_step_position", "type": "int"},

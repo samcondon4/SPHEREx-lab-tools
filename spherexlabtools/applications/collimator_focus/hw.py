@@ -23,7 +23,7 @@ CamCfg = {
 
 GaugeCfg = {
     "instance_name": "gauge",
-    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
     "manufacturer": "heidenhain",
     "instrument": "ND287",
     "params": {
@@ -36,9 +36,9 @@ GaugeCfg = {
 
 FocuserCfg = {
     "instance_name": "focuser",
-    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB3::INSTR",
     "manufacturer": "anaheimautomation",
-    "instrument": "LinearStageController",
+    "instrument": "FocuserDrive",
     "kwargs": {
         "address": 0,
         "homedir": "CCW",
@@ -51,9 +51,20 @@ FocuserCfg = {
     }
 }
 
+ShutterCfg = {
+    "instance_name": "shutter",
+    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
+    "manufacturer": "spherex",
+    "instrument": "CSLD",
+    "kwargs": {
+        "baud_rate": 115200,
+        "write_termination": "\r"
+    }
+}
+
 MscopeCfg = {
-    "instance_name": "MscopeMotors",
-    "subinstruments": [GaugeCfg, FocuserCfg],
+    "instance_name": "Mscope",
+    "subinstruments": [GaugeCfg, FocuserCfg, ShutterCfg],
     "property_config": [
         ("focuser_absolute_position", "gauge_position", "focuser_absolute_position")
     ]
@@ -64,7 +75,7 @@ MscopeCfg = {
 # relay gimbal0 az config
 relay_gimbal0_az = {
     "instance_name": "az",
-    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB4::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
@@ -82,7 +93,7 @@ relay_gimbal0_az = {
 # relay gimbal1 zth config
 relay_gimbal0_zth = {
     "instance_name": "za",
-    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB4::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
@@ -105,6 +116,6 @@ Gimbal0 = {
 ##################################################################
 
 # Instrument suite list for the experiment object ################
-INSTRUMENT_SUITE = [MscopeCfg, CamCfg, Gimbal0]
+INSTRUMENT_SUITE = [MscopeCfg, CamCfg, Gimbal0, FocuserCfg]
 
 

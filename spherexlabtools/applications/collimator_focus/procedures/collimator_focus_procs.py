@@ -50,37 +50,52 @@ class CamViewProc(CamProc, LogProc):
         LogProc.__init__(self, cfg, exp, **kwargs)
         CamProc.__init__(self, cfg, exp, **kwargs)
 
+    def shutdown(self):
+        self.thread.stop()
+        # TODO: this is a lazy fix to the issue of a frame trying to be retrieved from the camera after the stream
+        # is stopped.
+        time.sleep(0.5)
+        CamProc.shutdown(self)
 
-class CollimatorFocusProc(CamProc):
+class CollimatorFocusProc(BaseProcedure):
     """ Main collimator focus measurement procedure.
     """
 
-    focus_position = Parameter("Absolute Focus Position mm.", default=0)
+    focus_position = FloatParameter("Absolute Focus Position mm.", default=0)
     frames_per_image = IntegerParameter("Frames Per Image", default=10)
     images = IntegerParameter("Images", default=1)
     wait_time = FloatParameter("Wait Time", default=0)
+    light_frame = IntegerParameter("Light Frame", default=1)
+    exposure_time = FloatParameter("Exposure Time us.", default=100000, minimum=30, maximum=5929218.769073486)
 
     def __init__(self, cfg, exp, **kwargs):
         """
         """
         super().__init__(cfg, exp, **kwargs)
         self.cam = self.hw.Camera
-        self.mscope = self.hw.MscopeMotors
+        self.mscope = self.hw.Mscope
         self.inst_params = {}
 
     def startup(self):
         """ Override startup to get instrument parameters
         """
         super().startup()
-        self.inst_params.update({"focus_position": self.mscope.focuser_absolute_position,
-                                 "camera_gain": self.cam.gain,
-                                 "camera_exposure_time": self.cam.exposure_time})
-
-    def execute(self):
-        # move the focuser and wait for its motion to complete #
+        # - move the focuser and wait for its motion to complete - #
         self.mscope.focuser_absolute_position = self.focus_position
         self.mscope.focuser_wait_for_completion()
 
+        # - set camera exposure time - #
+        self.cam.exposure_time = self.exposure_time
+
+        # - set the shutter state - #
+        self.mscope.shutter_led_channel = self.light_frame
+
+        self.inst_params.update({"focus_position": self.mscope.focuser_absolute_position,
+                                 "camera_gain": self.cam.gain,
+                                 "camera_exposure_time": self.cam.exposure_time,
+                                 "light_frame": self.light_frame})
+
+    def execute(self):
         # wait for user specified amount of time #
         time.sleep(self.wait_time)
 

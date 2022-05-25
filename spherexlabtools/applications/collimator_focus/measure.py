@@ -50,7 +50,7 @@ CameraView_Proc = {
 CollimatorFocus_Proc = {
     "instance_name": "CollimatorFocusProc",
     "type": "CollimatorFocusProc",
-    "hw": ["MscopeMotors", "Camera"],
+    "hw": ["Mscope", "Camera"],
     "records": {
         "frame": {"viewer": "CamView", "ancillary_generator": histogram_gen},
         "frame_avg": {"viewer": "CamViewAvg", "ancillary_generator": histogram_gen},

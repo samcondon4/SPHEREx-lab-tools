@@ -1,2 +1,2 @@
+from .dpseriessubclasses import LinearStageController, FocuserDrive
 
-from .dpseriessubclasses import LinearStageController
