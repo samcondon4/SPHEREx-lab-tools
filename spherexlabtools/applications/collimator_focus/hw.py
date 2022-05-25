@@ -23,7 +23,7 @@ CamCfg = {
 
 GaugeCfg = {
     "instance_name": "gauge",
-    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "heidenhain",
     "instrument": "ND287",
     "params": {
@@ -36,7 +36,7 @@ GaugeCfg = {
 
 FocuserCfg = {
     "instance_name": "focuser",
-    "resource_name": "ASRL/dev/ttyUSB3::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "FocuserDrive",
     "kwargs": {
@@ -75,7 +75,7 @@ MscopeCfg = {
 # relay gimbal0 az config
 relay_gimbal0_az = {
     "instance_name": "az",
-    "resource_name": "ASRL/dev/ttyUSB4::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
@@ -93,7 +93,7 @@ relay_gimbal0_az = {
 # relay gimbal1 zth config
 relay_gimbal0_zth = {
     "instance_name": "za",
-    "resource_name": "ASRL/dev/ttyUSB4::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {

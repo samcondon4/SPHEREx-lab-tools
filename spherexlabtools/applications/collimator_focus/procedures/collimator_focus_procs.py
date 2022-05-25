@@ -90,14 +90,15 @@ class CollimatorFocusProc(BaseProcedure):
         # - set the shutter state - #
         self.mscope.shutter_led_channel = self.light_frame
 
+        # wait for user specified amount of time #
+        time.sleep(self.wait_time)
+
         self.inst_params.update({"focus_position": self.mscope.focuser_absolute_position,
                                  "camera_gain": self.cam.gain,
                                  "camera_exposure_time": self.cam.exposure_time,
                                  "light_frame": self.light_frame})
 
     def execute(self):
-        # wait for user specified amount of time #
-        time.sleep(self.wait_time)
 
         frame_width = self.cam.exposure_width
         frame_height = self.cam.exposure_height
