@@ -94,8 +94,7 @@ class CompoundInstrument:
             self.subinstruments[inst_dict["instance_name"]] = instantiate_instrument(inst_dict, exp)
 
         # perform the initial property merge
-        for inst_key in self.subinstruments.keys():
-            subinst = self.subinstruments[inst_key]
+        for inst_key, subinst in self.subinstruments.items():
             self.merge_subinst_clsattrs(subinst, inst_key, recursive=True)
 
         # apply the property configuration, if one is present
@@ -117,33 +116,24 @@ class CompoundInstrument:
     def merge_subinst_clsattrs(self, subinst, name, recursive=False):
         """ Merge all subinstrument class attributes into the instance's namespace.
 
-            :param: subinst: Instrument object to get properties from.
-            :param: name: String identifying the subinstrument.
-            :param: recursive: Recursively merge all subinstrument properties including those within baseclasses
-                               until the base :class:`.Instrument` class is reached.
+        :param subinst: Instrument object to get properties from.
+        :param name: String identifying the subinstrument.
+        :param recursive: Recursively merge all subinstrument properties including those within baseclasses
+                           until the base :class:`.Instrument` class is reached.
         """
-        attr_access = lambda sinst: sinst.__class__ if type(sinst) is not type else sinst
-        if "pymeasure.instruments.instrument.Instrument" not in str(subinst) and subinst.__module__ != "builtins":
-            merge_cls = attr_access(subinst)
-            for cls_attr in merge_cls.__dict__:
-                attr = merge_cls.__dict__[cls_attr]
-                if not cls_attr.startswith("_"):
-                    prop_name = "%s_%s" % (name, cls_attr)
-                    # place class attribute in instance namespace if it is not already there. #
-                    # This check preserves subclass attribute overrides #
-                    if prop_name not in self.__dict__.keys():
-                        self.__dict__[prop_name] = attr
-                    # write attribute into the appropriate mapping based on its type #
-                    attr_typ = type(attr)
-                    if (attr_typ is property) or (attr_typ is DynamicProperty):
-                        self.property_map[prop_name] = {"fget": name, "fset": name}
-                    else:
-                        self.method_map[prop_name] = name
-        else:
-            recursive = False
+        class_attrs = dir(subinst.__class__)
+        for cls_attr_str in class_attrs:
+            if not cls_attr_str.startswith("_"):
+                cls_attr = getattr(subinst.__class__, cls_attr_str)
+                attr_name = f"{name}_{cls_attr_str}"
+                if attr_name not in self.__dict__.keys():
+                    self.__dict__[attr_name] = cls_attr
 
-        if recursive:
-            self.merge_subinst_clsattrs(subinst.__class__.__bases__[0], name, recursive=True)
+                cls_attr_typ = type(cls_attr)
+                if cls_attr_typ is property or cls_attr_typ is DynamicProperty:
+                    self.property_map[attr_name] = {"fget": name, "fset": name}
+                else:
+                    self.method_map[attr_name] = name
 
     def shutdown(self):
         """ Shutdown all subinstruments

@@ -39,7 +39,7 @@ Camera = {
 SubclassInst = {
     "instance_name": "SubTest",
     "manufacturer": "submock",
-    "instrument": "SwissArmyDoubleSub",
+    "instrument": "SwissArmyTripleSub",
     "resource_name": 0.1,
 }
 
