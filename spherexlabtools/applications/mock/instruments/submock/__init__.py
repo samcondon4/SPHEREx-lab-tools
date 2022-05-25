@@ -1,2 +1,2 @@
-from .test import SwissArmySub, SwissArmyDoubleSub
+from .test import SwissArmySub, SwissArmyDoubleSub, SwissArmyTripleSub
 
