@@ -7,23 +7,27 @@ CamCfg = {
     "manufacturer": "flir",
     "instrument": "Flea3",
     "params": {
+        "acquisition_frame_rate_en": True,
+        "acquisition_frame_rate_auto": "Off",
         "gain_auto": "Off",
         "gain": 0,
         "blacklevel_en": False,
         "gamma_en": False,
         "sharpess_en": False,
-        "acquisition_frame_rate_en": False,
+        "offset_x": 0,
+        "offset_y": 0,
         "exposure_width": 2448,
         "exposure_height": 2048,
         "exposure_mode": "Timed",
-        "exposure_auto": "Off"
+        "exposure_auto": "Off",
+        "pixel_format": "Mono16"
     }
 }
 
 
 GaugeCfg = {
     "instance_name": "gauge",
-    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB3::INSTR",
     "manufacturer": "heidenhain",
     "instrument": "ND287",
     "params": {
@@ -36,7 +40,7 @@ GaugeCfg = {
 
 FocuserCfg = {
     "instance_name": "focuser",
-    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB4::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "FocuserDrive",
     "kwargs": {
@@ -53,7 +57,7 @@ FocuserCfg = {
 
 ShutterCfg = {
     "instance_name": "shutter",
-    "resource_name": "ASRL/dev/ttyUSB1::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
     "manufacturer": "spherex",
     "instrument": "CSLD",
     "kwargs": {
@@ -75,7 +79,7 @@ MscopeCfg = {
 # relay gimbal0 az config
 relay_gimbal0_az = {
     "instance_name": "az",
-    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {
@@ -93,7 +97,7 @@ relay_gimbal0_az = {
 # relay gimbal1 zth config
 relay_gimbal0_zth = {
     "instance_name": "za",
-    "resource_name": "ASRL/dev/ttyUSB2::INSTR",
+    "resource_name": "ASRL/dev/ttyUSB0::INSTR",
     "manufacturer": "anaheimautomation",
     "instrument": "LinearStageController",
     "kwargs": {

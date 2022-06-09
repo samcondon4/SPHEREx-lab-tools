@@ -44,6 +44,7 @@ MScope_Controller = {
     ],
     "status_parameters": [
         {"name": "focuser_step_position", "type": "int"},
+        {"name": "focuser_absolute_position", "type": "str"},
         {"name": "gauge_position", "type": "str"},
     ],
     "status_refresh": "manual",

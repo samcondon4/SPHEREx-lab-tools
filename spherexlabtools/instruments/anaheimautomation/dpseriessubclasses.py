@@ -141,9 +141,11 @@ class FocuserDrive(LinearStageController):
 
     @absolute_position.setter
     def absolute_position(self, abs_pos):
-        cur_pos = self.absolute_position
+        # TODO: Command 90% then the rest in 2 steps
+        cur_pos = float(self.absolute_position)
+        abs_pos = float(abs_pos)
         delta_pos = abs_pos - cur_pos
+        print(cur_pos, abs_pos, delta_pos)
         delta_step = self.absolute_to_steps(delta_pos)
-        print(delta_step)
-        #self.step_position += delta_step
+        self.step_position += delta_step
 

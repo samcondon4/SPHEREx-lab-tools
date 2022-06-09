@@ -27,18 +27,9 @@ class CamProc(BaseProcedure):
         try:
             self.hw.acquisition_frame_rate_en = False
             self.hw.exposure_time = self.refresh_rate
-            self.hw.start_stream()
         except AttributeError:
             self.hw.Camera.acquisition_frame_rate_en = False
             self.hw.Camera.exposure_time = self.refresh_rate
-            self.hw.Camera.start_stream()
-
-    def shutdown(self):
-        try:
-            self.hw.stop_stream()
-        except AttributeError:
-            self.hw.Camera.stop_stream()
-        BaseProcedure.shutdown(self)
 
 
 class CamViewProc(CamProc, LogProc):
@@ -55,9 +46,9 @@ class CamViewProc(CamProc, LogProc):
         # TODO: this is a lazy fix to the issue of a frame trying to be retrieved from the camera after the stream
         # is stopped.
         time.sleep(0.5)
-        CamProc.shutdown(self)
+        super().shutdown()
 
-class CollimatorFocusProc(BaseProcedure):
+class CollimatorFocusProc(CamProc):
     """ Main collimator focus measurement procedure.
     """
 
@@ -66,7 +57,6 @@ class CollimatorFocusProc(BaseProcedure):
     images = IntegerParameter("Images", default=1)
     wait_time = FloatParameter("Wait Time", default=0)
     light_frame = IntegerParameter("Light Frame", default=1)
-    exposure_time = FloatParameter("Exposure Time us.", default=100000, minimum=30, maximum=5929218.769073486)
 
     def __init__(self, cfg, exp, **kwargs):
         """
@@ -85,7 +75,10 @@ class CollimatorFocusProc(BaseProcedure):
         self.mscope.focuser_wait_for_completion()
 
         # - set camera exposure time - #
-        self.cam.exposure_time = self.exposure_time
+        self.cam.exposure_time = self.refresh_rate
+
+        # wait for user specified amount of time #
+        time.sleep(self.wait_time)
 
         # - set the shutter state - #
         self.mscope.shutter_led_channel = self.light_frame
@@ -107,6 +100,7 @@ class CollimatorFocusProc(BaseProcedure):
         for _ in range(int(self.images)):
             image = np.zeros([frame_height, frame_width], dtype=np.float64)
             for __ in range(self.frames_per_image):
+                time.sleep(0.1)
                 exp = self.cam.latest_frame
                 image = image + (exp / self.frames_per_image)
                 # write out to viewers #
