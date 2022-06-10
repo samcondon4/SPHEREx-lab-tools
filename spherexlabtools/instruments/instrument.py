@@ -65,8 +65,8 @@ def instantiate_instrument(inst_dict, exp):
 
     # set initial instrument parameters if any are given #
     if "params" in inst_dict:
-        for p in inst_dict["params"]:
-            setattr(inst, p, inst_dict["params"][p])
+        for param, param_val in inst_dict["params"].items():
+            setattr(inst, param, param_val)
 
     return inst
 

@@ -34,16 +34,18 @@ Camera_Controller = {
 }
 
 MScope_Controller = {
-    "instance_name": "MicroscopeMotorCntrl",
+    "instance_name": "MscopeCntrl",
     "type": "InstrumentController",
-    "hw": "MscopeMotors",
+    "hw": "Mscope",
     "control_parameters": [
         {"name": "focuser_step_position", "type": "int"},
-        {"name": "focuser_absolute_position", "type": "float"},
+        {"name": "focuser_absolute_position", "type": "str"},
+        {"name": "shutter_led_channel", "type": "list", "limits": [0, 1]}
     ],
     "status_parameters": [
         {"name": "focuser_step_position", "type": "int"},
-        {"name": "gauge_position", "type": "float"},
+        {"name": "focuser_absolute_position", "type": "str"},
+        {"name": "gauge_position", "type": "str"},
     ],
     "status_refresh": "manual",
     "actions": [
@@ -56,12 +58,16 @@ Gimbal0_Controller = {
     "type": "InstrumentController",
     "hw": "Gimbal0",
     "control_parameters": [
-        {"name": "az_absolute_position", "type": "float"},
-        {"name": "za_absolute_position", "type": "float"},
+        {"name": "az_absolute_position", "type": "str"},
+        {"name": "az_step_position", "type": "int"},
+        {"name": "za_absolute_position", "type": "str"},
+        {"name": "za_step_position", "type": "int"},
     ],
     "status_parameters": [
-        {"name": "az_absolute_position", "type": "float"},
-        {"name": "za_absolute_position", "type": "float"},
+        {"name": "az_absolute_position", "type": "str"},
+        {"name": "az_step_position", "type": "int"},
+        {"name": "za_absolute_position", "type": "str"},
+        {"name": "za_step_position", "type": "int"},
     ],
     "status_refresh": "manual",
     "actions": [

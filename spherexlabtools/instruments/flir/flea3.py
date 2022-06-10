@@ -1,3 +1,5 @@
+import time
+
 import PySpin
 import logging
 from pymeasure.instruments import Instrument
@@ -120,6 +122,8 @@ class Flea3:
                                            "auto function on the camera.")
 
     # image format properties #
+    offset_x = FlirInstrument.control("OffsetX", "int", "Integer property representing the camera x-pixel offset.")
+    offset_y = FlirInstrument.control("OffsetY", "int", "Integer property representing the camera y-pixel offset.")
     exposure_height = FlirInstrument.control("Height", "int",
                                              "Integer property representing the height in pixels of an "
                                              "image.")
@@ -163,7 +167,9 @@ class Flea3:
         else:
             self.acquisition_mode = "SingleFrame"
             self.cam.BeginAcquisition()
+            time.sleep(0.1)
             im_result = self.cam.GetNextImage(timeout)
+            time.sleep(0.1)
             frames = im_result.GetNDArray()
             im_result.Release()
         self.cam.EndAcquisition()

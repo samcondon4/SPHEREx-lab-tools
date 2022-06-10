@@ -492,10 +492,11 @@ class HDF5Recorder(SltRecorder):
         self.opened_results.append("inst_params", ip_df)
         try:
             if self.record_group > self.opened_results["sequence"].shape[0]:
-                self.opened_results.append("sequence", seq_df, min_itemsize={"sequence": len(seq_str)},
+                self.opened_results.append("sequence", seq_df, #min_itemsize={"sequence": len(seq_str[0])},
                                            encoding="utf-8")
         except KeyError:
-            self.opened_results.append("sequence", seq_df, min_itemsize={"sequence": len(seq_str)}, encoding="utf-8")
+            self.opened_results.append("sequence", seq_df, #min_itemsize={"sequence": len(seq_str[0])},
+                                       encoding="utf-8")
 
     def close_results(self):
         """ Close the .h5 results file.
