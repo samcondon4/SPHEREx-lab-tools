@@ -29,6 +29,7 @@ class Viewer(QueueThread, QtWidgets.QWidget):
         self.startup_signal.connect(self.show_view)
         self.shutdown_signal.connect(self.close_view)
         self.configuration_tree = ParameterTree()
+        self.setWindowTitle(self.name)
 
     def set_cfg_parameters(self, params, **kwargs):
         """ Set the configuration parameters of the configuration parameters tree.

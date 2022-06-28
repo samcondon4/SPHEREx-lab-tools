@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SltTop</class>
+ <widget class="QWidget" name="SltTop">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>708</width>
+    <height>535</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SPHERExLabTools</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../SPIE2022/spherex-2020logo_color_nobackground.png</normaloff>../../SPIE2022/spherex-2020logo_color_nobackground.png</iconset>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="top_horizontal_layout"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="log_tab">
+      <attribute name="title">
+       <string>Log</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="threads_tab">
+      <attribute name="title">
+       <string>Threads</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

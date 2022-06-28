@@ -36,18 +36,4 @@ Camera = {
     }
 }
 
-SubclassInst = {
-    "instance_name": "SubTest",
-    "manufacturer": "submock",
-    "instrument": "SwissArmyTripleSub",
-    "resource_name": 0.1,
-}
-
-CompoundTesting = {
-    "instance_name": "CompoundTest",
-    "subinstruments": [
-        SubclassInst, Camera, Heater
-    ]
-}
-
-INSTRUMENT_SUITE = [Lockin, Heater, Camera, CompoundTesting]
+INSTRUMENT_SUITE = [Lockin, Heater, Camera]

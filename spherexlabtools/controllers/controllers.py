@@ -7,7 +7,7 @@ import logging
 from PyQt5 import QtWidgets, QtCore
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
-from ..widgets import Sequencer, Records
+from spherexlabtools.ui.widgets import Sequencer, Records
 from ..parameters import ParameterInspect
 from ..thread import StoppableReusableThread
 from ..parameters import Parameter as pymeasureParam

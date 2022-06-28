@@ -4,14 +4,14 @@ Sam Condon, 01/27/2022
 """
 import logging
 import pyqtgraph as pg
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtGui
 from .loader import load_objects_from_cfg_list
 import spherexlabtools.viewers as slt_view
 import spherexlabtools.procedures as slt_proc
 import spherexlabtools.recorders as slt_record
 import spherexlabtools.controllers as slt_control
 from spherexlabtools.instruments import InstrumentSuite
-from spherexlabtools.thread import StoppableReusableThread
+from spherexlabtools.ui import Ui_SltTop, StackedHelper
 
 
 app = None
@@ -91,7 +91,45 @@ class Experiment:
         self.controllers = load_objects_from_cfg_list(search_order, self, control_cfgs, hw=self.hw,
                                                       procs=self.procedures)
 
+        # - Top-level ui - #
+        self.slt_top_widget = None
+        self.slt_top_ui = None
+        self.controller_stack = StackedHelper()
+        self.viewer_stack = StackedHelper()
+        self.procedure_stack = StackedHelper()
+
         logger.info("Experiment initialization complete.")
+
+    def start_top(self):
+        """ Start the top-level interface that includes all viewers, controllers, procedures, etc.
+        """
+        if self.slt_top_widget is None:
+            self.slt_top_widget = QtWidgets.QWidget()
+            self.slt_top_ui = Ui_SltTop()
+            self.slt_top_ui.setupUi(self.slt_top_widget)
+            self._init_top_ui()
+            # - start all controllers, viewers, and recorders - #
+            for c in self.controllers.values():
+                c.start()
+            for v in self.viewers.values():
+                v.start()
+            for r in self.recorders.values():
+                r.start()
+            self.slt_top_widget.show()
+
+    def _init_top_ui(self):
+        """ Initialize the top-level interface after start_top_ui() has been called.
+        """
+
+        # - initialize controllers in the top widget - #
+        controllers = [c for c in self.controllers.values()]
+        self.controller_stack.configure_stack(controllers, "Controllers", "Controller Select")
+        self.slt_top_ui.top_horizontal_layout.addWidget(self.controller_stack.stack)
+
+        # - initialize viewers in the top widget - #
+        viewers = [v for v in self.viewers.values()]
+        self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
+        self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)
 
     def start_viewer(self, viewer_key):
         """ Start a viewer thread.
