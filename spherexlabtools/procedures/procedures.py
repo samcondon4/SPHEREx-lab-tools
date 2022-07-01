@@ -13,9 +13,12 @@ import threading
 import numpy as np
 import scipy.io as spio
 from datetime import datetime
+from PyQt5 import QtWidgets, QtCore
+from pyqtgraph.parametertree import Parameter, ParameterTree
 
 from ..thread import StoppableReusableThread
 from ..parameters import ParameterInspect, Parameter, FloatParameter, IntegerParameter, BooleanParameter
+from spherexlabtools.ui.widgets import Records
 
 logger = logging.getLogger(__name__)
 
@@ -262,6 +265,16 @@ class BaseProcedure(StoppableReusableThread):
                 setattr(self, key, kwargs[key])
         self.parameter_map = {pval.name: pkey for pkey, pval in self.parameters.items()}
 
+        # - records ui - #
+        self.records_interface = Records(self.records)
+        self.records_interface_tree = ParameterTree()
+        setattr(self.records_interface_tree, "name", self.name)
+        #self.records_interface_tree_layout = QtWidgets.QGridLayout()
+        self.records_interface.new_record_params_sig.connect(self.update_record_attrs)
+        self.records_interface.save_record_sig.connect(self.save_record)
+        self.records_interface_tree.setParameters(self.records_interface)
+        #self.records_interface_tree_layout.addWidget(self.records_interface_tree)
+
     def startup(self):
         """ Check that all procedure parameters have been set.
         """
@@ -298,6 +311,27 @@ class BaseProcedure(StoppableReusableThread):
         """
         self.status = BaseProcedure.FINISHED
 
+    def update_record_attrs(self, record_param, record_name):
+        """ Update a record with the provided attributes.
+        """
+        rec_name_param_set_map = {
+            "Integrate Buffer": "avg",
+            "Buffer Size": "buffer_size",
+            "Run Ancillary Generator": "generate_ancillary",
+            "Recorder Write Path": "recorder_write_path"
+        }
+        record = self.records[record_name]
+        setattr(record, rec_name_param_set_map[record_param.name()], record_param.value())
+
+    def save_record(self, save_record_params, record_name):
+        """ Save the record in the format specified.
+        """
+        record = self.records[record_name]
+        save_vals = save_record_params.getValues()
+        record.filepath = save_vals["File-path"][0]
+        record.save_type = save_vals["Type"][0]
+        record.save()
+
     def __str__(self):
         result = repr(self) + "\n"
         for parameter in self.parameters.items():
@@ -309,6 +343,7 @@ class BaseProcedure(StoppableReusableThread):
             self.__class__.__name__, self.STATUS_STRINGS[self.status],
             ParameterInspect.parameters_are_set(self)
         )
+
 
 
 class LogProc(BaseProcedure):

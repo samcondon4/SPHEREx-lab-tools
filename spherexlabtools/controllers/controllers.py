@@ -324,12 +324,14 @@ class ProcedureController(Controller):
             params.append(self.sequencer)
 
         # generate records interface #
+        """
         self.records_interface = None
         if records:
             self.records_interface = Records(self.procedure.records)
             self.records_interface.new_record_params_sig.connect(self.update_record_attrs)
             self.records_interface.save_record_sig.connect(self.save_record)
             params.append(self.records_interface)
+        """
 
         # connect buttons to methods #
         if connect and proc_params:
@@ -343,7 +345,6 @@ class ProcedureController(Controller):
     def update_record_attrs(self, record_param, record_name):
         """ Update a record with the provided attributes.
         """
-        print(record_param, record_name)
         rec_name_param_set_map = {
             "Integrate Buffer": "avg",
             "Buffer Size": "buffer_size",

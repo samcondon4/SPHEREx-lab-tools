@@ -100,24 +100,35 @@ class Experiment:
 
         logger.info("Experiment initialization complete.")
 
-    def start_top(self):
+    def start(self):
         """ Start the top-level interface that includes all viewers, controllers, procedures, etc.
         """
-        if self.slt_top_widget is None:
-            self.slt_top_widget = QtWidgets.QWidget()
-            self.slt_top_ui = Ui_SltTop()
-            self.slt_top_ui.setupUi(self.slt_top_widget)
-            self._init_top_ui()
-            # - start all controllers, viewers, and recorders - #
-            for c in self.controllers.values():
-                c.start()
-            for v in self.viewers.values():
-                v.start()
-            for r in self.recorders.values():
-                r.start()
-            self.slt_top_widget.show()
+        self.slt_top_widget = QtWidgets.QWidget()
+        self.slt_top_ui = Ui_SltTop()
+        self.slt_top_ui.setupUi(self.slt_top_widget)
+        self._init_ui()
+        # - start all controllers, viewers, and recorders - #
+        for c in self.controllers.values():
+            c.start()
+        for v in self.viewers.values():
+            v.start()
+        for r in self.recorders.values():
+            r.start()
+        self.slt_top_widget.show()
 
-    def _init_top_ui(self):
+    def stop(self):
+        """ Stop the top-level interface.
+        """
+        # - start all controllers, viewers, and recorders - #
+        for c in self.controllers.values():
+            c.stop()
+        for v in self.viewers.values():
+            v.stop()
+        for r in self.recorders.values():
+            r.stop()
+        self.slt_top_widget.close()
+
+    def _init_ui(self):
         """ Initialize the top-level interface after start_top_ui() has been called.
         """
 
@@ -130,6 +141,11 @@ class Experiment:
         viewers = [v for v in self.viewers.values()]
         self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
         self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)
+
+        # - initialize procedures in the top widget - #
+        procedure_records = [p.records_interface_tree for p in self.procedures.values()]
+        self.procedure_stack.configure_stack(procedure_records, "Procedures", "Procedure Select")
+        self.slt_top_ui.top_horizontal_layout.addWidget(self.procedure_stack.stack)
 
     def start_viewer(self, viewer_key):
         """ Start a viewer thread.
