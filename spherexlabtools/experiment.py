@@ -134,18 +134,21 @@ class Experiment:
 
         # - initialize controllers in the top widget - #
         controllers = [c for c in self.controllers.values()]
-        self.controller_stack.configure_stack(controllers, "Controllers", "Controller Select")
-        self.slt_top_ui.top_horizontal_layout.addWidget(self.controller_stack.stack)
+        if len(controllers) > 0:
+            self.controller_stack.configure_stack(controllers, "Controllers", "Controller Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.controller_stack.stack)
 
         # - initialize viewers in the top widget - #
         viewers = [v for v in self.viewers.values()]
-        self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
-        self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)
+        if len(viewers) > 0:
+            self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)
 
         # - initialize procedures in the top widget - #
         procedure_records = [p.records_interface_tree for p in self.procedures.values()]
-        self.procedure_stack.configure_stack(procedure_records, "Procedures", "Procedure Select")
-        self.slt_top_ui.top_horizontal_layout.addWidget(self.procedure_stack.stack)
+        if len(procedure_records) > 0:
+            self.procedure_stack.configure_stack(procedure_records, "Procedures", "Procedure Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.procedure_stack.stack)
 
     def start_viewer(self, viewer_key):
         """ Start a viewer thread.
