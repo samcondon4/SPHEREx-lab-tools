@@ -3,6 +3,8 @@
 Sam Condon, 01/27/2022
 """
 import logging
+import os.path
+
 import pyqtgraph as pg
 from PyQt5 import QtWidgets, QtGui
 from .loader import load_objects_from_cfg_list
@@ -47,7 +49,18 @@ class Experiment:
         self.active_threads = {}
 
         # initialize instrument-suite #############################################
-        self.hw = InstrumentSuite(exp_pkg.INSTRUMENT_SUITE, exp_pkg)
+        self.dev_links = {}
+        if "dev_links_path" in dir(exp_pkg):
+            with open(exp_pkg.dev_links_path, "r") as dev_file:
+                df_lines = dev_file.readlines()
+                for df_l in df_lines:
+                    df_split = df_l.split(" -> ")
+                    dl0 = "".join([c for c in df_split[0] if c.isalnum() or c == os.path.sep])
+                    dl1 = "".join([c for c in df_split[1] if c.isalnum() or c == os.path.sep])
+                    dl1 = "ASRL" + dl1
+                    dl1 += "::INSTR"
+                    self.dev_links[dl0] = dl1
+        self.hw = InstrumentSuite(exp_pkg.INSTRUMENT_SUITE, exp_pkg, dev_links=self.dev_links)
 
         # initialize viewers ######################################################
         viewer_cfgs = exp_pkg.VIEWERS
@@ -134,18 +147,21 @@ class Experiment:
 
         # - initialize controllers in the top widget - #
         controllers = [c for c in self.controllers.values()]
-        self.controller_stack.configure_stack(controllers, "Controllers", "Controller Select")
-        self.slt_top_ui.top_horizontal_layout.addWidget(self.controller_stack.stack)
+        if len(controllers) > 0:
+            self.controller_stack.configure_stack(controllers, "Controllers", "Controller Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.controller_stack.stack)
 
         # - initialize viewers in the top widget - #
         viewers = [v for v in self.viewers.values()]
-        self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
-        self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)
+        if len(viewers) > 0:
+            self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)
 
         # - initialize procedures in the top widget - #
         procedure_records = [p.records_interface_tree for p in self.procedures.values()]
-        self.procedure_stack.configure_stack(procedure_records, "Procedures", "Procedure Select")
-        self.slt_top_ui.top_horizontal_layout.addWidget(self.procedure_stack.stack)
+        if len(procedure_records) > 0:
+            self.procedure_stack.configure_stack(procedure_records, "Procedures", "Procedure Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.procedure_stack.stack)
 
     def start_viewer(self, viewer_key):
         """ Start a viewer thread.

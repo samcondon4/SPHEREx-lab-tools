@@ -16,7 +16,7 @@ from pymeasure.instruments.instrument import DynamicProperty
 logger = logging.getLogger(__name__)
 
 
-def instantiate_instrument(inst_dict, exp):
+def instantiate_instrument(inst_dict, exp, dev_links=None):
     """ Instantiate and return the appropriate PyMeasure Instrument class based on the inst_dict arguments.
     :param: inst_dict: dictionary corresponding to a single instrument. This dictionary should take the form seen at
                        :ref:`Instrument Dictionaries`
@@ -57,7 +57,10 @@ def instantiate_instrument(inst_dict, exp):
     else:
         kwargs = {}
     try:
-        inst = inst_class(inst_dict["resource_name"], **kwargs)
+        rec_name = inst_dict["resource_name"]
+        if type(dev_links) is dict and rec_name.__hash__ is not None and rec_name in dev_links.keys():
+            rec_name = dev_links[rec_name]
+        inst = inst_class(rec_name, **kwargs)
     except Exception as e:
         logger.error("Error while instantiating {}.{}: \n {}".format(manufacturer_string, inst_dict["instrument"],
                                                                      e))
@@ -82,7 +85,7 @@ class CompoundInstrument:
     method_map = {}
     attrs = []
 
-    def __init__(self, cfg, exp):
+    def __init__(self, cfg, exp, dev_links=None):
         """
         :param: cfg: :ref:`Compound Instrument Dictionary` specifying subinstruments and optional property
                      configurations.
@@ -91,7 +94,7 @@ class CompoundInstrument:
         self.subinstruments = {}
         # instantiate all subinstruments
         for inst_dict in cfg["subinstruments"]:
-            self.subinstruments[inst_dict["instance_name"]] = instantiate_instrument(inst_dict, exp)
+            self.subinstruments[inst_dict["instance_name"]] = instantiate_instrument(inst_dict, exp, dev_links=dev_links)
 
         # perform the initial property merge
         for inst_key, subinst in self.subinstruments.items():
@@ -174,10 +177,10 @@ class InstrumentSuite:
     """ Top-level instrument object to encapsulate all instruments within an experiment.
     """
 
-    def __init__(self, inst_cfg, exp):
+    def __init__(self, inst_cfg, exp, dev_links=None):
         for inst in inst_cfg:
             if "subinstruments" not in inst:
-                self.__dict__[inst["instance_name"]] = instantiate_instrument(inst, exp)
+                self.__dict__[inst["instance_name"]] = instantiate_instrument(inst, exp, dev_links=dev_links)
             else:
-                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst, exp)
+                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst, exp, dev_links=dev_links)
 
