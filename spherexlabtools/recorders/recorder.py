@@ -86,7 +86,12 @@ class SltRecorder(QueueThread):
         else:
             self.record_group_ind += 1
 
-        self.record_row = record.data.shape[0]
+        # - in the case where the incoming data is a single numeric value, the record_row should be manually set to 1
+        # - #
+        try:
+            self.record_row = record.data.shape[0]
+        except AttributeError:
+            self.record_row = 1
 
         # update the pandas index objects #
         self.data_index = pd.MultiIndex.from_product([[self.record_group], [self.record_group_ind],
@@ -393,6 +398,12 @@ class CsvRecorder(SltRecorder):
             self._data_appnd: [record.data, self.data_index],
             self._seq_appnd: [record.sequence, self.sequence_index]
         }
+        filtered_dfs_map = {}
+        # - remove all components from the above dictionary if they are None - #
+        for rec_append, rec_stuff in dfs_map.items():
+            if rec_stuff[0] is not None:
+                filtered_dfs_map[rec_append] = rec_stuff
+        dfs_map = filtered_dfs_map
         for rec_append, rec_stuff in dfs_map.items():
             if type(rec_stuff[0]) is pd.DataFrame:
                 dfs_map[rec_append][0] = pd.DataFrame({key: val.values for key, val in rec_stuff[0].items()},
@@ -408,12 +419,14 @@ class CsvRecorder(SltRecorder):
 
         # remove the sequence dataframe from the dictionary since the output will only be updated if the record
         # group changed. #
-        seq_df = dfs_map.pop(self._seq_appnd)
+        seq_df = dfs_map.get(self._seq_appnd, None)
+        if seq_df is not None:
+            seq_df = dfs_map.pop(self._seq_appnd)
         for key, val in dfs_map.items():
             val[0].to_csv(record.recorder_write_path + key + ".csv", mode=mode, header=hdr, index=True)
 
         # update the sequence csv only if the record group changed #
-        if self.record_group_changed:
+        if self.record_group_changed and seq_df is not None:
             seq_df[0].to_csv(record.recorder_write_path + self._seq_appnd + ".csv", mode=mode, header=hdr, index=True)
 
 
