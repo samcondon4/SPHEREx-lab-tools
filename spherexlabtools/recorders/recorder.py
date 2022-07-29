@@ -69,6 +69,17 @@ class SltRecorder(QueueThread):
             self.close_results()
             self.record_group, self.record_group_ind = self.open_results(self.results_path)
 
+        # - update the record_group, record_group_ind, and record_row attributes - #
+        self.update_record_group(record)
+        # - update the pandas indices - #
+        self.update_indices()
+
+        # update the results file with the new indices #
+        self.update_results(record)
+
+    def update_record_group(self, record):
+        """ Update the record_group and record_group_ind attributes.
+        """
         # update record_group #
         self.record_group_changed = False
         if record.sequence["sequence"][0] == "None":
@@ -93,19 +104,16 @@ class SltRecorder(QueueThread):
         except AttributeError:
             self.record_row = 1
 
-        # update the pandas index objects #
+    def update_indices(self):
+        """ Update the pandas indices based on the current record_group and record_group_ind.
+        """
         self.data_index = pd.MultiIndex.from_product([[self.record_group], [self.record_group_ind],
                                                       np.arange(self.record_row)], names=[self._rgroup_str,
                                                                                           self._rgroupind_str,
                                                                                           self._rrow_str])
-
         self.meta_index = pd.MultiIndex.from_tuples([(self.record_group, self.record_group_ind)],
                                                     names=[self._rgroup_str, self._rgroupind_str])
-
         self.sequence_index = pd.Index([self.record_group], name=self._rgroup_str)
-
-        # update the results file with the new indices #
-        self.update_results(record)
 
     def open_results(self, results_path):
         """ Open the results file and return the record_group and record_group_ind. This method must be implemented in
@@ -478,12 +486,14 @@ class HDF5Recorder(SltRecorder):
 
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(cfg, exp, **kwargs)
+        # - opened results filename - #
+        self.fn = None
 
     def open_results(self, results_path):
         """ Open existing or create a new .h5 file.
         """
-        fn = results_path + ".h5"
-        self.opened_results = pd.HDFStore(fn)
+        self.fn = results_path + ".h5"
+        self.opened_results = pd.HDFStore(self.fn)
         rec_group = -1
         rec_group_ind = 0
         try:
@@ -495,6 +505,11 @@ class HDF5Recorder(SltRecorder):
     def update_results(self, record):
         """ Update the .h5 results file with information from the new record.
         """
+        # - check if the hdf file exists. If it doesn't, then it was deleted and should be recreated - #
+        if not os.path.exists(self.fn):
+            self.record_group, self.record_group_ind = self.open_results(self.fn.split(".")[0])
+            self.update_record_group(record)
+            self.update_indices()
         data_df = pd.DataFrame(record.data, index=self.data_index)
         pp_df = pd.DataFrame(record.proc_params, index=self.meta_index)
         ip_df = pd.DataFrame(record.inst_params, index=self.meta_index)

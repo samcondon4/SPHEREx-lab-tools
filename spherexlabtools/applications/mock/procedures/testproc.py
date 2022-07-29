@@ -41,4 +41,4 @@ class TestProc(BaseProcedure):
 
             # - get a sample lockin output - #
             lockin_out = self.lockin.sr830_wave
-            self.emit("lockin_output", lockin_out, inst_params=inst_params_dict)
+            self.emit("lockin_output", np.array([lockin_out]), inst_params=inst_params_dict)
