@@ -29,6 +29,7 @@ class TestProc(BaseProcedure):
 
     def execute(self):
         for i in range(self.images):
+            # - get an image and write out to the HDF5 recorder - #
             im = self.cam.frame
             if self.light_frame == 0:
                 im = np.zeros_like(im)
@@ -38,3 +39,6 @@ class TestProc(BaseProcedure):
                                 "light_frame": self.light_frame}
             self.emit("image", im, inst_params=inst_params_dict)
 
+            # - get a sample lockin output - #
+            lockin_out = self.lockin.sr830_wave
+            self.emit("lockin_output", np.array([lockin_out]), inst_params=inst_params_dict)
