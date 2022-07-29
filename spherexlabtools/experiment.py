@@ -3,6 +3,8 @@
 Sam Condon, 01/27/2022
 """
 import logging
+import os.path
+
 import pyqtgraph as pg
 from PyQt5 import QtWidgets, QtGui
 from .loader import load_objects_from_cfg_list
@@ -47,7 +49,18 @@ class Experiment:
         self.active_threads = {}
 
         # initialize instrument-suite #############################################
-        self.hw = InstrumentSuite(exp_pkg.INSTRUMENT_SUITE, exp_pkg)
+        self.dev_links = {}
+        if "dev_links_path" in dir(exp_pkg):
+            with open(exp_pkg.dev_links_path, "r") as dev_file:
+                df_lines = dev_file.readlines()
+                for df_l in df_lines:
+                    df_split = df_l.split(" -> ")
+                    dl0 = "".join([c for c in df_split[0] if c.isalnum() or c == os.path.sep])
+                    dl1 = "".join([c for c in df_split[1] if c.isalnum() or c == os.path.sep])
+                    dl1 = "ASRL" + dl1
+                    dl1 += "::INSTR"
+                    self.dev_links[dl0] = dl1
+        self.hw = InstrumentSuite(exp_pkg.INSTRUMENT_SUITE, exp_pkg, dev_links=self.dev_links)
 
         # initialize viewers ######################################################
         viewer_cfgs = exp_pkg.VIEWERS
