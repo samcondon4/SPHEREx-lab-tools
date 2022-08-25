@@ -11,8 +11,9 @@ class CS260:
     shutter = Instrument.control("SHUTTER?", "SHUTTER %s", """String property representing the current
     shutter setting. This property can be set.""",
                                  validator=strict_discrete_set,
-                                 values={0: "C", 1: "O"},
-                                 map_values=True)
+                                 values={0: "C", 1: "O", "0": "C", "1": "O"},
+                                 map_values=True,
+                                 set_process=int)
 
     units = Instrument.control("UNITS?", "UNITS %s", """String property representing the current units of the
     wavelength setting. This property can be set with "NM" for nanometers and "UM" for microns.""",
