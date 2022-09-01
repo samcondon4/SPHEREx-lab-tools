@@ -4,6 +4,8 @@ Sam Condon, 02/06/2022
 """
 
 import os
+
+import numpy as np
 from PyQt5 import QtCore
 from collections.abc import Iterable
 import pyqtgraph.parametertree.parameterTypes as pTypes
@@ -254,6 +256,11 @@ class Sequencer(pTypes.GroupParameter):
                 for i in range(len(val_list)):
                     val_list[i] = self.typecast(val_list[i].strip())
                 typecast = val_list
+            elif "np" in val:
+                np_array = eval(val)
+                if type(np_array) is not np.ndarray:
+                    raise TypeError("Only numpy arrays are allowed for numpy commands.")
+                typecast = np_array
 
         return typecast
 
