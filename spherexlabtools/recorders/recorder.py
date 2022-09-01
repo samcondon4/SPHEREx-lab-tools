@@ -1,9 +1,16 @@
 import os
+import sshtunnel
+from sshtunnel import SSHTunnelForwarder
 import logging
+import stat
+import pysftp
 import pymysql
 import numpy as np
 import pandas as pd
+import time
+import datetime
 from datetime import datetime
+import threading
 
 from ..thread import QueueThread
 from spherexlabtools.parameters import *
@@ -14,6 +21,7 @@ SCHEMA_NAME = 'spherexlab'
 SCHEMA_USER = 'root'
 SCHEMA_PSWD = '$PHEREx_B111'
 
+REC_LOCK = threading.Lock()
 
 class SltRecorder(QueueThread):
     """ Abstract base-class for SPHERExLabTools specific recorders. This class generates the indices used in the
@@ -136,6 +144,281 @@ class SltRecorder(QueueThread):
 
 
 class SQLRecorder(SltRecorder):
+    table = None
+
+    ssh_host = 'ragnarok.caltech.edu'
+    ssh_username = 'spherex_lab'
+    ssh_password = os.environ['RAGNAROK_PWD']
+    database_username = 'root'
+    database_password = '$PHEREx_B111'
+    database_name = 'spherexlab'
+    localhost = '127.0.0.1'
+
+    _server = {'ssh_host': ssh_host, 'ssh_username': ssh_username, 'ssh_password': ssh_password,
+               'database_username': database_username, 'database_password': database_password,
+               'database_name': database_name, 'localhost': localhost}
+
+    def __init__(self, cfg, exp, **kwargs):
+        """ Initialize a recorder.
+        """
+        super().__init__(cfg, exp, **kwargs)
+
+        self.open_ssh_tunnel()
+        self.mysql_connect()
+
+        DB_NAME = self._server['database_name']
+        try:
+            self.cursor.execute("USE {}".format(DB_NAME))
+            print("Database {} exists.".format(DB_NAME))
+        except:
+            print("Database {} does not exist.".format(DB_NAME))
+            self.cursor.execute(
+                "CREATE DATABASE {} DEFAULT CHARACTER SET 'utf8'".format(DB_NAME))
+            print("Database {} created successfully.".format(DB_NAME))
+            #cnx.database = DB_NAME
+
+        # Check that table exists
+        table = cfg['params'].get("table", None)
+        if table is not None:
+            self.table = table
+
+        table_description = "CREATE TABLE  IF NOT EXISTS {0} (" \
+                            "exp_id varchar(50)," \
+                            " PRIMARY KEY (exp_id)" \
+                            ") ENGINE=InnoDB".format(table)
+
+        self.cursor.execute(table_description)
+
+        self.mysql_disconnect()
+        self.close_ssh_tunnel()
+
+    def open_ssh_tunnel(self, verbose=False):
+        """Open an SSH tunnel and connect using a username and password.
+        :param verbose: Set to True to show logging
+        :return tunnel: Global SSH tunnel connection
+        """
+
+        if verbose:
+            sshtunnel.DEFAULT_LOGLEVEL = logging.DEBUG
+
+        global tunnel
+        tunnel = SSHTunnelForwarder(
+            (self._server['ssh_host'], 22),
+            ssh_username=self._server['ssh_username'],
+            ssh_password=self._server['ssh_password'],
+            remote_bind_address=('127.0.0.1', 3306)
+        )
+
+        tunnel.start()
+
+    def mysql_connect(self):
+        """Connect to a MySQL server using the SSH tunnel connection
+        :return connection: Global MySQL database connection
+        """
+
+        global db
+        db = pymysql.connect(
+            host='127.0.0.1',
+            user=self._server['database_username'],
+            passwd=self._server['database_password'],
+            db=self._server['database_name'],
+            port=tunnel.local_bind_port
+        )
+        self.cursor = db.cursor()
+
+    def mysql_disconnect(self):
+        """Closes the MySQL database connection.
+        """
+        db.close()
+
+    def close_ssh_tunnel(self):
+        """Closes the SSH tunnel connection.
+        """
+        tunnel.close()
+
+    def add_missing_columns(self, table_name_server, columns_dict):
+        ''' Check that columns exist, and add them if they do not.
+        '''
+        self.open_ssh_tunnel()
+        self.mysql_connect()
+
+        self.cursor.execute("DESCRIBE {}".format(table_name_server))
+        indexList = self.cursor.fetchall()
+        table_dict = {}
+
+        for row in indexList:
+            table_dict[row[0]] = row[1]
+
+        for column_name_local in columns_dict:
+            if column_name_local not in table_dict:
+                add_column_dict = {table_name_server: {column_name_local: columns_dict[column_name_local]}}
+                sql_add_column_commands = self.get_add_column_command(add_column_dict)
+                for i in sql_add_column_commands:
+                    self.cursor.execute(sql_add_column_commands[i])
+
+        self.mysql_disconnect()
+        self.close_ssh_tunnel()
+
+    def get_add_column_command(self, mod_dict):
+        ''' Return command to add column to table.  Uses the type_lookup table to assign data type to column definition
+        '''
+        type_lookup = {float: "float", str: "varchar (50)", int: "int", bool: "tinyint",
+                       FloatParameter: "float", Parameter: "varchar (50)", IntegerParameter: "int",
+                       BooleanParameter: "tinyint"}
+        for table_name in mod_dict:
+            print('table_name mod is:', table_name)
+            alter_statement_columns = {}
+            for column_name in mod_dict[table_name]:
+                print('column_name mod is:', column_name)
+                if 'timestamp' in column_name:
+                    type_mod = 'varchar (50)'
+                elif 'date' in column_name:
+                    type_mod = 'date'
+                else:
+                    try:
+                        type_mod = type_lookup[type(mod_dict[table_name][column_name])]
+                    except:
+                        logger.error("Add column type conversion still breaking!")
+                        type_mod = "float"
+
+                alter_statement = """
+                ALTER TABLE {0} 
+                ADD {1} {2};
+                """.format(table_name, column_name, type_mod)
+                # print('alter_statement is', alter_statement)
+                alter_statement_columns[column_name] = alter_statement
+            return alter_statement_columns
+
+    def upsert(self, table, **kwargs):
+        """ Add rows to table given the key-value pairs in kwargs
+        """
+        keys = ["%s" % k for k in kwargs]
+        values = ["'%s'" % v for v in kwargs.values()]
+        sql = list()
+        sql.append("INSERT INTO %s (" % table)
+        sql.append(", ".join(keys))
+        sql.append(") VALUES (")
+        sql.append(", ".join(values))
+
+        return "".join(sql) + ")"
+
+    def build_sql_table_command(self, ini_dict):
+        ''' Return command to add new table(s) to schema
+        '''
+
+        for itable, ilist in ini_dict.items():
+            sql_command = 'CREATE TABLE ' + itable + ' ('
+
+            for icol in ilist:
+                sql_command += icol + " " + ilist[icol] + ", "
+
+            sql_command += 'PRIMARY KEY (exp_id)) ENGINE=InnoDB'
+
+            self.TABLES[itable] = sql_command
+
+    def sql_insert_row_command(self, table_name, commands_dict0):
+        '''
+        Construct SQL command, e.g.;
+        """INSERT INTO spectral_cal
+            (exp_id, timestamp, date, sequence, wavelength, grating, order_sort_filter, ndf_position)
+            VALUES ('20220420_153633_12','2022-04-20 15:36:33','2022-04-20','sequencename', 5.2, 580 ,'3','1')"""
+        and write Table to Database.
+        '''
+
+        commands_dict = {key: value for (key, value) in commands_dict0.items() if value is not None}
+
+        return self.upsert(table_name, **commands_dict)
+
+    def execute_sql_statements(self, statement_dict):
+        ''' Execute SQL statements by looping through statement_dict
+        '''
+        for key, statement_text in statement_dict.items():
+            if 'add_row' in key:
+                try:
+                    # Connect to database
+                    self.open_ssh_tunnel()
+                    self.mysql_connect()
+
+                    # Creation of cursor object
+                    cursorObject = self.cursor
+
+                    # Execute the SQL statement
+                    cursorObject.execute(statement_text)
+                    db.commit()
+
+                except Exception as e:
+                    print("Exeception occured:{}".format(e))
+                    db.rollback()
+                    print('Rolling Back', statement_text)
+
+                finally:
+                    # Disconnect from database
+                    self.mysql_disconnect()
+                    self.close_ssh_tunnel()
+
+    def open_results(self, results_path):
+        """ Open existing or create new .mat file.
+        """
+        rec_group = 0
+        rec_group_ind = 0
+
+        return rec_group, rec_group_ind
+
+    def close_results(self):
+        pass
+
+    def update_results(self, record):
+        """ SqlHandle
+        """
+        print(f"SEQUENCE TIMESTAMP = {record.sequence_timestamp}")
+        print(f"PROCEDURE TIMESTAMP = {record.procedure_timestamp}")
+        # sql_dict = record.emit_kwargs.get("sql_dict", None)
+        table = record.emit_kwargs.get("table", None)
+        if table is not None:
+            self.table = table
+
+        sql_dict = {}
+        if record.inst_params is not None:
+           for key, val in record.inst_params.items():
+               #print(key, val)
+               if type(val) == list:
+                   sql_dict[key] = val[0]
+               else:
+                   sql_dict[key] = str(val)
+               #print(sql_dict)
+               #sql_dict[key] = re.sub(r'\]', '', re.sub(r'\[', '', val))
+
+        for iproc in record.proc_params:
+            if type(record.proc_params[iproc]) == bool:
+                if record.proc_params[iproc] == True:
+                    sql_dict["_".join(['proc', iproc])] = 1
+                if record.proc_params[iproc] == False:
+                    sql_dict["_".join(['proc', iproc])] = 0
+            else:
+                sql_dict["_".join(['proc', iproc])] = record.proc_params[iproc]
+            # print('proc is ', "_".join(['proc', iproc]), sql_dict["_".join(['proc', iproc])])
+
+        if 'exp_id' not in sql_dict:
+            sql_dict['exp_id'] = "_".join([datetime.now().strftime("%Y%m%d_%H%M%S"), str(self.record_group_ind)])
+
+        if 'storage_path' not in sql_dict:
+            sql_dict['storage_path'] = record.recorder_write_path
+
+        # sql_dict['sequence'] = record.sequence
+        if record.emit_kwargs.get("keep_recordgroup_info", False):
+            sql_dict['RecordGroupNum'] = self.record_group
+            sql_dict['RecordGroupInd'] = self.record_group_ind
+
+        # Check for missing columns and add if needed
+        self.add_missing_columns(self.table, sql_dict)
+
+        # Execute sql command to add row
+        sql_command = self.sql_insert_row_command(self.table, sql_dict)
+        sql_command_dict = {'add_row': sql_command}
+        self.execute_sql_statements(sql_command_dict)
+
+
+class SQLRecorder_local(SltRecorder):
     table = None
 
     def __init__(self, cfg, exp, **kwargs):
@@ -320,9 +603,16 @@ class SQLRecorder(SltRecorder):
         if table is not None:
             self.table = table
 
-        sql_dict = record.inst_params
-        if sql_dict is None:
-            sql_dict = {}
+        sql_dict = {}
+        if record.inst_params is not None:
+           for key, val in record.inst_params.items():
+               #print(key, val)
+               if type(val) == list:
+                   sql_dict[key] = val[0]
+               else:
+                   sql_dict[key] = str(val)
+               #print(sql_dict)
+               #sql_dict[key] = re.sub(r'\]', '', re.sub(r'\[', '', val))
 
         for iproc in record.proc_params:
             if type(record.proc_params[iproc]) == bool:
@@ -437,12 +727,12 @@ class CsvRecorder(SltRecorder):
         if self.record_group_changed and seq_df is not None:
             seq_df[0].to_csv(record.recorder_write_path + self._seq_appnd + ".csv", mode=mode, header=hdr, index=True)
 
-
 class PyhkRecorder(QueueThread):
     """ Basic recorder to log data to a .txt file in a Pyhk database.
     """
-
-    _data_dir = "/data/hk"
+    _data_dir = "D:\\spherex\\hk"
+    _server_data_dir = "/H2RG-tests/hk"
+    #print('data dir exists', os.path.isdir(_data_dir))
     _delimiter_map = {
         " ": "%20"
     }
@@ -451,34 +741,100 @@ class PyhkRecorder(QueueThread):
     def __init__(self, cfg, exp, **kwargs):
         """ Initialize a Pyhk recorder.
         """
-        self.name = cfg["instance_name"]
+        #self.name = cfg["instance_name"]
         super().__init__(**kwargs)
+        self.name = cfg["instance_name"]
+
+    def get_tod(self, ts_start, ts_end, data_type, alias):
+
+        sens_name = alias
+        for c, dc in self._delimiter_map.items():
+            sens_name = str(sens_name).replace(c, dc)
+
+        # convert timestamp to datetime and determine filename to read
+        dt0 = datetime.fromtimestamp(ts_start)
+        dtE = datetime.fromtimestamp(ts_end)
+        YR0 = dt0.strftime("%Y")
+        YRE = dtE.strftime("%Y")
+        MN0 = dt0.strftime("%m")
+        MNE = dtE.strftime("%m")
+        DY0 = dt0.strftime("%d")
+        DYE = dtE.strftime("%d")
+
+        with REC_LOCK:
+            fp = os.path.join(self._data_dir, YR0, MN0, DY0, data_type, sens_name + ".txt")
+            tod = pd.read_table(fp, sep='\t', header=None)
+
+            while (MN0 != MNE) | (DY0 != DYE) | (YR0 != YRE):
+                dt0 = dt0 + datetime.timedelta(days=1)
+                MN0 = dt0.strftime("%m")
+                DY0 = dt0.strftime("%d")
+                YR0 = dt0.strftime("%Y")
+                fp = os.path.join(self._data_dir, YR0, MN0, DY0, data_type, sens_name + ".txt")
+                tod = pd.concat([tod, pd.read_table(fp, sep='\t', header=None)])
+
+        ind_tod = (tod[0] >= ts_start) & (tod[0] < ts_end)
+        return tod[1].loc[ind_tod]
 
     def handle(self, record):
         """ Handle incoming records by appending to the appropriate .txt.
         """
         data = record.data
-        ts = record.timestamp
+        ts = record.data_timestamp
+        if ts is None:
+            ts = time.time()
+        #print('ts is', ts)
 
         sens_name = record.__dict__.get("alias", record.name)
-        sens_type = record.type
+        sens_type = record.data_type
+        #print('sens_type is', sens_type)
         for c, dc in self._delimiter_map.items():
-            sens_name = sens_name.replace(c, dc)
+            #print('sens_name is', sens_name, c, dc)
+            sens_name = str(sens_name).replace(c, dc)
+        #    print('sens_name is', sens_name)
 
         # convert timestamp to datetime and create the file-path #
         dt = datetime.fromtimestamp(ts)
+        #print('dt is ', dt)
         dt_str = dt.strftime("%Y:%m:%d")
+        #print('dt_str is ',dt_str)
         dt_str_split = dt_str.split(":")
-        fp = os.path.join(self._data_dir, dt_str_split[0], dt_str_split[1], dt_str_split[2], sens_type,
-                          sens_name + ".txt")
+        #fp = os.path.join(self._data_dir, dt_str_split[0], dt_str_split[1], dt_str_split[2], sens_type,
+        #                  sens_name + ".txt")
+        fp = os.path.join(dt_str_split[0], dt_str_split[1], dt_str_split[2], sens_type, sens_name + ".txt")
 
         # convert data to DataFrame if it is not already that type #
         data = pd.DataFrame(
             {"timestamp": [ts], "data": [data]}
         )
 
+        # LOCAL
+        fp_local = os.path.join(self._data_dir, fp)
+        if not os.path.isdir(os.path.dirname(fp_local)):
+            os.makedirs(os.path.dirname(fp_local), exist_ok=True)
+        #print('data path is', fp, os.path.isdir(os.path.dirname(fp)))
         data.to_csv(fp, mode="a", sep=self._separator, header=False, index=False)
 
+        test_remote = False
+        if test_remote:
+            # SKELLIG -- untested!
+            Hostname = "skellig.caltech.edu"
+            Username = "eng"
+            Password = "$PHEREx_2024!"  # os.environ['RAGNAROK_PWD']
+            fp_server = os.path.join(self._server_data_dir, fp)
+            with pysftp.Connection(host=Hostname, username=Username, password=Password) as sftp:
+                print("Connection successfully established ... ")
+
+                #  Check that dir exists remotely otherwise mkdir
+                #for fileattr in sftp.listdir_attr(os.path.dirname(fp_server)):
+                fileattr = sftp.lstat(os.path.dirname(fp_server))
+                if not stat.S_ISDIR(fileattr.st_mode):
+                    sftp.mkdir(os.path.dirname(fp_server))
+
+                #  Write file on skellig in /H2RG-tests/hk
+                sftp.put(localpath=fp_local, remotepath=fp_server)
+
+            sftp.close()
 
 class HDF5Recorder(SltRecorder):
     """ HDF5 recorder utilizing the SltRecorder base class.
