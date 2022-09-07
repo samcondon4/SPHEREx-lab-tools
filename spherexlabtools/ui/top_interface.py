@@ -4,16 +4,16 @@ from PyQt5 import QtCore
 from ._top_interface import Ui_SltTop
 
 
-class SltTop(Ui_SltTop):
+class SltTop(Ui_SltTop, QtCore.QObject):
 
-    ui_log_signal = QtCore.pyqtSignal(object)
+    ui_log_signal = QtCore.pyqtSignal(object, name="UI Log Signal")
 
     def __init__(self, top_widget):
         super().__init__()
         self.setupUi(top_widget)
         self.ver_scrollbar = self.logBrowser.verticalScrollBar()
         self.hor_scrollbar = self.logBrowser.horizontalScrollBar()
-        #self.ui_log_signal.connect(self.log)
+        self.ui_log_signal.connect(self.log)
 
     def log(self, msg):
         """ This method allows logging of formatted log messaged created by the logging package to the log

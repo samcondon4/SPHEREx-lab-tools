@@ -21,8 +21,8 @@ from spherexlabtools.ui import SltTop, StackedHelper
 # - configure top gui and logging parameters - #
 app = pg.mkQApp("SPHERExLabTools")
 top_widget = QtWidgets.QWidget()
-#top_ui = SltTop(top_widget)
-slt_log.LOGGER_GUI_SIGNAL = SltTop.ui_log_signal
+top_ui = SltTop(top_widget)
+slt_log.LOGGER_GUI_SIGNAL = top_ui.ui_log_signal
 slt_log.configure_slt_log()
 logger = logging.getLogger(slt_log.LOGGER_NAME)
 
