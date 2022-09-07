@@ -4,20 +4,27 @@ Sam Condon, 01/27/2022
 """
 import logging
 import os.path
+import threading
 
 import pyqtgraph as pg
-from PyQt5 import QtWidgets, QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui
 from .loader import load_objects_from_cfg_list
+import spherexlabtools.log as slt_log
 import spherexlabtools.viewers as slt_view
 import spherexlabtools.procedures as slt_proc
 import spherexlabtools.recorders as slt_record
 import spherexlabtools.controllers as slt_control
 from spherexlabtools.instruments import InstrumentSuite
-from spherexlabtools.ui import Ui_SltTop, StackedHelper
+from spherexlabtools.ui import SltTop, StackedHelper
 
 
-app = None
-logger = logging.getLogger(__name__)
+# - configure top gui and logging parameters - #
+app = pg.mkQApp("SPHERExLabTools")
+top_widget = QtWidgets.QWidget()
+#top_ui = SltTop(top_widget)
+slt_log.LOGGER_GUI_SIGNAL = SltTop.ui_log_signal
+slt_log.configure_slt_log()
+logger = logging.getLogger(slt_log.LOGGER_NAME)
 
 
 class Experiment:
@@ -41,12 +48,18 @@ class Experiment:
 
         :param: exp_pkg: Python package containing the experiment configuration modules.
         """
-        global app
-        app = pg.mkQApp(exp_pkg.__name__)
         self.exp_pkg = exp_pkg
-        logger.info("Initializing experiment: %s" % exp_pkg.__name__)
         self.layout = QtWidgets.QGridLayout()
         self.active_threads = {}
+
+        logger.info("Initializing experiment: %s" % exp_pkg.__name__)
+
+        # - Top-level ui - #
+        self.slt_top_widget = top_widget
+        self.slt_top_ui = top_ui
+        self.controller_stack = StackedHelper()
+        self.viewer_stack = StackedHelper()
+        self.procedure_stack = StackedHelper()
 
         # initialize instrument-suite #############################################
         self.dev_links = {}
@@ -104,21 +117,11 @@ class Experiment:
         self.controllers = load_objects_from_cfg_list(search_order, self, control_cfgs, hw=self.hw,
                                                       procs=self.procedures)
 
-        # - Top-level ui - #
-        self.slt_top_widget = None
-        self.slt_top_ui = None
-        self.controller_stack = StackedHelper()
-        self.viewer_stack = StackedHelper()
-        self.procedure_stack = StackedHelper()
-
         logger.info("Experiment initialization complete.")
 
     def start(self):
         """ Start the top-level interface that includes all viewers, controllers, procedures, etc.
         """
-        self.slt_top_widget = QtWidgets.QWidget()
-        self.slt_top_ui = Ui_SltTop()
-        self.slt_top_ui.setupUi(self.slt_top_widget)
         self._init_ui()
         # - start all controllers, viewers, and recorders - #
         for c in self.controllers.values():

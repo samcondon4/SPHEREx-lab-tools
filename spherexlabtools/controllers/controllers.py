@@ -7,6 +7,7 @@ import logging
 from PyQt5 import QtWidgets, QtCore
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
+import spherexlabtools.log as slt_log
 from spherexlabtools.ui.widgets import Sequencer, Records
 from ..parameters import ParameterInspect
 from ..thread import StoppableReusableThread
@@ -14,8 +15,8 @@ from ..parameters import Parameter as pymeasureParam
 from ..procedures import BaseProcedure, ProcedureSequence
 from ..parameters import FloatParameter, IntegerParameter, BooleanParameter, ListParameter
 
-
-logger = logging.getLogger(__name__)
+log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
+logger = logging.getLogger(log_name)
 
 
 class Controller(QtWidgets.QWidget):
@@ -25,12 +26,14 @@ class Controller(QtWidgets.QWidget):
     def __init__(self, cfg, exp, hw=None, procs=None):
         super().__init__()
         self.name = cfg["instance_name"]
+        logger.info(slt_log.INIT_MSG % self.name)
         self.exp = exp
         self.alive = False
         self.parameters = Parameter.create(name=self.name, type="group")
         self.tree = ParameterTree()
         self.layout = QtWidgets.QGridLayout()
         self.setLayout(self.layout)
+        logger.info(slt_log.CMPLT_MSG % f"{self.name} initialization")
 
     def set_parameters(self, params, **kwargs):
         """ Set the children of the parameters attribute and update the tree and
@@ -123,7 +126,7 @@ class InstrumentController(Controller):
                 if child is not self.set_params:
                     name = child.name()
                     value = self.set_processes[name](child)
-                    logger.debug("Setting instrument parameter {} with value {}".format(name, value))
+                    logger.debug(slt_log.SET_MSG % (name, self.hw.name, value))
                     setattr(self.hw, name, value)
             self.params_set.emit()
 
@@ -133,10 +136,10 @@ class InstrumentController(Controller):
         if self.alive:
             for c in self.status_group.children():
                 param = c.name()
-                logger.debug("Getting instrument parameter %s" % param)
+                #logger.debug("Getting instrument parameter %s" % param)
                 if param in self.status_names:
                     val = self.get_processes[param](getattr(self.hw, param))
-                    logger.debug(f"Got {val}")
+                    #logger.debug(f"Got {val}")
                     if val != self.status_values[param]:
                         self.status_values[param] = val
                         c.setValue(val)
@@ -150,7 +153,7 @@ class InstrumentController(Controller):
         act_param_values = act_param.getValues()
         kwargs = {pkey: pval[0] for pkey, pval in act_param_values.items()}
         act = getattr(self.hw, act_name)
-        logger.debug("Running action %s on instrument %s" % (act_name, str(self.hw)))
+        #logger.debug("Running action %s on instrument %s" % (act_name, str(self.hw)))
         act(**kwargs)
         # if the action is a setter, then emit the params_set signal after its execution
         if act_name.startswith("set"):
@@ -208,17 +211,17 @@ class InstrumentController(Controller):
             param["enabled"] = False
 
         if sref_typ is float or sref_typ is int:
-            logger.debug("Starting refresh timer for %f seconds" % self.status_refresh)
+            #logger.debug("Starting refresh timer for %f seconds" % self.status_refresh)
             thread = StoppableReusableThread()
             self.refresh_timer.timeout.connect(self.get_inst_params)
             self.refresh_timer.start(self.status_refresh)
 
         elif self.status_refresh == "after_set":
-            logger.debug("Connecting params_set signal to get_inst_params")
+            #logger.debug("Connecting params_set signal to get_inst_params")
             self.params_set.connect(self.get_inst_params)
 
         elif self.status_refresh == "manual":
-            logger.debug("Connecting status_refresh_button to get_inst_params")
+            #logger.debug("Connecting status_refresh_button to get_inst_params")
             self.status_refresh_button = Parameter.create(name="Refresh", type="action")
             self.status_refresh_button.sigActivated.connect(self.get_inst_params)
             status_params.append(self.status_refresh_button)
@@ -238,7 +241,7 @@ class InstrumentController(Controller):
             for c in self.control_group.children():
                 if c is not self.set_params:
                     child_name = c.name()
-                    logger.debug("Connecting set method for {}".format(child_name))
+                    #logger.debug("Connecting set method for {}".format(child_name))
                     button = c.child("Set")
                     thread = StoppableReusableThread()
                     thread.execute = lambda child=child_name: self.set_inst_params([child])
@@ -247,7 +250,7 @@ class InstrumentController(Controller):
 
         if self.actions_group is not None:
             for act_param in self.actions_group.children():
-                logger.info("Connecting action method for {}".format(act_param.name()))
+                #logger.info("Connecting action method for {}".format(act_param.name()))
                 thread = StoppableReusableThread()
                 thread.execute = lambda act=act_param: self.run_instrument_action(act)
                 act_param.sigActivated.connect(self.exp.get_start_thread_lambda(
@@ -380,14 +383,14 @@ class ProcedureController(Controller):
                 setattr(self.procedure, self.param_name_map[key], value)
 
         # start the procedure #
-        if log_msg is not None:
-            logger.info(log_msg)
+        #if log_msg is not None:
+            #logger.info(log_msg)
         self.procedure.start()
 
     def stop_procedure(self, timeout=1):
         """ Stop the running procedure thread.
         """
-        logger.info("%s stopping procedure" % self.name)
+        #logger.info("%s stopping procedure" % self.name)
         self.procedure.stop()
 
     def start_procedure_sequence(self, seq_dict, sequence, sleep=2):
@@ -397,7 +400,7 @@ class ProcedureController(Controller):
         :param sequence: List of procedure parameters.
         :param sleep: Time in seconds to sleep between checking if the procedure sequence is complete.
         """
-        logger.info("%s: Starting procedure sequence of length %i" % (self.name, len(sequence)))
+        #logger.info("%s: Starting procedure sequence of length %i" % (self.name, len(sequence)))
         """
         if self.proc_seq_ind != 0:
             seq = None
