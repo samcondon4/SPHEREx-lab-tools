@@ -1,2 +1,2 @@
-from .top_interface import Ui_SltTop
+from .top_interface import SltTop
 from .helpers import StackedHelper

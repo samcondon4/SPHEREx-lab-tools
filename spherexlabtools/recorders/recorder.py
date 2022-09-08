@@ -1,10 +1,10 @@
 import os
-import sshtunnel
-from sshtunnel import SSHTunnelForwarder
+#import sshtunnel
+#from sshtunnel import SSHTunnelForwarder
 import logging
 import stat
-import pysftp
-import pymysql
+#import pysftp
+#import pymysql
 import numpy as np
 import pandas as pd
 import time
@@ -14,14 +14,17 @@ import threading
 
 from ..thread import QueueThread
 from spherexlabtools.parameters import *
+import spherexlabtools.log as slt_log
 
-logger = logging.getLogger(__name__)
+log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
+logger = logging.getLogger(log_name)
 
 SCHEMA_NAME = 'spherexlab'
 SCHEMA_USER = 'root'
 SCHEMA_PSWD = '$PHEREx_B111'
 
 REC_LOCK = threading.Lock()
+
 
 class SltRecorder(QueueThread):
     """ Abstract base-class for SPHERExLabTools specific recorders. This class generates the indices used in the
@@ -57,6 +60,7 @@ class SltRecorder(QueueThread):
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(**kwargs)
         self.name = cfg["instance_name"]
+        logger.info(slt_log.INIT_MSG % self.name)
         self.results_path = None
         self.opened_results = None
         self.prev_seq_ts = None
@@ -67,6 +71,7 @@ class SltRecorder(QueueThread):
         self.data_index = None
         self.meta_index = None
         self.sequence_index = None
+        logger.info(slt_log.CMPLT_MSG % f"{self.name} initialization")
 
     def handle(self, record):
         """ Update the record_group, record_group_ind, and record_row attributes based on information provided in
@@ -146,9 +151,12 @@ class SltRecorder(QueueThread):
 class SQLRecorder(SltRecorder):
     table = None
 
+    # EDIT: all of these should be configuration variables for users to set, not hard-coded here - #
     ssh_host = 'ragnarok.caltech.edu'
     ssh_username = 'spherex_lab'
-    ssh_password = os.environ['RAGNAROK_PWD']
+    # EDIT: especially this one. 'import spherexlabtools as slt' doesn't work at all if this variable isn't set - #
+    #ssh_password = os.environ['RAGNAROK_PWD']
+    ssh_password = "placeholder"
     database_username = 'root'
     database_password = '$PHEREx_B111'
     database_name = 'spherexlab'
@@ -278,7 +286,7 @@ class SQLRecorder(SltRecorder):
                     try:
                         type_mod = type_lookup[type(mod_dict[table_name][column_name])]
                     except:
-                        logger.error("Add column type conversion still breaking!")
+                        #logger.error("Add column type conversion still breaking!")
                         type_mod = "float"
 
                 alter_statement = """
@@ -506,7 +514,7 @@ class SQLRecorder_local(SltRecorder):
                     try:
                         type_mod = type_lookup[type(mod_dict[table_name][column_name])]
                     except:
-                        logger.error("Add column type conversion still breaking!")
+                        #logger.error("Add column type conversion still breaking!")
                         type_mod = "float"
 
                 alter_statement = """

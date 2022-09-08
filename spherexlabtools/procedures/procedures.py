@@ -18,9 +18,12 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 
 from ..thread import StoppableReusableThread
 from ..parameters import ParameterInspect, Parameter, FloatParameter, IntegerParameter, BooleanParameter
+import spherexlabtools.log as slt_log
 from spherexlabtools.ui.widgets import Records
 
-logger = logging.getLogger(__name__)
+
+log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
+logger = logging.getLogger(log_name)
 
 
 class Record:
@@ -233,6 +236,7 @@ class BaseProcedure(StoppableReusableThread):
         """
         super().__init__()
         self.name = cfg["instance_name"]
+        logger.info(slt_log.INIT_MSG % self.name)
         self.exp = exp
         self.hw = None
         self.records = {}
@@ -274,6 +278,7 @@ class BaseProcedure(StoppableReusableThread):
         self.records_interface.save_record_sig.connect(self.save_record)
         self.records_interface_tree.setParameters(self.records_interface)
         #self.records_interface_tree_layout.addWidget(self.records_interface_tree)
+        logger.info(slt_log.CMPLT_MSG % f"{self.name} initialization")
 
     def startup(self):
         """ Check that all procedure parameters have been set.
@@ -389,7 +394,7 @@ class LogProc(BaseProcedure):
         for rec in self.DATA_RECORDS:
             log_param = getattr(self, rec.name)
             if log_param:
-                logger.debug("LogProc getting %s" % rec.name)
+                #logger.debug("LogProc getting %s" % rec.name)
                 data = getattr(self.hw, rec.name)
                 data_vals[rec.name] = data
                 self.emit(rec.name, data, timestamp=ts)
@@ -479,7 +484,7 @@ class ProcedureSequence(BaseProcedure):
             for pkey, pval in params.items():
                 setattr(self.procedure, self.procedure.parameter_map[pkey], pval)
             log_str = f"{self.name}: starting procedure {self.procedure.name} at index {self.seq_ind}"
-            logger.info(log_str)
+            #logger.info(log_str)
             self.exp.start_thread(log_str, self.procedure)
             # wait for the procedure to start running. #
             while not self.procedure.status == self.procedure.RUNNING:

@@ -3,10 +3,10 @@ import pyqtgraph as pg
 from ..thread import QueueThread
 from PyQt5 import QtCore, QtWidgets
 from pyqtgraph.parametertree import Parameter, ParameterTree
-
+import spherexlabtools.log as slt_log
 
 pg.setConfigOption("imageAxisOrder", "row-major")
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(f"{slt_log.LOGGER_NAME}.{__name__}")
 
 
 class Viewer(QueueThread, QtWidgets.QWidget):
@@ -19,6 +19,7 @@ class Viewer(QueueThread, QtWidgets.QWidget):
 
     def __init__(self, cfg, exp, **kwargs):
         self.name = cfg["instance_name"]
+        logger.info(slt_log.INIT_MSG % self.name)
         self.exp = exp
         QueueThread.__init__(self, **kwargs)
         QtWidgets.QWidget.__init__(self, **kwargs)
@@ -30,6 +31,7 @@ class Viewer(QueueThread, QtWidgets.QWidget):
         self.shutdown_signal.connect(self.close_view)
         self.configuration_tree = ParameterTree()
         self.setWindowTitle(self.name)
+        logger.info(slt_log.CMPLT_MSG % f"{self.name} initialization")
 
     def set_cfg_parameters(self, params, **kwargs):
         """ Set the configuration parameters of the configuration parameters tree.
@@ -88,7 +90,7 @@ class LineViewer(Viewer):
         """ Slot for the update signal. This is executed in the main thread and updates
             the data displayed in the plot item.
         """
-        logger.debug(f"LineViewer updating plot data for record {record.name}")
+        #logger.debug(f"LineViewer updating plot data for record {record.name}")
         if record.name not in self.curves.keys():
             curve_item = pg.PlotCurveItem(name=record.name, pen=self.pen_colors[self.pen_color_ind])
             self.pen_color_ind += 1
@@ -161,14 +163,14 @@ class ImageViewer(Viewer):
             self.levels[1] = val
         elif name == "Auto_scale":
             self.auto_scale = val
-        else:
-            logger.error("Invalid viewer settings specified. Changes have not been set in the viewer!")
+        #else:
+            #logger.error("Invalid viewer settings specified. Changes have not been set in the viewer!")
 
     def update_display(self, record):
         """ Slot for the update signal. This is executed in the main thread, and
             updates the currently displayed image data in the viewer.
         """
-        logger.debug("ImageViewer updating image data")
+        #logger.debug("ImageViewer updating image data")
         # update image item ########################################
         data = record.data
         kwargs = {}

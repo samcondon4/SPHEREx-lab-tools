@@ -7,13 +7,13 @@
 Sam Condon, 06/30/2021
 """
 import logging
-import asyncio
 import importlib
-from pymeasure.instruments import Instrument
 from pymeasure.instruments.instrument import DynamicProperty
+import spherexlabtools.log as slt_log
 
 
-logger = logging.getLogger(__name__)
+log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
+logger = logging.getLogger(log_name)
 
 
 def instantiate_instrument(inst_dict, exp, dev_links=None):
@@ -47,10 +47,11 @@ def instantiate_instrument(inst_dict, exp, dev_links=None):
             except (AttributeError, ModuleNotFoundError):
                 # - if the instrument driver class is still not found, then throw the error - #
                 err_msg = "No instrument driver found for %s.%s" % (manufacturer_string, inst_dict["instrument"])
-                logger.error(err_msg)
+                #logger.error(err_msg)
                 raise AttributeError("No instrument driver found for %s.%s" % (manufacturer_string,
                                                                                inst_dict["instrument"]))
 
+    logger.info(slt_log.INIT_MSG % inst_dict["instance_name"])
     # instantiate the instrument class with key-word arguments #
     if "kwargs" in inst_dict:
         kwargs = inst_dict["kwargs"]
@@ -62,15 +63,18 @@ def instantiate_instrument(inst_dict, exp, dev_links=None):
             rec_name = dev_links[rec_name]
         inst = inst_class(rec_name, **kwargs)
     except Exception as e:
-        logger.error("Error while instantiating {}.{}: \n {}".format(manufacturer_string, inst_dict["instrument"],
-                                                                     e))
+        #logger.error("Error while instantiating {}.{}: \n {}".format(manufacturer_string, inst_dict["instrument"],
+                                                                     #e))
         raise e
 
     # set initial instrument parameters if any are given #
     if "params" in inst_dict:
         for param, param_val in inst_dict["params"].items():
             setattr(inst, param, param_val)
+        logger.info(slt_log.CMPLT_MSG % f"{inst_dict['instance_name']} initialization")
 
+    # - set the instrument name - #
+    inst.name = inst_dict["instance_name"]
     return inst
 
 
