@@ -1,0 +1,12 @@
+.. module:: spherexlabtools.instruments.edmund
+
+##############
+Edmund Optics
+##############
+
+This section contains specific documentation on the Edmund optics device drivers that are implemented.
+.. toctree::
+   :maxdepth: 2
+
+   linearstagecontroller
+

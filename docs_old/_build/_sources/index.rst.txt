@@ -1,0 +1,45 @@
+.. SPHERExLabTools documentation master file, created by
+   sphinx-quickstart on Fri Feb 25 15:27:44 2022.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to SPHERExLabTools's documentation!
+===========================================
+
+SPHERExLabTools is a general purpose data acquisition and instrument control package built in Python for use in the SPHEREx
+optics test and calibration campaign. SPHERExLabTools (SLT) makes laboratory data acquisition and control easy. The package wraps the repository of existing
+instrument drivers in the :ref:`PyMeasure <https://pymeasure.readthedocs.io/en/latest/>` project, while implementing a few new
+features for instrument control. SLT also provides a system for running measurement scripts, plotting live data, and archiving
+data in a wide variety of file formats all with only a limited amount of manual coding required from users.
+
+Start by following the :doc:`Installation Guide <installation>` to set up the SLT package on your system. The rest of this
+documentation is structured as follows:
+
+   - :doc:`SPHERExLabTools Fundamentals <user_guide/fundamentals>` provides a brief overview of the architecture and operating principles of the package.
+   - :doc:`Tutorials <user_guide/tutorials>` provide step by step instructions for:
+      - Running preconfigured "Core Experiment" control software such as for the spectral and focus calibration measurements.
+      - Configuring "Custom Experiments" to generate control software for measurements not already supported as a "Core Experiment".
+   - | :doc:`Core Experiments <user_guide/core_experiments>` details the components of the preconfigured control software used for the spectral
+           and focus calibration measurements.
+   - | :doc:`Custom Experiments <user_guide/custom_experiments>` documents in detail the syntax and structure of the configuration files
+           required to generate custom instrument control software.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   
+   installation
+   user_guide/index
+   api/index
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
+
+

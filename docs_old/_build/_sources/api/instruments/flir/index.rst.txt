@@ -1,0 +1,12 @@
+.. module:: spherexlabtools.instruments.flir
+
+#####
+Flir
+#####
+
+This section contains specific documentation on the Flir instruments that are implemented.
+
+.. toctree::
+    :maxdepth: 2
+
+

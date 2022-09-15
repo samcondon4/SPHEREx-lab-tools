@@ -1,0 +1,17 @@
+####################
+Instrument Classes
+####################
+
+All SPHERExLabTools instrument driver classes either inherit directly from, or are based heavily on the :pymeasure:`PyMeasure Instrument Base Class <api/instruments/instruments.html>`. The following additional classes are defined to wrap up multiple instrument driver classes into a single object:
+
+.. autoclass:: spherexlabtools.instruments.CompoundInstrument
+        :members:
+        :show-inheritance:
+
+.. autoclass:: spherexlabtools.instruments.InstrumentSuite
+        :members:
+        :show-inheritance:
+
+
+
+

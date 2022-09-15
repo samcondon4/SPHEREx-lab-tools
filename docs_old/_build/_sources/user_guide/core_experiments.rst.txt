@@ -1,0 +1,63 @@
+Core Experiments
+=================
+
+SPHERExLabTools provides preconfigured :ref:`Experiment Control Packages <user_guide/custom_experiments:Experiment Control Package>`
+for the main experiments of the SPHEREx optics integration and testing. These :ref:`Experiment Control Packages <user_guide/custom_experiments:Experiment Control Package>`
+are documented in detail at the following links:
+
+.. toctree::
+        :maxdepth: 1
+
+        core_exp_docs/focus_cal
+        core_exp_docs/spectral_cal
+        core_exp_docs/thermal_surrogate
+
+Starting the control software for each of these experiments involves the same 5 basic steps, enumerated below:
+
+    1. Activate the **spherexlabtools** Anaconda environment by starting the **Anaconda Prompt** application (on windows type 'anaconda prompt in the search bar'),
+       then executing the following line in the prompt::
+
+        conda activate spherexlabtools
+
+    2. Start a python interpreter by typing **python** into the anaconda prompt.
+    3. Import the **spherexlabtools** package::
+
+        import spherexlabtools as slt
+
+    4. Import the desired :ref:`Experiment Control Package <user_guide/custom_experiments:Experiment Control Package>`.
+       For focus cal, this looks like::
+
+        from spherexlabtools.applications import focus_curve as fc
+
+       For spectral cal::
+
+        from spherexlabtools.applications import spectral_cal as sc
+
+       And finally for thermal surrogate::
+
+        from spherexlabtools.applications import thermal_surrogate as ts
+
+    5. Create a new :ref:`Experiment Object <user_guide/fundamentals:Experiment Class>` with the imported :ref:`Experiment Control Package <user_guide/custom_experiments:Experiment Control Package>`. For the focus cal example given above, this looks like::
+
+        exp = slt.create_experiment(fc)
+
+After this final step, the variable **exp** contains all of the :ref:`user_guide/fundamentals:Instrument Drivers`,
+:ref:`user_guide/fundamentals:Procedures`, :ref:`user_guide/fundamentals:Controllers`, :ref:`user_guide/fundamentals:Viewers`,
+and :ref:`user_guide/fundamentals:Recorders` that are specified by the :ref:`Experiment Control Package <user_guide/custom_experiments:Experiment Control Package>`
+in use. To start each of these components use::
+
+    exp.start_controller("NameOfController")
+    exp.start_viewer("NameOfViewer")
+    exp.start_recorder("NameOfRecorder")
+
+To stop each of these components use::
+
+    exp.stop_controller("NameOfController")
+    exp.stop_viewer("NameOfViewer")
+    exp.stop_recorder("NameOfRecorder")
+
+Where each string in the start/stop methods should be replaced by the appropriate name of the controller, viewer, or recorder.
+See the documentation for the specific experiment above to obtain the appropriate string names.
+
+
+
