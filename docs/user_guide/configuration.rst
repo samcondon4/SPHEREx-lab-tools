@@ -169,4 +169,3 @@ Viewer Configuration (VIEWERS)
         "params": '(OPTIONAL) set of initial viewer parameter values.'
     }
 
-|

@@ -6,7 +6,6 @@ User Guide
     :maxdepth: 2
 
     fundamentals/index
-    data_output/standard
-    data_output/recorders/index
+    data_standard/index
     configuration
     compound_instruments
