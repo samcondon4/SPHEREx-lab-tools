@@ -1,0 +1,235 @@
+###################
+Custom Experiments
+###################
+
+Experiment Control Package
+===========================
+
+| New measurement control software is created through :ref:`Experiment Control Packages <user_guide/custom_experiments:Experiment Control Package>`.
+  :ref:`Experiment Control Packages <user_guide/custom_experiments:Experiment Control Package>` are simply python packages that define 5 key variables
+  which tell SPHERExLabTools which instrument drivers to instantiate, the graphical interfaces to initialize, what the output data formats should be, etc.
+  Each of these variables are lists of python dictionaries that follow a special syntax. These 5 variables are:
+
+    1. INSTRUMENT_SUITE: List of :ref:`Hardware Configuration Dictionaries <user_guide/custom_experiments:Hardware Configuration>`
+    2. CONTROLLERS: List of :ref:`Controller Configuration Dictionaries <user_guide/custom_experiments:Controller Configuration>`
+    3. PROCEDURES: List of :ref:`Procedure Configuration Dictionaries <user_guide/custom_experiments:Procedure Configuration>`
+    4. RECORDERS: List of :ref:`Recorder Configuration Dictionaries <user_guide/custom_experiments:Recorder Configuration>`
+    5. VIEWERS: List of :ref:`Viewer Configuration Dictionaries <user_guide/custom_experiments:Viewer Configuration>`
+
+Example Experiment Control Package Structure
+---------------------------------------------
+  Each of the above variables are defined in python files and are imported by wrapping all of the appropriate files into a python package. An example file structure
+  to define each of the variables could be::
+
+    core_experiment_package/
+        __init__.py                # initialization
+        hw.py                      # defines INSTRUMENT_SUITE
+        control.py                 # defines CONTROLLERS
+        measure.py                 # defines PROCEDURES, RECORDERS, and VIEWERS
+
+
+__init__ File
+=======================
+
+  The 5 key variables listed above can be defined in any python file that the user desires. However, for SPHERExLabTools to be able to parse the configuration dictionaries
+  contained in each variable, it must know where each is defined. This is where the __init__.py file comes in. Every python package must contain an __init__.py file, the
+  contents of which are executed when the package is imported. In many cases, this file can be completely empty but an **Experiment Control Package** must use this file to import all of the key variables.
+  For the :ref:`user_guide/custom_experiments:Example Experiment Control Package Structure` shown above the contents of the __init__.py file would
+  contain the following lines::
+
+    from .hw import INSTRUMENT_SUITE
+    from .control import CONTROLLERS
+    from .measure import PROCEDURES, RECORDERS, VIEWERS
+
+  Now, when the **Experiment Control Package** is imported, all of the key variables can be accessed through the imported module object. I.e., when the following line is executed::
+
+    import core_experiment_package as cexp
+
+  We can access INSTRUMENT_SUITE with :python:`cexp.INSTRUMENT_SUITE`, CONTROLLERS can be accessed with :python:`cexp.CONTROLLERS`, and so on and so forth. Note that all of the key variables must be defined
+  in the experiment control package, though they can always be defined as an empty list.
+
+Hardware Configuration
+=======================
+
+Hardware configuration dictionaries are placed in the INSTRUMENT_SUITE variable to tell SLT which instrument drivers should be used. The syntax of a basic hardware configuration dictionary is as follows::
+
+    {
+        "instance_name": str # some string giving the instrument a name.
+        "resource_name": str # the PyVisa Resource Name of the instrument (see the link provided below).
+        "manufacturer": str # the name of the instrument manufacturer.
+        "instrument": str # the name of the instrument driver class.
+        "params": dict # an OPTIONAL dictionary containing initial values for instrument parameters.
+        "kwargs": dict # an OPTIONAL dictionary containing key-word arguments passed to the instrument class __init__ function.
+    }
+
+:ref:`PyVisa Resource Names <user_guide/pyvisa_resource_names:PyVisa Resource Names>`
+
+SPHERExLabTools also provides the capability to combine multiple instrument drivers into a single python object through the use of :ref:`Compound Instrument Dictionaries <user_guide/compound_instruments:Compound Instrument Configuration>`
+
+Controller Configuration
+========================
+
+Procedure Configuration
+=======================
+
+Recorder Configuration
+========================
+
+Viewer Configuration
+========================
+
+
+Procedure Configuration
+========================
+
+To specify the procedures used to control the execution of a measurement, a list of :ref:`user_guide/custom_experiments:Procedure Configuration Dictionaries`
+should be built and assigned to a variable called **PROCEDURES**. As described above, when the following code is executed::
+
+    import spherexlabtools as slt
+    import custom_experiment_package as cexp
+    exp = slt.create_experiment(cexp)
+
+The `create_experiment` function will look for the **PROCEDURES** variable in the experiment package namespace. Then,
+a :ref:`Procedure object <api/procedures/procedures:Base Procedure>` is created for each configuration dictionary found
+in this list.
+
+Procedure Configuration Dictionaries
+-------------------------------------
+The form of a procedure configuration dictionary is as follows::
+
+    proc_dict = {
+        "instance_name": <string to name the instantiated procedure.>,
+        "type": <string name of the procedure class.>,
+        "hw": <string or list of strings of instance_name fields of the instruments used in the procedure>,
+        "records": <dictionary with names of data objects as keys, and a map to the instance_name fields of the viewers
+                    and recorders that this object will be sent to.>,
+        "params": <`Optional` dictionary with an initial set of procedure parameters to set.>,
+        "kwargs": <`Optional` dictionary with key-word arguments sent to the procedure initialization method.>
+    }
+
+The whole procedure configuration used in the :ref:`Collimator Focus Core Experiment <user_guide/core_experiments:Collimator Focus>`
+is shown below::
+
+    CameraView_Proc = {
+        "instance_name": "CamViewProc",
+        "type": "CamViewProc",
+        "hw": "Microscope",
+        "records": {
+            "cam_latest_frame": {"viewer": "CamView"},
+        },
+        "params": {
+            "frames_per_image": 100
+        }
+    }
+
+    CollimatorFocus_Proc = {
+        "instance_name": "CollimatorFocusProc",
+        "type": "CollimatorFocusProc",
+        "hw": "Microscope",
+        "records": {
+            "frame": {"viewer": "CamView"},
+            "frame_avg": {"viewer": "CamViewAvg"},
+            "image": {"recorder": "CollimatorFocusRecorder"},
+            "sequence": {"recorder": "CollimatorFocusRecorder"}
+        }
+    }
+
+    PROCEDURES = [CameraView_Proc, CollimatorFocus_Proc]
+
+
+
+Controller Configuration
+=========================
+Controllers come in two flavors:
+
+    - :ref:`Instrument Controllers <user_guide/custom_experiments:Instrument Controller Configuration Dictionaries>` are
+      used for manual control over individual instruments.
+
+    - :ref:`Procedure Controllers <user_guide/custom_experiments:Procedure Controller Configuration Dictionaries>` are
+      used to set procedure parameters and execute individual procedures or sequences of several procedures.
+
+Instrument Controller Configuration Dictionaries
+-------------------------------------------------
+
+Procedure Controller Configuration Dictionaries
+-------------------------------------------------
+
+The form of procedure controller config dictionaries is quite simple::
+
+    proc_cntrl_dict = {
+        "instance_name": <string name of the controller instance.>,
+        "type": <string name of the controller class to instantiate.>
+        "procedure": <instance_name field of the procedure to control.>,
+        "params": <optional dictionary with a set of initial parameters. **NOTE**, while this field can be set just
+                   as with the other components, it is not recommended to use this field for procedure controllers.>
+        "kwargs": <optional dictionary of key-word arguments to send to the initialization method.>
+    }
+
+Valid key-word arguments that can be used in the optional `kwargs` field above are as follows:
+
+    - sequencer: Boolean to indicate if a procedure sequencer interface should be generated. The default value is True.
+    - records: Boolean to indicate if a record interaction interface should be generated. The default value is True.
+    - place_params: Boolean to indicate if the default procedure controller layout should be set on initialization.
+                    The default value is True.
+    - connect: Boolean to indicate if the start and stop procedure buttons should be connected to the default methods.
+
+The controller configuration used in the :ref:`Collimator Focus Core Experiment <user_guide/core_experiments:Collimator Focus>`
+is shown below::
+
+    MScope_Controller = {
+        "instance_name": "MicroscopeCntrl",
+        "type": "InstrumentController",
+        "hw": "Microscope",
+        "control_parameters": [
+            {"name": "focuser_step_position", "type": "int"},
+            {"name": "focuser_absolute_position", "type": "float"},
+            {"name": "cam_gain_auto", "type": "list", "values": ["Off", "Once", "Continuous"]},
+            {"name": "cam_gain", "type": "float"}
+        ],
+        "status_parameters": [
+            {"name": "focuser_step_position", "type": "int"},
+            {"name": "gauge_position", "type": "float"},
+            {"name": "focuser_absolute_position", "type": "float"},
+            {"name": "cam_gain", "type": "float"}
+        ],
+        "status_refresh": 2,
+        "actions": [
+            "focuser_stop", "focuser_reset_position"
+        ]
+    }
+
+    Gimbal0_Controller = {
+        "instance_name": "Gimbal0Cntrl",
+        "type": "InstrumentController",
+        "hw": "Gimbal0",
+        "control_parameters": [
+            {"name": "az_absolute_position", "type": "float"},
+            {"name": "za_absolute_position", "type": "float"},
+        ],
+        "status_parameters": [
+            {"name": "az_absolute_position", "type": "float"},
+            {"name": "za_absolute_position", "type": "float"},
+        ],
+        "status_refresh": 2,
+        "actions": [
+            "az_stop", "za_stop", "az_home", "za_home", "az_reset_position", "za_reset_position"
+        ]
+    }
+
+    LogProc_Controller = {
+        "instance_name": "CamViewProcCntrl",
+        "type": "LogProcController",
+        "procedure": "CamViewProc",
+    }
+
+    CollimatorFocus_Controller = {
+        "instance_name": "CollimatorFocusProcCntrl",
+        "type": "ProcedureController",
+        "procedure": "CollimatorFocusProc"
+    }
+
+    CONTROLLERS = [MScope_Controller, Gimbal0_Controller, LogProc_Controller, CollimatorFocus_Controller]
+
+
+.. _`Python Package`: https://docs.python.org/3/tutorial/modules.html#packages
+

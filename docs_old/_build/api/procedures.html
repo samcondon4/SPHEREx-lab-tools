@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Procedure Classes &#8212; SPHERExLabTools 0.6 documentation</title>
+    <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Linear Stage-Controller" href="instruments/anaheimautomation/linearstagecontroller.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="instruments/anaheimautomation/linearstagecontroller.html" title="Linear Stage-Controller"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">API Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Procedure Classes</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-spherexlabtools.procedures.procedures"></span><div class="section" id="procedure-classes">
+<h1>Procedure Classes<a class="headerlink" href="#procedure-classes" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="base-procedure">
+<h2>Base Procedure<a class="headerlink" href="#base-procedure" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="spherexlabtools.procedures.BaseProcedure">
+<em class="property">class </em><code class="sig-prename descclassname">spherexlabtools.procedures.</code><code class="sig-name descname">BaseProcedure</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em>, <em class="sig-param"><span class="n">hw</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">viewers</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">recorders</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">spherexlabtools.thread.StoppableReusableThread</span></code></p>
+<p>Thread to execute a measurement. Largely based on the pymeasure procedure class.</p>
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.check_parameters">
+<code class="sig-name descname">check_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.check_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raises an exception if any parameter is missing before calling
+the associated function. Ensures that each value can be set and
+got, which should cast it into the right format. Used as a decorator
+&#64;check_parameters on the startup method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.emit">
+<code class="sig-name descname">emit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record_name</span></em>, <em class="sig-param"><span class="n">record_data</span></em>, <em class="sig-param"><span class="n">record_params</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.emit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post a record to the appropriate queues.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record_name</strong> – String name of the record to post data to.</p></li>
+<li><p><strong>record_data</strong> – Data to be posted to the record queue.</p></li>
+<li><p><strong>record_params</strong> – Boolean to indicate if the procedure parameters should be included in the
+dictionary placed on the recorder queue. Optional argument with default
+value of True.</p></li>
+<li><p><strong>kwargs</strong> – Key-word arguments that are passed to the handle method of the corresponding
+<code class="xref py py-class docutils literal notranslate"><span class="pre">QueueThread</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.parameter_objects">
+<code class="sig-name descname">parameter_objects</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.parameter_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of all the Parameter objects and grabs any
+current values that are not in the default definitions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.parameter_values">
+<code class="sig-name descname">parameter_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.parameter_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of all the Parameter values and grabs any
+current values that are not in the default definitions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.parameters_are_set">
+<code class="sig-name descname">parameters_are_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.parameters_are_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if all parameters are set</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.refresh_parameters">
+<code class="sig-name descname">refresh_parameters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.refresh_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enforces that all the parameters are re-cast and updated in the meta
+dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.set_parameters">
+<code class="sig-name descname">set_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em>, <em class="sig-param"><span class="n">except_missing</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.set_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a dictionary of parameters and raises an exception if additional
+parameters are present if except_missing is True</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.shutdown">
+<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the procedure finished value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.BaseProcedure.startup">
+<code class="sig-name descname">startup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.BaseProcedure.startup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that all procedure parameters have been set.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="simple-logging-procedure">
+<h2>Simple Logging Procedure<a class="headerlink" href="#simple-logging-procedure" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="spherexlabtools.procedures.LogProc">
+<em class="property">class </em><code class="sig-prename descclassname">spherexlabtools.procedures.</code><code class="sig-name descname">LogProc</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.LogProc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">spherexlabtools.procedures.procedures.BaseProcedure</span></code></p>
+<p>Basic procedure that continuously records a parameter at a defined refresh rate and
+sends it to a <code class="xref py py-class docutils literal notranslate"><span class="pre">recorders.Recorder</span></code>, a <code class="xref py py-class docutils literal notranslate"><span class="pre">viewers.Viewer</span></code>, or both
+with calls to <a class="reference internal" href="#spherexlabtools.procedures.BaseProcedure.emit" title="spherexlabtools.procedures.BaseProcedure.emit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BaseProcedure.emit()</span></code></a>.</p>
+<dl class="py method">
+<dt id="spherexlabtools.procedures.LogProc.execute">
+<code class="sig-name descname">execute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.LogProc.execute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Procedure execution method. Calls get_properties() to start recording props at a fixed interval.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.procedures.LogProc.get_properties">
+<code class="sig-name descname">get_properties</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.procedures.LogProc.get_properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve all properties given in the DATA_COLUMNS list and emit results.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Procedure Classes</a><ul>
+<li><a class="reference internal" href="#base-procedure">Base Procedure</a></li>
+<li><a class="reference internal" href="#simple-logging-procedure">Simple Logging Procedure</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="instruments/anaheimautomation/linearstagecontroller.html"
+                        title="previous chapter">Linear Stage-Controller</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/procedures.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="instruments/anaheimautomation/linearstagecontroller.html" title="Linear Stage-Controller"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >API Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Procedure Classes</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Sam Condon.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

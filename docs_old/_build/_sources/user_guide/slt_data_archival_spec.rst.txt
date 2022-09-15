@@ -1,0 +1,5 @@
+SPHEREx-Lab-Tools Data Archival Specification
+==============================================
+
+Write this up Sam! Dammit!
+

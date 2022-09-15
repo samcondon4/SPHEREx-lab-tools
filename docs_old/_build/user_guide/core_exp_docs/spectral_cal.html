@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spectral Calibration &#8212; SPHERExLabTools 0.6 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Spectral Calibration</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-spherexlabtools.applications.spectral_cal">
+<span id="spectral-calibration"></span><h1>Spectral Calibration<a class="headerlink" href="#module-spherexlabtools.applications.spectral_cal" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-spherexlabtools.applications.spectral_cal.hw"></span><div class="section" id="hardware">
+<h2>Hardware<a class="headerlink" href="#hardware" title="Permalink to this headline">¶</a></h2>
+<p>The spectral_cal control software implements control over the following instruments:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“ndf”: Edmund Optics neutral density filter wheel.</p></li>
+<li><p>“mono”: Newport CS260 monochromator.</p></li>
+<li><p>“lockin”: Compound instrument wrapping the sr510 and sr830 lockin amplifiers.</p></li>
+</ul>
+</div></blockquote>
+<p>Each of these hardware components must be plugged into the computer and turned on or errors will be thrown when the
+nominal configuration is imported. Note that the monochromator is controlled via an interface to the mono control laptop
+on the optical bench. To start the mono control laptop interface, start an anaconda prompt on the laptop and run
+the following code:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">Documents</span>\<span class="n">Github</span>\<span class="n">SPHERExLabTools</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">spherexlabtools</span>
+<span class="n">python</span>
+<span class="kn">from</span> <span class="nn">spherexlabtools.instruments.spherex</span> <span class="kn">import</span> <span class="n">MonoControlServer</span>
+<span class="n">mserve</span> <span class="o">=</span> <span class="n">MonoControlServer</span><span class="p">()</span>
+<span class="n">mserve</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>These steps must be executed <strong>before</strong> creating the experiment object with exp = slt.create_experiment(sc).</p>
+</div>
+<p>To initialize the spectral calibration software, run the following code on the control computer:</p>
+<blockquote>
+<div><p>import spherexlabtools as slt
+from spherexlabtools.applications import spectral_cal as sc</p>
+<p>exp = slt.create_experiment(sc)</p>
+</div></blockquote>
+<p>The variable <strong>exp</strong> now contains the <a class="reference internal" href="../fundamentals.html#instrument-drivers"><span class="std std-ref">Instrument Drivers</span></a>,
+<a class="reference internal" href="../fundamentals.html#procedures"><span class="std std-ref">Procedures</span></a>, <a class="reference internal" href="../fundamentals.html#controllers"><span class="std std-ref">Controllers</span></a>,
+<a class="reference internal" href="../fundamentals.html#viewers"><span class="std std-ref">Viewers</span></a>, and <a class="reference internal" href="../fundamentals.html#recorders"><span class="std std-ref">Recorders</span></a> described below. As an example
+of starting a controller, the following code will start the manual monochromator control gui:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exp</span><span class="o">.</span><span class="n">start_controller</span><span class="p">(</span><span class="s2">&quot;MonoCntrl&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<span class="target" id="module-spherexlabtools.applications.spectral_cal.measure"></span><div class="section" id="procedures">
+<h2>Procedures<a class="headerlink" href="#procedures" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>“LockinViewProc”: Logging procedure to retrieve output voltages from the sr510 and sr830 lockin amplifiers.</p></li>
+<li><dl class="simple">
+<dt>“SpecCalProc”: Procedure to run monochromator scans, log lockin reference detector data, and trigger detector</dt><dd><p>exposures.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="viewers">
+<h2>Viewers<a class="headerlink" href="#viewers" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>“LockinView”: LineViewer to view live data recorded from the lock-in amplifiers.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="recorders">
+<h2>Recorders<a class="headerlink" href="#recorders" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p>“SpecCalMetaRecorder”: CsvRecorder to log all spectral calibration warm optics instrumentation metadata.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<span class="target" id="module-spherexlabtools.applications.spectral_cal.control"></span></div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Spectral Calibration</a><ul>
+<li><a class="reference internal" href="#hardware">Hardware</a></li>
+<li><a class="reference internal" href="#procedures">Procedures</a></li>
+<li><a class="reference internal" href="#viewers">Viewers</a></li>
+<li><a class="reference internal" href="#recorders">Recorders</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/user_guide/core_exp_docs/spectral_cal.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Spectral Calibration</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Sam Condon, Marco Viero.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>
