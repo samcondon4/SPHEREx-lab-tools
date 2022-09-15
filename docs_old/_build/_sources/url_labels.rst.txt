@@ -1,0 +1,17 @@
+External Urls
+=============
+
+Urls referenced at various points throughout the documentation.
+
+- `Queues`_
+- `PyMeasure Project`_
+
+
+.. _`Queues`: 
+        https://docs.python.org/3/library/queue.html
+
+
+.. _`PyMeasure Project`: 
+        https://pymeasure.readthedocs.io/en/latest/
+
+

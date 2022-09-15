@@ -1,0 +1,153 @@
+Fundamentals
+#############
+
+***Disclaimer on required background knowledge***
+*Throughout this section and much of the SPHERExLabTools documentation, familiarity with the Python programming language
+is assumed. In addition, knowledge of the object-oriented programming paradigm will help to understand the construction
+of the SPHERExLabTools package, though from a user perspective, this knowledge is not strictly necessary.*
+
+------------------------------
+
+SPHERExLabTools modularizes the key components of a general purpose laboratory data acquisition system and provides a
+streamlined mechanism for users to customize each key component to meet their data acquisition and instrument control
+demands.
+
+Specifically, SPHERExLabTools defines 5 core classes (in the object-oriented programming sense) which are configured
+independently through basic python configuration files by a user. These core classes are as follows:
+
+Core-Classes
+=============
+
+    - :ref:`Instruments <user_guide/fundamentals:Instrument Drivers>`: Classes that abstract away the low-level
+      instrument communication details allowing users to quickly interface with a wide range of instruments.
+
+    - :ref:`Procedures <user_guide/fundamentals:Procedures>`: Classes which specify the flow and execution of a measurement.
+
+    - :ref:`Controllers <user_guide/fundamentals:Controllers>`: Classes to implement graphical interfaces for easy control
+      of instruments and procedures.
+
+    - :ref:`Viewers <user_guide/fundamentals:Viewers>`: Classes implementing graphical visualization of live data generated
+      from procedures.
+
+    - :ref:`Recorders <user_guide/fundamentals:Recorders>`: Classes to archive data generated from procedures.
+
+    - :ref:`Top-Level Experiment Class <user_guide/fundamentals:Experiment Class>`: Instantiates each of the above core
+      classes using the parameters provided in the user configuration files to provide a single top level wrapper object.
+
+The way in which each of the above core classes interact with one another can be understood through the dataflow diagram
+seen below:
+
+Data-Flow
+----------
+
+.. figure:: SPHERExLabTools_Dataflow.png
+
+    SPHERExLabTools Dataflow: :ref:`Procedures <user_guide/fundamentals:Procedures>` contain scripts which define the logical
+    flow of a measurement. They interact directly with :ref:`Instruments <user_guide/fundamentals:Instrument Drivers>`
+    and generate data which they send to :ref:`Viewers <user_guide/fundamentals:Viewers>`, for real time graphical display,
+    and/or :ref:`Recorders <user_guide/fundamentals:Recorders>`, for data archival. :ref:`Recorders <user_guide/fundamentals:Recorders>`
+    and :ref:`Viewers <user_guide/fundamentals:Viewers>` sit idle until data is placed on their associated queue, upon
+    which they perform the appropriate archival or display task. :ref:`Controllers <user_guide/fundamentals:Controllers>`
+    provide graphical interfaces to interact directly with :ref:`Instruments <user_guide/fundamentals:Instrument Drivers>`
+    or to start/stop :ref:`Procedure <user_guide/fundamentals:Procedures>` execution. Since both :ref:`Controllers <user_guide/fundamentals:Controllers>`
+    and :ref:`Procedures <user_guide/fundamentals:Procedures>` have the ability to interact directly with :ref:`Instruments <user_guide/fundamentals:Instrument Drivers>`
+    a locking mechanism is placed on Instruments such that only one controller/procedure thread of execution can access
+    any given instrument driver class at a single instant.
+
+
+Instrument Drivers
+------------------
+
+| SPHERExLabTools builds off of the existing repository of instrument drivers found within the :pymeasure:`PyMeasure Project <>`.
+  Existing drivers within PyMeasure are integrated seamlessly. Drivers that have been developed specifically for SPHERExLabTools
+  all inherit from the :pymeasure:`PyMeasure Instrument Base Class <api/instruments/instruments.html>`. Users may also
+  develop their own drivers for instruments that are not already supported in SPHERExLabTools or PyMeasure. To do this,
+  one should reference the *Instrument file* section of the :pymeasure:`PyMeasure adding instruments doc <dev/adding_instruments.html>`.
+  One should also reference the existing :pymeasure:`PyMeasure Instrument Drivers <api/instruments>` and
+  :doc:`SPHERExLabTools Instrument Drivers </api/instruments/index>` for examples of existing drivers that are compatible with the package.
+
+
+Procedures
+----------
+
+| :ref:`SPHERExLabTools Procedure Classes <api/procedures/procedures:Base Procedure>` are nearly identical to :pymeasure:`PyMeasure Procedure Classes <api/experiment/procedure.html>`
+ and many of the methods and attributes defined in the former are indistinguishable from the latter. The two differ in a few
+ technical implementation details that are not important for the purposes of this document. The curious reader can refer to the detailed
+ api documentation for the procedure objects from each project for more information. Quoting from the PyMeasure documentation:
+
+    "The Procedure object bundles the sequence of steps in an experiment with the parameters required for its successful execution.
+    This simple structure comes with huge benefits, since a number of convenient tools for making the measurement use this common interface."
+
+ As quoted, Procedure objects contain both the code required to execute a measurement, as well as the parameters required for
+ measurement configuration. Procedures are executed on independent threads meaning that they can run in parallel with the
+ other processes in the data acquisition system. In addition Procedure parameters appear directly as user input in the
+ graphical interfaces implemented by :ref:`Controllers <user_guide/fundamentals:Controllers>`.
+
+
+Controllers
+-----------
+
+| Controller classes are graphical interfaces implemented with the `PyQtGraph <http://pyqtgraph.org>` graphics and GUI library. As
+  previously mentioned, they can implement direct control over :ref:`Instruments <user_guide/fundamentals:Instrument Drivers>`
+  and can be used to start/stop :ref:`Procedures <user_guide/fundamentals:Procedures>`. Screenshots of a few example controllers
+  are given below:
+
+
+Viewers
+-------
+
+| Viewer classes provide real-time data visualization capability and are also implemented with the `PyQtGraph <http://pyqtgraph.org>` graphics and GUI library.
+  Thus far, viewer classes have been developed to display multiple channels of time-stream sensor data, as well as live images from a camera/video system.
+  Screenshots of a few example viewers are shown below:
+
+
+Recorders
+---------
+
+| Recorder classes allow data generated from :ref:`Procedures <user_guide/fundamentals:Procedures>` to be archived in a wide variety of file formats including:
+  csv, hdf5, plain-text, pyhk, and direct logging to a sql database. Irrespective of the specific file format in use, the default data logging behavior follows
+  the :ref:`user_guide/slt_data_archival_spec:SPHEREx-Lab-Tools Data Archival Specification`.
+
+Experiment Class
+-----------------
+
+| The top-level :ref:`Experiment <api/experiment:Top-Level Experiment>` class provides a wrapper for all of the 5 core classes discussed above. Custom experiment control
+  software is configured with :ref:`Experiment Control Packages <user_guide/custom_experiments:Experiment Control Package>` which are then passed as an input
+  to the :ref:`spherexlabtools.create_experiment() <api/experiment:Create Experiment>` function. This function returns an instance of the :class:`spherexlabtools.experiment.Experiment` which in turn
+  defines the following basic methods:
+
+    - :meth:`start_viewer() <spherexlabtools.experiment.Experiment.start_viewer>`
+    - :meth:`start_recorder() <spherexlabtools.experiment.Experiment.start_recorder>`
+    - :meth:`start_procedure() <spherexlabtools.experiment.Experiment.start_procedure>`
+    - :meth:`start_controller() <spherexlabtools.experiment.Experiment.start_controller>`
+
+
+Configuration
+==============
+
+| The power of SPHEREx-Lab-Tools comes from the high-level of configurability inherent to its modular design.
+  :ref:`Experiment Control Packages <user_guide/custom_experiments:Experiment Control Package>` are created to configure each of the
+  5 core classes discussed above. :ref:`Experiment Control Packages <user_guide/custom_experiments:Experiment Control Package>` are
+  implemented as basic python packages containing the :ref:`user_guide/custom_experiments:Configuration Dictionaries` for each core
+  class. The structure of a basic :ref:`Experiment Control Package <user_guide/custom_experiments:Experiment Control Package>` is shown
+  below
+::
+
+    custom_experiment_package/     # top-level package
+        __init__.py                # initialization
+        hw.py                      # defines instrument driver configuration dictionaries
+        control.py                 # defines controller configuration dictionaries
+        measure.py                 # defines procedure, recorder, and viewer configuration dictionaries
+
+| :ref:`Experiment Control Packages <user_guide/custom_experiments:Experiment Control Package>` are then imported directly
+  as python modules and passed as an argument to the :meth:`spherexlabtools.create_experiment` function to initialize the
+  experiment control software. This process looks something like
+::
+
+    import spherexlabtools as slt
+    import custom_experiment_package as cust_exp
+
+    exp = slt.create_experiment(cust_exp)
+| After executing the three lines shown above, **exp** becomes an instance of the :ref:`Top-Level Experiment Class <user_guide/fundamentals:Experiment Class>`
+  and can be used to run each of the core classes discussed above.
+

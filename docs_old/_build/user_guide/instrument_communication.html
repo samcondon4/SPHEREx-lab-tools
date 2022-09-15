@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instrument Communication &#8212; SPHERExLabTools 0.6 documentation</title>
+    <link rel="stylesheet" href="../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api/index.html" />
+    <link rel="prev" title="Custom Experiments" href="custom_experiments.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../api/index.html" title="API Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="custom_experiments.html" title="Custom Experiments"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">User Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Instrument Communication</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="instrument-communication">
+<h1>Instrument Communication<a class="headerlink" href="#instrument-communication" title="Permalink to this headline">¶</a></h1>
+<p>SPHERExLabTools allows advanced control over several scientific instruments from various vendors. For many instrument communication interfaces, SPHERExLabTools works “out of the box”, though some instruments require vendor specific drivers and configurations. This page provides some helper documentation for configuring instrument communication for a small subset of instruments implemented in SPHERExLabTools that do not quite work “out of the box.” This page also provides information for finding an instrument <em>resource name</em>, which is a special string used to uniquely identify an instrument communication interface.</p>
+<div class="section" id="resource-name-identification">
+<span id="resource-name-id"></span><h2>Resource Name Identification:<a class="headerlink" href="#resource-name-identification" title="Permalink to this headline">¶</a></h2>
+<p>To communicate with instruments, SPHERExLabTools uses instrument classes implemented as subclasses of the <a class="reference external" href="https://pymeasure.readthedocs.io/en/latest/api/instruments/instruments.html">PyMeasure Instrument Class</a>, which in turn uses the <a class="reference external" href="https://pyvisa.readthedocs.io/en/latest/">pyvisa</a> library under the hood. In <strong>pyvisa</strong>, instruments are identified on a computer by a <strong>resource name</strong>. To identify the resource name for an instrument, make sure it is the only piece of hardware plugged into the usb port and execute the following code in a python interactive session:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyvisa</span> <span class="k">as</span> <span class="nn">pv</span>
+
+<span class="n">rm</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ResourceManager</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rm</span><span class="o">.</span><span class="n">list_resources</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="heidenhain-nd287-linear-encoder-readout">
+<h2>Heidenhain ND287, Linear Encoder Readout:<a class="headerlink" href="#heidenhain-nd287-linear-encoder-readout" title="Permalink to this headline">¶</a></h2>
+<p>SPHERExLabTools supports the RS-232 communication interface of the Heidenhain ND287. To configure this interface simply use a standard USB to RS-232 cable (ex. <a class="reference external" href="https://www.amazon.com/Adapter-Chipset%EF%BC%8CDB9-Serial-Converter-Windows/dp/B0759HSLP1/ref=asc_df_B0759HSLP1/?tag=hyprod-20&amp;linkCode=df0&amp;hvadid=459728334703&amp;hvpos=&amp;hvnetw=g&amp;hvrand=17713210100510461256&amp;hvpone=&amp;hvptwo=&amp;hvqmt=&amp;hvdev=c&amp;hvdvcmdl=&amp;hvlocint=&amp;hvlocphy=9031119&amp;hvtargid=pla-997424051967&amp;th=1">amazon</a>). Now follow the steps below to configure and verify that communication between your PC and the ND287 has been established:</p>
+<ol class="arabic">
+<li><p>Use the ND287 softkeys to navigate to the <em>Interface Settings</em> menu via <strong>SETUP-&gt;INSTALL SETUP-&gt;INTERFACE SETTINGS</strong> if at any point the device asks for a passcode, use: <em>95148</em></p></li>
+<li><p>Choose RS-232 for the serial port, then configure the serial communication settings to your liking. Note that SPHERExLabTools uses a default configuration of:</p>
+<ul class="simple">
+<li><p>baud rate = 115200</p></li>
+<li><p>data bits = 8</p></li>
+<li><p>stop bits = 1</p></li>
+<li><p>parity = None</p></li>
+<li><p>Output tail = 1</p></li>
+</ul>
+<p>Should you desired to deviate from the default serial com configuration, make sure to update the communication field in your hardware configuration file.</p>
+</li>
+<li><p>To verify that the interface between your computer and the ND287 is sound, open a terminal-emulator program such as TeraTerm or HyperTerminal and open up the COM port associated with the USB to RS232 adapter. Set up the serial port settings to match those of the previous step. Next, navigate to the <em>Import/Export</em> menu via <strong>SETUP-&gt;IMPORT EXPORT</strong> then press <strong>EXPORT</strong>. If everything is configured properly you should see a whole slew of information echoed within the terminal emulator.</p></li>
+</ol>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Instrument Communication</a><ul>
+<li><a class="reference internal" href="#resource-name-identification">Resource Name Identification:</a></li>
+<li><a class="reference internal" href="#heidenhain-nd287-linear-encoder-readout">Heidenhain ND287, Linear Encoder Readout:</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="custom_experiments.html"
+                        title="previous chapter">Custom Experiments</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../api/index.html"
+                        title="next chapter">API Reference</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/user_guide/instrument_communication.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../api/index.html" title="API Reference"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="custom_experiments.html" title="Custom Experiments"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >User Guide</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Instrument Communication</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Sam Condon, Marco Viero.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+#############################
+Neutral Density Filter Wheel
+#############################
+
+.. autoclass:: spherexlabtools.instruments.edmund.NDF
+    :members:
+    :show-inheritance:
+

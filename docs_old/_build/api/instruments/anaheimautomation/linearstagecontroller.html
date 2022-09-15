@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linear Stage-Controller &#8212; SPHERExLabTools 0.6 documentation</title>
+    <link rel="stylesheet" href="../../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="../newport/index.html" />
+    <link rel="prev" title="Anaheim Automation" href="index.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../newport/index.html" title="&lt;no title&gt;"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Anaheim Automation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >spherexlabtools.instruments</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="index.html" accesskey="U">Anaheim Automation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Linear Stage-Controller</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="linear-stage-controller">
+<h1>Linear Stage-Controller<a class="headerlink" href="#linear-stage-controller" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="spherexlabtools.instruments.anaheimautomation.LinearStageController">
+<em class="property">class </em><code class="sig-prename descclassname">spherexlabtools.instruments.anaheimautomation.</code><code class="sig-name descname">LinearStageController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">resource_name</span></em>, <em class="sig-param"><span class="n">homedir</span></em>, <em class="sig-param"><span class="n">encoder_motor_ratio</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">encoder_enabled</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.instruments.anaheimautomation.LinearStageController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pymeasure.instruments.anaheimautomation.dpseriesmotorcontroller.DPSeriesMotorController</span></code></p>
+<dl class="simple">
+<dt>Represents a Anaheim DP Series Motor Controller driving a linear stage. This class overrides the home()</dt><dd><p>method and implements unit conversions between controller steps and distance along the linear stage.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resource_name</strong> – string resource name to pass to pymeasure driver.</p></li>
+<li><p><strong>homedir</strong> – string with value “CW” or “CCW” corresponding to the direction the motor is spun during a
+homing operation.</p></li>
+<li><p><strong>kwargs</strong> – pymeasure driver kwargs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>homedir</strong> – Direction that the controller should turn the motor in a homing operation. Valid values are “CW” and
+“CCW” (default = “CCW”)</p></li>
+<li><p><strong>homespeed</strong> – Speed that the controller will turn the motor in a homing operation. Default = 500</p></li>
+<li><p><strong>turns_per_step</strong> – motor turns per individual controller step.</p></li>
+<li><p><strong>units_per_turn</strong> – distance in specified units that the linear stage travels in a single turn of the motor.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="spherexlabtools.instruments.anaheimautomation.LinearStageController.absolute_to_steps">
+<code class="sig-name descname">absolute_to_steps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pos</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.instruments.anaheimautomation.LinearStageController.absolute_to_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert from absolute position on a linear stage to steps.
+:param pos: absolute position in units defined by the absolute_units property.
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.instruments.anaheimautomation.LinearStageController.ask">
+<code class="sig-name descname">ask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.instruments.anaheimautomation.LinearStageController.ask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the instrument base ask method to add the motor controller’s address to the
+command string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>command</strong> – command string to be sent to the instrument</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.instruments.anaheimautomation.LinearStageController.home">
+<code class="sig-name descname">home</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">home_mode</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">block_interval</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.instruments.anaheimautomation.LinearStageController.home" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override of the home method to home using a slew to hard limit.
+:param home_mode: In this overridden version, this name is irrelevant.
+:param block_interval: Seconds between “busy” queries. Same argument as interval in wait_for_completion.
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.instruments.anaheimautomation.LinearStageController.steps_to_absolute">
+<code class="sig-name descname">steps_to_absolute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">steps</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.instruments.anaheimautomation.LinearStageController.steps_to_absolute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert from steps to an absolute position on a linear stage.
+:param steps:
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.instruments.anaheimautomation.LinearStageController.values">
+<code class="sig-name descname">values</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.instruments.anaheimautomation.LinearStageController.values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the instrument base values method to add the motor controller’s address to the
+command string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>command</strong> – command string to be sent to the motor controller.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.instruments.anaheimautomation.LinearStageController.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">command</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.instruments.anaheimautomation.LinearStageController.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override the instrument base write method to add the motor controller’s address to the
+command string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>command</strong> – command string to be sent to the motor controller.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Anaheim Automation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../newport/index.html"
+                        title="next chapter">&lt;no title&gt;</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/api/instruments/anaheimautomation/linearstagecontroller.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../newport/index.html" title="&lt;no title&gt;"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Anaheim Automation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >API Reference</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../index.html" >spherexlabtools.instruments</a> &#187;</li>
+          <li class="nav-item nav-item-3"><a href="index.html" >Anaheim Automation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Linear Stage-Controller</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Sam Condon, Marco Viero.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>

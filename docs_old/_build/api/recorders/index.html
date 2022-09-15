@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>spherexlabtools.recorders &#8212; SPHERExLabTools 0.6 documentation</title>
+    <link rel="stylesheet" href="../../_static/pyramid.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="spherexlabtools.experiment" href="../experiment.html" />
+    <link rel="prev" title="spherexlabtools.applications" href="../applications/index.html" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Neuton&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nobile:regular,italic,bold,bolditalic&amp;subset=latin" type="text/css" media="screen" charset="utf-8" />
+<!--[if lte IE 6]>
+<link rel="stylesheet" href="../../_static/ie6.css" type="text/css" media="screen" charset="utf-8" />
+<![endif]-->
+
+  </head><body>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../experiment.html" title="spherexlabtools.experiment"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../applications/index.html" title="spherexlabtools.applications"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">API Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">spherexlabtools.recorders</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <span class="target" id="module-spherexlabtools.recorders"></span><div class="section" id="spherexlabtools-recorders">
+<h1>spherexlabtools.recorders<a class="headerlink" href="#spherexlabtools-recorders" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="spherexlabtools.recorders.SltRecorder">
+<em class="property">class </em><code class="sig-prename descclassname">spherexlabtools.recorders.</code><code class="sig-name descname">SltRecorder</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cfg</span></em>, <em class="sig-param"><span class="n">exp</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.recorders.SltRecorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">spherexlabtools.thread.QueueThread</span></code></p>
+<p>Abstract base-class for SPHERExLabTools specific recorders. This class generates the indices used in the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">pd.DataFrame</span></code> objects that are written out to results files with subclasses of this base. The indices
+that are tracked are as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“RecordGroup”: Used to index procedure sequences. This value is incremented whenever a new procedure sequence
+is set on the “sequence” attribute of the incoming record, or when this same attribute is set
+to None. The latter case corresponds to when the record was generated from within an individual
+procedure and not a procedure sequence.</p></li>
+<li><p>“RecordGroupInd”: Used to index a specific procedure within a procedure sequence. This value is incremented on
+every call of <a class="reference internal" href="#spherexlabtools.recorders.SltRecorder.handle" title="spherexlabtools.recorders.SltRecorder.handle"><code class="xref py py-meth docutils literal notranslate"><span class="pre">SltRecorder.handle()</span></code></a> or is reset to 0 if the “RecordGroup” value was
+just changed.</p></li>
+<li><p>“RecordRow”: Only used in the “data” dataframe and is determined by the shape of the incoming record.data</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record_group</strong> – Integer attribute corresponding to the “RecordGroup” index described above.</p></li>
+<li><p><strong>record_group_ind</strong> – Integer attribute corresponding to the “RecordGroupInd” index described above.</p></li>
+<li><p><strong>record_row</strong> – Integer (or array-like) attribute corresponding to the “RecordRow” index described above.</p></li>
+<li><p><strong>data_index</strong> – Pandas index object for the record data.</p></li>
+<li><p><strong>meta_index</strong> – Pandas index object for the record procedure and instrument parameters.</p></li>
+<li><p><strong>sequence_index</strong> – Pandas index object for the record procedure sequence.</p></li>
+<li><p><strong>_rgroup_str</strong> – String name used in dataframes to identify the “RecordGroup” index described above.</p></li>
+<li><p><strong>_rgroupind_str</strong> – String name used in dataframes to identify the “RecordGroupInd” index described above.</p></li>
+<li><p><strong>_rrow_str</strong> – String name used in dataframes to identify the “RecordRow” index described above.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="spherexlabtools.recorders.SltRecorder.close_results">
+<code class="sig-name descname">close_results</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.recorders.SltRecorder.close_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the currently opened results file. This method must be implemented in subclasses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.recorders.SltRecorder.handle">
+<code class="sig-name descname">handle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.recorders.SltRecorder.handle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the record_group, record_group_ind, and record_row attributes based on information provided in
+the record.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.recorders.SltRecorder.open_results">
+<code class="sig-name descname">open_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">results_path</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.recorders.SltRecorder.open_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the results file and return the record_group and record_group_ind. This method must be implemented in
+subclasses and must return those values after opening (or creating) the results file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>results_path</strong> – Path to the results.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return the initial record_group and record_group_ind for a new file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="spherexlabtools.recorders.SltRecorder.update_results">
+<code class="sig-name descname">update_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em><span class="sig-paren">)</span><a class="headerlink" href="#spherexlabtools.recorders.SltRecorder.update_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the results file in the format determined by recorder subclasses.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../applications/index.html"
+                        title="previous chapter">spherexlabtools.applications</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../experiment.html"
+                        title="next chapter">spherexlabtools.experiment</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/api/recorders/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../experiment.html" title="spherexlabtools.experiment"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../applications/index.html" title="spherexlabtools.applications"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">SPHERExLabTools 0.6 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >API Reference</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">spherexlabtools.recorders</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Sam Condon, Marco Viero.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    </div>
+  </body>
+</html>
