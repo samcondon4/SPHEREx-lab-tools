@@ -4,5 +4,5 @@ Tutorials
 .. toctree::
     :maxdepth: 2
 
-    stepbystep_config
+    stepbystep_config/index
 
