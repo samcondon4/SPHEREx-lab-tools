@@ -30,31 +30,32 @@ Example:
 | Let's consider an example using the fake experiment generated in the :ref:`Step-by-Step Experiment Configuration <tutorials/stepbystep_config:Step-by-Step Experiment Configuration>`
   tutorial.
 
-| In this experiment, the temperature of a cryostat baseplate is monitored in response to some input voltage applied to a heater. Additionally, the thermal emission of
+| In this experiment, the temperature of a cryostat baseplate is monitored in response to some voltage applied to a heater. Additionally, the thermal emission of
   the heater is monitored via an IR camera.
 
   The measured quantities of the experiment are:
 
     - Baseplate temperature (K)
     - Heater IR emission intensity (mW)
-    - Heater measured input voltage (V)
+    - Heater voltage (V)
     - Timestamp at which quantities are measured (YYYYMMDD_HHMMSS.ms)
 
   The parameters of the Procedure recording the above information are:
 
-    - Heater input voltage (V)
+    - Heater voltage (V)
     - Sample Time (s)
     - Sample Rate (hz)
 
   Other metadata relevant to the experiment are:
 
-    - Cryostat pressure (Torr)
     - Camera gain
+    - Camera Frame Width
+    - Camera Frame Height
 
 | Now lets take a look at the data generated for each of the three categories after a few measurements.
 
-1) 10 seconds of data at 1 hz
-******************************
+1) 10 seconds of data at a single heater voltage
+*************************************************
 
 | Suppose that to start, our cryostat baseplate temperature is stable at 40K. Then, we apply 5V. to the heater input and record
   data every second for 10 seconds. Our procedure parameters then look like:
@@ -84,3 +85,10 @@ Example:
 
         Metadata table after the first measurement.
 
+2) 10 seconds of data at several heater voltages
+*************************************************
+
+| Now suppose that we would like to run a sequence of measurements in which we record 10 seconds of data at several heater voltages.
+  Say that we have 5 total heater voltages that we would like to run, the list of which being: **heater_voltage = [0.0, 2.0, 4.0, 6.0, 0.0]**
+
+| After constructing the appropriate Procedure Sequence and running the measurement, our tables will then look something like:
