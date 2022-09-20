@@ -383,4 +383,3 @@ Step-by-Step Experiment Configuration
     Final interface.
 
 | We have now completed the configuration of our SPHERExLabTools fake experiment. Now checkout: :ref:`Using the SPHERExLabTools Interface <tutorials/interface/index:Using the SPHERExLabTools Interface>`!
-
