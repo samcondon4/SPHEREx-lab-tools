@@ -86,7 +86,6 @@ class SltRecorder(QueueThread):
         self.update_record_group(record)
         # - update the pandas indices - #
         self.update_indices()
-
         # update the results file with the new indices #
         self.update_results(record)
 
