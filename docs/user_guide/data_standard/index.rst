@@ -21,13 +21,13 @@ Output Data Standard
   and *RecordGroupInd*. *RecordGroup* is an integer identifying a set of records that are grouped together, for instance after being
   generated from the same Procedure Sequence. *RecordGroupInd* identifies unique records within a larger Record Group.
 
-Default Metadata:
------------------
-
 Example:
 --------
 
-| Let's consider an example using the fake experiment generated in the :ref:`Step-by-Step Experiment Configuration <tutorials/stepbystep_config:Step-by-Step Experiment Configuration>`
+| *note*: data values generated here are clearly physically unrealistic. Values in tables are simply to provide a demonstration of the
+  manner in which experimental data is organized with SPHERExLabTools.
+
+| Let's consider an example using the fake experiment generated in the :ref:`Step-by-Step Experiment Configuration <tutorials/stepbystep_config/index:Step-by-Step Experiment Configuration>`
   tutorial.
 
 | In this experiment, the temperature of a cryostat baseplate is monitored in response to some voltage applied to a heater. Additionally, the thermal emission of
@@ -36,9 +36,9 @@ Example:
   The measured quantities of the experiment are:
 
     - Baseplate temperature (K)
-    - Heater IR emission intensity (mW)
+    - Heater IR emission intensity (W)
     - Heater voltage (V)
-    - Timestamp at which quantities are measured (YYYYMMDD_HHMMSS.ms)
+    - Timestamp at which quantities are measured (YYYYMMDD_HHMMSS)
 
   The parameters of the Procedure recording the above information are:
 
@@ -85,10 +85,37 @@ Example:
 
         Metadata table after the first measurement.
 
-2) 10 seconds of data at several heater voltages
+| Note that since we recorded data every second for 10-seconds, our individual **Record** has 10 rows, indicated by the *RecordRow* column
+  in the data table. The procedure parameters and metadata tables are linked to the 10 rows of measurements through the *RecordGroup* and *RecordGroupInd*
+  indices.
+
+2) 2 seconds of data at several heater voltages
 *************************************************
 
-| Now suppose that we would like to run a sequence of measurements in which we record 10 seconds of data at several heater voltages.
+| Now suppose that we would like to run a sequence of measurements in which we record just 2 seconds of data at several heater voltages.
   Say that we have 5 total heater voltages that we would like to run, the list of which being: **heater_voltage = [0.0, 2.0, 4.0, 6.0, 0.0]**
 
 | After constructing the appropriate Procedure Sequence and running the measurement, our tables will then look something like:
+
+  **1. Data:**
+
+    .. figure:: fig/Data_rg1.png
+
+        Data table after the procedure sequence.
+
+  **2. Procedure Parameters**
+
+    .. figure:: fig/PP_rg1.png
+
+        Procedure parameters table after the procedure sequence.
+
+  **3. Metadata**
+
+    .. figure:: fig/Meta_rg1.png
+
+        Metadata table after the procedure sequence.
+
+| Note the resulting structure of the tables. The *RecordGroup* increments from 0 to 1, since we appended to the existing
+  tables. The *RecordGroupInd* scales from 0 to 4 since we took measurements at 5 separate heater voltages within the same
+  procedure sequence. Finally, for every *RecordGroup* and *RecordGroupInd* pair, there are two values of *RecordRow* since
+  we measured two seconds of data at every heater voltage.
