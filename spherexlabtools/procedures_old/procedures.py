@@ -350,7 +350,6 @@ class BaseProcedure(StoppableReusableThread):
         )
 
 
-
 class LogProc(BaseProcedure):
     """ Basic procedure that continuously records a parameter at a defined refresh rate and
         sends it to a :class:`..recorders.Recorder`, a :class:`..viewers.Viewer`, or both
