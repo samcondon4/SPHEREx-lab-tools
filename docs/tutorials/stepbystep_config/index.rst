@@ -25,33 +25,26 @@ Step-by-Step Experiment Configuration
 | The file structure of the experiment control package can be in whatever manner the user desires, though the standard structure is as follows:
 
     config/
+     - instruments/
+     - procedures/
      -  __init__.py
-     -  hw.py
      -  control.py
+     -  hw.py
      -  measure.py
 
 | Where the configuration dictionaries are defined for instruments in hw.py, for controllers in control.py, and viewers, recorders, and procedures
-  in measure.py. The __init__.py file then defines the config variables as lists of the dictionaries defined in the other .py files.
+  in measure.py. The __init__.py file then defines the config variables as lists of the dictionaries defined in the other .py files. The instruments/
+  and procedures/ directories are used for custom user procedure scripts and instrument drivers.
 
-| Begin by creating the above directory structure in the location of your choice and copy the following block into your __init__.py file.
+| Begin by cloning this configuration file structure with the following git command:
 
-.. code-block:: python
+.. code-block:: bash
 
-    from . import hw
-    from . import control
-    from . import measure
-    from . import instruments
-    from . import procedures
+    git clone https://github.com/samcondon4/PyLabTools-Template.git
 
-    VIEWERS = []
-    RECORDERS = []
-    PROCEDURES = []
-    CONTROLLERS = []
-    INSTRUMENT_SUITE = []
-
-| We are now ready to populate our hw, control, and measure configuration files! In the following steps, do not worry too much about the
+| We are now ready to populate the hw, control, and measure configuration files! In the following steps, do not worry too much about the
   contents of the configuration dictionaries that we define. The purpose of this tutorial is to get a big picture sense of how SPHERExLabTools
-  is configured, not to understand all of the details of configuration dictionary syntax. For more details on the config dictionary syntax see:
+  is configured, not to understand all of the details of configuration dictionary syntax. These syntax details can be found at:
   :ref:`Configuration Dictionaries <user_guide/configuration:Configuration Dictionaries>`
 
 1) Defining instruments
@@ -159,8 +152,8 @@ Step-by-Step Experiment Configuration
 3) Creating a procedure
 ------------------------
 
-| As discussed in :ref:`Fundamentals <user_guide/fundamentals/index:Fundamentals>` **Procedures** are classes used to define scripts that run measurements.
-  We can write a procedure to run the measurement of baseplate temperature with voltage applied to the heater.
+| As discussed in :ref:`Fundamentals <user_guide/fundamentals/index:Fundamentals>`, **Procedures** are classes used to define scripts that run measurements.
+  Let's write a procedure to run our basic measurement.
 
 4) Connecting procedure records to viewers and recorders
 ---------------------------------------------------------
