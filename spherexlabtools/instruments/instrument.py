@@ -11,7 +11,7 @@ log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
 logger = logging.getLogger(log_name)
 
 
-def instantiate_instrument(inst_dict, exp, dev_links=None):
+def instantiate_instrument(inst_dict, exp, dev_links=None, **instance_kwargs):
     """ Instantiate and return the appropriate PyMeasure Instrument class based on the inst_dict arguments.
     :param: inst_dict: dictionary corresponding to a single instrument. This dictionary should take the form seen at
                        :ref:`Instrument Dictionaries`
@@ -49,14 +49,13 @@ def instantiate_instrument(inst_dict, exp, dev_links=None):
     logger.info(slt_log.INIT_MSG % inst_dict["instance_name"])
     # instantiate the instrument class with key-word arguments #
     if "kwargs" in inst_dict:
-        kwargs = inst_dict["kwargs"]
-    else:
-        kwargs = {}
+        instance_kwargs.update(inst_dict["kwargs"])
     try:
         rec_name = inst_dict["resource_name"]
         if type(dev_links) is dict and rec_name.__hash__ is not None and rec_name in dev_links.keys():
             rec_name = dev_links[rec_name]
-        inst = inst_class(rec_name, **kwargs)
+        print(instance_kwargs)
+        inst = inst_class(rec_name, **instance_kwargs)
     except Exception as e:
         logger.error("Error while instantiating {}.{}: \n {}".format(manufacturer_string, inst_dict["instrument"],
                                                                      e))
@@ -77,8 +76,7 @@ class CompoundInstrument:
     """ Dynamic class that merges two or more Instruments into a single object.
     """
 
-    def __init__(self, cfg, exp, merge_instances, dev_links=None):
-
+    def __init__(self, resource_name, merge_instances=None, dev_links=None):
         # - get all class attributes from passed in instrument instances - #
         cls_attrs = []
         for instance in merge_instances:
@@ -101,8 +99,12 @@ class InstrumentSuite:
         for inst in inst_cfg:
             if "subinstruments" not in inst:
                 self.__dict__[inst["instance_name"]] = instantiate_instrument(inst, exp, dev_links=dev_links)
+            elif "manufacturer" in inst and "instrument" in inst:
+                merge_instances = [instantiate_instrument(cfg, exp, dev_links=dev_links) for cfg in
+                                   inst["subinstruments"]]
+                self.__dict__[inst["instance_name"]] = instantiate_instrument(inst, exp, dev_links=dev_links,
+                                                                              merge_instances=merge_instances)
             else:
                 merge_instances = [instantiate_instrument(cfg, exp, dev_links=dev_links) for cfg in
                                    inst["subinstruments"]]
-                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst, exp, merge_instances,
-                                                                          dev_links=dev_links)
+                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst, exp, merge_instances)

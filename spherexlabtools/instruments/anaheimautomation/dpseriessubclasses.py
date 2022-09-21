@@ -121,7 +121,6 @@ class LinearStageController(DPSeriesMotorController):
 
 class FocuserDrive(LinearStageController):
 
-
     def __init__(self, resource_name, homedir, encoder_motor_ratio=1.0, encoder_enabled=False, **kwargs):
         """ Instantiate a stage controller.
         """
