@@ -20,7 +20,6 @@ class CsvRecorder(Recorder):
         """ Open the results csv file and return the record_group and record_group_ind. Since csvs do not
         need to stay open, use the opened_results attribute as a flag for if the csv output file exists.
 
-        :param results_path: Path to the results.
         :return: Return the initial record_group and record_group_ind for a new file.
         """
         try:
@@ -28,6 +27,7 @@ class CsvRecorder(Recorder):
         except FileNotFoundError:
             rec_group = -1
             rec_group_ind = -1
+            rec_group_ind = 0
             self.opened_results = False
         else:
             rec_group = results_df[self._rgroup_str].values[-1]
@@ -56,3 +56,8 @@ class CsvRecorder(Recorder):
         path = self.results_path if not self.results_path.endswith(".csv") else self.results_path + ".csv"
         self.merged_df.to_csv(path, header=header, mode=mode)
 
+    def update_results(self, record):
+        """ Join the data, procedure parameters, and metadata into a single dataframe and write
+        to the output file.
+        """
+        pass
