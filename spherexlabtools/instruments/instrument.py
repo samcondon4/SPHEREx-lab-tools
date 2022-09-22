@@ -16,6 +16,8 @@ def instantiate_instrument(inst_dict, exp, dev_links=None, **instance_kwargs):
     :param: inst_dict: dictionary corresponding to a single instrument. This dictionary should take the form seen at
                        :ref:`Instrument Dictionaries`
     """
+    instance_kwargs.update({"exp": exp})
+
     # check that the instrument dictionary contains valid arguments #
     assert "instance_name" in inst_dict, "Missing required argument 'instance_name' in instrument dictionary!"
     assert "manufacturer" in inst_dict, "Missing required argument 'manufacturer' in instrument dictionary!"
@@ -54,7 +56,6 @@ def instantiate_instrument(inst_dict, exp, dev_links=None, **instance_kwargs):
         rec_name = inst_dict["resource_name"]
         if type(dev_links) is dict and rec_name.__hash__ is not None and rec_name in dev_links.keys():
             rec_name = dev_links[rec_name]
-        print(instance_kwargs)
         inst = inst_class(rec_name, **instance_kwargs)
     except Exception as e:
         logger.error("Error while instantiating {}.{}: \n {}".format(manufacturer_string, inst_dict["instrument"],
@@ -70,6 +71,46 @@ def instantiate_instrument(inst_dict, exp, dev_links=None, **instance_kwargs):
     # - set the instrument name - #
     inst.name = inst_dict["instance_name"]
     return inst
+
+
+class MergeInstrumentMetaclass(type):
+
+    def __new__(mcs, clsname, bases, attrs, instruments, *args, **kwargs):
+        # - add the instrument dictionary to returned class attributes - #
+        attrs.update({"instruments": instruments})
+
+        # - merge all class attributes of all instances - #
+        for instKey, instClass in instruments.items():
+            inst_class_attrs = [
+                (iattr, getattr(instClass, iattr)) for iattr in dir(instClass) if not
+                (iattr.startswith("__") and iattr.endswith("__"))
+            ]
+            new_attrs = {
+                "_".join([instKey, new_attr[0]]): new_attr[1] for new_attr in inst_class_attrs
+            }
+            attrs.update(new_attrs)
+
+        # - create the new __init__ method - #
+        init_func = attrs.get("__init__", None)
+        attrs.update({
+            "__init__": mcs.get_init(mcs, init_func)
+        })
+        return super().__new__(mcs, clsname, bases, attrs)
+
+    def instantiate_instruments(self, *args, **kwargs):
+        assert "sub_instruments" in kwargs, "Merged instruments must have 'sub_instruments' passed as a kwarg!"
+        subinstruments = kwargs["sub_instruments"]
+        for cfg_dict in subinstruments:
+            self.instruments[cfg_dict["instance_name"]] = instantiate_instrument(cfg_dict, **kwargs)
+
+    def get_init(cls, init=None):
+
+        def __init(self, *args, obj_init=init, **kwargs):
+            cls.instantiate_instruments(self, *args, **kwargs)
+            if obj_init is not None:
+                obj_init(self, *args, **kwargs)
+
+        return __init
 
 
 class CompoundInstrument:
