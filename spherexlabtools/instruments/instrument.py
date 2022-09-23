@@ -73,64 +73,54 @@ def instantiate_instrument(inst_dict, exp, dev_links=None, **instance_kwargs):
     return inst
 
 
-class MergeInstrumentMetaclass(type):
-
-    def __new__(mcs, clsname, bases, attrs, instruments, *args, **kwargs):
-        # - add the instrument dictionary to returned class attributes - #
-        attrs.update({"instruments": instruments})
-
-        # - merge all class attributes of all instances - #
-        for instKey, instClass in instruments.items():
-            inst_class_attrs = [
-                (iattr, getattr(instClass, iattr)) for iattr in dir(instClass) if not
-                (iattr.startswith("__") and iattr.endswith("__"))
-            ]
-            new_attrs = {
-                "_".join([instKey, new_attr[0]]): new_attr[1] for new_attr in inst_class_attrs
-            }
-            attrs.update(new_attrs)
-
-        # - create the new __init__ method - #
-        init_func = attrs.get("__init__", None)
-        attrs.update({
-            "__init__": mcs.get_init(mcs, init_func)
-        })
-        return super().__new__(mcs, clsname, bases, attrs)
-
-    def instantiate_instruments(self, *args, **kwargs):
-        assert "sub_instruments" in kwargs, "Merged instruments must have 'sub_instruments' passed as a kwarg!"
-        subinstruments = kwargs["sub_instruments"]
-        for cfg_dict in subinstruments:
-            self.instruments[cfg_dict["instance_name"]] = instantiate_instrument(cfg_dict, **kwargs)
-
-    def get_init(cls, init=None):
-
-        def __init(self, *args, obj_init=init, **kwargs):
-            cls.instantiate_instruments(self, *args, **kwargs)
-            if obj_init is not None:
-                obj_init(self, *args, **kwargs)
-
-        return __init
-
-
 class CompoundInstrument:
     """ Dynamic class that merges two or more Instruments into a single object.
     """
 
-    def __init__(self, resource_name, merge_instances=None, dev_links=None):
-        # - get all class attributes from passed in instrument instances - #
-        cls_attrs = []
-        for instance in merge_instances:
-            cls = instance.__class__
-            attr_name_str = instance.name + "_%s"
-            attrs = [(attr_name_str % attr, getattr(cls, attr)) for attr in dir(cls) if not (attr.startswith("__") and
-                                                                                             attr.endswith("__"))]
-            cls_attrs.extend(attrs)
+    _scope_char = "_"
+    _init_complete = False
 
-        # - merge all class attributes retrieved above - #
-        for attr_tup in cls_attrs:
-            setattr(self.__class__, attr_tup[0], attr_tup[1])
+    def __init__(self, resource_name, instruments=None, **kwargs):
+        self.rec_name = resource_name
+        self.instruments = instruments
+        for instKey, instRument in self.instruments.items():
+            attrs = [attr for attr in dir(instRument) if not attr.startswith("__")]
+            for attr in attrs:
+                attr_key = self._scope_char.join([instKey, attr])
+                self.__dict__[attr_key] = None
+        self._init_complete = True
 
+    @staticmethod
+    def get_inst_attr(self, name):
+        scope_char = object.__getattribute__(self, "_scope_char")
+        instruments = object.__getattribute__(self, "instruments")
+        name_split = name.split(scope_char)
+        if name_split[0] in instruments.keys():
+            inst = instruments[name_split[0]]
+            attr = scope_char.join(name_split[1:])
+        else:
+            inst = self
+            attr = name
+
+        return inst, attr
+
+    def __getattribute__(self, name):
+        if object.__getattribute__(self, "_init_complete"):
+            get_inst_attr = object.__getattribute__(self, "get_inst_attr")
+            inst, attr = get_inst_attr(self, name)
+        else:
+            inst = self
+            attr = name
+        return object.__getattribute__(inst, attr)
+
+    def __setattr__(self, name, value):
+        if object.__getattribute__(self, "_init_complete"):
+            get_inst_attr = object.__getattribute__(self, "get_inst_attr")
+            inst, attr = get_inst_attr(self, name)
+        else:
+            inst = self
+            attr = name
+        object.__setattr__(inst, attr, value)
 
 class InstrumentSuite:
     """ Top-level instrument object to encapsulate all instruments within an experiment.
@@ -138,14 +128,22 @@ class InstrumentSuite:
 
     def __init__(self, inst_cfg, exp, dev_links=None):
         for inst in inst_cfg:
-            if "subinstruments" not in inst:
+            # - normal instrument - #
+            if "sub_instruments" not in inst:
                 self.__dict__[inst["instance_name"]] = instantiate_instrument(inst, exp, dev_links=dev_links)
+
+            # - compound instrument with a defined class - #
             elif "manufacturer" in inst and "instrument" in inst:
-                merge_instances = [instantiate_instrument(cfg, exp, dev_links=dev_links) for cfg in
-                                   inst["subinstruments"]]
+                instruments = {
+                    cfg["instance_name"]: instantiate_instrument(cfg, exp, dev_links=dev_links) for
+                    cfg in inst["sub_instruments"]
+                }
                 self.__dict__[inst["instance_name"]] = instantiate_instrument(inst, exp, dev_links=dev_links,
-                                                                              merge_instances=merge_instances)
+                                                                              instruments=instruments)
+            # - compound instrument w/ no defined class - #
             else:
-                merge_instances = [instantiate_instrument(cfg, exp, dev_links=dev_links) for cfg in
-                                   inst["subinstruments"]]
-                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst, exp, merge_instances)
+                instruments = {
+                    cfg["instance_name"]: instantiate_instrument(cfg, exp, dev_links=dev_links) for
+                    cfg in inst["sub_instruments"]
+                }
+                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst["resource_name"], instruments)
