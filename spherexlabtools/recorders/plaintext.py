@@ -27,7 +27,6 @@ class CsvRecorder(Recorder):
         except FileNotFoundError:
             rec_group = -1
             rec_group_ind = -1
-            rec_group_ind = 0
             self.opened_results = False
         else:
             rec_group = results_df[self._rgroup_str].values[-1]
@@ -41,7 +40,7 @@ class CsvRecorder(Recorder):
         """
         pass
 
-    def update_results(self):
+    def update_results(self, record):
         """ Join the data, procedure parameters, and metadata into a single dataframe and write
         to the output file.
         """
@@ -56,8 +55,3 @@ class CsvRecorder(Recorder):
         path = self.results_path if not self.results_path.endswith(".csv") else self.results_path + ".csv"
         self.merged_df.to_csv(path, header=header, mode=mode)
 
-    def update_results(self, record):
-        """ Join the data, procedure parameters, and metadata into a single dataframe and write
-        to the output file.
-        """
-        pass
