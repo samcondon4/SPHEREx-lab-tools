@@ -144,7 +144,6 @@ class FocuserDrive(LinearStageController):
         cur_pos = float(self.absolute_position)
         abs_pos = float(abs_pos)
         delta_pos = abs_pos - cur_pos
-        print(cur_pos, abs_pos, delta_pos)
         delta_step = self.absolute_to_steps(delta_pos)
         self.step_position += delta_step
 

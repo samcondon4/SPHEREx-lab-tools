@@ -5,7 +5,6 @@
 import logging
 import importlib
 import spherexlabtools.log as slt_log
-from pymeasure.instruments.instrument import DynamicProperty
 
 log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
 logger = logging.getLogger(log_name)
@@ -16,8 +15,6 @@ def instantiate_instrument(inst_dict, exp, dev_links=None, **instance_kwargs):
     :param: inst_dict: dictionary corresponding to a single instrument. This dictionary should take the form seen at
                        :ref:`Instrument Dictionaries`
     """
-    instance_kwargs.update({"exp": exp})
-
     # check that the instrument dictionary contains valid arguments #
     assert "instance_name" in inst_dict, "Missing required argument 'instance_name' in instrument dictionary!"
     assert "manufacturer" in inst_dict, "Missing required argument 'manufacturer' in instrument dictionary!"
@@ -121,6 +118,7 @@ class CompoundInstrument:
             inst = self
             attr = name
         object.__setattr__(inst, attr, value)
+
 
 class InstrumentSuite:
     """ Top-level instrument object to encapsulate all instruments within an experiment.
