@@ -183,7 +183,7 @@ class ProcedureSequence(Procedure):
     def startup(self):
         """ Set the sequence attribute of the procedure attribute.
         """
-        Procedure.startup(self)
+        super().startup()
         self.procedure.sequence = self
 
     def execute(self):
