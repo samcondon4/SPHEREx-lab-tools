@@ -18,8 +18,9 @@ class Recorder(QueueThread):
     _rgroup_str = "RecordGroup"
     _rgroupind_str = "RecordGroupInd"
     _rrow_str = "RecordRow"
+    _merge_on = [_rgroup_str, _rgroupind_str]
 
-    def __init__(self, cfg, exp, **kwargs):
+    def __init__(self, cfg, exp, merge=False, **kwargs):
         super().__init__(**kwargs)
         self.name = cfg["instance_name"]
         self.results_path = None
@@ -31,6 +32,15 @@ class Recorder(QueueThread):
         self.data_index = None
         self.meta_index = None
         self.procedure_start_time = None
+        # - should record tables be merged before written out? - #
+        self.merge = merge
+
+        # - copies of record tables - #
+        self.data_df = None
+        self.pp_df = None
+        self.meta_df = None
+        self.merged_df = None
+
 
     def handle(self, record):
         """ Update the record_group, record_group_ind, and record_row attributes, then call overridden methods to
@@ -42,8 +52,8 @@ class Recorder(QueueThread):
             self.record_group, self.record_group_ind = self.open_results(self.results_path)
 
         self.update_record_group(record)
-        self.update_indices()
-        self.update_results(record)
+        self.update_dataframes(record)
+        self.update_results()
 
     def update_record_group(self, record):
         # - update record_group - #
@@ -51,6 +61,7 @@ class Recorder(QueueThread):
         if self.procedure_start_time != record.procedure_start_time:
             self.record_group += 1
             self.record_group_changed = True
+            self.procedure_start_time = record.procedure_start_time
 
         # - update record_group_ind - #
         if self.record_group_changed:
@@ -58,15 +69,48 @@ class Recorder(QueueThread):
         else:
             self.record_group_ind += 1
 
-    def update_indices(self):
+        self.record_row = record.data.shape[0]
+
+    def update_dataframes(self, record):
         """ Update the pandas indices based on the current record_group and record_group_ind.
         """
+        # - update indices - #
         self.data_index = pd.MultiIndex.from_product([[self.record_group], [self.record_group_ind],
                                                       np.arange(self.record_row)], names=[self._rgroup_str,
                                                                                           self._rgroupind_str,
                                                                                           self._rrow_str])
         self.meta_index = pd.MultiIndex.from_tuples([(self.record_group, self.record_group_ind)],
                                                     names=[self._rgroup_str, self._rgroupind_str])
+
+        # - update dataframes - #
+        # - data
+        if type(record.data) is pd.DataFrame:
+            self.data_df = record.data
+            self.data_df.index = self.data_index
+        else:
+            self.data_df = pd.DataFrame(record.data, index=self.data_index)
+
+        # - procedure parameters
+        if type(record.proc_params) is pd.DataFrame:
+            self.pp_df = record.proc_params
+            self.pp_df.index = self.meta_index
+        else:
+            self.pp_df = pd.DataFrame(record.proc_params, index=self.meta_index)
+        self.pp_df.columns = ["_".join(["proc", col]) for col in self.pp_df.columns]
+
+        # - metadata
+        if type(record.meta) is pd.DataFrame:
+            self.meta_df = record.meta
+            self.meta_df.index = self.meta_index
+        else:
+            self.meta_df = pd.DataFrame(record.meta, index=self.meta_index)
+        self.meta_df.columns = ["_".join(["meta", col]) for col in self.meta_df.columns]
+
+        # - if merge, then merge all dataframes into one - #
+        if self.merge:
+            merged0 = pd.merge(self.pp_df, self.meta_df, on=self._merge_on)
+            self.merged_df = pd.merge(self.data_df, merged0, on=self._merge_on)
+            self.merged_df.index = self.data_df.index
 
     def open_results(self, results_path):
         """ Open the results file and return the record_group and record_group_ind. This method must be implemented in
@@ -77,7 +121,7 @@ class Recorder(QueueThread):
         """
         raise NotImplementedError("The open_results() method must be implemented in a subclass!")
 
-    def update_results(self, record):
+    def update_results(self):
         """ Update the results file in the format determined by recorder subclasses.
         """
         raise NotImplementedError("The update_results() method must be implemented in a subclass!")
