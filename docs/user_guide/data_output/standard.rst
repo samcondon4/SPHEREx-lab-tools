@@ -1,6 +1,9 @@
 Output Data Standard
 #####################
 
+Overview
+---------
+
 | While SPHERExLabTools supports output to many file types, the principles of how experiment data is organized for
   archival are common to all types. As described in :ref:`Fundamentals <user_guide/fundamentals:Fundamentals>`, data
   is generated and sent out for archival via :ref:`Procedures <user_guide/fundamentals:Procedures>`. Generally, procedures
@@ -21,7 +24,7 @@ Output Data Standard
   and *RecordGroupInd*. *RecordGroup* is an integer identifying a set of records that are grouped together, for instance after being
   generated from the same Procedure Sequence. *RecordGroupInd* identifies unique records within a larger Record Group.
 
-Example:
+Example
 --------
 
 | *note*: data values generated here are clearly physically unrealistic. Values in tables are simply to provide a demonstration of the
