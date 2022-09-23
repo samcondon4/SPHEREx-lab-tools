@@ -7,4 +7,5 @@ User Guide
 
     fundamentals
     configuration
-    data_standard/index
+    data_output/standard
+    data_output/recorders/index
