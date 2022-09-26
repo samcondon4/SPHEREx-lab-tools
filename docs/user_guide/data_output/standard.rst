@@ -5,16 +5,13 @@ Overview
 ---------
 
 | While SPHERExLabTools supports output to many file types, the principles of how experiment data is organized for
-  archival are common to all types. As described in :ref:`Fundamentals <user_guide/fundamentals:Fundamentals>`, data
-  is generated and sent out for archival via :ref:`Procedures <user_guide/fundamentals:Procedures>`. Generally, procedures
-  generate a single data point while :ref:`Procedure Sequences <user_guide/fundamentals:Procedure Sequences>` string together
-  multiple procedures in a loop to generate a larger data set.
+  archival are common to all types. As described in :ref:`Fundamentals <user_guide/fundamentals/index:Fundamentals>`, data
+  is generated and sent out for archival via :ref:`Procedures <user_guide/fundamentals/index:Procedures>`. Execution of an **individual procedure**
+  generates data which is wrapped into a **Record**. A **procedure sequence** is a set of multiple procedures which execute in a loop to
+  generate a **RecordGroup**.
 
-| Single data points are referred to as **Records** while collections of data points are **Record Groups**.
-
-| In addition to the measured quantities of interest (voltage, temperature, images, etc.), Records contain all experiment
-  information such as instrument metadata, procedure parameters, timestamps, etc., associated with the measured quantity.
-  Each piece of information contained within a Record is placed into one of 3 categories:
+| In addition to the measured quantities of an experiment (voltage, temperature, images, etcs.), Records also contain intrument
+  metadata, procedure parameters, timestamps, etc. Generally, information within a Record is placed into one of 3 categories:
 
     1. **Data**: The measured quantities of the experiment.
     2. **Procedure Parameters**: Parameters of the procedure that generated the measured quantities.
@@ -22,7 +19,10 @@ Overview
 
 | For any given output filetype, these pieces of information are separated but linked together via two indices called *RecordGroup*
   and *RecordGroupInd*. *RecordGroup* is an integer identifying a set of records that are grouped together, for instance after being
-  generated from the same Procedure Sequence. *RecordGroupInd* identifies unique records within a larger Record Group.
+  generated from the same Procedure Sequence. *RecordGroupInd* identifies unique records within the larger Record Group.
+
+| Depending on the specific recorder in use, these categories can be merged together into a single larger table, or kept
+  separate.
 
 Example
 --------
@@ -119,6 +119,7 @@ Example
         Metadata table after the procedure sequence.
 
 | Note the resulting structure of the tables. The *RecordGroup* increments from 0 to 1, since we appended to the existing
-  tables. The *RecordGroupInd* scales from 0 to 4 since we took measurements at 5 separate heater voltages within the same
-  procedure sequence. Finally, for every *RecordGroup* and *RecordGroupInd* pair, there are two values of *RecordRow* since
+  tables. Also, since we ran this measurement all within the same procedure sequence, all of the new data falls with *RecordGroup = 1*.
+  The *RecordGroupInd* scales from 0 to 4 since we took measurements at 5 separate heater voltages within the same
+  procedure sequence. Finally, for every new *RecordGroup* and *RecordGroupInd* pair, there are two values of *RecordRow* since
   we measured two seconds of data at every heater voltage.

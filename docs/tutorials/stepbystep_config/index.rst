@@ -378,5 +378,9 @@ Step-by-Step Experiment Configuration
 
 | The final interface that appears should look as follows:
 
+.. figure:: fig/final_interface.png
 
+    Final interface.
+
+| We have now completed the configuration of our SPHERExLabTools fake experiment. Now checkout: :ref:`Using the SPHERExLabTools Interface <tutorials/interface/index:Using the SPHERExLabTools Interface>`!
 
