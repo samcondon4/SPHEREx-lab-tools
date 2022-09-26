@@ -5,4 +5,5 @@ Tutorials
     :maxdepth: 2
 
     stepbystep_config/index
+    interface/index
 
