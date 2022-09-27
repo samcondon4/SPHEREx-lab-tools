@@ -3,18 +3,25 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to SPHERExLabTools' documentation!
+SPHERExLabTools DAQ and Instrument Control
 ===========================================
 
+| SPHERExLabTools (SLT) provides a general purpose laboratory data acquisition and instrument control system with driver
+  level software for control of testbed instrumentation, graphical interfaces, real-time data visualization, processing,
+  data archival tools for a variety of output file formats, and mechanisms to run manual and automated measurements.
+  Each component is highly configurable with minimal manual coding required by a user.
+
+| SLT draws inspiration from the existing `PyMeasure <https://pymeasure.readthedocs.io/en/latest/>`_ and `PyHk <http://docs.pyhk.net/en/beta/>`_ projects.
+  Many low-level architecture details are drawn directly from PyMeasure and the configuration file based interface was drawn from PyHk.
+
+Contents
+---------
 .. toctree::
    :maxdepth: 2
 
    user_guide/index
    tutorials/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   api/index
 
 
 

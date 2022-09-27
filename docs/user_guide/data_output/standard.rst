@@ -10,7 +10,7 @@ Overview
   generates data which is wrapped into a **Record**. A **procedure sequence** is a set of multiple procedures which execute in a loop to
   generate a **RecordGroup**.
 
-| In addition to the measured quantities of an experiment (voltage, temperature, images, etcs.), Records also contain intrument
+| In addition to the measured quantities of an experiment (voltage, temperature, images, etc.), Records also contain instrument
   metadata, procedure parameters, timestamps, etc. Generally, information within a Record is placed into one of 3 categories:
 
     1. **Data**: The measured quantities of the experiment.
@@ -123,3 +123,31 @@ Example
   The *RecordGroupInd* scales from 0 to 4 since we took measurements at 5 separate heater voltages within the same
   procedure sequence. Finally, for every new *RecordGroup* and *RecordGroupInd* pair, there are two values of *RecordRow* since
   we measured two seconds of data at every heater voltage.
+
+3) Merging the tables
+**********************
+
+| The **Data**, **Procedure Parameters**, and **Metadata** tables are all generated internally by the base recorder class.
+  Depending on the output file format desired, i.e. the specific recorder class in use, these tables may be merged into
+  a single table to facilitate writing to a single file or database entry. Note that when these tables are merged, all
+  column labels from the **Procedure Parameters** table are prepended with the string 'proc' while **Metadata** column
+  labels are prepended with 'meta.'
+
+| Merging of all tables generated in this example produces a table of the following form:
+
+.. raw:: html
+    :file: merged_table.html
+
+
+Recorders and Output-File Formats
+----------------------------------
+
+| Specific recorders which write the **Data**, **Procedure Parameters**, and **Metadata** tables out to files or databases
+  can be classified as *merging* or *non-merging*. *Merging* recorders write the merged table illustrated in :ref:`3) <user_guide/data_output/standard:3) Merging the tables>`
+  to a single file or database entry, while *non-merging* recorders keep the tables separate. Generally, plaintext or database
+  output formats are *merging* recorders while binary formats are *non-merging*. Links to the specific recorder API documentation
+  are provided below:
+
+
+
+
