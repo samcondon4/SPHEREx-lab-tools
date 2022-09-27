@@ -9,3 +9,4 @@ User Guide
     data_output/standard
     data_output/recorders/index
     configuration
+    compound_instruments
