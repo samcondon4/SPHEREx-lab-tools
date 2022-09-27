@@ -14,25 +14,23 @@ class CsvRecorder(Recorder):
     """
 
     def __init__(self, cfg, exp, **kwargs):
-        super().__init__(cfg, exp, merge=True, **kwargs)
+        super().__init__(cfg, exp, extension=".csv", merge=True, **kwargs)
 
-    def open_results(self, results_path):
+    def open_results(self, exists):
         """ Open the results csv file and return the record_group and record_group_ind. Since csvs do not
         need to stay open, use the opened_results attribute as a flag for if the csv output file exists.
 
-        :param results_path: Path to the results.
         :return: Return the initial record_group and record_group_ind for a new file.
         """
-        try:
-            results_df = pd.read_csv(results_path)
-        except FileNotFoundError:
-            rec_group = -1
-            rec_group_ind = -1
-            self.opened_results = False
-        else:
+        if exists:
+            results_df = pd.read_csv(self.results_path)
             rec_group = results_df[self._rgroup_str].values[-1]
             rec_group_ind = results_df[self._rgroupind_str].values[-1]
             self.opened_results = True
+        else:
+            rec_group = -1
+            rec_group_ind = -1
+            self.opened_results = False
 
         return rec_group, rec_group_ind
 
@@ -53,6 +51,5 @@ class CsvRecorder(Recorder):
             header = False
         self.opened_results = True
 
-        path = self.results_path if not self.results_path.endswith(".csv") else self.results_path + ".csv"
-        self.merged_df.to_csv(path, header=header, mode=mode)
+        self.merged_df.to_csv(self.results_path, header=header, mode=mode)
 

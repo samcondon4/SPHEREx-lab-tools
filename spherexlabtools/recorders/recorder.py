@@ -20,9 +20,10 @@ class Recorder(QueueThread):
     _rrow_str = "RecordRow"
     _merge_on = [_rgroup_str, _rgroupind_str]
 
-    def __init__(self, cfg, exp, merge=False, **kwargs):
+    def __init__(self, cfg, exp, extension, merge=False, **kwargs):
         super().__init__(**kwargs)
         self.name = cfg["instance_name"]
+        self.extension = extension
         self.results_path = None
         self.opened_results = None
         self.record_group = None
@@ -46,10 +47,14 @@ class Recorder(QueueThread):
         """ Update the record_group, record_group_ind, and record_row attributes, then call overridden methods to
         write to the output file.
         """
-        if record.recorder_write_path != self.results_path:
-            self.results_path = record.recorder_write_path
+        fp = record.recorder_write_path
+        if not fp.endswith(self.extension):
+            fp += self.extension
+        file_exists = os.path.exists(fp)
+        if self.results_path != fp or not file_exists:
+            self.results_path = fp
             self.close_results()
-            self.record_group, self.record_group_ind = self.open_results(self.results_path)
+            self.record_group, self.record_group_ind = self.open_results(file_exists)
 
         self.update_record_group(record)
         self.update_dataframes(record)
@@ -96,7 +101,6 @@ class Recorder(QueueThread):
             self.pp_df.index = self.meta_index
         else:
             self.pp_df = pd.DataFrame(record.proc_params, index=self.meta_index)
-        self.pp_df.columns = ["_".join(["proc", col]) for col in self.pp_df.columns]
 
         # - metadata
         if type(record.meta) is pd.DataFrame:
@@ -104,19 +108,23 @@ class Recorder(QueueThread):
             self.meta_df.index = self.meta_index
         else:
             self.meta_df = pd.DataFrame(record.meta, index=self.meta_index)
-        self.meta_df.columns = ["_".join(["meta", col]) for col in self.meta_df.columns]
 
         # - if merge, then merge all dataframes into one - #
         if self.merge:
+            self.pp_df.columns = ["_".join(["proc", col]) for col in self.pp_df.columns]
+            self.meta_df.columns = ["_".join(["meta", col]) for col in self.meta_df.columns]
             merged0 = pd.merge(self.pp_df, self.meta_df, on=self._merge_on)
             self.merged_df = pd.merge(self.data_df, merged0, on=self._merge_on)
             self.merged_df.index = self.data_df.index
 
-    def open_results(self, results_path):
+    def open_results(self, exists):
         """ Open the results file and return the record_group and record_group_ind. This method must be implemented in
         subclasses and must return those values after opening (or creating) the results file.
 
-        :param results_path: Path to the results.
+        Overrides of this method in subclasses should use the self.results_path attribute as the path to the output
+        file to open.
+
+        :param: Boolean indicating if the file exists or not.
         :return: Return the initial record_group and record_group_ind for a new file.
         """
         raise NotImplementedError("The open_results() method must be implemented in a subclass!")
