@@ -77,8 +77,9 @@ class CompoundInstrument:
     _scope_char = "_"
     _init_complete = False
 
-    def __init__(self, resource_name, instruments=None, **kwargs):
+    def __init__(self, resource_name, name=None, instruments=None, **kwargs):
         self.rec_name = resource_name
+        self.name = name
         self.instruments = instruments
         for instKey, instRument in self.instruments.items():
             attrs = [attr for attr in dir(instRument) if not attr.startswith("__")]
@@ -144,4 +145,6 @@ class InstrumentSuite:
                     cfg["instance_name"]: instantiate_instrument(cfg, exp, dev_links=dev_links) for
                     cfg in inst["sub_instruments"]
                 }
-                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst["resource_name"], instruments)
+                self.__dict__[inst["instance_name"]] = CompoundInstrument(inst["resource_name"],
+                                                                          name=inst["instance_name"],
+                                                                          instruments=instruments)
