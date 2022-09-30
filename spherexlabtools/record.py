@@ -1,3 +1,4 @@
+import datetime
 import os
 import logging
 import threading
@@ -38,6 +39,7 @@ class Record:
         self.recorder = recorder
         self.recorder_write_path = os.path.join(os.getcwd(), self.name)
         self.data = None
+        self.timestamp = None
         self.proc_params = None
         self.meta = None
         self.procedure_start_time = None
@@ -54,6 +56,13 @@ class Record:
 
     def update(self, data, proc_params=None, meta=None, proc_start_time=None, **kwargs):
         self.data = data
+        try:
+            if "timestamp" in self.data.columns:
+                self.timestamp = self.data["timestamp"].values[0]
+            else:
+                self.timestamp = datetime.datetime.now()
+        except (KeyError, AttributeError):
+            self.timestamp = datetime.datetime.now()
         self.proc_params = proc_params
         self.meta = meta
         self.procedure_start_time = proc_start_time
