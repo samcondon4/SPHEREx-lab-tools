@@ -52,5 +52,9 @@ def load_objects_from_cfg_list(search_order, exp, cfg_list, **kwargs):
             logger.error(err_msg)
             raise LoaderError(err_msg)
 
+        if "params" in cfg.keys():
+            for pKey, pVal in cfg["params"].items():
+                setattr(objects[name], pKey, pVal)
+
     return objects
 

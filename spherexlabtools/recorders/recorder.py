@@ -15,10 +15,14 @@ class Recorder(QueueThread):
     'RecordRow' indices used in output dataframes.
     """
 
-    _rgroup_str = "RecordGroup"
-    _rgroupind_str = "RecordGroupInd"
-    _rrow_str = "RecordRow"
-    _merge_on = [_rgroup_str, _rgroupind_str]
+    _rgroup_col_str = "RecordGroup"
+    _rgroupind_col_str = "RecordGroupInd"
+    _rrow_col_str = "RecordRow"
+    _merge_on = [_rgroup_col_str, _rgroupind_col_str]
+
+    _rgroup_val_str = "%06i"
+    _rgroupind_val_str = "%06i"
+    _rrow_val_str = "%06i"
 
     def __init__(self, cfg, exp, extension, merge=False, **kwargs):
         super().__init__(**kwargs)
@@ -47,13 +51,12 @@ class Recorder(QueueThread):
         """ Update the record_group, record_group_ind, and record_row attributes, then call overridden methods to
         write to the output file.
         """
-        fp = record.recorder_write_path
-        if not fp.endswith(self.extension):
-            fp += self.extension
-        file_exists = os.path.exists(fp)
-        if self.results_path != fp or not file_exists:
+        fp, file_exists = self.should_open(record)
+        if fp is not False:
+            # - if data_df is None, then no file has been opened at all yet, so don't close - #
+            if self.data_df is not None:
+                self.close_results()
             self.results_path = fp
-            self.close_results()
             self.record_group, self.record_group_ind = self.open_results(file_exists)
 
         self.update_record_group(record)
@@ -79,13 +82,15 @@ class Recorder(QueueThread):
     def update_dataframes(self, record):
         """ Update the pandas indices based on the current record_group and record_group_ind.
         """
+        rgroup_str = self._rgroup_val_str % self.record_group
+        rgroupind_str = self._rgroupind_val_str % self.record_group_ind
         # - update indices - #
-        self.data_index = pd.MultiIndex.from_product([[self.record_group], [self.record_group_ind],
-                                                      np.arange(self.record_row)], names=[self._rgroup_str,
-                                                                                          self._rgroupind_str,
-                                                                                          self._rrow_str])
-        self.meta_index = pd.MultiIndex.from_tuples([(self.record_group, self.record_group_ind)],
-                                                    names=[self._rgroup_str, self._rgroupind_str])
+        self.data_index = pd.MultiIndex.from_product([[rgroup_str], [rgroupind_str],
+                                                      [self._rrow_val_str % i for i in np.arange(self.record_row)]],
+                                                      names=[self._rgroup_col_str, self._rgroupind_col_str, self._rrow_col_str])
+
+        self.meta_index = pd.MultiIndex.from_tuples([(rgroup_str, rgroupind_str)],
+                                                    names=[self._rgroup_col_str, self._rgroupind_col_str])
 
         # - update dataframes - #
         # - data
@@ -109,6 +114,10 @@ class Recorder(QueueThread):
         else:
             self.meta_df = pd.DataFrame(record.meta, index=self.meta_index)
 
+        print(self.data_df)
+        print(self.meta_df)
+        print(self.pp_df)
+
         # - if merge, then merge all dataframes into one - #
         if self.merge:
             self.pp_df.columns = ["_".join(["proc", col]) for col in self.pp_df.columns]
@@ -116,6 +125,24 @@ class Recorder(QueueThread):
             merged0 = pd.merge(self.pp_df, self.meta_df, on=self._merge_on)
             self.merged_df = pd.merge(self.data_df, merged0, on=self._merge_on)
             self.merged_df.index = self.data_df.index
+
+    def should_open(self, record):
+        """ Check if new results should be opened via open_results().
+
+        :param write_path: Path to results file.
+        :return: Tuple of the form (file-path, Boolean indicating if the file exists).
+        """
+        fp = record.recorder_write_path
+        if not fp.endswith(self.extension):
+            fp += self.extension
+
+        fp_exists = os.path.exists(fp)
+        if (not fp_exists) or (self.results_path != fp):
+            ret = fp
+        else:
+            ret = False
+
+        return (ret, fp_exists)
 
     def open_results(self, exists):
         """ Open the results file and return the record_group and record_group_ind. This method must be implemented in
