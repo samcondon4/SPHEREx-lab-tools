@@ -24,8 +24,8 @@ class CsvRecorder(Recorder):
         """
         if exists:
             results_df = pd.read_csv(self.results_path)
-            rec_group = results_df[self._rgroup_str].values[-1]
-            rec_group_ind = results_df[self._rgroupind_str].values[-1]
+            rec_group = results_df[self._rgroup_col_str].values[-1]
+            rec_group_ind = results_df[self._rgroupind_col_str].values[-1]
             self.opened_results = True
         else:
             rec_group = -1
