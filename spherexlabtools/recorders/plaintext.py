@@ -39,7 +39,7 @@ class CsvRecorder(Recorder):
         """
         pass
 
-    def update_results(self, record):
+    def update_results(self):
         """ Join the data, procedure parameters, and metadata into a single dataframe and write
         to the output file.
         """
