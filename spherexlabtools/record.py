@@ -56,13 +56,6 @@ class Record:
 
     def update(self, data, proc_params=None, meta=None, proc_start_time=None, **kwargs):
         self.data = data
-        try:
-            if "timestamp" in self.data.columns:
-                self.timestamp = self.data["timestamp"].values[0]
-            else:
-                self.timestamp = datetime.datetime.now()
-        except (KeyError, AttributeError):
-            self.timestamp = datetime.datetime.now()
         self.proc_params = proc_params
         self.meta = meta
         self.procedure_start_time = proc_start_time
