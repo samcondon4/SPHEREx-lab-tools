@@ -37,7 +37,6 @@ class Recorder(QueueThread):
         self.data_index = None
         self.meta_index = None
         self.procedure_start_time = None
-        self.record_ts = None
         # - should record tables be merged before written out? - #
         self.merge = merge
 
@@ -59,9 +58,6 @@ class Recorder(QueueThread):
                 self.close_results()
             self.results_path = fp
             self.record_group, self.record_group_ind = self.open_results(file_exists)
-
-        # - update the record timestamp - #
-        self.record_ts = record.timestamp
 
         self.update_record_group(record)
         self.update_dataframes(record)
