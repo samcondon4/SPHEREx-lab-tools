@@ -12,7 +12,7 @@ from spherexlabtools.ui.widgets import Sequencer, Records
 from ..parameters import ParameterInspect
 from ..thread import StoppableReusableThread
 from ..parameters import Parameter as pymeasureParam
-from ..procedures import BaseProcedure, ProcedureSequence
+from ..procedures import Procedure, ProcedureSequence
 from ..parameters import FloatParameter, IntegerParameter, BooleanParameter, ListParameter
 
 log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
@@ -414,14 +414,14 @@ class ProcedureController(Controller):
     def stop_procedure_sequence(self):
         """ Stop a currently running procedure sequence.
         """
-        if self.procedure_sequence.status == BaseProcedure.RUNNING:
+        if self.procedure_sequence.status == Procedure.RUNNING:
             self.exp.stop_thread(self.procedure_sequence_thread_string)
         self.procedure_sequence.seq_ind = 0
 
     def pause_procedure_sequence(self):
         """ Stop a currently running procedure sequence without resetting the sequence index.
         """
-        if self.procedure_sequence.status == BaseProcedure.RUNNING:
+        if self.procedure_sequence.status == Procedure.RUNNING:
             self.exp.stop_thread(self.procedure_sequence_thread_string)
 
     def _connect_buttons(self):
