@@ -1,7 +1,0 @@
-#################
-Thermal Surrogate
-#################
-
-.. automodule:: spherexlabtools.applications.thermal_surrogate
-    :members:
-

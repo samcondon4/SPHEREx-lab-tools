@@ -1,4 +1,0 @@
-Compound Instrument Configuration
-===================================
-
-asdf
