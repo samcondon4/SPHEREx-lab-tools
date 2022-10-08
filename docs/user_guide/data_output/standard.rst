@@ -145,9 +145,18 @@ Recorders and Output-File Formats
 | Specific recorders which write the **Data**, **Procedure Parameters**, and **Metadata** tables out to files or databases
   can be classified as *merging* or *non-merging*. *Merging* recorders write the merged table illustrated in :ref:`3) <user_guide/data_output/standard:3) Merging the tables>`
   to a single file or database entry, while *non-merging* recorders keep the tables separate. Generally, plaintext or database
-  output formats are *merging* recorders while binary formats are *non-merging*. Links to the specific recorder API documentation
-  are provided below:
+  output formats are *merging* recorders while binary formats are *non-merging*.
 
+| Links to recorder API documentation are provided below, classified by *merging* and *non-merging*:
+
+**Merging Recorders**
+
+- :ref:`Comma-Separated-Values (CSV) Recorder <api/recorders/plaintext/csv:Comma-Separated Values (CSV) Recorder>`
+- :ref:`Structured-Query-Language (SQL) Database Recorder <api/recorders/database/sql:Structured-Query-Language (SQL) Database Recorder>`
+
+**Non-Merging Recorders**
+
+- :ref:`Hierarchical-Data-Format 5 (HDF5) Recorder <api/recorders/binary/hdf:Hierarchical-Data-Format 5 (HDF5) Recorder>`
 
 
 

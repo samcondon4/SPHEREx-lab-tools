@@ -6,6 +6,6 @@ User Guide
     :maxdepth: 2
 
     fundamentals/index
-    data_standard/index
+    data_output/standard
     configuration
     compound_instruments
