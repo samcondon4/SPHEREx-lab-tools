@@ -114,10 +114,6 @@ class Recorder(QueueThread):
         else:
             self.meta_df = pd.DataFrame(record.meta, index=self.meta_index)
 
-        print(self.data_df)
-        print(self.meta_df)
-        print(self.pp_df)
-
         # - if merge, then merge all dataframes into one - #
         if self.merge:
             self.pp_df.columns = ["_".join(["proc", col]) for col in self.pp_df.columns]

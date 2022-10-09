@@ -10,7 +10,12 @@ from spherexlabtools.recorders import Recorder
 
 
 class HDFRecorder(Recorder):
-    """ Write the data, procedure parameters, and metadata into separate groups of an HDF5 file.
+    """ A non-merging recorder that writes the data, procedure parameters, and metadata tables into three separate groups
+    of an HDF5 file:
+
+        1. 'data'
+        2. 'proc_params'
+        3. 'meta'
     """
 
     _data_group_str = "data"
@@ -21,9 +26,9 @@ class HDFRecorder(Recorder):
         super().__init__(cfg, exp, extension=".h5", merge=False, **kwargs)
 
     def open_results(self, exists):
-        """ Open existing or create a new .h5 file.
+        """ Open existing or create a new .h5 file. If the file exists then read the latest RecordGroup and RecordGroupInd
+        values from the 'proc_params' group.
 
-        :param results_path:
         :return: The appropriate RecordGroup and RecordGroupInd values.
         """
         self.opened_results = pd.HDFStore(self.results_path)
@@ -43,7 +48,7 @@ class HDFRecorder(Recorder):
             self.opened_results = None
 
     def update_results(self):
-        """ update the .h5 results with information from the new dataframes.
+        """ Append to the HDF groups with the information from the new dataframes.
         """
         self.opened_results.append(self._data_group_str, self.data_df)
         self.opened_results.append(self._pp_group_str, self.pp_df)

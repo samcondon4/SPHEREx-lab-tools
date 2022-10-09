@@ -13,13 +13,26 @@ log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
 logger = logging.getLogger(log_name)
 
 class SQLRecorder(Recorder):
-    """ Writes the merged dataframe to a SQL database.
+    """ A merging recorder that write all tables to a SQL database.
     """
 
     _if_exists = "append"
 
     def __init__(self, cfg, exp, table, engine, type_dict=None, **kwargs):
-        """ Initialize the SQL recorder.
+        """ Initialize the SQL recorder. Note that when configuring a SQLRecorder, the configuration dictionary
+        MUST include the 'table' and 'engine' keywords. So the config dict is of the following form:
+
+            {
+                'instance_name': 'name_of_recorder',
+                'type': 'SQLRecorder',
+                'kwargs': {
+                    'table': (REQUIRED) 'name_of_sql_table',
+
+                    'engine': (REQUIRED) <engine object for use by pandas. See `Pandas SQL I/O <https://pandas.pydata.org/docs/user_guide/io.html#io-sql>`_>
+
+                    'type_dict': (OPTIONAL) <dictionary of `SQL Alchemy Types <https://docs.sqlalchemy.org/en/14/core/types.html>`_ mapping table columns to sql types.>
+                }
+            }
 
         :param cfg: Config dictionary.
         :param exp: Experiment control package.
@@ -38,8 +51,7 @@ class SQLRecorder(Recorder):
         return (True, True) if self.opened_results is None. Then, use self.opened_results as a flag to indicate
         that we already probed the initial RecordGroup and RecordGroupInd values.
 
-        :param record:
-        :return:
+        :return: (True, True) or (False, True)
         """
         if self.opened_results is None:
             ret = (True, True)
@@ -76,12 +88,10 @@ class SQLRecorder(Recorder):
 
     def close_results(self):
         """ Close the engine.
-        :return:
         """
         self.engine.close()
 
     def update_results(self):
         """ Write the merged dataframe to the database.
-        :return:
         """
         self.merged_df.to_sql(self.table, self.engine, dtype=self.type_dict, if_exists=self._if_exists)

@@ -10,7 +10,7 @@ from spherexlabtools.recorders import Recorder
 
 
 class CsvRecorder(Recorder):
-    """ Joins the data, procedure parameters, and metadata into a single csv table.
+    """ A merging recorder that writes to a CSV text file.
     """
 
     def __init__(self, cfg, exp, **kwargs):
@@ -40,8 +40,8 @@ class CsvRecorder(Recorder):
         pass
 
     def update_results(self):
-        """ Join the data, procedure parameters, and metadata into a single dataframe and write
-        to the output file.
+        """ Check if the output file already exists. If so, just append to the existing file. If not, create the file
+        and write the column header.
         """
         # - initialize key-words for to_csv() - #
         mode = "w"

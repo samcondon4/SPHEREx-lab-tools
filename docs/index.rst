@@ -1,21 +1,26 @@
 .. SPHERExLabTools documentation master file, created by
-   sphinx-quickstart on Fri Feb 25 15:27:44 2022.
+   sphinx-quickstart on Tue Sep 13 09:11:29 2022.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to SPHERExLabTools's documentation!
+SPHERExLabTools DAQ and Instrument Control
 ===========================================
 
-SPHERExLabTools is a general purpose data acquisition and instrument control package built in Python for use in the SPHEREx optics test and calibration campaign. The package extends the repository of instrument classes provided in the :pymeasure:`PyMeasure Project <>` and allows the specification of complex measurement procedures through sets of configuration files with only a limited amount of manual coding required by a user. 
+| SPHERExLabTools (SLT) provides a general purpose laboratory data acquisition and instrument control system with driver
+  level software for control of testbed instrumentation, graphical interfaces, real-time data visualization, processing,
+  data archival tools for a variety of output file formats, and mechanisms to run manual and automated measurements.
+  Each component is highly configurable with minimal manual coding required by a user.
 
-Follow the :doc:`Installation Guide <installation>` for installation instructions, then check out :doc:`SPHERExLabTools Fundamentals <user_guide/fundamentals>` to orient yourself with the package. For instructions on running preconfigured experiments see :doc:`SPHERExLabTools Core Experiments <user_guide/core_experiments>`. To configure custom experiments refer to :doc:`SPHERExLabTools Custom Experiments <user_guide/custom_experiments>` 
+| SLT draws inspiration from the existing `PyMeasure <https://pymeasure.readthedocs.io/en/latest/>`_ and `PyHk <http://docs.pyhk.net/en/beta/>`_ projects.
+  Many low-level architecture details are drawn directly from PyMeasure and the configuration file based interface was drawn from PyHk.
 
+Contents
+---------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
-   
-   installation
+
    user_guide/index
+   tutorials/index
    api/index
 
 
@@ -26,6 +31,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-
