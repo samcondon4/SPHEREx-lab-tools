@@ -11,7 +11,7 @@ and the configuration file based interface was drawn from PyHk.
 
 See the full [SPHERExLabTools Documentation](https://spherexlogbook.caltech.edu/references/ControlSw/) and the 
 [SPHERExLabTools Conference Proceedings](https://www.spiedigitallibrary.org/conference-proceedings-of-spie/12180/121804S/SPHERExLabTools-SLT--a-Python-data-acquisition-system-for-SPHEREx/10.1117/12.2630662.full?SSO=1)
-for more a description of the package architecture and use cases.
+for a description of the package architecture and use cases.
 
 
 
