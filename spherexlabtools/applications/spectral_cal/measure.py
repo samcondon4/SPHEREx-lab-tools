@@ -47,7 +47,7 @@ SpecCalSql_Recorder = {
     "instance_name": "SQLRecorder",
     "type": "SQLRecorder",
     "params": {
-        "table": "spectral_cal"
+        "table": "spectral_cal_new"
     }
 }
 
