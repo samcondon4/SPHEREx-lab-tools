@@ -13,7 +13,7 @@ Step-by-Step Experiment Configuration
 0) Setting up the configuration file structure
 -----------------------------------------------
 
-| As discussed in :ref:`Fundamentals <user_guide/fundamentals:Fundamentals>`, SPHERExLabTools reads user defined :ref:`Experiment Control Packages <user_guide/fundamentals:Experiment Control Packages>`
+| As discussed in :ref:`Fundamentals <user_guide/fundamentals/index:Fundamentals>`, SPHERExLabTools reads user defined :ref:`Experiment Control Packages <user_guide/fundamentals/index:Experiment Control Packages>`
   to configure control software for a given experiment. Experiment control packages define the 5 configuration variables:
 
     - INSTRUMENT_SUITE: python list of hardware configuration dictionaries.
@@ -273,8 +273,10 @@ Step-by-Step Experiment Configuration
   and an image from the "IR camera." Note that there is no **shutdown()** method defined in this procedure, though typically this method would be used
   to place all of the instruments in the experiment into an idle state.
 
-| Also note the three calls of **self.emit()**. This is the method that sends measured data out to :ref:`Procedure <user_guide/fundamentals/index:Procedures>`
-  and :ref:`Recorder <user_guide/fundamentals/index:Recorders>` classes for live display and archival.
+| Also note the three calls of **self.emit()**. This is the method that sends measured data out to :ref:`Viewers and Recorders <user_guide/fundamentals/index:Viewers and Recorders>`
+  for live display and archival.
+
+
 
 4) Writing the procedure, viewer, and recorder configuration dictionaries
 --------------------------------------------------------------------------
