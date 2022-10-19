@@ -102,7 +102,6 @@ class FITSRecorder(Recorder):
     """
 
     _rg_append_char = '_'
-    _open_no_file_str = 'open_no_file'
 
     def __init__(self, cfg, exp, label_datacols=False, **kwargs):
         """ Initialize a FITSRecorder
@@ -115,6 +114,7 @@ class FITSRecorder(Recorder):
         super().__init__(cfg, exp, extension=".fits", merge=True, **kwargs)
         self._prev_rec_group = None
         self.label_datacols = label_datacols
+        self.meta_pp_cols = []
 
     def should_open(self, record):
         """ Override the base should_open method to check if a directory for fits files exists, rather than a single
@@ -139,14 +139,17 @@ class FITSRecorder(Recorder):
         :param exists:
         :return:
         """
+        if not exists:
+            os.makedirs(self.results_path, exist_ok=True)
+
         self.opened_results = None
-        fits_files = [f for f in os.listdir(self.results_path) if self.extension in f]
-        if exists and len(fits_files) > 0:
-            fits_files.sort()
-            rec_group = int(fits_files[-1].split(self._rg_append_char)[-1])
+        fits_files = [f.replace(self.extension, '') for f in os.listdir(self.results_path) if self.extension in f]
+        if not exists or len(fits_files) == 0:
+            rec_group = -1
             rec_group_ind = -1
         else:
-            rec_group = -1
+            fits_files.sort()
+            rec_group = int(fits_files[-1].split(self._rg_append_char)[-1])
             rec_group_ind = -1
 
         self._prev_rec_group = rec_group
@@ -156,28 +159,28 @@ class FITSRecorder(Recorder):
         self.opened_results.close()
 
     def update_results(self):
-        """ Update the fits output files.
-        """
+
         data_values = self.data_df.values.astype(np.float64)
         data_values = np.array([data_values])
-        meta_pp_columns = [col for col in self.merged_df.columns if 'proc' in str(col) or 'meta' in str(col)]
 
+        # - if a new record group, then open a new HDUL and write the data header - #
         if self._prev_rec_group != self.record_group:
-            # - create the primary HDU and start a new HDUList - #
+            # - update the meta_pp_columns - #
+            self.meta_pp_columns = [col for col in self.merged_df.columns if 'proc' in str(col) or 'meta' in str(col)]
+
+            # - create the primary hdu - #
             phdu = fits.PrimaryHDU(data_values)
-            self.opened_results = fits.HDUList([phdu])
-            icol = 0
             if self.label_datacols:
+                icol = 0
                 for col in self.data_df.columns:
                     col_str = 'COL_%i' % icol
                     phdu.header[col_str] = col
                     icol += 1
 
-            # - create the extension HDU - #
-            rgi_values = self.pp_df.index.get_level_values(1).astype(np.uint64)
-            rgi_col = fits.Column(name='RecordGroupInd', format='K', array=rgi_values)
+            # - create the extension hdu - #
+            rgi_col = fits.Column(name='RecordGroupInd', format='K', array=[self.record_group_ind])
             cols = [rgi_col]
-            for col in meta_pp_columns:
+            for col in self.meta_pp_columns:
                 if 'proc' in col:
                     array = self.pp_df[col]
                 elif 'meta' in col:
@@ -185,8 +188,11 @@ class FITSRecorder(Recorder):
                 column = fits.Column(name=col, format='K', array=array)
                 cols.append(column)
             ext_hdu = fits.BinTableHDU.from_columns(cols)
-            self.opened_results.append(ext_hdu)
 
+            # - create the HDUL - #
+            self.opened_results = fits.HDUList([phdu, ext_hdu])
+
+        # - otherwise just append to the existing HDUL - #
         else:
             # - append to the primary HDU - #
             phdu_data = self.opened_results[0].data
@@ -194,17 +200,22 @@ class FITSRecorder(Recorder):
             self.opened_results[0].data = phdu_data
 
             # - append to the extension HDU - #
-            ext_data = self.opened_results[1].data
-            ext_data_dtype = ext_data.dtype
-            meta_pp_data = self.merged_df[meta_pp_columns].data.astype(ext_data_dtype)
-            ext_data = np.concatenate([ext_data, meta_pp_data])
+            ext_dtype = self.opened_results[1].data.dtype
+            ext_list = [self.record_group_ind]
+            for col in self.meta_pp_columns:
+                if 'proc' in col:
+                    array = self.pp_df[col]
+                elif 'meta' in col:
+                    array = self.meta_df[col]
+                ext_list.extend(array)
+            ext_append = np.array([tuple(ext_list)], dtype=ext_dtype)
+            ext_data = np.concatenate([self.opened_results[1].data, ext_append])
             self.opened_results[1].data = ext_data
 
         # - write the fits file - #
-        path = os.path.join(self.results_path, 'rg%04i.fits' % self.record_group)
+        path = os.path.join(self.results_path, 'rg%s%04i.fits' % (self._rg_append_char, self.record_group))
         self.opened_results.writeto(path, overwrite=True)
 
         # - update the previous record group attribute - #
         self._prev_rec_group = self.record_group
-
 
