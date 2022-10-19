@@ -5,6 +5,9 @@ import time
 import logging
 import datetime
 import threading
+
+import numpy as np
+import pandas as pd
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
 import spherexlabtools.log as slt_log
@@ -162,8 +165,88 @@ class Procedure(StoppableReusableThread):
         )
 
 
-class LogProcedure(Procedure):
-    pass
+class LoggingProcedure(Procedure):
+    """ This class provides basic logging of instrument parameters. It contains the following Procedure Parameters:
+
+    - sample_rate: The rate in hz to query instruments for new data.
+    - record_rows: How many rows of instrument data should be recorded before a call to emit()?
+    - iterations: How many times to run the log. Set to 0 for continuous logging.
+
+    Currently, logging to just a single record is supported.
+    """
+
+    sample_rate = FloatParameter('Sample Rate', units='hz', default=1)
+    record_rows = IntegerParameter('Record Rows', default=1)
+    iterations = IntegerParameter('Iterations', default=0)
+
+    def __init__(self, cfg, exp, data, meta, **kwargs):
+        """ Initialize a basic logging procedure.
+
+        :param cfg: Configuration dictionary.
+        :param exp: Experiment control package.
+        :param data: Dictionary of the form: {'instrument-name': [list of parameters to record from the instrument in the data table]}
+        :param meta: Dictionary of the form: {'instrument-name': [list of parameters to record from the instrument in the meta-data table]}
+        :param kwargs:
+        """
+        assert len(cfg['records'].keys()) == 1, 'One and only one record is currently supported by the base LoggingProcedure.'
+        super().__init__(cfg, exp, **kwargs)
+        self.record = list(cfg['records'].keys())[0]
+        self.data_params = [(key, val[i]) for key, val in data.items() for i in range(len(val))]
+        self.meta_params = [(key, val[i]) for key, val in meta.items() for i in range(len(val))]
+        self.continuous = False
+
+    def startup(self):
+        """ Populate the metadata dictionary.
+        """
+        super().startup()
+        # - populate the metadata dataframe for the procedure execution - #
+        self.meta_df = pd.DataFrame({
+            param: [0] for inst, param in self.meta_params
+        })
+        self.populate_log_row(self.hw, self.meta_df, self.meta_params, 0)
+
+        # - check if we should run in continuous mode - #
+        self.continuous = True if self.iterations == 0 else False
+        if self.continuous:
+            self.iterations += 1
+
+        # - initialize a new data dataframe - #
+        self.data_df = pd.DataFrame({
+            param: np.arange(self.record_rows) for inst, param in self.data_params
+        })
+
+    def execute(self):
+        """ Run the log.
+        """
+        i = 0
+        while i < self.iterations:
+            if self.should_stop():
+                break
+
+            # - populate the data dataframe - #
+            for j in range(self.record_rows):
+                self.populate_log_row(self.hw, self.data_df, self.data_params, j)
+                time.sleep(1 / self.sample_rate)
+            self.emit(self.record, self.data_df, meta=self.meta_df)
+
+            # - if we aren't in continuous mode, then add to the iterator - #
+            if not self.continuous:
+                i += 1
+
+    @staticmethod
+    def populate_log_row(hw, log_dict, param_list, index):
+        """ Populate the data or metadata dictionary row with parameter values.
+
+        :param hw: Hardware object.
+        :param log_dict: The dictionary to populate.
+        :param param_list: List of tuples with the instrument name and parameter to query.
+        :param index: Index of the dictionary row to populate.
+        :return:
+        """
+        for inst, param in param_list:
+            inst_obj = getattr(hw, inst)
+            param_val = getattr(inst_obj, param)
+            log_dict[param][index] = param_val
 
 
 class ProcedureSequence(Procedure):
@@ -175,8 +258,6 @@ class ProcedureSequence(Procedure):
     seq_ind = 0
 
     def __init__(self, cfg, exp, proc, **kwargs):
-        """
-        """
         super().__init__(cfg, exp, **kwargs)
         self.procedure = proc
 
