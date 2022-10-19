@@ -9,7 +9,7 @@ import spherexlabtools.log as slt_log
 from spherexlabtools.recorders import Recorder
 
 
-class CsvRecorder(Recorder):
+class CSVRecorder(Recorder):
     """ A merging recorder that writes to a CSV text file.
     """
 
