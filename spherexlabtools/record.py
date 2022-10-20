@@ -1,7 +1,7 @@
-import datetime
 import os
 import logging
 import threading
+import numpy as np
 from spherexlabtools.parameters import ParameterInspect, Parameter, BooleanParameter, IntegerParameter
 
 import spherexlabtools.log as slt_log
@@ -79,9 +79,6 @@ class Record:
             self.data = self.buffer[-1]
 
         self.to_date = True
-
-    def save(self, file_arg=None):
-        pass
 
     def __getattribute__(self, name):
         """ Attribute access override for thread safety.
