@@ -90,22 +90,8 @@ class Procedure(StoppableReusableThread):
         self.records_interface = RecordUI(self.records)
         self.records_interface_tree = ParameterTree()
         setattr(self.records_interface_tree, "name", self.name)
-        self.records_interface.new_record_params_sig.connect(self.update_record_attrs)
-        self.records_interface.save_record_sig.connect(self.save_record)
         self.records_interface_tree.setParameters(self.records_interface)
         logger.info(slt_log.CMPLT_MSG % f"{self.name} initialization")
-
-    def update_record_attrs(self, record_param, record_name):
-        """ Update a record with the provided attributes.
-        """
-        rec_name_param_set_map = {
-            "Integrate Buffer": "avg",
-            "Buffer Size": "buffer_size",
-            "Run Ancillary Generator": "generate_ancillary",
-            "Recorder Write Path": "recorder_write_path"
-        }
-        record = self.records[record_name]
-        setattr(record, rec_name_param_set_map[record_param.name()], record_param.value())
 
     def startup(self):
         """ Check that all procedure parameters have been set, and set the start_time object.
@@ -142,15 +128,6 @@ class Procedure(StoppableReusableThread):
         """ Set the procedure finished value.
         """
         self.status = Procedure.FINISHED
-
-    def save_record(self, save_record_params, record_name):
-        """ Save the record in the format specified.
-        """
-        record = self.records[record_name]
-        save_vals = save_record_params.getValues()
-        record.filepath = save_vals["File-path"][0]
-        record.save_type = save_vals["Type"][0]
-        record.save()
 
     def __str__(self):
         result = repr(self) + "\n"
