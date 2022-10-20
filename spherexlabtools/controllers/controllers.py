@@ -8,7 +8,7 @@ from PyQt5 import QtWidgets, QtCore
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
 import spherexlabtools.log as slt_log
-from spherexlabtools.ui.widgets import Sequencer, Records
+from spherexlabtools.ui import SequenceUI
 from ..parameters import ParameterInspect
 from ..thread import StoppableReusableThread
 from ..parameters import Parameter as pymeasureParam
@@ -323,14 +323,14 @@ class ProcedureController(Controller):
             self.procedure_sequence.seq_ind = 0
             self.procedure_sequence_thread = StoppableReusableThread()
             self.procedure_sequence_thread_string = f"{self.name}: Procedure Sequence"
-            self.sequencer = Sequencer(self.proc_params_tree)
+            self.sequencer = SequenceUI(self.proc_params_tree)
             params.append(self.sequencer)
 
         # generate records interface #
         """
         self.records_interface = None
         if records:
-            self.records_interface = Records(self.procedure.records)
+            self.records_interface = RecordUI(self.procedure.records)
             self.records_interface.new_record_params_sig.connect(self.update_record_attrs)
             self.records_interface.save_record_sig.connect(self.save_record)
             params.append(self.records_interface)

@@ -12,7 +12,7 @@ from pyqtgraph.parametertree import Parameter, ParameterTree
 
 import spherexlabtools.log as slt_log
 from spherexlabtools.record import Record
-from spherexlabtools.ui.widgets import Records
+from spherexlabtools.ui.record import RecordUI
 from spherexlabtools.thread import StoppableReusableThread
 from spherexlabtools.parameters import ParameterInspect, Parameter, FloatParameter, IntegerParameter, BooleanParameter
 
@@ -87,7 +87,7 @@ class Procedure(StoppableReusableThread):
         self.parameter_map = {pval.name: pkey for pkey, pval in self.parameters.items()}
 
         # - configure the records user-interface - #
-        self.records_interface = Records(self.records)
+        self.records_interface = RecordUI(self.records)
         self.records_interface_tree = ParameterTree()
         setattr(self.records_interface_tree, "name", self.name)
         self.records_interface.new_record_params_sig.connect(self.update_record_attrs)
