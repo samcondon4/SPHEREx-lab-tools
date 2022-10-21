@@ -128,16 +128,14 @@ class QueueThread(StoppableReusableThread):
     """Subclass of :class:`.StoppableReusableThread` to implement processing around a queue.
     """
 
-    def __init__(self, q=None, timeout=1, buf_size=0):
+    def __init__(self, q=None, timeout=1):
         """
         :param q: Queue object. Does not need to be provided.
         :param timeout: queue get timeout.
-        :param buf_size: size of the record data buffer.
         """
         super().__init__()
         self.queue = q if q is not None else queue.Queue()
         self.timeout = timeout
-        self.buffer = [np.nan for _ in range(buf_size)]
 
     def execute(self):
         """ Override base execute() method to get and handle queue data.
@@ -145,11 +143,6 @@ class QueueThread(StoppableReusableThread):
         while not self.thread.should_stop():
             try:
                 record = self.queue.get(timeout=self.timeout)
-                # buffer the record #
-                if len(self.buffer) > 0:
-                    self.buffer[:-1] = self.buffer[1:]
-                    self.buffer[-1] = record.data
-                logger.debug("QueueThread handling data.")
                 self.handle(record)
             except queue.Empty:
                 pass

@@ -105,8 +105,6 @@ class Experiment:
             search_order = [slt_proc]
         self.procedures = load_objects_from_cfg_list(search_order, self, proc_cfgs, hw=self.hw,
                                                      viewers=self.viewers, recorders=self.recorders)
-        # instantiate compound procedures #
-        self.procedures.update(load_objects_from_cfg_list([slt_proc], self, compound_proc_cfgs))
 
         # initialize controllers ##################################################
         control_cfgs = exp_pkg.CONTROLLERS
@@ -155,7 +153,12 @@ class Experiment:
             self.slt_top_ui.top_horizontal_layout.addWidget(self.controller_stack.stack)
 
         # - initialize viewers in the top widget - #
-        viewers = [v for v in self.viewers.values()]
+        viewers = [None for _ in range(len(self.viewers))]
+        i = 0
+        for name, viewer in self.viewers.items():
+            widget = viewer.widget(name=name)
+            viewers[i] = widget
+            i += 1
         if len(viewers) > 0:
             self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
             self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)

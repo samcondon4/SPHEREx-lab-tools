@@ -4,6 +4,7 @@ Sam Condon, 2022-06-26
 """
 
 from PyQt5 import QtWidgets, QtGui
+from pyqtgraph.parametertree import Parameter
 
 
 class StackedHelper:
@@ -70,3 +71,19 @@ class StackedHelper:
         self.stack.setCurrentIndex(new_index)
         new_window = self.stack.currentWidget().windowTitle()
         self.stacked_selector_dict[new_window].setCurrentIndex(new_index)
+
+
+def get_object_parameters(obj):
+    """ Return all of the pyqtgraph Parameter objects within the passed in object.
+
+    :param obj: Object within which parameters are present.
+    :return: List of pyqtgraph parameter objects.
+    """
+    params = []
+    for attr_str in dir(obj):
+        attr = getattr(obj, attr_str)
+        if isinstance(attr, Parameter):
+            params.append(attr)
+
+    return params
+

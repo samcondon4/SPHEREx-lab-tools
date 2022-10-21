@@ -76,7 +76,7 @@ class Procedure(StoppableReusableThread):
             view_rec_val = {k: {"viewer": self.exp.viewers, "recorder": self.exp.recorders}[k][v] for k, v in
                             val_dict.items()}
             qdict_val = [comp.queue for comp in view_rec_val.values()]
-            kwargs_dict.update({k: v.name for k, v in view_rec_val.items()})
+            kwargs_dict.update({k: v for k, v in view_rec_val.items()})
             self.record_queues[key] = qdict_val
             self.records[key] = Record(key, **kwargs_dict)
         if update_params:
@@ -170,6 +170,8 @@ class LoggingProcedure(Procedure):
         self.record = list(cfg['records'].keys())[0]
         self.data_params = [(key, val[i]) for key, val in data.items() for i in range(len(val))]
         self.meta_params = [(key, val[i]) for key, val in meta.items() for i in range(len(val))]
+        self.data_df = None
+        self.meta_df = None
         self.continuous = False
 
     def startup(self):
