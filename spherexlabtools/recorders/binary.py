@@ -1,11 +1,6 @@
 """ This module implements Recorder sub-classes that write to binary output files.
 """
-
-import os
-import logging
 import pandas as pd
-
-import spherexlabtools.log as slt_log
 from spherexlabtools.recorders import Recorder
 
 

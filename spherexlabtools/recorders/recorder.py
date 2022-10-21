@@ -2,6 +2,7 @@ import os
 import logging
 import numpy as np
 import pandas as pd
+from pyqtgraph.parametertree import Parameter
 
 import spherexlabtools.log as slt_log
 from spherexlabtools.thread import QueueThread
@@ -28,7 +29,6 @@ class Recorder(QueueThread):
         super().__init__(**kwargs)
         self.name = cfg["instance_name"]
         self.extension = extension
-        self.results_path = None
         self.opened_results = None
         self.record_group = None
         self.record_group_ind = None
@@ -46,6 +46,9 @@ class Recorder(QueueThread):
         self.meta_df = None
         self.merged_df = None
 
+        # - configure parameters - #
+        self.results_path = Parameter.create(name='Results Path', type='str',
+                                             value=os.path.join(os.getcwd(), self.name))
 
     def handle(self, record):
         """ Update the record_group, record_group_ind, and record_row attributes, then call overridden methods to

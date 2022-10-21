@@ -12,6 +12,7 @@ from spherexlabtools.recorders import Recorder
 log_name = f"{slt_log.LOGGER_NAME}.{__name__.split('.')[-1]}"
 logger = logging.getLogger(log_name)
 
+
 class SQLRecorder(Recorder):
     """ A merging recorder that write all tables to a SQL database.
     """

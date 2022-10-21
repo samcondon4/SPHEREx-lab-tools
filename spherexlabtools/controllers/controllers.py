@@ -357,15 +357,6 @@ class ProcedureController(Controller):
         record = self.procedure.records[record_name]
         setattr(record, rec_name_param_set_map[record_param.name()], record_param.value())
 
-    def save_record(self, save_record_params, record_name):
-        """ Save the record in the format specified.
-        """
-        record = self.procedure.records[record_name]
-        save_vals = save_record_params.getValues()
-        record.filepath = save_vals["File-path"][0]
-        record.save_type = save_vals["Type"][0]
-        record.save()
-
     def start_procedure(self, params=None, log_msg=None):
         """ Start the procedure thread.
 
