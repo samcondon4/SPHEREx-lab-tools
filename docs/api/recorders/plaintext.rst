@@ -1,4 +1,0 @@
-spherexlabtools.recorders.plaintext
-####################################
-
-
