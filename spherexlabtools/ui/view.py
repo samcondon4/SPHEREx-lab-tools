@@ -25,13 +25,30 @@ class LineViewerWidget(ViewerWidget):
         super().__init__(**kwargs)
         self.plot_item = self.graphics_layout.addPlot(row=0, col=0)
         self.legend_item = self.plot_item.addLegend()
+        self.curve_items = {}
 
     def update(self, plot_dict):
         """ Updates the plot_item in the graphics layout with data transferred in the plot_dict.
 
         :param plot_dict: Dictionary of the following form: {'name of line': ([array of data], 'color of the line')}
         """
-        pass
+        new_curve_names = list(plot_dict.keys())
+
+        # - remove any curves not in the set of new curves to plot - #
+        cur_curve_names = list(self.curve_items.keys())
+        for cur_curve_name in cur_curve_names:
+            if cur_curve_name not in new_curve_names:
+                curve_item = self.curve_items.pop(cur_curve_name)
+                self.plot_item.removeItem(curve_item)
+
+        # - update the curve items - #
+        for curve_name in new_curve_names:
+            data, pen_color = plot_dict[curve_name]
+            if curve_name not in self.curve_items.keys():
+                curve_item = pg.PlotCurveItem(name=curve_name, pen=pen_color)
+                self.curve_items[curve_name] = curve_item
+                self.plot_item.addItem(curve_item)
+            self.curve_items[curve_name].setData(data)
 
 
 class ImageViewerWidget(ViewerWidget):

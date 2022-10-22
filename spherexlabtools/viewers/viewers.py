@@ -30,14 +30,14 @@ class Viewer(QueueThread, QObject):
         self.buffer_size = Parameter.create(name='Buffer Size', type='int', value=buffer_size)
 
     def handle(self, record):
-        """ Process the latest record.
+        """ Add the latest record to the viewer buffer based on the buffer size.
         """
         cur_buffer_length = len(self.buffer.index.get_level_values(0))
         desired_buffer_length = self.buffer_size.value()
         dbuf_size = cur_buffer_length - desired_buffer_length
 
         if dbuf_size > 0:
-            shift_ind = dbuf_size
+            shift_ind = dbuf_size + 1
         elif dbuf_size < 0:
             shift_ind = 0
         else:
@@ -94,11 +94,12 @@ class LineViewer(Viewer):
         self.buffer_size.setDefault(100)
 
     def update_display_object(self):
-        print(self.buffer)
         self.display_object = {}
         for plot_line_param in self.plot_lines_enable.children():
             if plot_line_param.value():
-                display_tup = ()
+                line_name = plot_line_param.name()
+                display_tup = (self.buffer[line_name].values, self.lines[line_name])
+                self.display_object[line_name] = display_tup
 
 
 class ImageViewer(Viewer):
