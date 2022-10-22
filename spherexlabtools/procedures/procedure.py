@@ -225,7 +225,7 @@ class LoggingProcedure(Procedure):
         for inst, param in param_list:
             inst_obj = getattr(hw, inst)
             param_val = getattr(inst_obj, param)
-            log_dict[param][index] = param_val
+            log_dict.loc[index, param] = param_val
 
 
 class ProcedureSequence(Procedure):

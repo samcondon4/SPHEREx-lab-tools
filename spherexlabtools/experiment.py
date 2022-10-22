@@ -157,6 +157,7 @@ class Experiment:
         i = 0
         for name, viewer in self.viewers.items():
             widget = viewer.widget(name=name)
+            viewer.update.connect(widget.update)
             viewers[i] = widget
             i += 1
         if len(viewers) > 0:

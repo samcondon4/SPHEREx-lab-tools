@@ -52,6 +52,8 @@ class Record:
             self.data = pd.DataFrame(data_dict)
         elif dtype is not pd.DataFrame:
             self.data = pd.DataFrame({self.name: data}, index=[0])
+        else:
+            self.data = data
 
         # - update the procedure parameters and metadata dataframes - #
         self.proc_params = pd.DataFrame(proc_params, index=[0])
