@@ -1,7 +1,7 @@
 Comma-Separated Values (CSV) Recorder
 ######################################
 
-.. autoclass:: spherexlabtools.recorders.plaintext.CsvRecorder
+.. autoclass:: spherexlabtools.recorders.plaintext.CSVRecorder
     :members:
     :show-inheritance:
 
