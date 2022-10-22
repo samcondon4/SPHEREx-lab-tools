@@ -60,5 +60,10 @@ class ImageViewerWidget(ViewerWidget):
         self.img = pg.ImageItem(border='w')
         self.view.addItem(self.img)
 
-    def update(self):
-        pass
+    def update(self, img):
+        """ Updates the image displayed in the image item display.
+
+        :param img: 2-dimensional array of image data.
+        """
+        self.img.setImage(img)
+
