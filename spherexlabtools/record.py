@@ -57,7 +57,10 @@ class Record:
 
         # - update the procedure parameters and metadata dataframes - #
         self.proc_params = pd.DataFrame(proc_params, index=[0])
-        self.meta = pd.DataFrame(meta, index=[0])
+        if meta is not None:
+            self.meta = pd.DataFrame(meta, index=[0])
+        else:
+            self.meta = None
         self.procedure_start_time = proc_start_time
         self.emit_kwargs = kwargs
 

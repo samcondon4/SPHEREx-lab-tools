@@ -103,6 +103,8 @@ class LineViewer(Viewer):
 
 
 class ImageViewer(Viewer):
+    """ A viewer subclass that displays 2-dimensional arrays as images.
+    """
 
     widget = ImageViewerWidget
 
@@ -110,4 +112,6 @@ class ImageViewer(Viewer):
         super().__init__(cfg, exp, **kwargs)
 
     def update_display_object(self):
-        pass
+        ind = self.buffer.index.get_level_values(0)[-1]
+        img = self.buffer.loc[ind].values
+        self.display_object = img

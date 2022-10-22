@@ -96,26 +96,9 @@ class Recorder(QueueThread):
                                                     names=[self._rgroup_col_str, self._rgroupind_col_str])
 
         # - update dataframes - #
-        # - data
-        if type(record.data) is pd.DataFrame:
-            self.data_df = record.data
-            self.data_df.index = self.data_index
-        else:
-            self.data_df = pd.DataFrame(record.data, index=self.data_index)
-
-        # - procedure parameters
-        if type(record.proc_params) is pd.DataFrame:
-            self.pp_df = record.proc_params
-            self.pp_df.index = self.meta_index
-        else:
-            self.pp_df = pd.DataFrame(record.proc_params, index=self.meta_index)
-
-        # - metadata
-        if type(record.meta) is pd.DataFrame:
-            self.meta_df = record.meta
-            self.meta_df.index = self.meta_index
-        else:
-            self.meta_df = pd.DataFrame(record.meta, index=self.meta_index)
+        self.data_df = record.data.set_index(self.data_index)
+        self.pp_df = record.proc_params.set_index(self.meta_index)
+        self.meta_df = None if record.meta is None else record.meta.set_index(self.meta_index)
 
         # - if merge, then merge all dataframes into one - #
         if self.merge:
@@ -128,7 +111,7 @@ class Recorder(QueueThread):
     def should_open(self, record):
         """ Check if new results should be opened via open_results().
 
-        :param write_path: Path to results file.
+        :param record: Latest record
         :return: Tuple of the form (file-path, Boolean indicating if the file exists).
         """
         fp = record.recorder_write_path
