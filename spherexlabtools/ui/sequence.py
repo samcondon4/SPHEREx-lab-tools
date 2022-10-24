@@ -262,8 +262,6 @@ class SequenceUI(pTypes.GroupParameter):
         return typecast
 
     def write_dict(self, dct, child):
-        """
-        """
         children = child.children()
         if len(children) > 0:
             for c in children:

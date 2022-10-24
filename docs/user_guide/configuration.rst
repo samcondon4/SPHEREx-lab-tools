@@ -118,7 +118,7 @@ Instrument Controllers
 | Note that **type always contains the string InstrumentController**
 
 | **control_parameters** and **status_parameters** are lists of dictionaries corresponding to pyqtgraph parameter tree entries.
-  See :ref:`PyqtGraph Parameter Trees <https://pyqtgraph.readthedocs.io/en/latest/parametertree/index.html>` for details. Also,
+  See `PyqtGraph Parameter Trees <https://pyqtgraph.readthedocs.io/en/latest/parametertree/index.html>`_ for details. Also,
   see :ref:`Step-by-Step Config Tutorial <tutorials/stepbystep_config/index:2) First instrument controller>` for example instrument
   controller config dictionaries.
 

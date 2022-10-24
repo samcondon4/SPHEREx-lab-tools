@@ -91,3 +91,6 @@ Controllers
   graphical interfaces. Procedure Controllers are used to execute individual procedures as well as several procedures in a sequence.
   Users can set and modify the Parameter Objects for a given procedure and create nested for loops where the parameters of the procedure
   are modified at each step of the loop.
+
+Experiment Control Packages
+----------------------------

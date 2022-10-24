@@ -14,6 +14,9 @@ logger = logging.getLogger(f"{slt_log.LOGGER_NAME}.{__name__}")
 
 
 class Viewer(QueueThread, QObject):
+    """ The base viewer class which performs the buffering of incoming dataframes into a larger dataframe based on the
+    buffer_size attribute. Subclasses are connected to GUI interface via the widget attribute.
+    """
 
     update = pyqtSignal(object, name='update')
     widget = None
@@ -65,7 +68,8 @@ class Viewer(QueueThread, QObject):
 
 
 class LineViewer(Viewer):
-    """ A viewer subclass that plots data as lines on a graph.
+    """ A viewer subclass that plots data as lines on a graph. This subclass connects to the :class:`.LineViewerWidget`
+    class by setting widget = LineViewerWidget.
     """
 
     widget = LineViewerWidget
@@ -94,6 +98,9 @@ class LineViewer(Viewer):
         self.buffer_size.setDefault(100)
 
     def update_display_object(self):
+        """ Update the display object for the LineViewerWidget to plot. Sets the display object to be a dictionary of
+        the following form {'line name': (data, color of the line to plot)}
+        """
         self.display_object = {}
         for plot_line_param in self.plot_lines_enable.children():
             if plot_line_param.value():
@@ -103,7 +110,8 @@ class LineViewer(Viewer):
 
 
 class ImageViewer(Viewer):
-    """ A viewer subclass that displays 2-dimensional arrays as images.
+    """ A viewer subclass that displays 2-dimensional arrays as images. This subclass connects to the
+    :class:`.ImageViewerWidget` class by setting widget = ImageViewerWidget.
     """
 
     widget = ImageViewerWidget
@@ -112,6 +120,9 @@ class ImageViewer(Viewer):
         super().__init__(cfg, exp, **kwargs)
 
     def update_display_object(self):
+        """ Update the display object for the ImageViewerWidget to display. Sets the display object to the numpy values
+        of the latest item in the buffer.
+        """
         ind = self.buffer.index.get_level_values(0)[-1]
         img = self.buffer.loc[ind].values
         self.display_object = img
