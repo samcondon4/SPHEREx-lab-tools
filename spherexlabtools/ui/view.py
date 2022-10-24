@@ -1,8 +1,20 @@
+""" This module implements the classes:
+
+    - :class:`.ViewerWidget`
+    - :class:`.LineViewerWidget`
+    - :class:`.ImageViewerWidget`
+
+    Which serve to display the data buffered within the :class:`LineViewer <spherexlabtools.viewers.LineViewer>` and
+    :class:`ImageViewer <spherexlabtools.viewers.ImageViewer>` classes.
+"""
 import pyqtgraph as pg
 from PyQt5 import QtWidgets
 
 
 class ViewerWidget(QtWidgets.QWidget):
+    """ Base QWidget object implementing a layout and a GraphicsLayoutWidget into which line plots and image displays
+    are embedded.
+    """
 
     def __init__(self, name=None, **kwargs):
         QtWidgets.QWidget.__init__(self, **kwargs)
@@ -20,6 +32,8 @@ class ViewerWidget(QtWidgets.QWidget):
 
 
 class LineViewerWidget(ViewerWidget):
+    """ Embeds a line plot within the GraphicsLayoutWidget.
+    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -52,6 +66,8 @@ class LineViewerWidget(ViewerWidget):
 
 
 class ImageViewerWidget(ViewerWidget):
+    """ Embeds an image display into the GraphicsLayoutWidget.
+    """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

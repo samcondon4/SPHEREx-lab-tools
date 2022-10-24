@@ -1,4 +1,4 @@
-""" This module implements the default interfaces for procedure Records.
+""" This module implements the basic interface class for procedure Records.
 """
 from pyqtgraph.parametertree import Parameter
 import pyqtgraph.parametertree.parameterTypes as pTypes

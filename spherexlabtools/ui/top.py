@@ -1,4 +1,4 @@
-""" This module provides the class SltTop, which provides the main SPHERExLabTools gui interface.
+""" This module provides the class TopUI, which implements the wrapper of the main SPHERExLabTools gui interface.
 """
 from PyQt5 import QtCore, QtGui, QtWidgets
 
