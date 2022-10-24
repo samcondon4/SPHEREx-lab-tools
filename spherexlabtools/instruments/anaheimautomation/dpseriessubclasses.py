@@ -37,10 +37,14 @@ class LinearStageController(DPSeriesMotorController):
     units_per_turn = None
     units = None
 
+    # - the encoder motor ratio can only be set to an integer number, but in some real circumstances a whole integer
+    # - does not accurately reflect the true ratio. This attribute can be used to set non-integer ratios - #
+    encoder_motor_ratio_override = None
+
     # dictionary of locks for thread-safety #
     locks = {}
 
-    def __init__(self, resource_name, homedir, encoder_motor_ratio=1.0, encoder_enabled=False, **kwargs):
+    def __init__(self, resource_name, homedir, **kwargs):
         """ Instantiate a stage controller.
         """
         self.resource_name = resource_name
@@ -48,8 +52,6 @@ class LinearStageController(DPSeriesMotorController):
             LinearStageController.locks[resource_name] = threading.Lock()
         super().__init__(resourceName=resource_name, **kwargs)
         self.homedir = homedir
-        self.encd_enabled = encoder_enabled
-        self.encd_mot_ratio = encoder_motor_ratio
 
     def absolute_to_steps(self, pos):
         """ Convert from absolute position on a linear stage to steps.
@@ -66,9 +68,13 @@ class LinearStageController(DPSeriesMotorController):
         :param steps:
         :return:
         """
-        if self.encd_enabled:
-            steps = steps / self.encd_mot_ratio
-        return steps*self.turns_per_step*self.units_per_turn
+        if self.encoder_enabled:
+            enc_mot_ratio = self.encoder_motor_ratio_override if self.encoder_motor_ratio_override is not None else \
+                self.encoder_motor_ratio
+            steps *= (1 / enc_mot_ratio)
+        absolute = steps * self.turns_per_step * self.units_per_turn
+
+        return absolute
 
     def home(self, home_mode=None, block_interval=3):
         """ Override of the home method to home using a slew to hard limit.
