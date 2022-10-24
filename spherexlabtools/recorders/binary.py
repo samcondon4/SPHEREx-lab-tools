@@ -26,7 +26,8 @@ class HDFRecorder(Recorder):
 
         :return: The appropriate RecordGroup and RecordGroupInd values.
         """
-        self.opened_results = pd.HDFStore(self.results_path)
+        fp = self.results_path.value()
+        self.opened_results = pd.HDFStore(fp)
         if exists:
             rec_group, rec_group_ind = self.opened_results[self._pp_group_str].index[-1]
         else:

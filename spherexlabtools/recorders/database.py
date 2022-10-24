@@ -1,10 +1,7 @@
 """ This module implements specific recorders that write to databases.
 """
-
-import os
 import logging
 import pandas as pd
-from sqlalchemy.exc import ProgrammingError, OperationalError
 
 import spherexlabtools.log as slt_log
 from spherexlabtools.recorders import Recorder
@@ -14,7 +11,7 @@ logger = logging.getLogger(log_name)
 
 
 class SQLRecorder(Recorder):
-    """ A merging recorder that write all tables to a SQL database.
+    """ A merging recorder that writes all tables to a SQL database.
     """
 
     _if_exists = "append"
@@ -47,7 +44,7 @@ class SQLRecorder(Recorder):
         self.engine = engine
         self.type_dict = type_dict
 
-    def should_open(self, record):
+    def should_open(self):
         """ For now, the table and engine are fixed, so only need to open results once. Thus, we can just
         return (True, True) if self.opened_results is None. Then, use self.opened_results as a flag to indicate
         that we already probed the initial RecordGroup and RecordGroupInd values.

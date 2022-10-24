@@ -49,18 +49,20 @@ class Recorder(QueueThread):
         # - configure parameters - #
         self.results_path = Parameter.create(name='Results Path', type='str',
                                              value=os.path.join(os.getcwd(), self.name))
+        self.results_path_changed = True
+        self.results_path.sigValueChanged.connect(self.update_results_path_changed)
 
     def handle(self, record):
         """ Update the record_group, record_group_ind, and record_row attributes, then call overridden methods to
         write to the output file.
         """
-        fp, file_exists = self.should_open(record)
-        if fp is not False:
-            # - if data_df is None, then no file has been opened at all yet, so don't close - #
-            if self.data_df is not None:
-                self.close_results()
-            self.results_path = fp
-            self.record_group, self.record_group_ind = self.open_results(file_exists)
+        should_open, fp_exists = self.should_open()
+        should_close = True if self.data_df is not None else False
+        if should_open and should_close:
+            self.close_results()
+            self.record_group, self.record_group_ind = self.open_results(fp_exists)
+        elif should_open:
+            self.record_group, self.record_group_ind = self.open_results(fp_exists)
 
         self.update_record_group(record)
         self.update_dataframes(record)
@@ -108,23 +110,34 @@ class Recorder(QueueThread):
             self.merged_df = pd.merge(self.data_df, merged0, on=self._merge_on)
             self.merged_df.index = self.data_df.index
 
-    def should_open(self, record):
+    def should_open(self):
         """ Check if new results should be opened via open_results().
 
-        :param record: Latest record
-        :return: Tuple of the form (file-path, Boolean indicating if the file exists).
+        :return: Tuple of the following form:
+        (Boolean indicating if should_open() should be called, Boolean indicating if the file exists)
         """
-        fp = record.recorder_write_path
+        # - add the extension to the results path if it is not there. Check if the file exists. - #
+        fp = self.results_path.value()
         if not fp.endswith(self.extension):
             fp += self.extension
-
+            self.results_path.setValue(fp)
         fp_exists = os.path.exists(fp)
-        if (not fp_exists) or (self.results_path != fp):
-            ret = fp
+
+        # - check the conditions for if should_open() should be called. - #
+        if not fp_exists or self.results_path_changed:
+            ret = True
+            self.results_path_changed = False
+        elif self.opened_results is None:
+            ret = True
         else:
             ret = False
 
-        return (ret, fp_exists)
+        return ret, fp_exists
+
+    def update_results_path_changed(self):
+        """ Slot for the self.results_path.sigValueChanged signal.
+        """
+        self.results_path_changed = True
 
     def open_results(self, exists):
         """ Open the results file and return the record_group and record_group_ind. This method must be implemented in
