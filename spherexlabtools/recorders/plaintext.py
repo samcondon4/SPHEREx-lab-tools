@@ -23,7 +23,7 @@ class CSVRecorder(Recorder):
         :return: Return the initial record_group and record_group_ind for a new file.
         """
         if exists:
-            results_df = pd.read_csv(self.results_path)
+            results_df = pd.read_csv(self.results_path.value())
             rec_group = results_df[self._rgroup_col_str].values[-1]
             rec_group_ind = results_df[self._rgroupind_col_str].values[-1]
             self.opened_results = True
@@ -51,5 +51,6 @@ class CSVRecorder(Recorder):
             header = False
         self.opened_results = True
 
-        self.merged_df.to_csv(self.results_path, header=header, mode=mode)
+        fp = self.results_path.value()
+        self.merged_df.to_csv(fp, header=header, mode=mode)
 
