@@ -93,18 +93,32 @@ class Record:
         :return: Converted dataframe.
         """
         dtype = type(obj)
-        if dtype is np.ndarray or dtype is list:
+        if dtype is np.ndarray:
             obj_dict = {
                 "_".join([self.name, str(i)]): obj[:, i] for i in range(obj.shape[1])
             }
             df = pd.DataFrame(obj_dict)
-        elif dtype is dict:
+
+        # - special handling for dictionaries since they can hold multidimensional data - #
+        elif dtype is dict and len(obj.values()) > 0:
             val0 = list(obj.values())[0]
             val_length = 1 if not hasattr(val0, '__iter__') else len(val0)
             index = np.arange(val_length)
-            df = pd.DataFrame(obj, index=index)
+
+            # - flatten dictionary w/ multidimensional data inputs - #
+            to_df_dict = {}
+            for param, data in obj.items():
+                data_arr = np.array(data)
+                if data_arr.size > 1:
+                    update_dict = {'_'.join([param, str(i)]): data[:, i] for i in range(data.shape[1])}
+                else:
+                    update_dict = {param: data}
+                to_df_dict.update(update_dict)
+            df = pd.DataFrame(to_df_dict, index=index)
+
         elif dtype is not pd.DataFrame:
             df = pd.DataFrame({self.name: obj}, index=[0])
+
         else:
             df = obj
 
