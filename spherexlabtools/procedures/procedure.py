@@ -174,6 +174,7 @@ class LoggingProcedure(Procedure):
     def startup(self):
         """ Initialize the metadata dictionary.
         """
+        super().startup()
         self.data_dict = {}
         self.meta_dict = {}
         for inst, param in self.meta_params:

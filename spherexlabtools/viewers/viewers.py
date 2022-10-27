@@ -12,7 +12,6 @@ from spherexlabtools.thread import QueueThread
 from spherexlabtools.ui import LineViewerWidget, ImageViewerWidget
 
 pg.setConfigOption("imageAxisOrder", "row-major")
-pg.setConfigOption('useNumba', True)
 logger = logging.getLogger(f"{slt_log.LOGGER_NAME}.{__name__}")
 
 
