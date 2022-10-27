@@ -9,6 +9,7 @@
 """
 import pyqtgraph as pg
 from PyQt5 import QtWidgets
+import datetime
 
 
 class ViewerWidget(QtWidgets.QWidget):

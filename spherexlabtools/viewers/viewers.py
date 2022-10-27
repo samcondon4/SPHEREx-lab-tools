@@ -12,6 +12,7 @@ from spherexlabtools.ui import LineViewerWidget, ImageViewerWidget
 pg.setConfigOption("imageAxisOrder", "row-major")
 logger = logging.getLogger(f"{slt_log.LOGGER_NAME}.{__name__}")
 
+import datetime
 
 class Viewer(QueueThread, QObject):
     """ The base viewer class which performs the buffering of incoming dataframes into a larger dataframe based on the
@@ -35,6 +36,7 @@ class Viewer(QueueThread, QObject):
     def handle(self, record):
         """ Add the latest record to the viewer buffer based on the buffer size.
         """
+        start = datetime.datetime.now()
         cur_buffer_length = len(self.buffer.index.get_level_values(0))
         desired_buffer_length = self.buffer_size.value()
         dbuf_size = cur_buffer_length - desired_buffer_length
@@ -60,6 +62,8 @@ class Viewer(QueueThread, QObject):
         # - update the display object and send it to the ViewerWidget - #
         self.update_display_object()
         self.update.emit(self.display_object)
+        end = datetime.datetime.now()
+        print(end - start)
 
     def update_display_object(self):
         """ Update the display_object attribute, which is sent out through a signal to the ViewerWidget class.

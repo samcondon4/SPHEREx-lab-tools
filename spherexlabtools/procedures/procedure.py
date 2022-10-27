@@ -152,9 +152,10 @@ class LoggingProcedure(Procedure):
     Currently, logging to just a single record is supported.
     """
 
+    group_size = IntegerParameter('Group Size', default=1)
+    meta_rows = IntegerParameter('Metadata Rows', default=1)
+    data_rows = IntegerParameter('Data Rows', default=1)
     sample_rate = FloatParameter('Sample Rate', units='hz', default=1)
-    record_rows = IntegerParameter('Record Rows', default=1)
-    iterations = IntegerParameter('Iterations', default=0)
 
     def __init__(self, cfg, exp, data, meta, **kwargs):
         """ Initialize a basic logging procedure.
@@ -173,59 +174,56 @@ class LoggingProcedure(Procedure):
         self.data_df = None
         self.meta_df = None
         self.continuous = False
+        self.execute_start_ind = 1
 
     def startup(self):
-        """ Populate the metadata dictionary.
+        """ Populate the metadata dataframe and initialize the data dataframe.
         """
         super().startup()
-        # - populate the metadata dataframe for the procedure execution - #
-        self.meta_df = pd.DataFrame({
-            param: [0] for inst, param in self.meta_params
-        })
-        self.populate_log_row(self.hw, self.meta_df, self.meta_params, 0)
-
-        # - check if we should run in continuous mode - #
-        self.continuous = True if self.iterations == 0 else False
-        if self.continuous:
-            self.iterations += 1
-
-        # - initialize a new data dataframe - #
-        self.data_df = pd.DataFrame({
-            param: np.arange(self.record_rows) for inst, param in self.data_params
-        })
+        self.meta_df = self.get_param_df(self.hw, self.meta_params, 0, self.meta_rows)
+        data_df0 = self.get_param_df(self.hw, self.data_params, 0, self.data_rows)
+        if self.group_size > 1:
+            data_1 = np.ones((self.group_size - 1, data_df0.shape[1]))
+            index = pd.MultiIndex.from_product([np.arange(1, self.group_size), np.arange(self.data_rows)])
+            data_df1 = pd.DataFrame(data_1, index=index)
+            self.data_df = pd.concat([data_df0, data_df1])
+        else:
+            self.data_df = data_df0
 
     def execute(self):
         """ Run the log.
         """
-        i = 0
-        while i < self.iterations:
-            if self.should_stop():
-                break
-
-            # - populate the data dataframe - #
-            for j in range(self.record_rows):
-                self.populate_log_row(self.hw, self.data_df, self.data_params, j)
-                time.sleep(1 / self.sample_rate)
+        while not self.should_stop():
+            time.sleep(1 / self.sample_rate)
+            for i in range(self.execute_start_ind, self.group_size):
+                update_df = self.get_param_df(self.hw, self.data_params, i, self.data_rows)
+                self.data_df.update(update_df)
             self.emit(self.record, self.data_df, meta=self.meta_df)
-
-            # - if we aren't in continuous mode, then add to the iterator - #
-            if not self.continuous:
-                i += 1
+            self.execute_start_ind = 0
 
     @staticmethod
-    def populate_log_row(hw, log_dict, param_list, index):
-        """ Populate the data or metadata dictionary row with parameter values.
+    def get_param_df(hw, param_list, group_ind, rows):
+        """ Get a dataframe of the most recent parameter values for those in param_list.
 
-        :param hw: Hardware object.
-        :param log_dict: The dictionary to populate.
-        :param param_list: List of tuples with the instrument name and parameter to query.
-        :param index: Index of the dictionary row to populate.
-        :return:
+        :param hw: InstrumentSuite object to get parameters from.
+        :param param_list: List of the parameters to query.
+        :param group_ind: Index into the top-level emitted dataframe.
+        :param rows: Number of rows expected in the queried parameters.
+        :return: Dataframe
         """
+        param_dict = {}
         for inst, param in param_list:
-            inst_obj = getattr(hw, inst)
-            param_val = getattr(inst_obj, param)
-            log_dict.loc[index, param] = param_val
+            inst = getattr(hw, inst)
+            val = getattr(inst, param)
+            val = np.array(val)
+            if val.size > rows:
+                update_dict = {'_'.join([param, str(i)]): val[:, i] for i in range(val.shape[1])}
+            else:
+                update_dict = {param: val}
+            param_dict.update(update_dict)
+
+        index = pd.MultiIndex.from_product([[group_ind], np.arange(rows)])
+        return pd.DataFrame(param_dict, index=index)
 
 
 class ProcedureSequence(Procedure):
