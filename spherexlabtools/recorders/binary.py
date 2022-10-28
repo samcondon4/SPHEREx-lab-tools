@@ -116,21 +116,22 @@ class FITSRecorder(Recorder):
         self.label_datacols = label_datacols
         self.meta_pp_cols = []
 
-    def should_open(self, record):
+    def should_open(self):
         """ Override the base should_open method to check if a directory for fits files exists, rather than a single
         file.
 
         :param record:
         :return:
         """
-        fp = record.recorder_write_path
+        fp = self.results_path.value()
         fp_exists = os.path.exists(fp)
-        if (not fp_exists) or (self.results_path != fp):
-            ret = fp
+        if (not fp_exists) or self.results_path_changed:
+            ret = True
+            self.results_path_changed = False
         else:
             ret = False
 
-        return (ret, fp_exists)
+        return ret, fp_exists
 
     def open_results(self, exists):
         """ Open existing or create a new .fits output directory. If the directory exists, then get the latest record
@@ -140,10 +141,10 @@ class FITSRecorder(Recorder):
         :return:
         """
         if not exists:
-            os.makedirs(self.results_path, exist_ok=True)
+            os.makedirs(self.results_path.value(), exist_ok=True)
 
         self.opened_results = None
-        fits_files = [f.replace(self.extension, '') for f in os.listdir(self.results_path) if self.extension in f]
+        fits_files = [f.replace(self.extension, '') for f in os.listdir(self.results_path.value()) if self.extension in f]
         if not exists or len(fits_files) == 0:
             rec_group = -1
             rec_group_ind = -1
@@ -213,7 +214,7 @@ class FITSRecorder(Recorder):
             self.opened_results[1].data = ext_data
 
         # - write the fits file - #
-        path = os.path.join(self.results_path, 'rg%s%04i.fits' % (self._rg_append_char, self.record_group))
+        path = os.path.join(self.results_path.value(), 'rg%s%04i.fits' % (self._rg_append_char, self.record_group))
         self.opened_results.writeto(path, overwrite=True)
 
         # - update the previous record group attribute - #

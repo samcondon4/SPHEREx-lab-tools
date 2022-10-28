@@ -3,7 +3,6 @@
         :func:`.load_objects_from_cfg_list`
 """
 import logging
-import importlib
 
 
 logger = logging.getLogger(__name__)
