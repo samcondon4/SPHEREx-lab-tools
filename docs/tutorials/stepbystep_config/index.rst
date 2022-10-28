@@ -274,7 +274,10 @@ Step-by-Step Experiment Configuration
   to place all of the instruments in the experiment into an idle state.
 
 | Also note the three calls of **self.emit()**. This is the method that sends measured data out to :ref:`Viewers and Recorders <user_guide/fundamentals/index:Viewers and Recorders>`
-  classes for live display and archival.
+  for live display and archival.
+
+
+>>>>>>> 36474eaadac8cbe54edbd2311cbab854cd42054d
 
 4) Writing the procedure, viewer, and recorder configuration dictionaries
 --------------------------------------------------------------------------
