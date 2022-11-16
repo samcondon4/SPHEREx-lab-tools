@@ -102,7 +102,7 @@ class Record:
         # - special handling for dictionaries since they can hold multidimensional data - #
         elif dtype is dict and len(obj.values()) > 0:
             val0 = list(obj.values())[0]
-            val_length = 1 if not hasattr(val0, '__iter__') else len(val0)
+            val_length = 1 if (not hasattr(val0, '__iter__') or type(val0) is str) else len(val0)
             index = np.arange(val_length)
 
             # - flatten dictionary w/ multidimensional data inputs - #
@@ -110,7 +110,7 @@ class Record:
             for param, data in obj.items():
                 data_arr = np.array(data)
                 if data_arr.size > 1:
-                    update_dict = {'_'.join([param, str(i)]): data[:, i] for i in range(data.shape[1])}
+                    update_dict = {'_'.join([param, str(i)]): data_arr[:, i] for i in range(data_arr.shape[1])}
                 else:
                     update_dict = {param: data}
                 to_df_dict.update(update_dict)
