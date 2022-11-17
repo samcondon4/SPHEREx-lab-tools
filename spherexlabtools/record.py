@@ -109,7 +109,7 @@ class Record:
             to_df_dict = {}
             for param, data in obj.items():
                 data_arr = np.array(data)
-                if data_arr.size > 1:
+                if len(data_arr.shape) > 1:
                     update_dict = {'_'.join([param, str(i)]): data_arr[:, i] for i in range(data_arr.shape[1])}
                 else:
                     update_dict = {param: data}
