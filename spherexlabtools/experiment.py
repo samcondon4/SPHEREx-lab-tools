@@ -57,9 +57,9 @@ class Experiment:
         # - Top-level ui - #
         self.slt_top_widget = top_widget
         self.slt_top_ui = top_ui
-        self.controller_stack = StackedHelper()
         self.viewer_stack = StackedHelper()
-        self.procedure_stack = StackedHelper()
+        self.procedure_controller_stack = StackedHelper()
+        self.instrument_controller_stack = StackedHelper()
 
         # initialize instrument-suite #############################################
         self.dev_links = {}
@@ -114,7 +114,6 @@ class Experiment:
             search_order = [slt_control]
         self.controllers = load_objects_from_cfg_list(search_order, self, control_cfgs, hw=self.hw,
                                                       procs=self.procedures)
-
         logger.info("Experiment initialization complete.")
 
     def start(self):
@@ -146,13 +145,25 @@ class Experiment:
         """ Initialize the top-level interface after start_top_ui() has been called.
         """
 
-        # - initialize controllers in the top widget - #
+        # - get controller objects ---------------------------------------------------------------------------------- #
         controllers = [c for c in self.controllers.values()]
-        if len(controllers) > 0:
-            self.controller_stack.configure_stack(controllers, "Controllers", "Controller Select")
-            self.slt_top_ui.top_horizontal_layout.addWidget(self.controller_stack.stack)
 
-        # - initialize viewers in the top widget - #
+        # - initialize procedure_controllers in the top widget ------------------------------------------------------ #
+        procedure_controllers = {
+            c.procedure.name: c for c in controllers if type(c) is slt_control.ProcedureController
+        }
+        procedure_records = {
+            p.name: p.records_interface for p in self.procedures.values()
+        }
+        for pname, controller in procedure_controllers.items():
+            records_interface = procedure_records[pname]
+            controller.tree.addParameters(records_interface)
+        if len(procedure_controllers) > 0:
+            self.procedure_controller_stack.configure_stack(list(procedure_controllers.values()),
+                                                            "Procedure Controllers", "Controller Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.procedure_controller_stack.stack)
+
+        # - initialize viewers in the top widget -------------------------------------------------------------------- #
         viewers = [None for _ in range(len(self.viewers))]
         i = 0
         for name, viewer in self.viewers.items():
@@ -164,11 +175,25 @@ class Experiment:
             self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
             self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)
 
+        # - initialize instrument_controllers in the top widget ----------------------------------------------------- #
+        instrument_controllers = [c for c in controllers if type(c) is slt_control.InstrumentController]
+        if len(instrument_controllers) > 0:
+            self.instrument_controller_stack.configure_stack(instrument_controllers, "Instrument Controllers",
+                                                             "Controller Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.instrument_controller_stack.stack)
+
+        """
+        if len(controllers) > 0:
+            self.controller_stack.configure_stack(controllers, "Procedure Controllers", "Controller Select")
+            self.slt_top_ui.top_horizontal_layout.addWidget(self.controller_stack.stack)
+        """
+
         # - initialize procedures in the top widget - #
-        procedure_records = [p.records_interface_tree for p in self.procedures.values()]
+        """
         if len(procedure_records) > 0:
             self.procedure_stack.configure_stack(procedure_records, "Procedures", "Procedure Select")
             self.slt_top_ui.top_horizontal_layout.addWidget(self.procedure_stack.stack)
+        """
 
     def start_viewer(self, viewer_key):
         """ Start a viewer thread.
