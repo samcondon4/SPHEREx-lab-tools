@@ -25,6 +25,10 @@ class Recorder(QueueThread):
     _rgroupind_val_str = "%06i"
     _rrow_val_str = "%06i"
 
+    _rgroup_val_prepend_str = ''
+    _rgroupind_val_prepend_str = ''
+    _rrow_val_prepend_str = ''
+
     def __init__(self, cfg, exp, extension, merge=False, **kwargs):
         super().__init__(**kwargs)
         self.name = cfg["instance_name"]
@@ -64,6 +68,12 @@ class Recorder(QueueThread):
         elif should_open:
             self.record_group, self.record_group_ind = self.open_results(fp_exists)
 
+        # - if record_group and/or record_group_ind is a string, update to be an integer ----------- #
+        if type(self.record_group) is str:
+            self.record_group = int(''.join([c for c in self.record_group if c.isdigit()]))
+        if type(self.record_group_ind) is str:
+            self.record_group_ind = int(''.join([c for c in self.record_group_ind if c.isdigit()]))
+
         self.update_record_group(record)
         self.update_dataframes(record)
         self.update_results()
@@ -87,8 +97,8 @@ class Recorder(QueueThread):
     def update_dataframes(self, record):
         """ Update the pandas indices based on the current record_group and record_group_ind.
         """
-        rgroup_str = self._rgroup_val_str % self.record_group
-        rgroupind_str = self._rgroupind_val_str % self.record_group_ind
+        rgroup_str = self._rgroup_val_prepend_str + (self._rgroup_val_str % self.record_group)
+        rgroupind_str = self._rgroupind_val_prepend_str + (self._rgroupind_val_str % self.record_group_ind)
         # - update indices - #
         self.data_index = pd.MultiIndex.from_product([[rgroup_str], [rgroupind_str],
                                                       [self._rrow_val_str % i for i in np.arange(self.record_row)]],
