@@ -102,6 +102,9 @@ class TopUI(TopQT, QtCore.QObject):
         self.ver_scrollbar = self.logBrowser.verticalScrollBar()
         self.hor_scrollbar = self.logBrowser.horizontalScrollBar()
         self.ui_log_signal.connect(self.log)
+        font = QtGui.QFont()
+        font.setPointSize(16)
+        self.logBrowser.setFont(font)
 
     def log(self, msg):
         """ This method allows logging of formatted log messaged created by the logging package to the log
