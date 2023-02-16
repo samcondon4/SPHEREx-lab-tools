@@ -6,7 +6,7 @@ for a variety of output file formats, and mechanisms to run manual and automated
 minimal manual coding required by a user.
 
 SLT draws inspiration from the existing PyMeasure and PyHk projects. Many low-level architecture details are drawn directly from PyMeasure 
-and the configuration file based interface was drawn from PyHk.
+and the configuration file based interface was inspired by PyHk.
 
 
 See the full [SPHERExLabTools Documentation](https://spherexlogbook.caltech.edu/references/ControlSw/) and the 
