@@ -1,6 +1,7 @@
 # SPHERExLabTools
 
-SPHERExLabTools (SLT) provides a general purpose laboratory data acquisition and instrument control system with driver level 
+SPHERExLabTools (SLT) is the laboratory data acquisition and instrument control system used for optical characterization and testing of
+NASA's upcoming astrophysics explorer telescope, SPHEREx. SLT provides a general purpose laboratory data acquisition and instrument control system with driver level 
 software for control of testbed instrumentation, graphical interfaces, real-time data visualization, processing, data archival tools 
 for a variety of output file formats, and mechanisms to run manual and automated measurements. Each component is highly configurable with 
 minimal manual coding required by a user.
