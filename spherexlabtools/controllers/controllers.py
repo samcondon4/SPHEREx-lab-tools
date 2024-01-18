@@ -126,7 +126,7 @@ class InstrumentController(Controller):
                 if child is not self.set_params:
                     name = child.name()
                     value = self.set_processes[name](child)
-                    logger.debug(slt_log.SET_MSG % (name, self.hw.name, value))
+                    logger.info(slt_log.SET_MSG % (name, self.hw.name, value))
                     setattr(self.hw, name, value)
             self.params_set.emit()
 
@@ -136,10 +136,10 @@ class InstrumentController(Controller):
         if self.alive:
             for c in self.status_group.children():
                 param = c.name()
-                #logger.debug("Getting instrument parameter %s" % param)
+                #logger.info("Getting instrument parameter %s" % param)
                 if param in self.status_names:
                     val = self.get_processes[param](getattr(self.hw, param))
-                    #logger.debug(f"Got {val}")
+                    #logger.info(f"Got {val}")
                     if val != self.status_values[param]:
                         self.status_values[param] = val
                         c.setValue(val)
@@ -153,7 +153,7 @@ class InstrumentController(Controller):
         act_param_values = act_param.getValues()
         kwargs = {pkey: pval[0] for pkey, pval in act_param_values.items()}
         act = getattr(self.hw, act_name)
-        #logger.debug("Running action %s on instrument %s" % (act_name, str(self.hw)))
+        #logger.info("Running action %s on instrument %s" % (act_name, str(self.hw)))
         act(**kwargs)
         # if the action is a setter, then emit the params_set signal after its execution
         if act_name.startswith("set"):
@@ -211,17 +211,17 @@ class InstrumentController(Controller):
             param["enabled"] = False
 
         if sref_typ is float or sref_typ is int:
-            #logger.debug("Starting refresh timer for %f seconds" % self.status_refresh)
+            #logger.info("Starting refresh timer for %f seconds" % self.status_refresh)
             thread = StoppableReusableThread()
             self.refresh_timer.timeout.connect(self.get_inst_params)
             self.refresh_timer.start(self.status_refresh)
 
         elif self.status_refresh == "after_set":
-            #logger.debug("Connecting params_set signal to get_inst_params")
+            #logger.info("Connecting params_set signal to get_inst_params")
             self.params_set.connect(self.get_inst_params)
 
         elif self.status_refresh == "manual":
-            #logger.debug("Connecting status_refresh_button to get_inst_params")
+            #logger.info("Connecting status_refresh_button to get_inst_params")
             self.status_refresh_button = Parameter.create(name="Refresh", type="action")
             self.status_refresh_button.sigActivated.connect(self.get_inst_params)
             status_params.append(self.status_refresh_button)
@@ -241,7 +241,7 @@ class InstrumentController(Controller):
             for c in self.control_group.children():
                 if c is not self.set_params:
                     child_name = c.name()
-                    #logger.debug("Connecting set method for {}".format(child_name))
+                    #logger.info("Connecting set method for {}".format(child_name))
                     button = c.child("Set")
                     thread = StoppableReusableThread()
                     thread.execute = lambda child=child_name: self.set_inst_params([child])

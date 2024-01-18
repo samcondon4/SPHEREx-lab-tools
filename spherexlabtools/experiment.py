@@ -161,7 +161,7 @@ class Experiment:
         if len(procedure_controllers) > 0:
             self.procedure_controller_stack.configure_stack(list(procedure_controllers.values()),
                                                             "Procedure Controllers", "Controller Select")
-            self.slt_top_ui.top_horizontal_layout.addWidget(self.procedure_controller_stack.stack)
+            self.slt_top_ui.top_horizontal_splitter.addWidget(self.procedure_controller_stack.stack)
 
         # - initialize viewers in the top widget -------------------------------------------------------------------- #
         viewers = [None for _ in range(len(self.viewers))]
@@ -173,14 +173,14 @@ class Experiment:
             i += 1
         if len(viewers) > 0:
             self.viewer_stack.configure_stack(viewers, "Viewers", "Viewer Select")
-            self.slt_top_ui.top_horizontal_layout.addWidget(self.viewer_stack.stack)
+            self.slt_top_ui.top_horizontal_splitter.addWidget(self.viewer_stack.stack)
 
         # - initialize instrument_controllers in the top widget ----------------------------------------------------- #
         instrument_controllers = [c for c in controllers if type(c) is slt_control.InstrumentController]
         if len(instrument_controllers) > 0:
             self.instrument_controller_stack.configure_stack(instrument_controllers, "Instrument Controllers",
                                                              "Controller Select")
-            self.slt_top_ui.top_horizontal_layout.addWidget(self.instrument_controller_stack.stack)
+            self.slt_top_ui.top_horizontal_splitter.addWidget(self.instrument_controller_stack.stack)
 
         """
         if len(controllers) > 0:

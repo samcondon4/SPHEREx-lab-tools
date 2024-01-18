@@ -1,3 +1,0 @@
-[submodule "submodules/pymeasure"]
-	path = submodules/pymeasure
-	url = https://github.com/samcondon4/pymeasure.git
