@@ -4,6 +4,7 @@ import threading
 import numpy as np
 import pandas as pd
 import pyqtgraph as pg
+from scipy.ndimage import gaussian_filter
 from PyQt5.QtCore import QObject, pyqtSignal
 from pyqtgraph.parametertree import Parameter
 
@@ -121,10 +122,70 @@ class ImageViewer(Viewer):
     def __init__(self, cfg, exp, **kwargs):
         super().__init__(cfg, exp, **kwargs)
 
+        # - reference frame used for differencing ---------------------------------------------- #
+        self.reference = None
+
+        # - create autoscale parameters -------------------------------------------------------- #
+        self.scaling = Parameter.create(name='Scaling', type='group')
+        self.scaling.addChild({'name': 'autoscale', 'type': 'bool', 'value': True})
+        self.scaling.addChild({'name': 'min', 'type': 'float', 'value': 0})
+        self.scaling.addChild({'name': 'max', 'type': 'float', 'value': 4096})
+
+        # - difference frame parameters -------------------------------------------------------- #
+        self.difference_frame = Parameter.create(name='Difference Frame', type='group')
+        self.save_reference_action = Parameter.create(name='Save Reference', type='action')
+        self.difference_frame.addChild(self.save_reference_action)
+        self.difference_frame.addChild({'name': 'Image Selection', 'type': 'list',
+                                        'limits': ['original', 'reference', 'difference']})
+        self.save_reference_action.sigActivated.connect(self.save_reference)
+
+        # - create the gaussian filter parameters ---------------------------------------------- #
+        self.gaussian_filter = Parameter.create(name='Gaussian Filter', type='group')
+        self.gaussian_filter.addChild({'name': 'enabled', 'type': 'bool', 'value': False})
+        self.gaussian_filter.addChild({'name': 'sigma', 'type': 'float', 'value': 1})
+
+    def save_reference(self):
+        """ Set the latest buffer data as the reference frame.
+        """
+        ind = self.buffer.index.get_level_values(0)[-1]
+        self.reference = self.buffer.loc[ind].values
+
     def update_display_object(self):
         """ Update the display object for the ImageViewerWidget to display. Sets the display object to the numpy values
         of the latest item in the buffer.
         """
+        # - get the processing parameters ------------------------------------------------------ #
+        scale_vals = self.scaling.getValues()
+        difference_vals = self.difference_frame.getValues()
+        gauss_filt_vals = self.gaussian_filter.getValues()
+
+        # - get the latest image from the buffer set a default reference frame ----------------- #
         ind = self.buffer.index.get_level_values(0)[-1]
         img = self.buffer.loc[ind].values
-        self.display_object = img
+        if self.reference is None:
+            self.reference = np.zeros_like(img)
+
+        # - select the display data from the difference frame options --------------------------- #
+        data = None
+        im_select = difference_vals['Image Selection'][0]
+        if im_select == 'original':
+            data = img
+        elif im_select == 'reference':
+            data = self.reference
+        elif im_select == 'difference':
+            data = img - self.reference
+
+        # - run the gaussian filter if enabled ------------------------------------------------- #
+        if gauss_filt_vals['enabled'][0]:
+            sigma = self.gaussian_filter.getValues()['sigma'][0]
+            data = gaussian_filter(data, sigma)
+
+        # - create the final display object and set the attribute ------------------------------ #
+        obj = {
+            'data': data,
+            'display_kwargs': {
+                'autoLevels': scale_vals['autoscale'][0],
+                'levels': (scale_vals['min'][0], scale_vals['max'][0])
+            }
+        }
+        self.display_object = obj

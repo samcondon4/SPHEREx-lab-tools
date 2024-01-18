@@ -82,5 +82,5 @@ class ImageViewerWidget(ViewerWidget):
 
         :param img: 2-dimensional array of image data.
         """
-        self.img.setImage(img)
+        self.img.setImage(img['data'], **img['display_kwargs'])
 

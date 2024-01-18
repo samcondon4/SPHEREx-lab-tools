@@ -1,2 +1,2 @@
-from .lakeshore218 import LakeShore218
-from .lakeshore336 import LakeShore336
+from .slt_lakeshore218 import SLTLakeShore218
+from .slt_lakeshore336 import SLTLakeShore336

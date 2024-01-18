@@ -1,10 +1,12 @@
 """ This module provides a set of subclasses of the pymeasure Anaheim Automation DPSeriesMotorController class to implement
-    concurrency and additional properties that are out of scope for a pymeasure driver.
+    additional properties that are out of scope for a pymeasure driver.
 Sam Condon, 11/17/2021
 """
 
 import logging
 import threading
+from pymeasure.instruments import Instrument
+from pymeasure.instruments.validators import strict_range
 from pymeasure.instruments.anaheimautomation import DPSeriesMotorController
 
 
@@ -15,6 +17,7 @@ log.addHandler(logging.NullHandler())
 class LinearStageController(DPSeriesMotorController):
     """ Represents an Anaheim DP Series Motor Controller driving a linear stage. This class overrides the home()
         method and implements unit conversions between controller steps and distance along the linear stage.
+
     :param resource_name: string resource name to pass to pymeasure driver.
     :param homedir: string with value "CW" or "CCW" corresponding to the direction the motor is spun during a
                     homing operation.
@@ -25,7 +28,6 @@ class LinearStageController(DPSeriesMotorController):
     :var homespeed: Speed that the controller will turn the motor in a homing operation. Default = 500
     :var turns_per_step: motor turns per individual controller step.
     :var units_per_turn: distance in specified units that the linear stage travels in a single turn of the motor.
-
     """
 
     # homing attributes #
@@ -41,17 +43,44 @@ class LinearStageController(DPSeriesMotorController):
     # - does not accurately reflect the true ratio. This attribute can be used to set non-integer ratios - #
     encoder_motor_ratio_override = None
 
-    # dictionary of locks for thread-safety #
-    locks = {}
+    encoder_position = Instrument.measurement(
+        'VEP', """Query of steps counted by the encoder."""
+    )
 
     def __init__(self, resource_name, homedir, **kwargs):
         """ Instantiate a stage controller.
         """
         self.resource_name = resource_name
-        if resource_name not in LinearStageController.locks.keys():
-            LinearStageController.locks[resource_name] = threading.Lock()
-        super().__init__(resourceName=resource_name, **kwargs)
+        super().__init__(resource_name, **kwargs)
         self.homedir = homedir
+
+    @property
+    def step_position(self):
+        """ Override of the step_position property to ALWAYS return the position in steps as read
+        by the motor controller even if the encoder is enabled.
+        """
+        return int(self.ask('VZ'))
+
+    @step_position.setter
+    def step_position(self, pos):
+        """ Setter for the step_position. Same as the super class setter.
+        """
+        strict_range(pos, (-8388607, 8388607))
+        self.write('P%i' % pos)
+        self.write('G')
+
+    @property
+    def absolute_position(self):
+        """ Override of the absolute position property to read from the **encoder_position**
+        property rather than step_position.
+        """
+        encoder_pos = self.encoder_position
+        return self.steps_to_absolute(encoder_pos)
+
+    @absolute_position.setter
+    def absolute_position(self, abs_pos):
+        steps_pos = self.absolute_to_steps(abs_pos)
+        self.step_position = steps_pos
 
     def absolute_to_steps(self, pos):
         """ Convert from absolute position on a linear stage to steps.
@@ -88,41 +117,6 @@ class LinearStageController(DPSeriesMotorController):
         self.wait_for_completion(interval=block_interval)
         self.reset_position()
         self.maxspeed = prev_maxspeed
-
-    def write(self, command):
-        """Override the instrument base write method to add the motor controller's address to the
-        command string.
-
-        :param command: command string to be sent to the motor controller.
-        """
-        log.debug("LinearStageController acquiring lock for write.")
-        with LinearStageController.locks[self.resource_name]:
-            super().write(command)
-        log.debug("LinearStageController released lock for write.")
-
-    def values(self, command, **kwargs):
-        """ Override the instrument base values method to add the motor controller's address to the
-        command string.
-
-        :param command: command string to be sent to the motor controller.
-        """
-        log.debug("LinearStageController acquiring lock for values.")
-        with LinearStageController.locks[self.resource_name]:
-            vals = super().values(command, **kwargs)
-        log.debug("LinearStageController released lock for values.")
-        return vals
-
-    def ask(self, command):
-        """ Override the instrument base ask method to add the motor controller's address to the
-        command string.
-
-        :param command: command string to be sent to the instrument
-        """
-        logging.debug("LinearStageController acquiring lock for ask.")
-        with LinearStageController.locks[self.resource_name]:
-            val = super().ask(command)
-        logging.debug("LinearStageController released lock for ask.")
-        return val
 
 
 class FocuserDrive(LinearStageController):
