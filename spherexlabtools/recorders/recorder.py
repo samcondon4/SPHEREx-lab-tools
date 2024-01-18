@@ -2,7 +2,7 @@ import os
 import logging
 import numpy as np
 import pandas as pd
-from pyqtgraph.parametertree import Parameter
+from pyqtgraph.parametertree.parameterTypes import FileParameter
 
 import spherexlabtools.log as slt_log
 from spherexlabtools.thread import QueueThread
@@ -51,8 +51,14 @@ class Recorder(QueueThread):
         self.merged_df = None
 
         # - configure parameters - #
-        self.results_path = Parameter.create(name='Results Path', type='str',
-                                             value=os.path.join(os.getcwd(), self.name))
+        name = 'Results Path'
+        directory = os.getcwd()
+        self.results_path = FileParameter(
+            name=name,
+            winTitle=name,
+            directory=directory,
+            value=os.path.join(directory, self.name)
+        )
         self.results_path_changed = True
         self.results_path.sigValueChanged.connect(self.update_results_path_changed)
 
@@ -141,6 +147,10 @@ class Recorder(QueueThread):
             ret = True
         else:
             ret = False
+
+        # - log --------------------------- #
+        if ret:
+            logger.info('Opening file %s' % fp)
 
         return ret, fp_exists
 

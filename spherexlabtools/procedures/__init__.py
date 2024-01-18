@@ -1,1 +1,1 @@
-from . procedure import Procedure, LoggingProcedure, ProcedureSequence
+from . procedure import Procedure, LoggingProcedure, AlertProcedure, ProcedureSequence

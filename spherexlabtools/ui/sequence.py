@@ -120,10 +120,10 @@ class SequenceUI(pTypes.GroupParameter):
         self.pause_sequence = Parameter.create(name="Pause Procedure Sequence", type="action")
         self.stop_sequence = Parameter.create(name="Abort Procedure Sequence", type="action")
         self.save_sequence = Parameter.create(name="Save Sequence", type="action", children=[
-            {"name": "Save Path", "type": "str", "value": os.path.join(os.getcwd(), "sequence")}
+            {"name": "Save Path", "type": "file", "value": os.path.join(os.getcwd(), "sequence.txt")}
         ])
         self.load_sequence = Parameter.create(name="Load Sequence", type="action", children=[
-            {"name": "Load Path", "type": "str", "value": os.getcwd()}
+            {"name": "Load Path", "type": "file", "value": os.path.join(os.getcwd(), 'sequence.txt')}
         ])
         self.base_children = [self.sequence_group, self.start_sequence, self.pause_sequence, self.stop_sequence,
                               self.save_sequence, self.load_sequence]
@@ -177,7 +177,7 @@ class SequenceUI(pTypes.GroupParameter):
         """
         save_path = self.save_sequence.child("Save Path").value()
         seq_group = self.sequence_group.get_readable()
-        with open(save_path + ".txt", "w") as f:
+        with open(save_path, "w") as f:
             f.write(seq_group)
 
     def input_sequence(self):
@@ -188,7 +188,7 @@ class SequenceUI(pTypes.GroupParameter):
         for child in self.sequence_group.children():
             if child not in self.sequence_group.base_children:
                 self.sequence_group.removeChild(child)
-        with open(load_path + ".txt", "r") as f:
+        with open(load_path, "r") as f:
             top_level = -1
             sub_levels = []
             tabs = 0
