@@ -64,7 +64,7 @@ class Viewer(QueueThread, QObject):
         self.update_display_object()
         self.update.emit(self.display_object)
 
-    def update_display_object(self):
+    def update_display_object(self, *args, **kwargs):
         """ Update the display_object attribute, which is sent out through a signal to the ViewerWidget class.
         """
         raise NotImplementedError("update_display_object() must be implemented in Viewer subclasses!")
