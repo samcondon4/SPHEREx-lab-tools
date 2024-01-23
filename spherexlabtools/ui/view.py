@@ -4,12 +4,12 @@
     - :class:`.LineViewerWidget`
     - :class:`.ImageViewerWidget`
 
-    Which serve to display the data buffered within the :class:`LineViewer <spherexlabtools.viewers.LineViewer>` and
+    which serve to display the data buffered within the :class:`LineViewer <spherexlabtools.viewers.LineViewer>` and
     :class:`ImageViewer <spherexlabtools.viewers.ImageViewer>` classes.
 """
+import datetime
 import pyqtgraph as pg
 from PyQt5 import QtWidgets
-import datetime
 
 
 class ViewerWidget(QtWidgets.QWidget):
